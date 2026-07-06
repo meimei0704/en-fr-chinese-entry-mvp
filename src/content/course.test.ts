@@ -39,6 +39,24 @@ async function collectAudioPaths() {
   ])
 }
 
+function collectLocalizedStrings(value: unknown, locale: 'en' | 'fr'): string[] {
+  if (typeof value !== 'object' || value === null) {
+    return []
+  }
+
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => collectLocalizedStrings(item, locale))
+  }
+
+  const record = value as Record<string, unknown>
+  const localizedValue = typeof record[locale] === 'string' ? [record[locale]] : []
+  const nestedValues = Object.entries(record)
+    .filter(([key]) => key !== 'en' && key !== 'fr')
+    .flatMap(([, item]) => collectLocalizedStrings(item, locale))
+
+  return [...localizedValue, ...nestedValues]
+}
+
 describe('course content', () => {
   it('exposes three lessons with bilingual explanations and static audio paths', async () => {
     const { course } = await import('./course')
@@ -95,7 +113,41 @@ describe('course content', () => {
     expect(directionsLesson?.dialogue.lines).toHaveLength(5)
     expect(directionsLesson?.dialogue.lines.some((line) => line.hanzi.includes('地铁站'))).toBe(true)
     expect(directionsLesson?.dialogue.lines.some((line) => line.hanzi.includes('往左拐'))).toBe(true)
-    expect(directionsLesson?.shortInput.target).toBe('站在哪儿？')
+    expect(directionsLesson?.shortInput.target).toBe('地铁站在哪儿？')
+  })
+
+  it('covers practical subway ticket, line, transfer, and exit concepts in ask-directions copy', async () => {
+    const { course } = await import('./course')
+    const directionsLesson = course.lessons.find((lesson) => lesson.id === 'ask-directions')
+
+    if (!directionsLesson) {
+      throw new Error('ask-directions lesson missing')
+    }
+
+    const dialogueHanzi = directionsLesson.dialogue.lines.map((line) => line.hanzi).join('\n')
+    const englishCopy = collectLocalizedStrings(directionsLesson, 'en').join('\n').toLowerCase()
+    const frenchCopy = collectLocalizedStrings(directionsLesson, 'fr').join('\n').toLowerCase()
+
+    expect(dialogueHanzi, 'Chinese examples should include buying a subway ticket').toMatch(
+      /买票|地铁票/,
+    )
+    expect(dialogueHanzi, 'Chinese examples should include choosing or taking a subway line').toMatch(
+      /[一二三四五六七八九十\d]+号线/,
+    )
+    expect(dialogueHanzi, 'Chinese examples should include transferring lines').toMatch(
+      /换乘|换[一二三四五六七八九十\d]+号线/,
+    )
+    expect(dialogueHanzi, 'Chinese examples should include exits').toContain('出口')
+
+    expect(englishCopy, 'English copy should cover ticket buying').toMatch(/\bticket\b/)
+    expect(englishCopy, 'English copy should cover subway line choice').toMatch(/\bline\b/)
+    expect(englishCopy, 'English copy should cover transfers').toMatch(/\btransfer\b/)
+    expect(englishCopy, 'English copy should cover exits').toMatch(/\bexit\b/)
+
+    expect(frenchCopy, 'French copy should cover ticket buying').toMatch(/\b(ticket|billet)s?\b/)
+    expect(frenchCopy, 'French copy should cover subway line choice').toMatch(/\bligne\b/)
+    expect(frenchCopy, 'French copy should cover transfers').toMatch(/\b(correspondance|changer)\b/)
+    expect(frenchCopy, 'French copy should cover exits').toMatch(/\bsortie\b/)
   })
 
   it('ships placeholder audio files for every dialogue and short-input reference', async () => {

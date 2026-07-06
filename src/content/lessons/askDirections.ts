@@ -7,8 +7,8 @@ export const askDirectionsLesson: LessonContent = {
     fr: 'Demander son chemin',
   },
   scenario: {
-    en: 'Asking where a nearby station is and understanding a simple answer.',
-    fr: 'Demander où se trouve une station proche et comprendre une réponse simple.',
+    en: 'Buying a subway ticket, choosing the right line, transferring, and finding the correct exit.',
+    fr: 'Acheter un ticket de métro, choisir la bonne ligne, faire une correspondance et trouver la bonne sortie.',
   },
   dialogue: {
     title: {
@@ -34,56 +34,56 @@ export const askDirectionsLesson: LessonContent = {
       {
         id: 'ask-directions-line-02',
         speaker: 'Local',
-        hanzi: '在前面。',
-        pinyin: 'Zài qiánmiàn.',
+        hanzi: '在前面，往左拐，从B出口进去。',
+        pinyin: 'Zài qiánmiàn, wǎng zuǒ guǎi, cóng B chūkǒu jìnqù.',
         translation: {
-          en: 'It is ahead.',
-          fr: 'C’est devant.',
+          en: 'It is ahead. Turn left and go in through Exit B.',
+          fr: 'C’est devant. Tournez à gauche et entrez par la sortie B.',
         },
         explanation: {
-          en: '前面 means in front or straight ahead.',
-          fr: '前面 signifie devant ou tout droit.',
+          en: '出口 means exit; metro directions often mention an exit letter or number.',
+          fr: '出口 signifie sortie ; les indications de métro mentionnent souvent une lettre ou un numéro de sortie.',
         },
         audio: '/audio/ask-directions/line-02.mp3',
       },
       {
         id: 'ask-directions-line-03',
         speaker: 'Traveler',
-        hanzi: '要走很远吗？',
-        pinyin: 'Yào zǒu hěn yuǎn ma?',
+        hanzi: '我想买票去人民广场，坐几号线？',
+        pinyin: 'Wǒ xiǎng mǎi piào qù Rénmín Guǎngchǎng, zuò jǐ hào xiàn?',
         translation: {
-          en: 'Do I need to walk far?',
-          fr: 'Je dois marcher loin ?',
+          en: 'I want to buy a ticket to People’s Square. Which line should I take?',
+          fr: 'Je veux acheter un ticket pour la place du Peuple. Quelle ligne dois-je prendre ?',
         },
         explanation: {
-          en: 'This follow-up checks whether the destination is still far away.',
-          fr: 'Cette question de suivi vérifie si la destination est encore loin.',
+          en: '买票 means to buy a ticket, and 几号线 asks which numbered subway line.',
+          fr: '买票 signifie acheter un ticket, et 几号线 demande quelle ligne numérotée prendre.',
         },
         audio: '/audio/ask-directions/line-03.mp3',
       },
       {
         id: 'ask-directions-line-04',
         speaker: 'Local',
-        hanzi: '不远，往左拐就到了。',
-        pinyin: 'Bù yuǎn, wǎng zuǒ guǎi jiù dào le.',
+        hanzi: '先买一张地铁票，坐二号线，到中山路换乘一号线。',
+        pinyin: 'Xiān mǎi yì zhāng dìtiě piào, zuò èr hào xiàn, dào Zhōngshān Lù huànchéng yī hào xiàn.',
         translation: {
-          en: 'Not far—turn left and you will arrive.',
-          fr: 'Ce n’est pas loin — tournez à gauche et vous arriverez.',
+          en: 'First buy a subway ticket, take Line 2, and transfer to Line 1 at Zhongshan Road.',
+          fr: 'Achetez d’abord un ticket de métro, prenez la ligne 2, puis faites une correspondance vers la ligne 1 à Zhongshan Road.',
         },
         explanation: {
-          en: 'The answer reassures you and adds one extra direction step.',
-          fr: 'La réponse te rassure et ajoute une étape de direction en plus.',
+          en: '换乘 means to transfer from one line to another.',
+          fr: '换乘 signifie faire une correspondance d’une ligne à une autre.',
         },
         audio: '/audio/ask-directions/line-04.mp3',
       },
       {
         id: 'ask-directions-line-05',
         speaker: 'Traveler',
-        hanzi: '谢谢你！',
-        pinyin: 'Xièxie nǐ!',
+        hanzi: '好的，谢谢你！',
+        pinyin: 'Hǎo de, xièxie nǐ!',
         translation: {
-          en: 'Thank you!',
-          fr: 'Merci !',
+          en: 'Got it. Thank you!',
+          fr: 'D’accord. Merci !',
         },
         explanation: {
           en: 'A short thank-you closes the exchange naturally.',
@@ -97,11 +97,27 @@ export const askDirectionsLesson: LessonContent = {
     {
       id: 'ask-directions-pattern-1',
       pattern: '…在哪儿？',
-      meaning: 'Where is ...?',
+      meaning: {
+        en: 'Where is ...?',
+        fr: 'Où est ... ?',
+      },
       example: '厕所在哪儿？',
       explanation: {
         en: 'Attach a place before 在哪儿 to ask for its location.',
         fr: 'Ajoute un lieu avant 在哪儿 pour demander où il se trouve.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-2',
+      pattern: '坐几号线？',
+      meaning: {
+        en: 'Which line should I take?',
+        fr: 'Quelle ligne dois-je prendre ?',
+      },
+      example: '去人民广场坐几号线？',
+      explanation: {
+        en: 'Use this when choosing the correct subway or bus line.',
+        fr: 'Utilise cette question pour choisir la bonne ligne de métro ou de bus.',
       },
     },
   ],
@@ -114,6 +130,45 @@ export const askDirectionsLesson: LessonContent = {
       explanation: {
         en: 'A practical travel word for moving around a city.',
         fr: 'Un mot pratique de voyage pour se déplacer en ville.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-2',
+      hanzi: '买票',
+      pinyin: 'mǎi piào',
+      meaning: {
+        en: 'buy a ticket',
+        fr: 'acheter un ticket',
+      },
+      explanation: {
+        en: 'Useful at subway stations, train stations, and ticket counters.',
+        fr: 'Utile dans les stations de métro, les gares et les guichets.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-3',
+      hanzi: '换乘',
+      pinyin: 'huànchéng',
+      meaning: {
+        en: 'transfer',
+        fr: 'faire une correspondance',
+      },
+      explanation: {
+        en: 'Use it when changing from one subway line to another.',
+        fr: 'Utilise-le quand tu changes d’une ligne de métro à une autre.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-4',
+      hanzi: '出口',
+      pinyin: 'chūkǒu',
+      meaning: {
+        en: 'exit',
+        fr: 'sortie',
+      },
+      explanation: {
+        en: 'Subway stations often label exits with letters or numbers.',
+        fr: 'Les stations de métro indiquent souvent les sorties avec des lettres ou des numéros.',
       },
     },
   ],
@@ -144,33 +199,42 @@ export const askDirectionsLesson: LessonContent = {
     listening: [
       {
         id: 'ask-directions-listening-1',
-        prompt: 'Which line answers the direction question?',
-        target: '在前面。',
+        prompt: {
+          en: 'Which sentence mentions the correct exit?',
+          fr: 'Quelle phrase mentionne la bonne sortie ?',
+        },
+        target: '从B出口进去。',
         explanation: {
-          en: 'Listen for the short location answer.',
-          fr: 'Écoute la réponse courte qui indique l’emplacement.',
+          en: 'Listen for 出口 when someone explains where to enter or leave.',
+          fr: 'Écoute 出口 quand quelqu’un explique par où entrer ou sortir.',
         },
       },
     ],
     speaking: [
       {
         id: 'ask-directions-speaking-1',
-        prompt: 'Ask where the subway station is.',
+        prompt: {
+          en: 'Ask which subway line to take.',
+          fr: 'Demande quelle ligne de métro prendre.',
+        },
         target: '请问，地铁站在哪儿？',
         explanation: {
-          en: 'Start politely, then ask the full location question.',
-          fr: 'Commence poliment puis pose la question complète sur le lieu.',
+          en: 'You can swap in 去人民广场坐几号线？ when asking for a specific destination.',
+          fr: 'Tu peux remplacer par 去人民广场坐几号线？ pour demander un trajet précis.',
         },
       },
     ],
     reading: [
       {
         id: 'ask-directions-reading-1',
-        prompt: 'Read aloud: 谢谢你！',
-        target: 'Xièxie nǐ!',
+        prompt: {
+          en: 'Read aloud: 换乘一号线',
+          fr: 'Lis à voix haute : 换乘一号线',
+        },
+        target: 'Huànchéng yī hào xiàn',
         explanation: {
-          en: 'Practice the common closing thank-you.',
-          fr: 'Entraîne-toi à dire le merci de clôture.',
+          en: 'Practice the transfer phrase used in subway directions.',
+          fr: 'Entraîne-toi avec l’expression de correspondance utilisée dans le métro.',
         },
       },
     ],
@@ -191,11 +255,14 @@ export const askDirectionsLesson: LessonContent = {
   ],
   shortInput: {
     id: 'ask-directions-short-input-01',
-    prompt: 'Type the phrase for “Where is the station?”',
-    target: '站在哪儿？',
+    prompt: {
+      en: 'Type the phrase for “Where is the subway station?”',
+      fr: 'Tape la phrase pour « Où est la station de métro ? »',
+    },
+    target: '地铁站在哪儿？',
     explanation: {
-      en: 'Keep the location question pattern and swap in the place.',
-      fr: 'Garde la structure de question et remplace simplement le lieu.',
+      en: 'Name the place clearly before 在哪儿 so the question is unambiguous.',
+      fr: 'Nomme clairement le lieu avant 在哪儿 pour que la question soit sans ambiguïté.',
     },
     audio: '/audio/ask-directions/short-input-01.mp3',
   },
