@@ -1,12 +1,12 @@
 # UI Style Refresh Design — Chinese Entry MVP
 
 ## Goal
-Make the Chinese learning MVP feel more polished, memorable, and motivating without changing the product scope or lesson data model. The new style should combine:
+Make the Chinese learning MVP feel more polished, memorable, and motivating without changing the product scope or lesson data model. Per the thread decision, this first implementation round focuses on **Home / Lesson / Review** only; language selection and progress can reuse shared tokens now but are not the primary redesign target. The new style should combine:
 
 - **A: 清新东方** — warm paper, ink, cinnabar, jade accents, subtle Chinese-learning identity.
 - **B: 明亮学习产品** — rounded cards, progress cues, friendly badges, clear practice affordances.
 
-The result should feel like a modern language-learning product with a light Chinese cultural signature, not a heavy traditional theme.
+The result should feel like a modern language-learning product with a light Chinese cultural signature, not a heavy traditional theme. Chinese visual elements should be **medium intensity**: visible enough to signal “learn Chinese”, but secondary to product clarity.
 
 ## Current UI baseline
 The app is currently simple and functional:
@@ -50,33 +50,18 @@ Background can use a very subtle radial gradient: warm paper base + light jade/s
   - Pinyin: small uppercase/mono-like rhythm, colored with sky/jade.
 - Avoid adding external font loading for this iteration; keep performance and build simple.
 
-## Page-level design
+## First-round page-level design
 
-### 1. Language selection / first screen
-Purpose: make the product promise immediately clear.
-
-Layout:
-- Two-column hero on desktop; stacked on mobile.
-- Left: product promise, short explanation, language selector, primary CTA.
-- Right: a “phrase card” showing:
-  - `你好`
-  - `nǐ hǎo`
-  - English/French meaning depending on selected UI language.
-- Add small trust/progress chips such as “English/French explanations”, “Real situations”, “Listen & repeat”.
-
-CTA style:
-- Primary button in cinnabar.
-- Secondary actions in warm outline / ghost style.
-
-### 2. Home page
-Purpose: show learning path and motivate continuation.
+### 1. Home page
+Purpose: establish a memorable first impression while letting learners quickly continue. The chosen structure is a **balanced C layout**: a distinctive hero at the top, then immediate course/progress entry below.
 
 Layout:
 - Top hero summary card with:
-  - “Continue your next useful Chinese moment” style message.
-  - Continue button, Review button, Progress button.
-  - Compact progress strip: lessons count, review queue count, last lesson if available.
-- Lesson list becomes a responsive card grid on desktop and single column on mobile.
+  - A warm product promise such as “Learn useful Chinese through real moments”.
+  - A medium-intensity Chinese phrase display, for example `你好` / `nǐ hǎo`, as a visual anchor rather than a heavy decoration.
+  - Continue, Review, and Progress actions.
+  - Compact learning chips: “English/French explanations”, “Real situations”, “Listen & repeat”.
+- Below hero: responsive lesson card grid on desktop and single column on mobile.
 
 Lesson card style:
 - Warm surface card, rounded corners, soft shadow.
@@ -84,7 +69,7 @@ Lesson card style:
 - One visible mini phrase from the lesson if available.
 - Clear primary “Open lesson” action.
 
-### 3. Lesson page
+### 2. Lesson page
 Purpose: make dense lesson content easier to scan.
 
 Layout:
@@ -103,19 +88,7 @@ Dialogue card style:
 - Translation in muted text.
 - Listen button as compact pill with icon-like styling.
 
-### 4. Practice page
-Purpose: make exercises feel active and less like static text.
-
-Layout:
-- Checklist becomes a horizontal/stacked progress module.
-- Listening / speaking / reading cards get distinct icon chips or labels.
-- Answers should be clearly separated from prompts.
-
-Style:
-- Use jade for completion/success states.
-- Keep feedback self-check simple; do not add scoring yet.
-
-### 5. Review page
+### 3. Review page
 Purpose: make flashcard review feel like a focused action.
 
 Layout:
@@ -128,16 +101,8 @@ Style:
 - Flashcard can use a slightly deeper border/shadow than ordinary cards.
 - Finished count uses jade success chip.
 
-### 6. Progress page
-Purpose: give users a simple sense of momentum.
-
-Layout:
-- Progress summary card with completed lessons count.
-- Simple progress bar based on completed / total lessons.
-- Current lesson and review queue shown as two stat cards.
-
-Style:
-- Use sky for learning progress and jade for completed/success.
+### Later pages / shared inheritance
+Language selection, practice, and progress should inherit shared tokens, buttons, cards, and typography where low-risk, but they are not first-round custom redesign targets. If implementation time allows, small consistency fixes are acceptable; larger layout changes should wait for a second UI pass.
 
 ## Component system
 
@@ -225,18 +190,16 @@ After implementation:
    - `src/app/AppShell.test.tsx`
    - `src/pages/HomePage.test.tsx`
    - `src/pages/LessonPage.test.tsx`
-   - `src/pages/PracticePage.test.tsx`
-   - `src/pages/ProgressPage.test.tsx`
+   - `src/pages/PracticePage.test.tsx` (only if shared component changes affect it)
+   - `src/pages/ProgressPage.test.tsx` (only if shared component changes affect it)
    - `src/pages/ReviewPage.test.tsx`
 2. Full test suite:
    - `npm run test -- --run`
 3. Build:
    - `npm run build`
 4. Manual visual smoke:
-   - language selection
    - home
    - one lesson page
-   - practice
    - review
-   - progress
    - mobile width check
+   - language selection / practice / progress quick smoke only if shared styles changed
