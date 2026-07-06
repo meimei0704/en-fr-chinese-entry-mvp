@@ -57,6 +57,15 @@ function collectLocalizedStrings(value: unknown, locale: 'en' | 'fr'): string[] 
   return [...localizedValue, ...nestedValues]
 }
 
+function expectLocalizedField(value: unknown, fieldPath: string) {
+  expect(value, `${fieldPath} should provide English and French copy`).toEqual(
+    expect.objectContaining({
+      en: expect.stringMatching(/\S/),
+      fr: expect.stringMatching(/\S/),
+    }),
+  )
+}
+
 describe('course content', () => {
   it('exposes three lessons with bilingual explanations and static audio paths', async () => {
     const { course } = await import('./course')
@@ -148,6 +157,139 @@ describe('course content', () => {
     expect(frenchCopy, 'French copy should cover subway line choice').toMatch(/\bligne\b/)
     expect(frenchCopy, 'French copy should cover transfers').toMatch(/\b(correspondance|changer)\b/)
     expect(frenchCopy, 'French copy should cover exits').toMatch(/\bsortie\b/)
+  })
+
+  it('keeps self-intro and order-food learner-facing copy consistently bilingual', async () => {
+    const { course } = await import('./course')
+    const targetLessons = course.lessons.filter((lesson) =>
+      ['self-intro', 'order-food'].includes(lesson.id),
+    )
+
+    expect(targetLessons.map((lesson) => lesson.id)).toEqual(['self-intro', 'order-food'])
+
+    for (const lesson of targetLessons) {
+      expectLocalizedField(lesson.title, `${lesson.id}.title`)
+      expectLocalizedField(lesson.scenario, `${lesson.id}.scenario`)
+      expectLocalizedField(lesson.dialogue.title, `${lesson.id}.dialogue.title`)
+
+      lesson.dialogue.lines.forEach((line) => {
+        expectLocalizedField(line.translation, `${line.id}.translation`)
+        expectLocalizedField(line.explanation, `${line.id}.explanation`)
+      })
+
+      lesson.sentencePatterns.forEach((pattern) => {
+        expectLocalizedField(pattern.meaning, `${pattern.id}.meaning`)
+        expectLocalizedField(pattern.explanation, `${pattern.id}.explanation`)
+      })
+
+      lesson.vocabulary.forEach((item) => {
+        expectLocalizedField(item.meaning, `${item.id}.meaning`)
+        expectLocalizedField(item.explanation, `${item.id}.explanation`)
+      })
+
+      lesson.pronunciation.forEach((tip) => {
+        expectLocalizedField(tip.focus, `${tip.id}.focus`)
+        expectLocalizedField(tip.tip, `${tip.id}.tip`)
+        expectLocalizedField(tip.explanation, `${tip.id}.explanation`)
+      })
+
+      lesson.hanziRecognition.forEach((item) => {
+        expectLocalizedField(item.meaning, `${item.id}.meaning`)
+        expectLocalizedField(item.explanation, `${item.id}.explanation`)
+      })
+
+      Object.entries(lesson.practice).forEach(([section, prompts]) => {
+        prompts.forEach((prompt) => {
+          expectLocalizedField(prompt.prompt, `${prompt.id}.${section}.prompt`)
+          expectLocalizedField(prompt.explanation, `${prompt.id}.${section}.explanation`)
+        })
+      })
+
+      lesson.reviewCards.forEach((card) => {
+        expectLocalizedField(card.back, `${card.id}.back`)
+        expectLocalizedField(card.explanation, `${card.id}.explanation`)
+      })
+
+      expectLocalizedField(lesson.shortInput.prompt, `${lesson.id}.shortInput.prompt`)
+      expectLocalizedField(lesson.shortInput.explanation, `${lesson.id}.shortInput.explanation`)
+    }
+  })
+
+  it('adds practical high-frequency examples with natural English and matching French support', async () => {
+    const { course } = await import('./course')
+    const selfIntroLesson = course.lessons.find((lesson) => lesson.id === 'self-intro')
+    const orderFoodLesson = course.lessons.find((lesson) => lesson.id === 'order-food')
+
+    if (!selfIntroLesson || !orderFoodLesson) {
+      throw new Error('target lessons missing')
+    }
+
+    const selfIntroHanzi = collectLocalizedStrings(selfIntroLesson, 'en').join('\n')
+    const selfIntroChinese = [
+      ...selfIntroLesson.sentencePatterns.map((pattern) => pattern.example),
+      ...selfIntroLesson.vocabulary.map((item) => item.hanzi),
+      ...selfIntroLesson.hanziRecognition.map((item) => item.hanzi),
+      ...Object.values(selfIntroLesson.practice).flatMap((prompts) =>
+        prompts.map((prompt) => prompt.target),
+      ),
+      selfIntroLesson.shortInput.target,
+    ].join('\n')
+    const selfIntroFrench = collectLocalizedStrings(selfIntroLesson, 'fr').join('\n').toLowerCase()
+    const orderFoodHanzi = [
+      ...orderFoodLesson.sentencePatterns.map((pattern) => pattern.example),
+      ...orderFoodLesson.vocabulary.map((item) => item.hanzi),
+      ...orderFoodLesson.hanziRecognition.map((item) => item.hanzi),
+      ...Object.values(orderFoodLesson.practice).flatMap((prompts) =>
+        prompts.map((prompt) => prompt.target),
+      ),
+      orderFoodLesson.shortInput.target,
+    ].join('\n')
+    const orderFoodEnglish = collectLocalizedStrings(orderFoodLesson, 'en').join('\n').toLowerCase()
+    const orderFoodFrench = collectLocalizedStrings(orderFoodLesson, 'fr').join('\n').toLowerCase()
+
+    expect(selfIntroHanzi.toLowerCase()).toContain('introducing yourself')
+    expect(selfIntroHanzi.toLowerCase()).not.toMatch(/\bself introduction\b/)
+    expect(selfIntroChinese, 'Self-intro examples should cover saying where you are from').toMatch(
+      /我来自|我从.+来/,
+    )
+    expect(selfIntroChinese, 'Self-intro examples should cover a common identity').toMatch(
+      /我是(学生|老师|医生|工程师)/,
+    )
+    expect(selfIntroChinese, 'Self-intro examples should include asking “and you?”').toContain(
+      '你呢',
+    )
+    expect(selfIntroFrench, 'French self-intro support should mention coming from a place').toMatch(
+      /je viens de|je suis de/,
+    )
+    expect(selfIntroFrench, 'French self-intro support should mention student identity').toMatch(
+      /étudiant|étudiante/,
+    )
+    expect(selfIntroFrench, 'French self-intro support should include “et toi ?”').toContain(
+      'et toi',
+    )
+
+    expect(orderFoodEnglish, 'English restaurant copy should use natural requests').not.toMatch(
+      /\bplease give me\b/,
+    )
+    expect(orderFoodEnglish, 'English restaurant copy should model “I’d like”').toMatch(
+      /\bi(?:'|’)d like\b/,
+    )
+    expect(orderFoodHanzi, 'Order-food examples should cover asking for a menu').toContain('菜单')
+    expect(orderFoodHanzi, 'Order-food examples should cover ordering water').toContain('水')
+    expect(orderFoodHanzi, 'Order-food examples should cover spice preferences').toMatch(
+      /不辣|少辣/,
+    )
+    expect(orderFoodHanzi, 'Order-food examples should cover takeaway or paying').toMatch(
+      /打包|带走|买单|结账/,
+    )
+    expect(orderFoodFrench, 'French order-food support should mention a menu').toContain('menu')
+    expect(orderFoodFrench, 'French order-food support should mention water').toMatch(/\beau\b/)
+    expect(orderFoodFrench, 'French order-food support should mention spice preferences').toMatch(
+      /pas épicé|moins épicé/,
+    )
+    expect(orderFoodFrench, 'French order-food support should mention takeaway or the bill').toMatch(
+      /à emporter|addition/,
+    )
   })
 
   it('ships placeholder audio files for every dialogue and short-input reference', async () => {
