@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
@@ -26,6 +26,16 @@ describe('HomePage', () => {
         }),
       ).toBeVisible()
     }
+  })
+
+  it('shows the refreshed hero phrase, progress cues, and lesson mini phrase', () => {
+    renderRoute('/home')
+
+    expect(screen.getByLabelText(/hero phrase/i)).toHaveTextContent('你好')
+    expect(screen.getByLabelText(/hero phrase/i)).toHaveTextContent('nǐ hǎo')
+    expect(screen.getByText(`${course.lessons.length} lessons`)).toBeVisible()
+    expect(screen.getByText(/listen & repeat/i)).toBeVisible()
+    expect(within(screen.getAllByRole('article')[0]).getByText(course.lessons[0].vocabulary[0].hanzi)).toBeVisible()
   })
 
   it('renders page-level French copy when the learner chooses French mode', () => {

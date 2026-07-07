@@ -10,11 +10,10 @@ export function SpeechButton({ label, text, audioSrc }: SpeechButtonProps) {
   return (
     <button
       type="button"
-      className="secondary-link"
+      className="chip-button speech-button"
       onClick={() => {
         speakChinese({ text, audioSrc })
       }}
-      style={{ marginTop: '0.75rem' }}
     >
       {label}
     </button>

@@ -11,6 +11,15 @@ describe('LessonPage', () => {
     localStorage.clear()
   })
 
+  it('wraps the lesson in scannable overview and dialogue regions', () => {
+    renderRoute('/lesson/self-intro')
+
+    expect(screen.getByRole('region', { name: /lesson overview/i })).toBeVisible()
+    expect(screen.getByRole('region', { name: /dialogue practice/i })).toBeVisible()
+    expect(screen.getAllByLabelText(/dialogue line speaker a/i)[0]).toHaveTextContent('你好')
+    expect(screen.getAllByLabelText(/dialogue line speaker a/i)[0]).toHaveTextContent('Nǐ hǎo')
+  })
+
   it('renders the full lesson template and lets the user switch explanations without changing progress', async () => {
     const user = userEvent.setup()
     saveProgress({

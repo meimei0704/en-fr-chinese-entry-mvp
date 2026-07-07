@@ -38,8 +38,8 @@ export function ReviewPage() {
   }
 
   return (
-    <main className="page-shell" style={{ placeItems: 'start center' }}>
-      <section className="hero-card" style={{ display: 'grid', gap: '1.5rem' }}>
+    <main className="page-shell page-shell--wide">
+      <section className="hero-card review-card">
         <header>
           <p className="eyebrow">{copy.reviewPage.eyebrow}</p>
           <h1>{copy.reviewPage.heading}</h1>
@@ -47,42 +47,33 @@ export function ReviewPage() {
         </header>
 
         {finishedCount > 0 ? (
-          <p style={{ margin: 0, color: '#166534', fontWeight: 700 }}>
+          <p className="success-chip">
             {copy.reviewPage.finishedCount(finishedCount)}
           </p>
         ) : null}
 
         {currentCard ? (
-          <article
-            style={{
-              padding: '1.5rem',
-              borderRadius: '1rem',
-              background: '#f8fafc',
-              border: '1px solid #dbeafe',
-              display: 'grid',
-              gap: '0.75rem',
-            }}
-          >
-            <div>
-              <p className="eyebrow" style={{ marginBottom: '0.5rem' }}>{copy.reviewPage.front}</p>
-              <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>{currentCard.front}</p>
-            </div>
-            <div>
-              <p className="eyebrow" style={{ marginBottom: '0.5rem' }}>{copy.reviewPage.back}</p>
-              <p style={{ margin: 0 }}>
+          <article className="review-flashcard" aria-label="Current review flashcard">
+            <section className="review-side" aria-label="Flashcard front">
+              <p className="eyebrow">{copy.reviewPage.front}</p>
+              <p className="hanzi-display hanzi-display--review">{currentCard.front}</p>
+            </section>
+            <section className="review-side" aria-label="Flashcard back">
+              <p className="eyebrow">{copy.reviewPage.back}</p>
+              <p className="review-answer">
                 {getLocalizedText(currentCard.back, progress.selectedExplanationLanguage)}
               </p>
               <ExplanationBlock
                 explanation={currentCard.explanation}
                 language={progress.selectedExplanationLanguage}
               />
-            </div>
+            </section>
             <button type="button" className="primary-button" onClick={handleMarkComplete}>
               {copy.reviewPage.markComplete}
             </button>
           </article>
         ) : (
-          <section>
+          <section className="review-empty-state">
             <h2>{copy.reviewPage.queueClear}</h2>
             <p>{copy.reviewPage.noCards}</p>
           </section>

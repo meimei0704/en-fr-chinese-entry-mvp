@@ -12,23 +12,19 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
   const copy = getUiCopy(language)
 
   return (
-    <div style={{ display: 'grid', gap: '1rem' }}>
+    <div className="dialogue-list">
       {lines.map((line) => (
         <article
           key={line.id}
-          style={{
-            padding: '1rem',
-            borderRadius: '1rem',
-            background: '#f8fafc',
-            border: '1px solid #dbeafe',
-          }}
+          className="dialogue-card"
+          aria-label={`Dialogue line speaker ${getLocalizedText(line.speaker, language)}`}
         >
-          <p className="eyebrow" style={{ marginBottom: '0.5rem' }}>
+          <p className="speaker-chip">
             {copy.lessonPage.speakerPrefix} {getLocalizedText(line.speaker, language)}
           </p>
-          <p style={{ margin: 0, fontSize: '1.4rem', fontWeight: 700 }}>{line.hanzi}</p>
-          <p style={{ margin: '0.25rem 0 0', color: '#1d4ed8' }}>{line.pinyin}</p>
-          <p style={{ margin: '0.5rem 0 0' }}>{getLocalizedText(line.translation, language)}</p>
+          <p className="hanzi-display hanzi-display--dialogue">{line.hanzi}</p>
+          <p className="pinyin-line">{line.pinyin}</p>
+          <p className="muted-text">{getLocalizedText(line.translation, language)}</p>
           <SpeechButton
             label={copy.lessonPage.listenChinese}
             text={line.hanzi}

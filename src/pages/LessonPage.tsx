@@ -61,91 +61,93 @@ export function LessonPage() {
   }
 
   return (
-    <main className="page-shell" style={{ placeItems: 'start center' }}>
-      <section className="hero-card" style={{ display: 'grid', gap: '1.5rem' }}>
-        <header>
+    <main className="page-shell page-shell--wide">
+      <section className="hero-card lesson-header-card">
+        <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.lessonPage.eyebrow}</p>
           <h1>{getLocalizedText(lesson.title, selectedLanguage)}</h1>
           <p className="lede">{getLocalizedText(lesson.dialogue.title, selectedLanguage)}</p>
         </header>
 
-        <section>
-          <h2>{copy.lessonPage.scenarioGoal}</h2>
-          <p>{getLocalizedText(lesson.scenario, selectedLanguage)}</p>
+        <section className="surface-card lesson-overview-card" aria-label="Lesson overview">
+          <div>
+            <h2>{copy.lessonPage.scenarioGoal}</h2>
+            <p className="muted-text">{getLocalizedText(lesson.scenario, selectedLanguage)}</p>
+          </div>
           <LanguageToggle
             selectedLanguage={selectedLanguage}
             onSelect={handleSelectLanguage}
             ariaLabel={copy.languageToggleLabel}
           />
-          <p style={{ marginTop: '1rem', color: '#475569' }}>
-            {copy.lessonPage.sectionSummary}
-          </p>
+          <p className="explanation-block">{copy.lessonPage.sectionSummary}</p>
         </section>
 
-        <section>
-          <h2>{copy.lessonPage.dialogue}</h2>
-          <DialoguePlayer lines={lesson.dialogue.lines} language={selectedLanguage} />
-        </section>
+        <div className="section-stack">
+          <section className="surface-card lesson-section-card" aria-label="Dialogue practice">
+            <h2>{copy.lessonPage.dialogue}</h2>
+            <DialoguePlayer lines={lesson.dialogue.lines} language={selectedLanguage} />
+          </section>
 
-        <section>
-          <h2>{copy.lessonPage.sentencePatterns}</h2>
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {lesson.sentencePatterns.map((pattern) => (
-              <article key={pattern.id} style={{ padding: '1rem', borderTop: '1px solid #cbd5e1' }}>
-                <p style={{ margin: 0, fontWeight: 700 }}>{pattern.pattern}</p>
-                <p style={{ margin: '0.25rem 0 0' }}>{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
-                <p style={{ margin: '0.25rem 0 0', color: '#1d4ed8' }}>{pattern.example}</p>
-                <ExplanationBlock explanation={pattern.explanation} language={selectedLanguage} />
-              </article>
-            ))}
-          </div>
-        </section>
+          <section className="surface-card lesson-section-card">
+            <h2>{copy.lessonPage.sentencePatterns}</h2>
+            <div className="card-grid">
+              {lesson.sentencePatterns.map((pattern) => (
+                <article key={pattern.id} className="study-item study-item--pattern">
+                  <p className="study-item__title">{pattern.pattern}</p>
+                  <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
+                  <p className="pinyin-line">{pattern.example}</p>
+                  <ExplanationBlock explanation={pattern.explanation} language={selectedLanguage} />
+                </article>
+              ))}
+            </div>
+          </section>
 
-        <section>
-          <h2>{copy.lessonPage.vocabulary}</h2>
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {lesson.vocabulary.map((item) => (
-              <article key={item.id} style={{ padding: '1rem', borderTop: '1px solid #cbd5e1' }}>
-                <p style={{ margin: 0, fontWeight: 700 }}>
-                  {item.hanzi} · {item.pinyin}
-                </p>
-                <p style={{ margin: '0.25rem 0 0' }}>{getLocalizedText(item.meaning, selectedLanguage)}</p>
-                <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
-              </article>
-            ))}
-          </div>
-        </section>
+          <section className="surface-card lesson-section-card">
+            <h2>{copy.lessonPage.vocabulary}</h2>
+            <div className="card-grid card-grid--compact">
+              {lesson.vocabulary.map((item) => (
+                <article key={item.id} className="study-item">
+                  <p className="study-item__title">
+                    {item.hanzi} <span>{item.pinyin}</span>
+                  </p>
+                  <p className="muted-text">{getLocalizedText(item.meaning, selectedLanguage)}</p>
+                  <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
+                </article>
+              ))}
+            </div>
+          </section>
 
-        <section>
-          <h2>{copy.lessonPage.pronunciation}</h2>
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {lesson.pronunciation.map((tip) => (
-              <article key={tip.id} style={{ padding: '1rem', borderTop: '1px solid #cbd5e1' }}>
-                <p style={{ margin: 0, fontWeight: 700 }}>{getLocalizedText(tip.focus, selectedLanguage)}</p>
-                <p style={{ margin: '0.25rem 0 0' }}>{getLocalizedText(tip.tip, selectedLanguage)}</p>
-                <ExplanationBlock explanation={tip.explanation} language={selectedLanguage} />
-              </article>
-            ))}
-          </div>
-        </section>
+          <section className="surface-card lesson-section-card">
+            <h2>{copy.lessonPage.pronunciation}</h2>
+            <div className="card-grid">
+              {lesson.pronunciation.map((tip) => (
+                <article key={tip.id} className="study-item">
+                  <p className="study-item__title">{getLocalizedText(tip.focus, selectedLanguage)}</p>
+                  <p className="muted-text">{getLocalizedText(tip.tip, selectedLanguage)}</p>
+                  <ExplanationBlock explanation={tip.explanation} language={selectedLanguage} />
+                </article>
+              ))}
+            </div>
+          </section>
 
-        <section>
-          <h2>{copy.lessonPage.hanziRecognition}</h2>
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            {lesson.hanziRecognition.map((item) => (
-              <article key={item.id} style={{ padding: '1rem', borderTop: '1px solid #cbd5e1' }}>
-                <p style={{ margin: 0, fontWeight: 700 }}>
-                  {item.hanzi} · {item.pinyin}
-                </p>
-                <p style={{ margin: '0.25rem 0 0' }}>{getLocalizedText(item.meaning, selectedLanguage)}</p>
-                <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
-              </article>
-            ))}
-          </div>
-        </section>
+          <section className="surface-card lesson-section-card">
+            <h2>{copy.lessonPage.hanziRecognition}</h2>
+            <div className="card-grid card-grid--compact">
+              {lesson.hanziRecognition.map((item) => (
+                <article key={item.id} className="study-item">
+                  <p className="study-item__title">
+                    {item.hanzi} <span>{item.pinyin}</span>
+                  </p>
+                  <p className="muted-text">{getLocalizedText(item.meaning, selectedLanguage)}</p>
+                  <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
 
-        <nav className="button-row" aria-label={copy.lessonPage.lessonActions}>
-          <Link className="secondary-link" to={`/lesson/${lesson.id}/practice`}>
+        <nav className="button-row lesson-actions" aria-label={copy.lessonPage.lessonActions}>
+          <Link className="primary-button" to={`/lesson/${lesson.id}/practice`}>
             {copy.lessonPage.goToPractice}
           </Link>
           <Link className="secondary-link" to={`/lesson/${lesson.id}/short-input`}>

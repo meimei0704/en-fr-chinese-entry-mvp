@@ -15,7 +15,7 @@ export function ExplanationBlock({
   const resolvedLabel = label ?? getUiCopy(language).common.explanation
 
   return (
-    <p style={{ margin: '0.5rem 0 0', color: '#334155' }}>
+    <p className="explanation-block">
       <strong>{resolvedLabel}: </strong>
       <span>{explanation[language]}</span>
     </p>
