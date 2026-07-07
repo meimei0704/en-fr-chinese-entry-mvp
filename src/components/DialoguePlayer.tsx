@@ -17,7 +17,7 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
         <article
           key={line.id}
           className="dialogue-card"
-          aria-label={`Dialogue line speaker ${getLocalizedText(line.speaker, language)}`}
+          aria-label={copy.lessonPage.dialogueLineLabel(getLocalizedText(line.speaker, language))}
         >
           <p className="speaker-chip">
             {copy.lessonPage.speakerPrefix} {getLocalizedText(line.speaker, language)}

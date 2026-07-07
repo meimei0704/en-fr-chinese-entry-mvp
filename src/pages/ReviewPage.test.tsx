@@ -35,11 +35,15 @@ describe('ReviewPage', () => {
 
     expect(screen.getByRole('heading', { name: /révision/i })).toBeVisible()
     expect(screen.getByText(/cartes à revoir aujourd’hui/i)).toBeVisible()
-    expect(screen.getByRole('article', { name: /current review flashcard/i })).toBeVisible()
-    expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('我叫')
+    expect(screen.getByRole('article', { name: /carte de révision en cours/i })).toBeVisible()
+    expect(screen.getByRole('region', { name: /recto de la carte/i })).toHaveTextContent('我叫')
+    expect(screen.getByRole('region', { name: /verso de la carte/i })).toHaveTextContent(
+      /je m[’']appelle/i,
+    )
     expect(screen.getByText('我叫')).toBeVisible()
     expect(screen.getByText(/je m[’']appelle/i)).toBeVisible()
     expect(screen.getByText(/utilise-le pour commencer ta présentation\./i)).toBeVisible()
+    expect(screen.queryByRole('article', { name: /current review flashcard/i })).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /marquer comme terminée/i }))
 

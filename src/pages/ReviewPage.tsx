@@ -53,12 +53,12 @@ export function ReviewPage() {
         ) : null}
 
         {currentCard ? (
-          <article className="review-flashcard" aria-label="Current review flashcard">
-            <section className="review-side" aria-label="Flashcard front">
+          <article className="review-flashcard" aria-label={copy.reviewPage.currentFlashcardLabel}>
+            <section className="review-side" aria-label={copy.reviewPage.frontSideLabel}>
               <p className="eyebrow">{copy.reviewPage.front}</p>
               <p className="hanzi-display hanzi-display--review">{currentCard.front}</p>
             </section>
-            <section className="review-side" aria-label="Flashcard back">
+            <section className="review-side" aria-label={copy.reviewPage.backSideLabel}>
               <p className="eyebrow">{copy.reviewPage.back}</p>
               <p className="review-answer">
                 {getLocalizedText(currentCard.back, progress.selectedExplanationLanguage)}

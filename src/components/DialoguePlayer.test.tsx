@@ -62,4 +62,36 @@ describe('DialoguePlayer', () => {
       lang: 'zh-CN',
     })
   })
+
+  it('uses localized accessible names for dialogue lines in French mode', () => {
+    render(
+      <DialoguePlayer
+        language="fr"
+        lines={[
+          {
+            id: 'line-1',
+            speaker: {
+              en: 'Traveler',
+              fr: 'Voyageuse',
+            },
+            hanzi: '请问，地铁票在哪儿买？',
+            pinyin: 'Qǐngwèn, dìtiě piào zài nǎr mǎi?',
+            translation: 'Où est-ce que je peux acheter un ticket de métro ?',
+            explanation: {
+              en: 'Test explanation',
+              fr: 'Explication de test',
+            },
+            audio: '/audio/test.mp3',
+          },
+        ]}
+      />,
+    )
+
+    expect(
+      screen.getByRole('article', { name: /ligne de dialogue, interlocuteur voyageuse/i }),
+    ).toHaveTextContent('请问，地铁票在哪儿买？')
+    expect(
+      screen.queryByRole('article', { name: /dialogue line speaker traveler/i }),
+    ).not.toBeInTheDocument()
+  })
 })

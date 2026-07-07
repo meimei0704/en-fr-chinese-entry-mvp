@@ -69,7 +69,10 @@ export function LessonPage() {
           <p className="lede">{getLocalizedText(lesson.dialogue.title, selectedLanguage)}</p>
         </header>
 
-        <section className="surface-card lesson-overview-card" aria-label="Lesson overview">
+        <section
+          className="surface-card lesson-overview-card"
+          aria-label={copy.lessonPage.lessonOverviewLabel}
+        >
           <div>
             <h2>{copy.lessonPage.scenarioGoal}</h2>
             <p className="muted-text">{getLocalizedText(lesson.scenario, selectedLanguage)}</p>
@@ -83,7 +86,10 @@ export function LessonPage() {
         </section>
 
         <div className="section-stack">
-          <section className="surface-card lesson-section-card" aria-label="Dialogue practice">
+          <section
+            className="surface-card lesson-section-card"
+            aria-label={copy.lessonPage.dialoguePracticeLabel}
+          >
             <h2>{copy.lessonPage.dialogue}</h2>
             <DialoguePlayer lines={lesson.dialogue.lines} language={selectedLanguage} />
           </section>

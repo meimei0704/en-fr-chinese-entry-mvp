@@ -55,5 +55,19 @@ describe('HomePage', () => {
         name: /se présenter/i,
       }),
     ).toBeVisible()
+    expect(screen.getByLabelText(/points clés de l’apprentissage/i)).toHaveTextContent(
+      'Guidage anglais/français',
+    )
+    expect(screen.getByLabelText(/phrase modèle/i)).toHaveTextContent('你好')
+
+    const progressSummary = screen.getByLabelText(/résumé des progrès du cours/i)
+    expect(progressSummary).toHaveTextContent(`${course.lessons.length} leçons`)
+    expect(progressSummary).toHaveTextContent('0 terminée')
+    expect(progressSummary).toHaveTextContent('0 à réviser')
+
+    expect(screen.getByText('Présentation')).toBeVisible()
+    expect(screen.getByText('Métro')).toBeVisible()
+    expect(screen.queryByText(`${course.lessons.length} lessons`)).not.toBeInTheDocument()
+    expect(screen.queryByText('Intro')).not.toBeInTheDocument()
   })
 })

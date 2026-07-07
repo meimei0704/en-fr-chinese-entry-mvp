@@ -32,9 +32,14 @@ describe('LessonPage', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: /se présenter/i }),
     ).toBeVisible()
+    expect(screen.getByRole('region', { name: /aperçu de la leçon/i })).toBeVisible()
     expect(
       screen.getByRole('heading', { level: 2, name: /objectif de la scène/i }),
     ).toBeVisible()
+    expect(screen.getByRole('region', { name: /pratique du dialogue/i })).toBeVisible()
+    expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur a/i)[0]).toHaveTextContent(
+      '你好',
+    )
     expect(screen.getByRole('heading', { level: 2, name: /dialogue/i })).toBeVisible()
     expect(
       screen.getByRole('heading', { level: 2, name: /structures utiles/i }),
@@ -51,6 +56,7 @@ describe('LessonPage', () => {
     expect(screen.getByText(/je m[’']appelle anna\./i)).toBeVisible()
     expect(screen.getByRole('link', { name: /passer à la pratique/i })).toBeVisible()
     expect(screen.getByRole('link', { name: /terminer avec la mini-réponse/i })).toBeVisible()
+    expect(screen.queryByRole('region', { name: /lesson overview/i })).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'English' }))
 

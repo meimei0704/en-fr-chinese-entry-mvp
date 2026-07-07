@@ -23,7 +23,7 @@ export function HomePage() {
           <h1>{copy.homePage.heading}</h1>
           <p className="lede">{copy.homePage.lede}</p>
 
-          <div className="learning-chip-row" aria-label="Learning highlights">
+          <div className="learning-chip-row" aria-label={copy.homePage.learningHighlightsLabel}>
             {learningChips.map((chip) => (
               <span key={chip} className="badge badge--gold">
                 {chip}
@@ -47,14 +47,17 @@ export function HomePage() {
           </div>
         </div>
 
-        <aside className="home-hero__phrase" aria-label="Hero phrase">
+        <aside className="home-hero__phrase" aria-label={copy.homePage.heroPhraseLabel}>
           <span className="badge badge--jade">{copy.homePage.lessonEyebrow}</span>
           <p className="hanzi-display">你好</p>
           <p className="pinyin-line">nǐ hǎo</p>
-          <div className="home-hero__stats" aria-label="Course progress summary">
-            <span>{course.lessons.length} lessons</span>
-            <span>{progress.completedLessons.length} complete</span>
-            <span>{progress.reviewQueue.length} review</span>
+          <div
+            className="home-hero__stats"
+            aria-label={copy.homePage.courseProgressSummaryLabel}
+          >
+            <span>{copy.homePage.lessonCount(course.lessons.length)}</span>
+            <span>{copy.homePage.completedLessonCount(progress.completedLessons.length)}</span>
+            <span>{copy.homePage.reviewCount(progress.reviewQueue.length)}</span>
           </div>
         </aside>
       </section>

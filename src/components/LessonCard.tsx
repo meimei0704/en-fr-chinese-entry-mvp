@@ -8,12 +8,6 @@ interface LessonCardProps {
   language: ExplanationLanguage
 }
 
-const scenarioBadges: Record<string, string> = {
-  'self-intro': 'Intro',
-  'order-food': 'Restaurant',
-  'ask-directions': 'Metro',
-}
-
 export function LessonCard({ lesson, language }: LessonCardProps) {
   const copy = getUiCopy(language)
   const miniPhrase = lesson.vocabulary[0]
@@ -21,7 +15,7 @@ export function LessonCard({ lesson, language }: LessonCardProps) {
   return (
     <article className="lesson-card">
       <span className="badge badge--sky">
-        {scenarioBadges[lesson.id] ?? copy.homePage.lessonEyebrow}
+        {copy.homePage.lessonScenarioBadges[lesson.id]}
       </span>
       <h2>{getLocalizedText(lesson.title, language)}</h2>
       <p className="lede">{getLocalizedText(lesson.scenario, language)}</p>
