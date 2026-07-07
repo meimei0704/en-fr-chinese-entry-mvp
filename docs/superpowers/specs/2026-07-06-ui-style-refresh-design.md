@@ -178,7 +178,7 @@ Out of scope:
 - Homepage has a stronger hero and clearer learning path.
 - Lesson pages are easier to scan because dialogue, patterns, vocabulary, and practice sections have distinct card treatments.
 - Review page feels like a flashcard interaction.
-- Progress page includes a visible progress cue.
+- Home page includes visible progress/learning cues; progress page can inherit shared styling without a first-round layout redesign.
 - Existing tests still pass after UI changes.
 - Production build passes.
 
