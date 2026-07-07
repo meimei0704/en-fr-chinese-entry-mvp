@@ -23,24 +23,42 @@ export function LanguageSelectionPage() {
 
   return (
     <main className="page-shell">
-      <section className="hero-card">
-        <p className="eyebrow">{copy.selectionPage.eyebrow}</p>
-        <h1>{copy.selectionPage.heading}</h1>
-        <p className="lede">{copy.selectionPage.lede}</p>
+      <section className="hero-card selection-hero">
+        <div className="selection-hero__content">
+          <p className="eyebrow">{copy.selectionPage.eyebrow}</p>
+          <h1>{copy.selectionPage.heading}</h1>
+          <p className="lede">{copy.selectionPage.lede}</p>
 
-        <LanguageToggle
-          selectedLanguage={selectedLanguage}
-          onSelect={setSelectedLanguage}
-          ariaLabel={copy.languageToggleLabel}
-        />
+          <section
+            className="surface-card selection-options-card"
+            aria-label={copy.selectionPage.languageOptionsLabel}
+          >
+            <div>
+              <p className="eyebrow">{copy.selectionPage.languageOptionsHeading}</p>
+              <p className="muted-text">{copy.selectionPage.languageOptionsDescription}</p>
+            </div>
 
-        <button
-          type="button"
-          className="primary-button"
-          onClick={handleStartLearning}
-        >
-          {copy.selectionPage.startLearning}
-        </button>
+            <LanguageToggle
+              selectedLanguage={selectedLanguage}
+              onSelect={setSelectedLanguage}
+              ariaLabel={copy.languageToggleLabel}
+            />
+          </section>
+
+          <button
+            type="button"
+            className="primary-button selection-primary-button"
+            onClick={handleStartLearning}
+          >
+            {copy.selectionPage.startLearning}
+          </button>
+        </div>
+
+        <aside className="selection-identity-card" aria-label={copy.selectionPage.identityLabel}>
+          <span className="badge badge--gold">{copy.selectionPage.identityBadge}</span>
+          <p className="hanzi-display">中文</p>
+          <p className="pinyin-line">zhōngwén</p>
+        </aside>
       </section>
     </main>
   )

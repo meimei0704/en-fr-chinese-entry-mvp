@@ -20,6 +20,11 @@ export const uiCopy = {
       eyebrow: 'EN/FR Chinese Entry MVP',
       heading: 'Choose your explanation language',
       lede: 'Learn beginner Chinese through practical scenarios with either English or French guidance.',
+      languageOptionsLabel: 'Choose guidance path',
+      languageOptionsHeading: 'Choose guidance path',
+      languageOptionsDescription: 'Start with the language that makes grammar feel clearest. You can switch anytime.',
+      identityLabel: 'Chinese starter phrase',
+      identityBadge: 'Light Chinese identity',
       startLearning: 'Start learning',
     },
     homePage: {
@@ -124,6 +129,14 @@ export const uiCopy = {
     progressPage: {
       eyebrow: 'Progress',
       heading: 'Progress',
+      summaryLabel: 'Learning path summary',
+      statsLabel: 'Learning indicators',
+      lessonProgressLabel: 'Lesson progress',
+      progressActionsLabel: 'Progress actions',
+      nextStepEyebrow: 'Next step',
+      lessonProgressEyebrow: 'Course map',
+      completedLessonsLabel: 'Completed lessons',
+      masteryLabel: 'Course mastery',
       completedSummary: (done: number, total: number) =>
         `${done} of ${total} lesson${total === 1 ? '' : 's'} completed`,
       currentLesson: 'Current lesson',
@@ -131,6 +144,9 @@ export const uiCopy = {
       reviewQueue: 'Review queue',
       reviewItemsWaiting: (count: number) =>
         `${count} review item${count === 1 ? '' : 's'} waiting`,
+      lessonStatusComplete: 'Complete',
+      lessonStatusCurrent: 'Current',
+      lessonStatusUpcoming: 'Upcoming',
       backToHome: 'Back to home',
       goToReview: 'Go to review',
     },
@@ -145,6 +161,11 @@ export const uiCopy = {
       eyebrow: 'MVP de chinois débutant EN/FR',
       heading: 'Choisissez votre langue d’explication',
       lede: 'Apprenez le chinois débutant à travers des situations pratiques avec un accompagnement en anglais ou en français.',
+      languageOptionsLabel: 'Choisir le parcours d’accompagnement',
+      languageOptionsHeading: 'Choisir le parcours d’accompagnement',
+      languageOptionsDescription: 'Commencez avec la langue qui rend la grammaire plus claire. Vous pouvez changer à tout moment.',
+      identityLabel: 'Phrase de départ en chinois',
+      identityBadge: 'Identité chinoise légère',
       startLearning: 'Commencer',
     },
     homePage: {
@@ -249,6 +270,14 @@ export const uiCopy = {
     progressPage: {
       eyebrow: 'Progression',
       heading: 'Progression',
+      summaryLabel: 'Résumé du parcours',
+      statsLabel: 'Indicateurs d’apprentissage',
+      lessonProgressLabel: 'Progression des leçons',
+      progressActionsLabel: 'Actions de progression',
+      nextStepEyebrow: 'Prochaine étape',
+      lessonProgressEyebrow: 'Carte du parcours',
+      completedLessonsLabel: 'Leçons terminées',
+      masteryLabel: 'Maîtrise du parcours',
       completedSummary: (done: number, total: number) =>
         `${done} leçon${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       currentLesson: 'Leçon en cours',
@@ -256,6 +285,9 @@ export const uiCopy = {
       reviewQueue: 'File de révision',
       reviewItemsWaiting: (count: number) =>
         `${count} carte${count > 1 ? 's' : ''} en attente`,
+      lessonStatusComplete: 'Terminée',
+      lessonStatusCurrent: 'En cours',
+      lessonStatusUpcoming: 'À venir',
       backToHome: 'Retour à l’accueil',
       goToReview: 'Aller à la révision',
     },

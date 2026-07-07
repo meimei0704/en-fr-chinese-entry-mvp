@@ -556,10 +556,247 @@ h2 {
   margin: 0;
 }
 
+
+.selection-hero,
+.progress-page-card {
+  width: min(100%, 64rem);
+  display: grid;
+  gap: clamp(1.25rem, 4vw, 2rem);
+}
+
+.selection-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.48fr);
+  align-items: center;
+}
+
+.selection-hero__content {
+  min-width: 0;
+}
+
+.selection-options-card {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 253, 248, 0.96), rgba(255, 244, 230, 0.94));
+}
+
+.selection-options-card .button-row {
+  margin-top: 0;
+}
+
+.selection-options-card .option-button {
+  flex: 1 1 10rem;
+  min-height: 3.15rem;
+  justify-content: center;
+  background: rgba(255, 250, 242, 0.92);
+}
+
+.selection-options-card .option-button--selected {
+  background: linear-gradient(135deg, #eaf6f1, #fffdf8);
+  border-color: rgba(47, 143, 107, 0.62);
+  box-shadow: inset 0 0 0 1px rgba(47, 143, 107, 0.18);
+}
+
+.selection-primary-button {
+  margin-top: 1.25rem;
+}
+
+.selection-identity-card {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  padding: 1.35rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(217, 154, 43, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(194, 65, 45, 0.12), transparent 58%),
+    linear-gradient(145deg, #fffaf1, #fffdf8);
+  overflow: hidden;
+}
+
+.selection-identity-card::after {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.35rem;
+  content: '语';
+  color: rgba(47, 143, 107, 0.1);
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.selection-identity-card > * {
+  z-index: 1;
+}
+
+.progress-page-card {
+  max-width: 46rem;
+}
+
+.progress-hero__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.progress-hero__seal {
+  display: grid;
+  place-items: center;
+  width: clamp(4rem, 14vw, 5.5rem);
+  aspect-ratio: 1;
+  border-radius: 1.35rem;
+  color: rgba(194, 65, 45, 0.88);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.72), transparent 34%),
+    #fff3d8;
+  border: 1px solid rgba(217, 154, 43, 0.28);
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  font-weight: 900;
+  box-shadow: var(--shadow-card);
+}
+
+.progress-summary-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  background:
+    radial-gradient(circle at top right, rgba(47, 143, 107, 0.12), transparent 16rem),
+    linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(238, 246, 255, 0.7));
+}
+
+.progress-summary-card .button-row {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.progress-current-lesson {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.progress-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.stat-card {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid rgba(234, 220, 205, 0.92);
+  border-radius: 1.2rem;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-card--accent {
+  background: linear-gradient(145deg, #fffdf8, #eaf6f1);
+  border-color: rgba(47, 143, 107, 0.22);
+}
+
+.stat-card__label,
+.stat-card__value,
+.stat-card__meta {
+  margin: 0;
+}
+
+.stat-card__label {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stat-card__value {
+  color: var(--color-ink);
+  font-size: clamp(1.55rem, 4vw, 2.2rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.stat-card__meta {
+  color: var(--color-muted);
+  font-size: 0.88rem;
+}
+
+.progress-bar {
+  height: 0.55rem;
+  margin-top: 0.3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(47, 143, 107, 0.14);
+}
+
+.progress-bar__fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-jade), var(--color-sky));
+}
+
+.progress-list-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.progress-list-card__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.progress-lesson-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.progress-lesson-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.9rem;
+  border: 1px solid rgba(234, 220, 205, 0.86);
+  border-radius: 1rem;
+  background: rgba(255, 250, 242, 0.78);
+}
+
+.progress-lesson-row__index {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  aspect-ratio: 1;
+  border-radius: 0.85rem;
+  color: var(--color-cinnabar-dark);
+  background: #fff3d8;
+  font-weight: 900;
+}
+
+.progress-lesson-row h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
 @media (max-width: 760px) {
   .home-hero,
+  .selection-hero,
   .lesson-grid,
-  .card-grid {
+  .card-grid,
+  .progress-stats-grid,
+  .progress-summary-card {
     grid-template-columns: 1fr;
   }
 
@@ -570,6 +807,20 @@ h2 {
 
   .home-hero__stats {
     grid-template-columns: 1fr;
+  }
+
+  .progress-hero__header,
+  .progress-list-card__header,
+  .progress-lesson-row {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-hero__seal {
+    justify-self: start;
+  }
+
+  .progress-summary-card .button-row {
+    justify-content: stretch;
   }
 
   .button-row {
