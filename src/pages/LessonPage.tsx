@@ -20,6 +20,13 @@ export function LessonPage() {
     () => loadProgress().selectedExplanationLanguage,
   )
   const copy = getUiCopy(selectedLanguage)
+  const studyLayers = [
+    copy.lessonPage.dialogue,
+    copy.lessonPage.sentencePatterns,
+    copy.lessonPage.vocabulary,
+    copy.lessonPage.pronunciation,
+    copy.lessonPage.hanziRecognition,
+  ]
 
   useEffect(() => {
     if (!lesson) {
@@ -68,6 +75,27 @@ export function LessonPage() {
           <h1>{getLocalizedText(lesson.title, selectedLanguage)}</h1>
           <p className="lede">{getLocalizedText(lesson.dialogue.title, selectedLanguage)}</p>
         </header>
+
+        <section
+          className="lesson-progress-preview"
+          aria-label={copy.lessonPage.lessonProgressPreviewLabel}
+        >
+          <div className="lesson-progress-preview__summary">
+            <span className="badge badge--sky">
+              {copy.homePage.lessonScenarioBadges[lesson.id]}
+            </span>
+            <strong>{copy.lessonPage.studyLayersCount(studyLayers.length)}</strong>
+            <span>{copy.lessonPage.practiceNext}</span>
+          </div>
+          <ol className="lesson-progress-preview__rail">
+            {studyLayers.map((layer, index) => (
+              <li key={layer} className={index === 0 ? 'is-current' : undefined}>
+                <span>{index + 1}</span>
+                {layer}
+              </li>
+            ))}
+          </ol>
+        </section>
 
         <section
           className="surface-card lesson-overview-card"
@@ -152,7 +180,10 @@ export function LessonPage() {
           </section>
         </div>
 
-        <nav className="button-row lesson-actions" aria-label={copy.lessonPage.lessonActions}>
+        <nav
+          className="button-row lesson-actions lesson-action-dock"
+          aria-label={copy.lessonPage.lessonActions}
+        >
           <Link className="primary-button" to={`/lesson/${lesson.id}/practice`}>
             {copy.lessonPage.goToPractice}
           </Link>

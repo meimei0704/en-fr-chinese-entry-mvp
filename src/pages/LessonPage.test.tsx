@@ -36,6 +36,7 @@ describe('LessonPage', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: /objectif de la scène/i }),
     ).toBeVisible()
+    expect(screen.getByRole('region', { name: /aperçu de progression de la leçon/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /pratique du dialogue/i })).toBeVisible()
     expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur a/i)[0]).toHaveTextContent(
       '你好',
@@ -62,5 +63,23 @@ describe('LessonPage', () => {
 
     expect(screen.getByText(/my name is anna\./i)).toBeVisible()
     expect(loadProgress().selectedExplanationLanguage).toBe('en')
+  })
+
+  it('adds polished study status cues around the existing lesson flow', () => {
+    renderRoute('/lesson/self-intro')
+
+    const progressPreview = screen.getByRole('region', { name: /lesson progress preview/i })
+    expect(progressPreview).toHaveClass('lesson-progress-preview')
+    expect(progressPreview).toHaveTextContent(/5 study layers/i)
+    expect(progressPreview).toHaveTextContent(/dialogue/i)
+    expect(progressPreview).toHaveTextContent(/practice next/i)
+
+    const overview = screen.getByRole('region', { name: /lesson overview/i })
+    expect(overview).toHaveClass('lesson-overview-card')
+    expect(overview).toHaveTextContent(/scenario/i)
+
+    expect(screen.getByRole('navigation', { name: /lesson actions/i })).toHaveClass(
+      'lesson-action-dock',
+    )
   })
 })

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 import { LessonCard } from '../components/LessonCard'
-import { getUiCopy } from '../content/copy'
+import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
@@ -10,6 +10,10 @@ export function HomePage() {
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const continueLessonId = getContinueLessonId(progress)
+  const continueHref = continueLessonId ? `/lesson/${continueLessonId}` : '/'
+  const mockupLesson = course.lessons[0]
+  const mockupPhrase = mockupLesson.vocabulary[0]
+  const mockupLine = mockupLesson.dialogue.lines[0]
   const learningChips =
     language === 'fr'
       ? ['Guidage anglais/français', 'Situations réelles', 'Écouter & répéter']
@@ -31,26 +35,43 @@ export function HomePage() {
             ))}
           </div>
 
-          <div className="button-row">
-            <Link
-              className="primary-button"
-              to={continueLessonId ? `/lesson/${continueLessonId}` : '/'}
-            >
-              {copy.homePage.continueLearning}
+          <nav className="home-quick-entry-grid" aria-label={copy.homePage.quickLearningPathsLabel}>
+            <Link className="quick-entry-card quick-entry-card--primary" to={continueHref}>
+              <span>{copy.homePage.quickEntryContinueMeta}</span>
+              <strong>{copy.homePage.continueLearning}</strong>
             </Link>
-            <Link className="secondary-link" to="/review">
-              {copy.homePage.goToReview}
+            <Link className="quick-entry-card quick-entry-card--review" to="/review">
+              <span>{copy.homePage.quickEntryReviewMeta}</span>
+              <strong>{copy.homePage.goToReview}</strong>
             </Link>
-            <Link className="secondary-link" to="/progress">
-              {copy.homePage.viewProgress}
+            <Link className="quick-entry-card quick-entry-card--progress" to="/progress">
+              <span>{copy.homePage.quickEntryProgressMeta}</span>
+              <strong>{copy.homePage.viewProgress}</strong>
             </Link>
-          </div>
+          </nav>
         </div>
 
-        <aside className="home-hero__phrase" aria-label={copy.homePage.heroPhraseLabel}>
-          <span className="badge badge--jade">{copy.homePage.lessonEyebrow}</span>
-          <p className="hanzi-display">你好</p>
-          <p className="pinyin-line">nǐ hǎo</p>
+        <section className="home-learning-mockup" aria-label={copy.homePage.learningMockupLabel}>
+          <div className="mockup-window-bar" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div
+            className="home-hero__phrase"
+            role="group"
+            aria-label={copy.homePage.heroPhraseLabel}
+          >
+            <span className="badge badge--jade">{copy.homePage.lessonEyebrow}</span>
+            <p className="hanzi-display">{mockupPhrase.hanzi}</p>
+            <p className="pinyin-line">{mockupPhrase.pinyin}</p>
+          </div>
+          <div className="mock-dialogue-stack">
+            <p className="mock-dialogue-bubble mock-dialogue-bubble--accent">
+              {getLocalizedText(mockupLine.translation, language)}
+            </p>
+            <p className="mock-dialogue-bubble">{copy.homePage.mockupListenLabel}</p>
+          </div>
           <div
             className="home-hero__stats"
             aria-label={copy.homePage.courseProgressSummaryLabel}
@@ -59,7 +80,7 @@ export function HomePage() {
             <span>{copy.homePage.completedLessonCount(progress.completedLessons.length)}</span>
             <span>{copy.homePage.reviewCount(progress.reviewQueue.length)}</span>
           </div>
-        </aside>
+        </section>
       </section>
 
       <section aria-label={copy.homePage.lessonListLabel} className="page-grid lesson-grid">

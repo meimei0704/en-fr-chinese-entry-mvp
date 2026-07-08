@@ -6,10 +6,10 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
-function seedProgressWithFirstLessonLearned() {
+function seedProgressWithFirstLessonLearned(selectedExplanationLanguage: 'en' | 'fr' = 'fr') {
   saveProgress({
     ...createDefaultProgress(),
-    selectedExplanationLanguage: 'fr',
+    selectedExplanationLanguage,
     completedLessons: ['self-intro'],
     reviewQueue: ['self-intro-review-1'],
     lastVisitedLesson: 'self-intro',
@@ -35,6 +35,7 @@ describe('ReviewPage', () => {
 
     expect(screen.getByRole('heading', { name: /révision/i })).toBeVisible()
     expect(screen.getByText(/cartes à revoir aujourd’hui/i)).toBeVisible()
+    expect(screen.getByRole('region', { name: /panneau d’état de révision/i })).toBeVisible()
     expect(screen.getByRole('article', { name: /carte de révision en cours/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /recto de la carte/i })).toHaveTextContent('我叫')
     expect(screen.getByRole('region', { name: /verso de la carte/i })).toHaveTextContent(
@@ -50,5 +51,24 @@ describe('ReviewPage', () => {
     expect(screen.getByText(/1 carte terminée/i)).toHaveClass('success-chip')
     expect(screen.queryByText('我叫')).not.toBeInTheDocument()
     expect(loadProgress().reviewQueue).toEqual([])
+  })
+
+  it('frames the review queue with status cards and a layered flashcard surface', () => {
+    seedProgressWithFirstLessonLearned('en')
+    renderRoute('/review')
+
+    const statusPanel = screen.getByRole('region', { name: /review status panel/i })
+    expect(statusPanel).toHaveClass('review-status-panel')
+    expect(statusPanel).toHaveTextContent(/due now/i)
+    expect(statusPanel).toHaveTextContent(/1/)
+
+    const flashcard = screen.getByRole('article', { name: /current review flashcard/i })
+    expect(flashcard).toHaveClass('review-flashcard--layered')
+    expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveClass(
+      'review-side--front',
+    )
+    expect(screen.getByRole('region', { name: /flashcard back/i })).toHaveClass(
+      'review-side--back',
+    )
   })
 })

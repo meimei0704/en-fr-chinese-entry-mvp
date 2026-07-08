@@ -31,8 +31,9 @@ describe('HomePage', () => {
   it('shows the refreshed hero phrase, progress cues, and lesson mini phrase', () => {
     renderRoute('/home')
 
-    expect(screen.getByLabelText(/hero phrase/i)).toHaveTextContent('你好')
-    expect(screen.getByLabelText(/hero phrase/i)).toHaveTextContent('nǐ hǎo')
+    const heroPhrase = screen.getByRole('group', { name: /hero phrase/i })
+    expect(heroPhrase).toHaveTextContent('你好')
+    expect(heroPhrase).toHaveTextContent('nǐ hǎo')
     expect(screen.getByText(`${course.lessons.length} lessons`)).toBeVisible()
     expect(screen.getByText(/listen & repeat/i)).toBeVisible()
     expect(within(screen.getAllByRole('article')[0]).getByText(course.lessons[0].vocabulary[0].hanzi)).toBeVisible()
@@ -58,6 +59,8 @@ describe('HomePage', () => {
     expect(screen.getByLabelText(/points clés de l’apprentissage/i)).toHaveTextContent(
       'Guidage anglais/français',
     )
+    expect(screen.getByRole('region', { name: /maquette d’aperçu d’apprentissage/i })).toBeVisible()
+    expect(screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i })).toBeVisible()
     expect(screen.getByLabelText(/phrase modèle/i)).toHaveTextContent('你好')
 
     const progressSummary = screen.getByLabelText(/résumé des progrès du cours/i)
@@ -69,5 +72,32 @@ describe('HomePage', () => {
     expect(screen.getByText('Métro')).toBeVisible()
     expect(screen.queryByText(`${course.lessons.length} lessons`)).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
+  })
+
+  it('presents a learning mockup and card-based quick entry paths without changing destinations', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      lastVisitedLesson: 'order-food',
+      reviewQueue: ['self-intro-review-1'],
+    })
+
+    renderRoute('/home')
+
+    const learningMockup = screen.getByRole('region', { name: /learning preview mockup/i })
+    expect(learningMockup).toHaveClass('home-learning-mockup')
+    expect(within(learningMockup).getByText('你好')).toBeVisible()
+    expect(within(learningMockup).getByText(/listen/i)).toBeVisible()
+
+    const quickEntries = screen.getByRole('navigation', { name: /quick learning paths/i })
+    expect(quickEntries).toHaveClass('home-quick-entry-grid')
+    expect(
+      within(quickEntries).getByRole('link', { name: /continue learning/i }),
+    ).toHaveAttribute('href', '/lesson/order-food')
+    expect(
+      within(quickEntries).getByRole('link', { name: /go to review/i }),
+    ).toHaveClass('quick-entry-card')
+    expect(
+      within(quickEntries).getByRole('link', { name: /view progress/i }),
+    ).toHaveAttribute('href', '/progress')
   })
 })

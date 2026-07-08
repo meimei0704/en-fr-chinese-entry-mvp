@@ -46,6 +46,17 @@ export function ReviewPage() {
           <p className="lede">{copy.reviewPage.cardsDueToday(dueCards.length)}</p>
         </header>
 
+        <section className="review-status-panel" aria-label={copy.reviewPage.statusPanelLabel}>
+          <div className="review-status-panel__item review-status-panel__item--due">
+            <span>{copy.reviewPage.dueNow}</span>
+            <strong>{dueCards.length}</strong>
+          </div>
+          <div className="review-status-panel__item review-status-panel__item--done">
+            <span>{copy.reviewPage.completedNow}</span>
+            <strong>{finishedCount}</strong>
+          </div>
+        </section>
+
         {finishedCount > 0 ? (
           <p className="success-chip">
             {copy.reviewPage.finishedCount(finishedCount)}
@@ -53,12 +64,21 @@ export function ReviewPage() {
         ) : null}
 
         {currentCard ? (
-          <article className="review-flashcard" aria-label={copy.reviewPage.currentFlashcardLabel}>
-            <section className="review-side" aria-label={copy.reviewPage.frontSideLabel}>
+          <article
+            className="review-flashcard review-flashcard--layered"
+            aria-label={copy.reviewPage.currentFlashcardLabel}
+          >
+            <section
+              className="review-side review-side--front"
+              aria-label={copy.reviewPage.frontSideLabel}
+            >
               <p className="eyebrow">{copy.reviewPage.front}</p>
               <p className="hanzi-display hanzi-display--review">{currentCard.front}</p>
             </section>
-            <section className="review-side" aria-label={copy.reviewPage.backSideLabel}>
+            <section
+              className="review-side review-side--back"
+              aria-label={copy.reviewPage.backSideLabel}
+            >
               <p className="eyebrow">{copy.reviewPage.back}</p>
               <p className="review-answer">
                 {getLocalizedText(currentCard.back, progress.selectedExplanationLanguage)}
