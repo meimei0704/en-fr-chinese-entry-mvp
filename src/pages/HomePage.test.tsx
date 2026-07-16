@@ -126,6 +126,38 @@ describe('HomePage', () => {
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
   })
 
+  it('keeps the journey map as the only lesson entry section on Home', () => {
+    renderRoute('/home')
+
+    expect(
+      screen.queryByRole('heading', {
+        level: 2,
+        name: /lesson list/i,
+      }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: /lesson list/i })).not.toBeInTheDocument()
+  })
+
+  it('renders each journey card with a dedicated illustration slot', () => {
+    renderRoute('/home')
+
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    const cityTravelCard = within(journeyMap).getByRole('link', { name: /city travel/i })
+    const airportArrivalToggle = within(journeyMap).getByRole('button', { name: /airport arrival/i })
+
+    expect(cityTravelCard.querySelector('.journey-node__body')).toBeInTheDocument()
+    expect(cityTravelCard.querySelector('.journey-node__illustration-slot')).toBeInTheDocument()
+    expect(
+      cityTravelCard.querySelector('.journey-node__illustration-slot .journey-node__doodle'),
+    ).toBeInTheDocument()
+
+    expect(airportArrivalToggle.querySelector('.journey-node__body')).toBeInTheDocument()
+    expect(airportArrivalToggle.querySelector('.journey-node__illustration-slot')).toBeInTheDocument()
+    expect(
+      airportArrivalToggle.querySelector('.journey-node__illustration-slot .journey-node__doodle'),
+    ).toBeInTheDocument()
+  })
+
   it('keeps preview journey nodes off routing and expands one in-card coming-soon panel on demand', async () => {
     const user = userEvent.setup()
 

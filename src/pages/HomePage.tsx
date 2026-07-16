@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { LessonCard } from '../components/LessonCard'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
@@ -110,19 +109,22 @@ export function HomePage() {
                   className="journey-node journey-node--lesson journey-node--card-link"
                   to={`/lesson/${node.lessonId}`}
                 >
-                  <div className="journey-node__header">
-                    <span className="badge badge--jade">{nodeEyebrow}</span>
-                    <span className="journey-node__stamp journey-node__stamp--lesson">
-                      {copy.homePage.openLesson}
-                    </span>
+                  <div className="journey-node__body">
+                    <div className="journey-node__header">
+                      <span className="badge badge--jade">{nodeEyebrow}</span>
+                      <span className="journey-node__stamp journey-node__stamp--lesson">
+                        {copy.homePage.openLesson}
+                      </span>
+                    </div>
+
+                    <h2>{nodeTitle}</h2>
+                    <p className="muted-text">{nodeSummary}</p>
+                    <span className="journey-node__cta">{copy.homePage.openLesson} →</span>
                   </div>
 
-                  <span className="journey-node__doodle" aria-hidden="true">
-                    {nodeIcon}
+                  <span className="journey-node__illustration-slot" aria-hidden="true">
+                    <span className="journey-node__doodle">{nodeIcon}</span>
                   </span>
-                  <h2>{nodeTitle}</h2>
-                  <p className="muted-text">{nodeSummary}</p>
-                  <span className="journey-node__cta">{copy.homePage.openLesson} →</span>
                 </Link>
               )
             }
@@ -146,18 +148,21 @@ export function HomePage() {
                     )
                   }
                 >
-                  <div className="journey-node__header">
-                    <span className="badge badge--gold">{nodeEyebrow}</span>
-                    <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
+                  <div className="journey-node__body">
+                    <div className="journey-node__header">
+                      <span className="badge badge--gold">{nodeEyebrow}</span>
+                      <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
+                    </div>
+
+                    <h2>{nodeTitle}</h2>
+                    <p className="muted-text">{nodeSummary}</p>
+                    <span className="journey-node__cta">
+                      {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
+                    </span>
                   </div>
 
-                  <span className="journey-node__doodle" aria-hidden="true">
-                    {nodeIcon}
-                  </span>
-                  <h2>{nodeTitle}</h2>
-                  <p className="muted-text">{nodeSummary}</p>
-                  <span className="journey-node__cta">
-                    {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
+                  <span className="journey-node__illustration-slot" aria-hidden="true">
+                    <span className="journey-node__doodle">{nodeIcon}</span>
                   </span>
                 </button>
 
@@ -187,17 +192,6 @@ export function HomePage() {
             )
           })}
         </div>
-      </section>
-
-      <section aria-label={copy.homePage.lessonListLabel} className="page-grid lesson-grid">
-        <div className="section-heading">
-          <p className="eyebrow">{copy.homePage.lessonEyebrow}</p>
-          <h2>{copy.homePage.lessonListLabel}</h2>
-        </div>
-
-        {course.lessons.map((lesson) => (
-          <LessonCard key={lesson.id} lesson={lesson} language={language} />
-        ))}
       </section>
     </main>
   )

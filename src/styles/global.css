@@ -689,6 +689,63 @@ h2 {
   transform: rotate(8deg);
 }
 
+.journey-map .journey-node,
+.journey-map .journey-node__preview-button {
+  --journey-card-min-height: clamp(10rem, 26vw, 12.5rem);
+  --journey-illustration-slot-width: clamp(4.75rem, 18vw, 7.25rem);
+  --journey-illustration-slot-height: clamp(4.25rem, 14vw, 6rem);
+}
+
+.journey-map .journey-node {
+  overflow: hidden;
+}
+
+.journey-map .journey-node--card-link,
+.journey-map .journey-node__preview-button {
+  position: relative;
+  min-height: var(--journey-card-min-height);
+}
+
+.journey-map .journey-node__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: var(--journey-card-min-height);
+  padding-right: calc(var(--journey-illustration-slot-width) + 0.65rem);
+}
+
+.journey-map .journey-node h2,
+.journey-map .journey-node h3 {
+  max-width: none;
+}
+
+.journey-map .journey-node__illustration-slot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: min(40%, var(--journey-illustration-slot-width));
+  min-height: var(--journey-illustration-slot-height);
+  pointer-events: none;
+}
+
+.journey-map .journey-node__doodle {
+  position: static;
+  top: auto;
+  right: auto;
+  width: min(100%, var(--journey-illustration-slot-width));
+  min-height: var(--journey-illustration-slot-height);
+  padding: 0.45rem;
+  background: rgba(255, 255, 255, 0.78);
+  font-size: clamp(2.1rem, 6vw, 3.15rem);
+  transform: rotate(6deg);
+}
+
 .journey-node h2,
 .journey-node h3 {
   margin-bottom: 0;
