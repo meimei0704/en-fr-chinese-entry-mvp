@@ -1278,7 +1278,7 @@ h2 {
   }
 }
 
-@media (max-width: 980px) {
+@media (min-width: 761px) and (max-width: 980px) {
   .journey-map__path {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

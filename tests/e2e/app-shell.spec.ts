@@ -8,7 +8,7 @@ test('shows the explanation-language entry screen on first load', async ({ page 
   await expect(page.getByRole('button', { name: /start learning/i })).toBeVisible()
 
   await page.getByRole('button', { name: 'Français' }).click()
-  await page.getByRole('button', { name: /start learning/i }).click()
+  await page.getByRole('button', { name: /commencer/i }).click()
 
   await expect(page).toHaveURL(/\/home$/)
   await expect(page.getByRole('heading', { name: 'Accueil' })).toBeVisible()

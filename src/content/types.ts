@@ -130,6 +130,7 @@ export interface JourneyStage {
 }
 
 export interface JourneyNode {
+  /** Stable shared journey node key for downstream progress/review consumers. */
   id: JourneyNodeId
   stageId: JourneyStageId
   kind: JourneyNodeKind
