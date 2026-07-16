@@ -4,20 +4,9 @@ import { Link } from 'react-router-dom'
 import { LessonCard } from '../components/LessonCard'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
-import { journeyNodes } from '../content/journey'
+import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import type { JourneyNodeId } from '../content/types'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
-
-const journeyNodeIcons: Record<JourneyNodeId, string> = {
-  'airport-arrival': '✈️',
-  'city-travel': '🚇',
-  'getting-settled': '🏠',
-  'meet-people': '👋',
-  'restaurant-ordering': '🍜',
-  'shopping-and-payment': '🛍️',
-  'work-communication': '💼',
-  'clinic-and-medicine': '🩺',
-}
 
 export function HomePage() {
   const progress = loadProgress()

@@ -1,5 +1,5 @@
 import { course } from './course'
-import type { JourneyNode, JourneyStage, LessonContent, LessonId } from './types'
+import type { JourneyNode, JourneyNodeId, JourneyStage, LessonContent, LessonId } from './types'
 
 function getLesson(lessonId: LessonId): LessonContent {
   const lesson = course.lessons.find((entry) => entry.id === lessonId)
@@ -14,6 +14,17 @@ function getLesson(lessonId: LessonId): LessonContent {
 const meetPeopleLesson = getLesson('self-intro')
 const restaurantOrderingLesson = getLesson('order-food')
 const cityTravelLesson = getLesson('ask-directions')
+
+export const journeyNodeIcons: Record<JourneyNodeId, string> = {
+  'airport-arrival': '✈️',
+  'city-travel': '🚇',
+  'getting-settled': '🏠',
+  'meet-people': '👋',
+  'restaurant-ordering': '🍜',
+  'shopping-and-payment': '🛍️',
+  'work-communication': '💼',
+  'clinic-and-medicine': '🩺',
+}
 
 export const journeyStages: JourneyStage[] = [
   {

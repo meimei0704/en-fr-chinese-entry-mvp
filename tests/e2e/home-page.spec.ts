@@ -7,7 +7,7 @@ test('stacks journey map nodes into a single column on phone widths', async ({ p
   await page.getByRole('button', { name: 'English' }).click()
   await page.getByRole('button', { name: /start learning/i }).click()
 
-  const journeyNodes = page.locator('.journey-map__path > article')
+  const journeyNodes = page.locator('.journey-map__path > .journey-node')
 
   await expect(journeyNodes).toHaveCount(8)
 

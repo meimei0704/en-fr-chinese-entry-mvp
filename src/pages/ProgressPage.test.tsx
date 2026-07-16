@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
 import { journeyNodes } from '../content/journey'
-import { createDefaultProgress, saveProgress } from '../lib/progress'
+import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
@@ -22,9 +23,12 @@ function getJourneyMap() {
 }
 
 function getJourneyNodeCard(title: string) {
-  return within(getJourneyMap()).getByRole('article', {
-    name: new RegExp(`^${escapeRegExp(title)}\\b`, 'i'),
-  })
+  const name = new RegExp(`^${escapeRegExp(title)}\\b`, 'i')
+
+  return (
+    within(getJourneyMap()).queryByRole('link', { name }) ??
+    within(getJourneyMap()).getByRole('article', { name })
+  )
 }
 
 describe('ProgressPage', () => {
@@ -75,7 +79,7 @@ describe('ProgressPage', () => {
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
-    const cards = within(journeyMap).getAllByRole('article')
+    const cards = Array.from(journeyMap.querySelectorAll<HTMLElement>('.journey-node'))
 
     expect(cards).toHaveLength(orderedJourneyNodes.length)
     expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(
@@ -86,6 +90,32 @@ describe('ProgressPage', () => {
     ).toEqual(orderedJourneyNodes.map((node) => journeyTitle(node)))
     expect(within(journeyMap).getAllByText('Preview')).toHaveLength(5)
     expect(within(journeyMap).getAllByText('Upcoming')).toHaveLength(3)
+  })
+
+  it('reuses the Home hand-drawn/kawaii journey card visual hooks on Progress', () => {
+    renderRoute('/progress')
+
+    const journeyMap = getJourneyMap()
+    const cityTravelCard = getJourneyNodeCard('City travel')
+    const airportArrivalCard = getJourneyNodeCard('Airport arrival')
+
+    expect(journeyMap.querySelectorAll('.journey-node')).toHaveLength(orderedJourneyNodes.length)
+    expect(cityTravelCard).toHaveClass(
+      'journey-node',
+      'journey-node--lesson',
+      'journey-node--card-link',
+    )
+    expect(cityTravelCard.querySelector('.journey-node__doodle')).toHaveTextContent('🚇')
+    expect(within(cityTravelCard).getByText('Open lesson')).toHaveClass('journey-node__stamp')
+
+    expect(airportArrivalCard).toHaveClass('journey-node', 'journey-node--preview')
+    expect(airportArrivalCard.querySelector('.journey-node__doodle')).toHaveTextContent('✈️')
+    expect(within(airportArrivalCard).getByText(/coming soon/i)).toHaveClass(
+      'journey-node__stamp',
+    )
+    expect(
+      within(airportArrivalCard).getByRole('button', { name: /airport arrival/i }),
+    ).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('counts mastery from complete lesson nodes only, excluding display-only previews', () => {
@@ -128,22 +158,60 @@ describe('ProgressPage', () => {
     }
   })
 
-  it('links complete lesson nodes to their existing lesson routes but keeps preview nodes display-only', () => {
+  it('makes lesson journey nodes whole-card links to existing lesson routes while keeping previews off routing', () => {
     renderRoute('/progress')
 
     for (const node of orderedJourneyNodes) {
       const card = getJourneyNodeCard(journeyTitle(node))
 
       if (node.kind === 'lesson') {
-        const lessonLink = within(card).getByRole('link', {
-          name: new RegExp(`open ${escapeRegExp(journeyTitle(node))}`, 'i'),
-        })
-
-        expect(lessonLink).toHaveAttribute('href', `/lesson/${node.lessonId}`)
+        expect(card).toHaveRole('link')
+        expect(card).toHaveClass('journey-node--card-link')
+        expect(card).toHaveAttribute('href', `/lesson/${node.lessonId}`)
       } else {
         expect(within(card).queryByRole('link')).not.toBeInTheDocument()
-        expect(within(card).getByText(/display-only preview/i)).toBeVisible()
+        expect(within(card).getByRole('button', { name: new RegExp(journeyTitle(node), 'i') }))
+          .toBeVisible()
       }
     }
+  })
+
+  it('expands preview journey nodes in-card without routing, completion, or review side effects', async () => {
+    const user = userEvent.setup()
+    const savedProgress = {
+      ...createDefaultProgress(),
+      completedLessons: ['ask-directions'],
+      lastVisitedLesson: 'ask-directions',
+      reviewQueue: ['ask-directions-review-1'],
+    }
+    saveProgress(savedProgress)
+
+    renderRoute('/progress')
+
+    const journeyMap = getJourneyMap()
+    const airportArrivalCard = getJourneyNodeCard('Airport arrival')
+    const airportArrivalToggle = within(airportArrivalCard).getByRole('button', {
+      name: /airport arrival/i,
+    })
+
+    expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
+    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(airportArrivalToggle)
+
+    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(within(journeyMap).getAllByRole('note')).toHaveLength(1)
+    expect(within(airportArrivalCard).queryByRole('link')).not.toBeInTheDocument()
+    expect(within(airportArrivalCard).getByRole('note')).toHaveTextContent(/coming soon/i)
+    expect(within(airportArrivalCard).getByRole('note')).toHaveTextContent('出口在哪里？')
+    expect(within(airportArrivalCard).getByRole('note')).toHaveTextContent(/immigration/i)
+
+    expect(loadProgress()).toEqual(savedProgress)
+    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('1/3')
+    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('33%')
+    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent(
+      /1 review item waiting/i,
+    )
+    expect(screen.queryByText(/1 of 8/i)).not.toBeInTheDocument()
   })
 })
