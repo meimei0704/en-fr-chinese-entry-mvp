@@ -10,6 +10,25 @@ export type BilingualExplanation = LocalizedText
 
 export type LessonId = 'self-intro' | 'order-food' | 'ask-directions'
 
+export type JourneyStageId =
+  | 'arrival-and-transit'
+  | 'settling-in'
+  | 'daily-life'
+  | 'work-and-study'
+  | 'health-and-emergency'
+
+export type JourneyNodeId =
+  | 'airport-arrival'
+  | 'city-travel'
+  | 'getting-settled'
+  | 'meet-people'
+  | 'restaurant-ordering'
+  | 'shopping-and-payment'
+  | 'work-communication'
+  | 'clinic-and-medicine'
+
+export type JourneyNodeKind = 'lesson' | 'preview'
+
 export interface DialogueLine {
   id: string
   speaker: LocalizedField
@@ -102,4 +121,21 @@ export interface CourseContent {
   supportedExplanationLanguages: readonly ExplanationLanguage[]
   estimatedDailyMinutes: number
   lessons: LessonContent[]
+}
+
+export interface JourneyStage {
+  id: JourneyStageId
+  title: LocalizedField
+  summary: LocalizedField
+}
+
+export interface JourneyNode {
+  id: JourneyNodeId
+  stageId: JourneyStageId
+  kind: JourneyNodeKind
+  title: LocalizedField
+  eyebrow: LocalizedField
+  summary: LocalizedField
+  pathOrder: number
+  lessonId?: LessonId
 }

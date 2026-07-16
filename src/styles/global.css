@@ -523,6 +523,106 @@ h2 {
   font-weight: 800;
 }
 
+.journey-map {
+  gap: 1.1rem;
+}
+
+.journey-map__intro {
+  align-items: start;
+}
+
+.journey-map__path {
+  position: relative;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.journey-map__path::before {
+  position: absolute;
+  top: 1.8rem;
+  left: 1rem;
+  right: 1rem;
+  height: 0;
+  border-top: 3px solid rgba(31, 26, 23, 0.14);
+  border-radius: 999px;
+  content: '';
+}
+
+.journey-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  min-height: 100%;
+  padding: 1.2rem;
+  border: 1px solid rgba(234, 220, 205, 0.98);
+  border-radius: 1.45rem;
+  background:
+    radial-gradient(circle at top right, rgba(194, 65, 45, 0.08), transparent 8rem),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.97), rgba(255, 248, 238, 0.95));
+  box-shadow: var(--shadow-card);
+}
+
+.journey-node::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  content: '';
+  background:
+    linear-gradient(135deg, rgba(194, 65, 45, 0.03), transparent 42%),
+    linear-gradient(0deg, rgba(47, 111, 186, 0.03), transparent 36%);
+}
+
+.journey-node__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.journey-node__action {
+  padding-inline: 0.95rem;
+}
+
+.journey-node__stamp {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.2rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px dashed rgba(194, 65, 45, 0.42);
+  border-radius: 999px;
+  color: var(--color-cinnabar-dark);
+  background: rgba(255, 244, 230, 0.92);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.journey-node h2 {
+  margin-bottom: 0;
+  font-size: clamp(1.1rem, 2.4vw, 1.35rem);
+}
+
+.journey-node .muted-text {
+  margin-top: 0;
+}
+
+.journey-node--lesson {
+  border-color: rgba(47, 143, 107, 0.24);
+}
+
+.journey-node--preview {
+  border-style: dashed;
+}
+
 .lesson-card {
   min-height: 100%;
   display: grid;
@@ -1121,6 +1221,7 @@ h2 {
   .selection-hero,
   .lesson-grid,
   .card-grid,
+  .journey-map__path,
   .progress-stats-grid,
   .progress-summary-card,
   .lesson-overview-card,
@@ -1167,8 +1268,19 @@ h2 {
   }
 
   .primary-button,
-  .secondary-link {
+  .secondary-link,
+  .journey-node__stamp {
     width: 100%;
+  }
+
+  .journey-map__path::before {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .journey-map__path {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

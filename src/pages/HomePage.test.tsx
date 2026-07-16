@@ -18,17 +18,22 @@ describe('HomePage', () => {
     expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
     expect(screen.getByRole('link', { name: /go to review/i })).toBeVisible()
 
-    for (const lesson of course.lessons) {
-      expect(
-        screen.getByRole('heading', {
-          level: 2,
-          name: getLocalizedText(lesson.title, 'en'),
-        }),
-      ).toBeVisible()
-    }
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    const openLessonLinks = within(journeyMap).getAllByRole('link', { name: /open lesson/i })
+
+    expect(openLessonLinks).toHaveLength(3)
+    expect(openLessonLinks.map((link) => link.getAttribute('href'))).toEqual([
+      '/lesson/ask-directions',
+      '/lesson/self-intro',
+      '/lesson/order-food',
+    ])
+    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(5)
+    expect(within(journeyMap).getByRole('heading', { level: 2, name: /meet people/i })).toBeVisible()
+    expect(within(journeyMap).getByRole('heading', { level: 2, name: /city travel/i })).toBeVisible()
+    expect(within(journeyMap).getByRole('heading', { level: 2, name: /airport arrival/i })).toBeVisible()
   })
 
-  it('shows the refreshed hero phrase, progress cues, and lesson mini phrase', () => {
+  it('shows the refreshed hero phrase, progress cues, and journey status copy', () => {
     renderRoute('/home')
 
     const heroPhrase = screen.getByRole('group', { name: /hero phrase/i })
@@ -36,7 +41,10 @@ describe('HomePage', () => {
     expect(heroPhrase).toHaveTextContent('nǐ hǎo')
     expect(screen.getByText(`${course.lessons.length} lessons`)).toBeVisible()
     expect(screen.getByText(/listen & repeat/i)).toBeVisible()
-    expect(within(screen.getAllByRole('article')[0]).getByText(course.lessons[0].vocabulary[0].hanzi)).toBeVisible()
+
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(5)
+    expect(within(journeyMap).getByText(/first conversations in china/i)).toBeVisible()
   })
 
   it('renders page-level French copy when the learner chooses French mode', () => {
@@ -53,7 +61,7 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /se présenter/i,
+        name: /faire connaissance/i,
       }),
     ).toBeVisible()
     expect(screen.getByLabelText(/points clés de l’apprentissage/i)).toHaveTextContent(
@@ -68,8 +76,9 @@ describe('HomePage', () => {
     expect(progressSummary).toHaveTextContent('0 terminée')
     expect(progressSummary).toHaveTextContent('0 à réviser')
 
-    expect(screen.getByText('Présentation')).toBeVisible()
-    expect(screen.getByText('Métro')).toBeVisible()
+    expect(screen.getByText('Rencontres')).toBeVisible()
+    expect(screen.getByText('Trajet')).toBeVisible()
+    expect(screen.getAllByText(/bientôt/i)).toHaveLength(5)
     expect(screen.queryByText(`${course.lessons.length} lessons`)).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
   })

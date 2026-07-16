@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { LessonCard } from '../components/LessonCard'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
+import { journeyNodes } from '../content/journey'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
 export function HomePage() {
@@ -81,6 +82,46 @@ export function HomePage() {
             <span>{copy.homePage.reviewCount(progress.reviewQueue.length)}</span>
           </div>
         </section>
+      </section>
+
+      <section aria-label={copy.homePage.journeyMapLabel} className="page-grid journey-map">
+        <div className="section-heading journey-map__intro">
+          <div>
+            <p className="eyebrow">{copy.homePage.journeyEyebrow}</p>
+            <h2>{copy.homePage.journeyMapLabel}</h2>
+            <p className="lede">{copy.homePage.journeyIntro}</p>
+          </div>
+        </div>
+
+        <div className="journey-map__path">
+          {journeyNodes.map((node) => {
+            return (
+              <article key={node.id} className={`journey-node journey-node--${node.kind}`}>
+                <div className="journey-node__header">
+                  <span
+                    className={node.kind === 'lesson' ? 'badge badge--jade' : 'badge badge--gold'}
+                  >
+                    {getLocalizedText(node.eyebrow, language)}
+                  </span>
+
+                  {node.kind === 'lesson' && node.lessonId ? (
+                    <Link
+                      className="secondary-link journey-node__action"
+                      to={`/lesson/${node.lessonId}`}
+                    >
+                      {copy.homePage.openLesson}
+                    </Link>
+                  ) : (
+                    <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
+                  )}
+                </div>
+
+                <h2>{getLocalizedText(node.title, language)}</h2>
+                <p className="muted-text">{getLocalizedText(node.summary, language)}</p>
+              </article>
+            )
+          })}
+        </div>
       </section>
 
       <section aria-label={copy.homePage.lessonListLabel} className="page-grid lesson-grid">
