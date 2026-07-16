@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { getLocalizedText } from '../content/copy'
 import { course } from '../content/course'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
@@ -19,10 +19,12 @@ describe('HomePage', () => {
     expect(screen.getByRole('link', { name: /go to review/i })).toBeVisible()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    const openLessonLinks = within(journeyMap).getAllByRole('link', { name: /open lesson/i })
+    const journeyLessonLinks = within(journeyMap)
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
-    expect(openLessonLinks).toHaveLength(3)
-    expect(openLessonLinks.map((link) => link.getAttribute('href'))).toEqual([
+    expect(journeyLessonLinks).toHaveLength(3)
+    expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual([
       '/lesson/ask-directions',
       '/lesson/self-intro',
       '/lesson/order-food',
@@ -108,5 +110,49 @@ describe('HomePage', () => {
     expect(
       within(quickEntries).getByRole('link', { name: /view progress/i }),
     ).toHaveAttribute('href', '/progress')
+  })
+
+  it('makes each lesson journey node a whole-card link to its real lesson route', () => {
+    renderRoute('/home')
+
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    const cityTravelCard = within(journeyMap).getByRole('link', { name: /city travel/i })
+    const meetPeopleCard = within(journeyMap).getByRole('link', { name: /meet people/i })
+    const restaurantCard = within(journeyMap).getByRole('link', { name: /restaurant ordering/i })
+
+    expect(cityTravelCard).toHaveAttribute('href', '/lesson/ask-directions')
+    expect(meetPeopleCard).toHaveAttribute('href', '/lesson/self-intro')
+    expect(restaurantCard).toHaveAttribute('href', '/lesson/order-food')
+    expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
+  })
+
+  it('keeps preview journey nodes off routing and expands one in-card coming-soon panel on demand', async () => {
+    const user = userEvent.setup()
+
+    renderRoute('/home')
+
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
+
+    const airportArrivalToggle = within(journeyMap).getByRole('button', { name: /airport arrival/i })
+    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(airportArrivalToggle)
+
+    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(within(journeyMap).getAllByRole('note')).toHaveLength(1)
+
+    const airportArrivalCard = airportArrivalToggle.closest('.journey-node')
+    expect(airportArrivalCard).not.toBeNull()
+
+    const airportArrivalPreview = within(airportArrivalCard as HTMLElement).getByRole('note')
+    expect(airportArrivalPreview).toHaveTextContent(/coming soon/i)
+    expect(airportArrivalPreview).toHaveTextContent(/immigration/i)
+    expect(within(airportArrivalCard as HTMLElement).queryByRole('link')).not.toBeInTheDocument()
+
+    await user.click(airportArrivalToggle)
+
+    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
   })
 })

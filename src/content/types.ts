@@ -129,6 +129,13 @@ export interface JourneyStage {
   summary: LocalizedField
 }
 
+export interface JourneyNodePreviewDetails {
+  phrase: string
+  pinyin: string
+  meaning: LocalizedField
+  goal: LocalizedField
+}
+
 export interface JourneyNode {
   /** Stable shared journey node key for downstream progress/review consumers. */
   id: JourneyNodeId
@@ -139,4 +146,5 @@ export interface JourneyNode {
   summary: LocalizedField
   pathOrder: number
   lessonId?: LessonId
+  previewDetails?: JourneyNodePreviewDetails
 }

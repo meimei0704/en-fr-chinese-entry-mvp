@@ -90,6 +90,18 @@ const journeyNodeData: JourneyNode[] = [
       en: 'Preview immigration, pickup points, and your first airport questions.',
       fr: 'Aperçu de l’immigration, des points de rendez-vous et des premières questions à l’aéroport.',
     },
+    previewDetails: {
+      phrase: '出口在哪里？',
+      pinyin: 'Chūkǒu zài nǎli?',
+      meaning: {
+        en: 'Where is the exit?',
+        fr: 'Où est la sortie ?',
+      },
+      goal: {
+        en: 'Ask about immigration, pickup points, and the right airport exit.',
+        fr: 'Demander l’immigration, le point de rendez-vous et la bonne sortie de l’aéroport.',
+      },
+    },
     pathOrder: 1,
   },
   {
@@ -123,6 +135,18 @@ const journeyNodeData: JourneyNode[] = [
     summary: {
       en: 'Preview housing check-ins, deliveries, and small setup tasks.',
       fr: 'Aperçu des arrivées dans le logement, des livraisons et des petites installations.',
+    },
+    previewDetails: {
+      phrase: '我到了。',
+      pinyin: 'Wǒ dàole.',
+      meaning: {
+        en: 'I’ve arrived.',
+        fr: 'Je suis arrivé·e.',
+      },
+      goal: {
+        en: 'Check in, confirm deliveries, and ask for small apartment help.',
+        fr: 'Faire le check-in, confirmer les livraisons et demander une petite aide dans le logement.',
+      },
     },
     pathOrder: 3,
   },
@@ -174,6 +198,18 @@ const journeyNodeData: JourneyNode[] = [
       en: 'Preview asking prices, paying digitally, and confirming amounts.',
       fr: 'Aperçu des prix, du paiement numérique et de la vérification des montants.',
     },
+    previewDetails: {
+      phrase: '多少钱？',
+      pinyin: 'Duōshǎo qián?',
+      meaning: {
+        en: 'How much is it?',
+        fr: 'C’est combien ?',
+      },
+      goal: {
+        en: 'Ask prices, confirm totals, and pay by phone with confidence.',
+        fr: 'Demander les prix, confirmer les totaux et payer par téléphone avec assurance.',
+      },
+    },
     pathOrder: 6,
   },
   {
@@ -192,6 +228,18 @@ const journeyNodeData: JourneyNode[] = [
       en: 'Preview short updates, scheduling, and polite office messages.',
       fr: 'Aperçu des courtes mises à jour, de la planification et des messages polis au bureau.',
     },
+    previewDetails: {
+      phrase: '我马上发。',
+      pinyin: 'Wǒ mǎshàng fā.',
+      meaning: {
+        en: 'I’ll send it right away.',
+        fr: 'Je l’envoie tout de suite.',
+      },
+      goal: {
+        en: 'Give short updates, confirm timing, and sound polite at work.',
+        fr: 'Donner de courtes mises à jour, confirmer le timing et rester poli au travail.',
+      },
+    },
     pathOrder: 7,
   },
   {
@@ -209,6 +257,18 @@ const journeyNodeData: JourneyNode[] = [
     summary: {
       en: 'Preview describing symptoms, asking for medicine, and basic clinic help.',
       fr: 'Aperçu de la description des symptômes, de la demande de médicaments et de l’aide en clinique.',
+    },
+    previewDetails: {
+      phrase: '我不舒服。',
+      pinyin: 'Wǒ bù shūfu.',
+      meaning: {
+        en: 'I don’t feel well.',
+        fr: 'Je ne me sens pas bien.',
+      },
+      goal: {
+        en: 'Describe simple symptoms and ask for medicine or clinic support.',
+        fr: 'Décrire des symptômes simples et demander des médicaments ou de l’aide en clinique.',
+      },
     },
     pathOrder: 8,
   },
