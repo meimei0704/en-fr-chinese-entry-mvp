@@ -1056,7 +1056,7 @@ h2 {
 }
 
 .progress-page-card {
-  max-width: 46rem;
+  max-width: 68rem;
 }
 
 .progress-hero__header {
@@ -1215,6 +1215,194 @@ h2 {
   line-height: 1.2;
 }
 
+.progress-journey-card {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(47, 111, 186, 0.08), transparent 11rem),
+    radial-gradient(circle at 90% 10%, rgba(194, 65, 45, 0.09), transparent 12rem),
+    linear-gradient(135deg, rgba(255, 253, 248, 0.98), rgba(255, 248, 238, 0.94));
+}
+
+.progress-journey-card::after {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.6rem;
+  content: '路';
+  color: rgba(31, 26, 23, 0.05);
+  font-size: clamp(4rem, 15vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.progress-journey-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-journey-map__path {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.progress-journey-map__path::before {
+  position: absolute;
+  top: 2.25rem;
+  left: 1rem;
+  right: 1rem;
+  height: 0;
+  border-top: 3px dashed rgba(31, 26, 23, 0.16);
+  border-radius: 999px;
+  content: '';
+}
+
+.progress-journey-node {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
+  min-height: 100%;
+  padding: 1rem;
+  border: 1px solid rgba(234, 220, 205, 0.98);
+  border-radius: 1.35rem 1.15rem 1.45rem 1.1rem;
+  background:
+    radial-gradient(circle at top right, rgba(194, 65, 45, 0.07), transparent 7rem),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(255, 250, 242, 0.94));
+  box-shadow: 0 1rem 2rem rgba(89, 59, 35, 0.1);
+}
+
+.progress-journey-node:nth-child(even) {
+  transform: translateY(0.5rem) rotate(-0.2deg);
+}
+
+.progress-journey-node:nth-child(odd) {
+  transform: rotate(0.18deg);
+}
+
+.progress-journey-node::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(47, 111, 186, 0.04), transparent 44%),
+    linear-gradient(0deg, rgba(31, 26, 23, 0.03), transparent 36%);
+  content: '';
+  pointer-events: none;
+}
+
+.progress-journey-node > * {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-journey-node--lesson {
+  border-color: rgba(47, 143, 107, 0.26);
+}
+
+.progress-journey-node--preview {
+  border-style: dashed;
+}
+
+.progress-journey-node--complete {
+  background:
+    radial-gradient(circle at top right, rgba(47, 143, 107, 0.13), transparent 7rem),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(235, 246, 241, 0.94));
+}
+
+.progress-journey-node--current {
+  border-color: rgba(47, 111, 186, 0.34);
+  box-shadow: 0 1rem 2rem rgba(47, 111, 186, 0.16);
+}
+
+.progress-journey-node__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.progress-journey-node__marker {
+  display: grid;
+  place-items: center;
+  width: 2.15rem;
+  aspect-ratio: 1;
+  border: 2px solid rgba(31, 26, 23, 0.2);
+  border-radius: 48% 42% 52% 40%;
+  color: var(--color-ink);
+  background: rgba(255, 243, 216, 0.96);
+  font-weight: 900;
+}
+
+.progress-status-seal,
+.progress-journey-node__stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 2.1rem;
+  padding: 0.35rem 0.72rem;
+  border-radius: 0.9rem 0.8rem 1rem 0.75rem;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.progress-status-seal {
+  border: 1px solid rgba(194, 65, 45, 0.4);
+  color: var(--color-cinnabar-dark);
+  background: rgba(255, 244, 230, 0.95);
+}
+
+.progress-status-seal--complete {
+  border-color: rgba(47, 143, 107, 0.34);
+  color: var(--color-jade-ink);
+  background: #ebf6f1;
+}
+
+.progress-status-seal--current {
+  border-color: rgba(47, 111, 186, 0.34);
+  color: var(--color-sky-ink);
+  background: #eef4ff;
+}
+
+.progress-status-seal--upcoming,
+.progress-status-seal--preview,
+.progress-journey-node__stamp {
+  border-style: dashed;
+}
+
+.progress-journey-node h3 {
+  margin: 0.2rem 0 0;
+  color: var(--color-ink);
+  font-size: clamp(1.02rem, 2.3vw, 1.25rem);
+  line-height: 1.2;
+}
+
+.progress-journey-node .muted-text {
+  margin-top: 0.45rem;
+}
+
+.progress-journey-node__action {
+  align-self: end;
+  justify-self: start;
+  padding-inline: 0.95rem;
+}
+
+.progress-journey-node__stamp {
+  align-self: end;
+  color: var(--color-muted);
+  background: rgba(255, 253, 248, 0.82);
+  border: 1px dashed rgba(31, 26, 23, 0.22);
+}
+
 @media (max-width: 760px) {
   .home-hero,
   .home-quick-entry-grid,
@@ -1222,6 +1410,7 @@ h2 {
   .lesson-grid,
   .card-grid,
   .journey-map__path,
+  .progress-journey-map__path,
   .progress-stats-grid,
   .progress-summary-card,
   .lesson-overview-card,
@@ -1273,13 +1462,15 @@ h2 {
     width: 100%;
   }
 
-  .journey-map__path::before {
+  .journey-map__path::before,
+  .progress-journey-map__path::before {
     display: none;
   }
 }
 
 @media (min-width: 761px) and (max-width: 980px) {
-  .journey-map__path {
+  .journey-map__path,
+  .progress-journey-map__path {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

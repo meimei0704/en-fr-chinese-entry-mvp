@@ -2,8 +2,20 @@ import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
-import type { LessonId } from '../content/types'
+import { journeyNodes } from '../content/journey'
+import type { JourneyNode, LessonId } from '../content/types'
 import { loadProgress } from '../lib/progress'
+
+type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
+type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
+
+const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
+const lessonJourneyNodes = orderedJourneyNodes.filter(isLessonJourneyNode)
+const lessonJourneyLessonIds = new Set(lessonJourneyNodes.map((node) => node.lessonId))
+
+function isLessonJourneyNode(node: JourneyNode): node is LessonJourneyNode {
+  return node.kind === 'lesson' && node.lessonId !== undefined
+}
 
 export function ProgressPage() {
   const progress = loadProgress()
@@ -12,8 +24,11 @@ export function ProgressPage() {
   const currentLesson = course.lessons.find(
     (lesson) => lesson.id === progress.lastVisitedLesson,
   )
-  const completedLessonsCount = progress.completedLessons.length
-  const totalLessons = course.lessons.length
+  const completedLessonIds = new Set(
+    progress.completedLessons.filter((lessonId) => lessonJourneyLessonIds.has(lessonId)),
+  )
+  const completedLessonsCount = completedLessonIds.size
+  const totalLessons = lessonJourneyNodes.length
   const completionPercent = totalLessons === 0
     ? 0
     : Math.round((completedLessonsCount / totalLessons) * 100)
@@ -21,16 +36,33 @@ export function ProgressPage() {
     ? getLocalizedText(currentLesson.title, language)
     : copy.progressPage.notStartedYet
 
-  function getLessonStatus(lessonId: LessonId) {
-    if (progress.completedLessons.includes(lessonId)) {
-      return copy.progressPage.lessonStatusComplete
+  function getJourneyNodeStatus(node: JourneyNode): JourneyNodeStatus {
+    if (!isLessonJourneyNode(node)) {
+      return 'preview'
     }
 
-    if (progress.lastVisitedLesson === lessonId) {
-      return copy.progressPage.lessonStatusCurrent
+    if (completedLessonIds.has(node.lessonId)) {
+      return 'complete'
     }
 
-    return copy.progressPage.lessonStatusUpcoming
+    if (progress.lastVisitedLesson === node.lessonId) {
+      return 'current'
+    }
+
+    return 'upcoming'
+  }
+
+  function getStatusLabel(status: JourneyNodeStatus) {
+    switch (status) {
+      case 'complete':
+        return copy.progressPage.lessonStatusComplete
+      case 'current':
+        return copy.progressPage.lessonStatusCurrent
+      case 'preview':
+        return copy.progressPage.lessonStatusPreview
+      case 'upcoming':
+        return copy.progressPage.lessonStatusUpcoming
+    }
   }
 
   return (
@@ -110,8 +142,8 @@ export function ProgressPage() {
         </section>
 
         <section
-          className="surface-card progress-list-card"
-          aria-label={copy.progressPage.lessonProgressLabel}
+          className="surface-card progress-journey-card"
+          aria-label={copy.progressPage.progressJourneyMapLabel}
         >
           <div className="progress-list-card__header">
             <div>
@@ -123,21 +155,51 @@ export function ProgressPage() {
             </span>
           </div>
 
-          <div className="progress-lesson-list">
-            {course.lessons.map((lesson, index) => (
-              <article key={lesson.id} className="progress-lesson-row">
-                <span className="progress-lesson-row__index" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <div>
-                  <h3>{getLocalizedText(lesson.title, language)}</h3>
-                  <p className="muted-text">
-                    {getLocalizedText(lesson.scenario, language)}
-                  </p>
-                </div>
-                <span className="badge badge--jade">{getLessonStatus(lesson.id)}</span>
-              </article>
-            ))}
+          <div className="progress-journey-map__path">
+            {orderedJourneyNodes.map((node) => {
+              const status = getJourneyNodeStatus(node)
+              const statusLabel = getStatusLabel(status)
+              const nodeTitle = getLocalizedText(node.title, language)
+              const nodeSummary = getLocalizedText(node.summary, language)
+
+              return (
+                <article
+                  key={node.id}
+                  className={`progress-journey-node progress-journey-node--${node.kind} progress-journey-node--${status}`}
+                  data-journey-node-id={node.id}
+                  aria-label={`${nodeTitle}: ${statusLabel}`}
+                >
+                  <div className="progress-journey-node__header">
+                    <span className="progress-journey-node__marker" aria-hidden="true">
+                      {node.pathOrder}
+                    </span>
+                    <span className={`progress-status-seal progress-status-seal--${status}`}>
+                      {statusLabel}
+                    </span>
+                  </div>
+
+                  <div>
+                    <p className="eyebrow">{getLocalizedText(node.eyebrow, language)}</p>
+                    <h3>{nodeTitle}</h3>
+                    <p className="muted-text">{nodeSummary}</p>
+                  </div>
+
+                  {isLessonJourneyNode(node) ? (
+                    <Link
+                      className="secondary-link progress-journey-node__action"
+                      to={`/lesson/${node.lessonId}`}
+                      aria-label={copy.progressPage.openJourneyLesson(nodeTitle)}
+                    >
+                      {copy.progressPage.openLesson}
+                    </Link>
+                  ) : (
+                    <span className="progress-journey-node__stamp">
+                      {copy.progressPage.previewDisplayOnly}
+                    </span>
+                  )}
+                </article>
+              )
+            })}
           </div>
         </section>
       </section>

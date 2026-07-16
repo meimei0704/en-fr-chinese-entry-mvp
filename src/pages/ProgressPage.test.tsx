@@ -3,9 +3,29 @@ import { screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
-import { course } from '../content/course'
+import { journeyNodes } from '../content/journey'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
+
+const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
+
+function journeyTitle(node: (typeof journeyNodes)[number], language: 'en' | 'fr' = 'en') {
+  return getLocalizedText(node.title, language)
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function getJourneyMap() {
+  return screen.getByRole('region', { name: /progress journey map/i })
+}
+
+function getJourneyNodeCard(title: string) {
+  return within(getJourneyMap()).getByRole('article', {
+    name: new RegExp(`^${escapeRegExp(title)}\\b`, 'i'),
+  })
+}
 
 describe('ProgressPage', () => {
   beforeEach(() => {
@@ -38,12 +58,92 @@ describe('ProgressPage', () => {
     expect(within(stats).getByText(/maîtrise du parcours/i)).toBeVisible()
     expect(within(stats).getByText('33%')).toBeVisible()
 
-    const lessonProgress = screen.getByRole('region', { name: /progression des leçons/i })
-    for (const lesson of course.lessons) {
-      expect(within(lessonProgress).getByText(getLocalizedText(lesson.title, 'fr'))).toBeVisible()
+    const journeyMap = screen.getByRole('region', { name: /carte de progression du parcours/i })
+    const lessonJourneyTitles = orderedJourneyNodes
+      .filter((node) => node.kind === 'lesson')
+      .map((node) => journeyTitle(node, 'fr'))
+
+    for (const title of lessonJourneyTitles) {
+      expect(within(journeyMap).getByText(title)).toBeVisible()
     }
-    expect(within(lessonProgress).getByText('Terminée')).toBeVisible()
-    expect(within(lessonProgress).getByText('En cours')).toBeVisible()
-    expect(within(lessonProgress).getByText('À venir')).toBeVisible()
+    expect(within(journeyMap).getByText('Terminée')).toBeVisible()
+    expect(within(journeyMap).getByText('En cours')).toBeVisible()
+    expect(within(journeyMap).getByText('À venir')).toBeVisible()
+  })
+
+  it('renders the shared journey map in path order with all complete lesson and preview nodes', () => {
+    renderRoute('/progress')
+
+    const journeyMap = getJourneyMap()
+    const cards = within(journeyMap).getAllByRole('article')
+
+    expect(cards).toHaveLength(orderedJourneyNodes.length)
+    expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(
+      orderedJourneyNodes.map((node) => node.id),
+    )
+    expect(
+      cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent),
+    ).toEqual(orderedJourneyNodes.map((node) => journeyTitle(node)))
+    expect(within(journeyMap).getAllByText('Preview')).toHaveLength(5)
+    expect(within(journeyMap).getAllByText('Upcoming')).toHaveLength(3)
+  })
+
+  it('counts mastery from complete lesson nodes only, excluding display-only previews', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['ask-directions'],
+      lastVisitedLesson: 'ask-directions',
+    })
+
+    renderRoute('/progress')
+
+    const stats = screen.getByRole('region', { name: /learning indicators/i })
+    expect(within(stats).getByText('1/3')).toBeVisible()
+    expect(within(stats).getByText('33%')).toBeVisible()
+    expect(screen.getAllByText(/1 of 3 lessons completed/i)[0]).toBeVisible()
+    expect(screen.queryByText(/1 of 8/i)).not.toBeInTheDocument()
+  })
+
+  it('maps learner progress to completed, current, upcoming, and preview journey statuses', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['ask-directions'],
+      lastVisitedLesson: 'self-intro',
+    })
+
+    renderRoute('/progress')
+
+    expect(within(getJourneyNodeCard('City travel')).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard('Meet people')).getByText('Current')).toBeVisible()
+    expect(within(getJourneyNodeCard('Restaurant ordering')).getByText('Upcoming')).toBeVisible()
+
+    const previewTitles = orderedJourneyNodes
+      .filter((node) => node.kind === 'preview')
+      .map((node) => journeyTitle(node))
+
+    for (const title of previewTitles) {
+      const card = getJourneyNodeCard(title)
+      expect(within(card).getByText('Preview')).toBeVisible()
+      expect(within(card).queryByText(/Complete|Current|Upcoming/)).not.toBeInTheDocument()
+    }
+  })
+
+  it('links complete lesson nodes to their existing lesson routes but keeps preview nodes display-only', () => {
+    renderRoute('/progress')
+
+    for (const node of orderedJourneyNodes) {
+      const card = getJourneyNodeCard(journeyTitle(node))
+
+      if (node.kind === 'lesson') {
+        const lessonLink = within(card).getByRole('link', {
+          name: new RegExp(`open ${escapeRegExp(journeyTitle(node))}`, 'i'),
+        })
+
+        expect(lessonLink).toHaveAttribute('href', `/lesson/${node.lessonId}`)
+      } else {
+        expect(within(card).queryByRole('link')).not.toBeInTheDocument()
+        expect(within(card).getByText(/display-only preview/i)).toBeVisible()
+      }
+    }
   })
 })
