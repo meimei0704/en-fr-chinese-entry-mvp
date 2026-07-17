@@ -691,9 +691,10 @@ h2 {
 
 .journey-map .journey-node,
 .journey-map .journey-node__preview-button {
-  --journey-card-min-height: clamp(10rem, 26vw, 12.5rem);
-  --journey-illustration-slot-width: clamp(4.75rem, 18vw, 7.25rem);
-  --journey-illustration-slot-height: clamp(4.25rem, 14vw, 6rem);
+  --journey-card-min-height: clamp(10.5rem, 24vw, 12.75rem);
+  --journey-stamp-slot-max-width: clamp(3.5rem, 11vw, 5rem);
+  --journey-stamp-slot-max-height: clamp(3.5rem, 10vw, 4.75rem);
+  --journey-stamp-slot-offset: clamp(0.6rem, 1.5vw, 1rem);
 }
 
 .journey-map .journey-node {
@@ -711,9 +712,11 @@ h2 {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.7rem;
   min-height: var(--journey-card-min-height);
-  padding-right: calc(var(--journey-illustration-slot-width) + 0.65rem);
+  padding-right: calc(
+    var(--journey-stamp-slot-max-width) + var(--journey-stamp-slot-offset) + 0.4rem
+  );
 }
 
 .journey-map .journey-node h2,
@@ -721,28 +724,30 @@ h2 {
   max-width: none;
 }
 
-.journey-map .journey-node__illustration-slot {
+.journey-map .journey-node__illustration-slot--stamp {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: var(--journey-stamp-slot-offset);
+  bottom: var(--journey-stamp-slot-offset);
   z-index: 0;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  width: min(40%, var(--journey-illustration-slot-width));
-  min-height: var(--journey-illustration-slot-height);
+  width: min(34%, var(--journey-stamp-slot-max-width));
+  min-height: var(--journey-stamp-slot-max-height);
   pointer-events: none;
 }
 
-.journey-map .journey-node__doodle {
+.journey-map .journey-node__doodle--stamp {
   position: static;
   top: auto;
   right: auto;
-  width: min(100%, var(--journey-illustration-slot-width));
-  min-height: var(--journey-illustration-slot-height);
-  padding: 0.45rem;
-  background: rgba(255, 255, 255, 0.78);
-  font-size: clamp(2.1rem, 6vw, 3.15rem);
+  width: min(100%, var(--journey-stamp-slot-max-width));
+  min-height: var(--journey-stamp-slot-max-height);
+  padding: 0.35rem;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(214, 181, 150, 0.58);
+  box-shadow: 0 12px 30px -24px rgba(67, 40, 20, 0.35);
+  font-size: clamp(1.65rem, 4.2vw, 2.35rem);
   transform: rotate(6deg);
 }
 
@@ -756,7 +761,7 @@ h2 {
 .journey-node .muted-text {
   margin-top: 0;
   color: var(--color-ink-soft);
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 .journey-node--lesson {
@@ -770,6 +775,7 @@ h2 {
       transparent 18px
     ),
     linear-gradient(180deg, rgba(247, 255, 249, 0.98), rgba(237, 248, 242, 0.94));
+  box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);
 }
 
 .journey-node--preview {
@@ -782,6 +788,7 @@ h2 {
       transparent 18px
     ),
     linear-gradient(180deg, rgba(255, 250, 244, 0.98), rgba(255, 241, 225, 0.96));
+  box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);
 }
 
 .journey-node--card-link {
@@ -811,15 +818,14 @@ h2 {
   border-radius: 999px;
   border: 1px solid rgba(95, 143, 247, 0.2);
   color: var(--color-sky-ink);
-  background: rgba(238, 244, 255, 0.9);
+  background: rgba(255, 253, 248, 0.92);
   font-size: 0.82rem;
   font-weight: 850;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .journey-node--preview .journey-node__cta {
   color: var(--color-cinnabar-dark);
-  background: rgba(255, 244, 230, 0.92);
   border-color: rgba(194, 65, 45, 0.16);
 }
 

@@ -122,8 +122,13 @@ export function HomePage() {
                     <span className="journey-node__cta">{copy.homePage.openLesson} →</span>
                   </div>
 
-                  <span className="journey-node__illustration-slot" aria-hidden="true">
-                    <span className="journey-node__doodle">{nodeIcon}</span>
+                  <span
+                    className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
+                    aria-hidden="true"
+                  >
+                    <span className="journey-node__doodle journey-node__doodle--stamp">
+                      {nodeIcon}
+                    </span>
                   </span>
                 </Link>
               )
@@ -161,8 +166,13 @@ export function HomePage() {
                     </span>
                   </div>
 
-                  <span className="journey-node__illustration-slot" aria-hidden="true">
-                    <span className="journey-node__doodle">{nodeIcon}</span>
+                  <span
+                    className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
+                    aria-hidden="true"
+                  >
+                    <span className="journey-node__doodle journey-node__doodle--stamp">
+                      {nodeIcon}
+                    </span>
                   </span>
                 </button>
 
