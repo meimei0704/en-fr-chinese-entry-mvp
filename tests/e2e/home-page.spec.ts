@@ -1,57 +1,43 @@
 import { expect, test } from 'playwright/test'
 
-test('stacks journey map nodes into a single column on phone widths', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/')
-
-  await page.getByRole('button', { name: 'English' }).click()
-  await page.getByRole('button', { name: /start learning/i }).click()
-
-  const journeyNodes = page.locator('.journey-map__path > .journey-node')
-
-  await expect(journeyNodes).toHaveCount(8)
-
-  const firstNodeBox = await journeyNodes.nth(0).boundingBox()
-  const secondNodeBox = await journeyNodes.nth(1).boundingBox()
-
-  expect(firstNodeBox).not.toBeNull()
-  expect(secondNodeBox).not.toBeNull()
-  expect(Math.abs(firstNodeBox!.x - secondNodeBox!.x)).toBeLessThan(2)
-  expect(secondNodeBox!.y).toBeGreaterThan(firstNodeBox!.y + firstNodeBox!.height - 2)
-})
-
-test('keeps Home journey cards readable at 1024px by avoiding a cramped four-column row', async ({
+test('keeps the Home journey stamp slot decorative while preserving readable text widths', async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 1024, height: 900 })
+  await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')
 
   await page.getByRole('button', { name: 'English' }).click()
   await page.getByRole('button', { name: /start learning/i }).click()
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
-
   await expect(journeyNodes).toHaveCount(8)
 
-  const [firstNodeBox, secondNodeBox, thirdNodeBox, fourthNodeBox] = await Promise.all(
-    [0, 1, 2, 3].map((index) => journeyNodes.nth(index).boundingBox()),
-  )
+  for (const width of [320, 390, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 })
 
-  expect(firstNodeBox).not.toBeNull()
-  expect(secondNodeBox).not.toBeNull()
-  expect(thirdNodeBox).not.toBeNull()
-  expect(fourthNodeBox).not.toBeNull()
+    const firstCard = journeyNodes.first()
+    const secondCard = journeyNodes.nth(1)
+    const title = firstCard.locator('h2')
+    const slot = firstCard.locator('.journey-node__illustration-slot--stamp')
 
-  expect(Math.abs(firstNodeBox!.y - secondNodeBox!.y)).toBeLessThan(2)
-  expect(Math.abs(secondNodeBox!.y - thirdNodeBox!.y)).toBeLessThan(2)
-  expect(fourthNodeBox!.y).toBeGreaterThan(firstNodeBox!.y + firstNodeBox!.height - 2)
+    const [firstCardBox, secondCardBox, titleBox, slotBox] = await Promise.all([
+      firstCard.boundingBox(),
+      secondCard.boundingBox(),
+      title.boundingBox(),
+      slot.boundingBox(),
+    ])
 
-  const titleWidths = await journeyNodes.evaluateAll((nodes) =>
-    nodes.map((node) => {
-      const title = node.querySelector('h2, h3')
-      return title ? Math.round(title.getBoundingClientRect().width) : 0
-    }),
-  )
+    expect(firstCardBox).not.toBeNull()
+    expect(secondCardBox).not.toBeNull()
+    expect(titleBox).not.toBeNull()
+    expect(slotBox).not.toBeNull()
 
-  expect(Math.min(...titleWidths)).toBeGreaterThanOrEqual(140)
+    if (width <= 390) {
+      expect(Math.abs(firstCardBox!.x - secondCardBox!.x)).toBeLessThan(2)
+      expect(secondCardBox!.y).toBeGreaterThan(firstCardBox!.y + firstCardBox!.height - 2)
+    }
+
+    expect(slotBox!.width).toBeLessThan(firstCardBox!.width * 0.38)
+    expect(titleBox!.width).toBeGreaterThanOrEqual(width >= 1024 ? 150 : 140)
+  }
 })

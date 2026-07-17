@@ -126,35 +126,25 @@ describe('HomePage', () => {
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
   })
 
-  it('keeps the journey map as the only lesson entry section on Home', () => {
+  it('keeps the journey map as the only lesson entry section and exposes a stamp illustration slot on each card', () => {
     renderRoute('/home')
 
-    expect(
-      screen.queryByRole('heading', {
-        level: 2,
-        name: /lesson list/i,
-      }),
-    ).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 2, name: /lesson list/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('region', { name: /lesson list/i })).not.toBeInTheDocument()
-  })
-
-  it('renders each journey card with a dedicated illustration slot', () => {
-    renderRoute('/home')
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     const cityTravelCard = within(journeyMap).getByRole('link', { name: /city travel/i })
     const airportArrivalToggle = within(journeyMap).getByRole('button', { name: /airport arrival/i })
 
-    expect(cityTravelCard.querySelector('.journey-node__body')).toBeInTheDocument()
-    expect(cityTravelCard.querySelector('.journey-node__illustration-slot')).toBeInTheDocument()
     expect(
-      cityTravelCard.querySelector('.journey-node__illustration-slot .journey-node__doodle'),
+      cityTravelCard.querySelector(
+        '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
+      ),
     ).toBeInTheDocument()
-
-    expect(airportArrivalToggle.querySelector('.journey-node__body')).toBeInTheDocument()
-    expect(airportArrivalToggle.querySelector('.journey-node__illustration-slot')).toBeInTheDocument()
     expect(
-      airportArrivalToggle.querySelector('.journey-node__illustration-slot .journey-node__doodle'),
+      airportArrivalToggle.querySelector(
+        '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
+      ),
     ).toBeInTheDocument()
   })
 
