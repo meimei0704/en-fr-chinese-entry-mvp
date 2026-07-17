@@ -91,11 +91,15 @@ describe('global color accessibility tokens', () => {
       ['.journey-map .journey-node .muted-text', 'line-height: 1.5;'],
       ['.journey-map .journey-node__cta', 'margin-top: auto;'],
       ['.journey-map .journey-node--preview .journey-node__cta', 'color: var(--color-cinnabar-dark);'],
+      ['.journey-map .journey-node--lesson', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
+      ['.journey-map .journey-node--preview', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
     ]
     const leakedProgressSelectors = [
       ['.journey-node .muted-text', 'line-height: 1.5;'],
       ['.journey-node__cta', 'margin-top: auto;'],
       ['.journey-node--preview .journey-node__cta', 'color: var(--color-cinnabar-dark);'],
+      ['.journey-node--lesson', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
+      ['.journey-node--preview', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
     ]
 
     for (const [selector, declaration] of homeScopedSelectors) {
@@ -115,6 +119,10 @@ describe('global color accessibility tokens', () => {
       ['.progress-journey-card .journey-node__cta', 'background: rgba(238, 244, 255, 0.9);'],
       ['.progress-journey-card .journey-node--preview .journey-node__cta', 'background: rgba(255, 244, 230, 0.92);'],
       ['.progress-journey-card .journey-node--preview .journey-node__cta', 'border-color: rgba(194, 65, 45, 0.16);'],
+      ['.progress-journey-card .journey-node .muted-text', 'margin-top: 0.45rem;'],
+      ['.progress-journey-card .journey-node .muted-text', 'color: var(--color-ink-soft);'],
+      ['.progress-journey-card .journey-node .muted-text', 'line-height: 1.55;'],
+      ['.progress-journey-card .journey-node', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.35);'],
     ]
 
     for (const [selector, declaration] of progressBaselineSelectors) {
