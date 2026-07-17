@@ -758,7 +758,7 @@ h2 {
   font-size: clamp(1.1rem, 2.4vw, 1.35rem);
 }
 
-.journey-node .muted-text {
+.journey-map .journey-node .muted-text {
   margin-top: 0;
   color: var(--color-ink-soft);
   line-height: 1.5;
@@ -807,7 +807,7 @@ h2 {
   text-align: left;
 }
 
-.journey-node__cta {
+.journey-map .journey-node__cta {
   margin-top: auto;
   display: inline-flex;
   align-items: center;
@@ -824,7 +824,7 @@ h2 {
   letter-spacing: 0.01em;
 }
 
-.journey-node--preview .journey-node__cta {
+.journey-map .journey-node--preview .journey-node__cta {
   color: var(--color-cinnabar-dark);
   border-color: rgba(194, 65, 45, 0.16);
 }
