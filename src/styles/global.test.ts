@@ -107,4 +107,19 @@ describe('global color accessibility tokens', () => {
       expect(hasRuleWithDeclaration(selector, declaration)).toBe(false)
     }
   })
+
+  it('keeps the original Progress journey CTA pill baseline while Home polish stays scoped', () => {
+    const progressBaselineSelectors = [
+      ['.progress-journey-card .journey-node__cta', 'padding: 0.5rem 0.85rem;'],
+      ['.progress-journey-card .journey-node__cta', 'border-radius: 999px;'],
+      ['.progress-journey-card .journey-node__cta', 'background: rgba(238, 244, 255, 0.9);'],
+      ['.progress-journey-card .journey-node--preview .journey-node__cta', 'background: rgba(255, 244, 230, 0.92);'],
+      ['.progress-journey-card .journey-node--preview .journey-node__cta', 'border-color: rgba(194, 65, 45, 0.16);'],
+    ]
+
+    for (const [selector, declaration] of progressBaselineSelectors) {
+      expect(hasRule(selector)).toBe(true)
+      expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
+    }
+  })
 })

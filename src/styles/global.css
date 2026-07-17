@@ -1750,6 +1750,29 @@ h2 {
   margin-top: 0.1rem;
 }
 
+.progress-journey-card .journey-node__cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  min-height: 2.25rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(95, 143, 247, 0.2);
+  color: var(--color-sky-ink);
+  background: rgba(238, 244, 255, 0.9);
+  font-size: 0.82rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+}
+
+.progress-journey-card .journey-node--preview .journey-node__cta {
+  color: var(--color-cinnabar-dark);
+  background: rgba(255, 244, 230, 0.92);
+  border-color: rgba(194, 65, 45, 0.16);
+}
+
 @media (max-width: 760px) {
   .home-hero,
   .home-quick-entry-grid,
