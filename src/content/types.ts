@@ -10,22 +10,14 @@ export type BilingualExplanation = LocalizedText
 
 export type LessonId = 'self-intro' | 'order-food' | 'ask-directions'
 
-export type JourneyStageId =
-  | 'arrival-and-transit'
-  | 'settling-in'
-  | 'daily-life'
-  | 'work-and-study'
-  | 'health-and-emergency'
+export type JourneyStageId = 'arrival-in-china'
 
 export type JourneyNodeId =
-  | 'airport-arrival'
-  | 'city-travel'
-  | 'getting-settled'
-  | 'meet-people'
-  | 'restaurant-ordering'
-  | 'shopping-and-payment'
-  | 'work-communication'
-  | 'clinic-and-medicine'
+  | 'airport-immigration'
+  | 'taxi-to-stay'
+  | 'hotel-check-in'
+  | 'phone-and-payment'
+  | 'convenience-store-run'
 
 export type JourneyNodeKind = 'lesson' | 'preview'
 

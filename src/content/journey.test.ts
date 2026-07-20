@@ -5,49 +5,39 @@ import { course } from './course'
 import { journeyNodes, journeyStages } from './journey'
 
 describe('journey content', () => {
-  it('layers a fixed journey map beside the existing three-lesson course model', () => {
-    expect(journeyStages.map((stage) => stage.id)).toEqual([
-      'arrival-and-transit',
-      'settling-in',
-      'daily-life',
-      'work-and-study',
-      'health-and-emergency',
-    ])
+  it('exposes the B1 arrival-in-China loop as three lessons plus two previews', () => {
+    expect(journeyStages.map((stage) => stage.id)).toEqual(['arrival-in-china'])
 
     const lessonNodes = journeyNodes.filter((node) => node.kind === 'lesson')
     const previewNodes = journeyNodes.filter((node) => node.kind === 'preview')
 
+    expect(journeyNodes.map((node) => node.pathOrder)).toEqual([1, 2, 3, 4, 5])
     expect(lessonNodes).toHaveLength(3)
-    expect(previewNodes).toHaveLength(5)
+    expect(previewNodes).toHaveLength(2)
     expect(lessonNodes.map((node) => node.lessonId)).toEqual([
-      'ask-directions',
       'self-intro',
+      'ask-directions',
       'order-food',
     ])
-    expect(
-      [...lessonNodes].sort(
-        (left, right) =>
-          course.lessons.findIndex((lesson) => lesson.id === left.lessonId) -
-          course.lessons.findIndex((lesson) => lesson.id === right.lessonId),
-      ),
-    ).toMatchObject(
-      course.lessons.map((lesson) => ({
-        lessonId: lesson.id,
-      })),
-    )
+    expect(lessonNodes.map((node) => node.lessonId)).toEqual(course.lessons.map((lesson) => lesson.id))
     expect(previewNodes.every((node) => node.lessonId === undefined)).toBe(true)
   })
 
-  it('pins the first journey map copy to the owner-approved complete and preview nodes', () => {
+  it('pins the arrival path copy to immigration, taxi, check-in, phone payment, and convenience store', () => {
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'en'))).toEqual([
-      'Airport arrival',
-      'City travel',
-      'Getting settled',
-      'Meet people',
-      'Restaurant ordering',
-      'Shopping & payment',
-      'Work communication',
-      'Clinic & medicine',
+      'Airport immigration basics',
+      'Taxi to your stay',
+      'Hotel / apartment check-in',
+      'Phone number & mobile payment',
+      'First convenience store run',
+    ])
+
+    expect(journeyNodes.map((node) => getLocalizedText(node.title, 'fr'))).toEqual([
+      'Bases de l’immigration à l’aéroport',
+      'Taxi vers son logement',
+      'Check-in hôtel / appartement',
+      'Téléphone & paiement mobile',
+      'Première course en supérette',
     ])
   })
 })

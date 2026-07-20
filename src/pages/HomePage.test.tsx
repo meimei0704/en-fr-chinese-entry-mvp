@@ -12,7 +12,7 @@ describe('HomePage', () => {
     localStorage.clear()
   })
 
-  it('shows the three fixed lesson cards and a review shortcut on the home page', () => {
+  it('shows the three arrival lesson cards and a review shortcut on the home page', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
@@ -25,28 +25,32 @@ describe('HomePage', () => {
 
     expect(journeyLessonLinks).toHaveLength(3)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual([
-      '/lesson/ask-directions',
       '/lesson/self-intro',
+      '/lesson/ask-directions',
       '/lesson/order-food',
     ])
-    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(5)
-    expect(within(journeyMap).getByRole('heading', { level: 2, name: /meet people/i })).toBeVisible()
-    expect(within(journeyMap).getByRole('heading', { level: 2, name: /city travel/i })).toBeVisible()
-    expect(within(journeyMap).getByRole('heading', { level: 2, name: /airport arrival/i })).toBeVisible()
+    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(2)
+    expect(
+      within(journeyMap).getByRole('heading', { level: 2, name: /airport immigration basics/i }),
+    ).toBeVisible()
+    expect(within(journeyMap).getByRole('heading', { level: 2, name: /taxi to your stay/i })).toBeVisible()
+    expect(
+      within(journeyMap).getByRole('heading', { level: 2, name: /hotel \/ apartment check-in/i }),
+    ).toBeVisible()
   })
 
   it('shows the refreshed hero phrase, progress cues, and journey status copy', () => {
     renderRoute('/home')
 
     const heroPhrase = screen.getByRole('group', { name: /hero phrase/i })
-    expect(heroPhrase).toHaveTextContent('你好')
-    expect(heroPhrase).toHaveTextContent('nǐ hǎo')
+    expect(heroPhrase).toHaveTextContent('护照')
+    expect(heroPhrase).toHaveTextContent('hùzhào')
     expect(screen.getByText(`${course.lessons.length} lessons`)).toBeVisible()
     expect(screen.getByText(/listen & repeat/i)).toBeVisible()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(5)
-    expect(within(journeyMap).getByText(/first conversations in china/i)).toBeVisible()
+    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(2)
+    expect(within(journeyMap).getByText(/arrive in china step by step/i)).toBeVisible()
   })
 
   it('renders page-level French copy when the learner chooses French mode', () => {
@@ -63,7 +67,7 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /faire connaissance/i,
+        name: /bases de l’immigration à l’aéroport/i,
       }),
     ).toBeVisible()
     expect(screen.getByLabelText(/points clés de l’apprentissage/i)).toHaveTextContent(
@@ -71,16 +75,16 @@ describe('HomePage', () => {
     )
     expect(screen.getByRole('region', { name: /maquette d’aperçu d’apprentissage/i })).toBeVisible()
     expect(screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i })).toBeVisible()
-    expect(screen.getByLabelText(/phrase modèle/i)).toHaveTextContent('你好')
+    expect(screen.getByLabelText(/phrase modèle/i)).toHaveTextContent('护照')
 
     const progressSummary = screen.getByLabelText(/résumé des progrès du cours/i)
     expect(progressSummary).toHaveTextContent(`${course.lessons.length} leçons`)
     expect(progressSummary).toHaveTextContent('0 terminée')
     expect(progressSummary).toHaveTextContent('0 à réviser')
 
-    expect(screen.getByText('Rencontres')).toBeVisible()
-    expect(screen.getByText('Trajet')).toBeVisible()
-    expect(screen.getAllByText(/bientôt/i)).toHaveLength(5)
+    expect(screen.getByText('Immigration')).toBeVisible()
+    expect(screen.getByText('Taxi')).toBeVisible()
+    expect(screen.getAllByText(/bientôt/i)).toHaveLength(2)
     expect(screen.queryByText(`${course.lessons.length} lessons`)).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
   })
@@ -96,7 +100,7 @@ describe('HomePage', () => {
 
     const learningMockup = screen.getByRole('region', { name: /learning preview mockup/i })
     expect(learningMockup).toHaveClass('home-learning-mockup')
-    expect(within(learningMockup).getByText('你好')).toBeVisible()
+    expect(within(learningMockup).getByText('护照')).toBeVisible()
     expect(within(learningMockup).getByText(/listen/i)).toBeVisible()
 
     const quickEntries = screen.getByRole('navigation', { name: /quick learning paths/i })
@@ -116,13 +120,13 @@ describe('HomePage', () => {
     renderRoute('/home')
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    const cityTravelCard = within(journeyMap).getByRole('link', { name: /city travel/i })
-    const meetPeopleCard = within(journeyMap).getByRole('link', { name: /meet people/i })
-    const restaurantCard = within(journeyMap).getByRole('link', { name: /restaurant ordering/i })
+    const immigrationCard = within(journeyMap).getByRole('link', { name: /airport immigration basics/i })
+    const taxiCard = within(journeyMap).getByRole('link', { name: /taxi to your stay/i })
+    const checkInCard = within(journeyMap).getByRole('link', { name: /hotel \/ apartment check-in/i })
 
-    expect(cityTravelCard).toHaveAttribute('href', '/lesson/ask-directions')
-    expect(meetPeopleCard).toHaveAttribute('href', '/lesson/self-intro')
-    expect(restaurantCard).toHaveAttribute('href', '/lesson/order-food')
+    expect(immigrationCard).toHaveAttribute('href', '/lesson/self-intro')
+    expect(taxiCard).toHaveAttribute('href', '/lesson/ask-directions')
+    expect(checkInCard).toHaveAttribute('href', '/lesson/order-food')
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
   })
 
@@ -133,16 +137,16 @@ describe('HomePage', () => {
     expect(screen.queryByRole('region', { name: /lesson list/i })).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    const cityTravelCard = within(journeyMap).getByRole('link', { name: /city travel/i })
-    const airportArrivalToggle = within(journeyMap).getByRole('button', { name: /airport arrival/i })
+    const taxiCard = within(journeyMap).getByRole('link', { name: /taxi to your stay/i })
+    const paymentToggle = within(journeyMap).getByRole('button', { name: /phone number & mobile payment/i })
 
     expect(
-      cityTravelCard.querySelector(
+      taxiCard.querySelector(
         '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
       ),
     ).toBeInTheDocument()
     expect(
-      airportArrivalToggle.querySelector(
+      paymentToggle.querySelector(
         '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
       ),
     ).toBeInTheDocument()
@@ -156,25 +160,25 @@ describe('HomePage', () => {
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
 
-    const airportArrivalToggle = within(journeyMap).getByRole('button', { name: /airport arrival/i })
-    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'false')
+    const paymentToggle = within(journeyMap).getByRole('button', { name: /phone number & mobile payment/i })
+    expect(paymentToggle).toHaveAttribute('aria-expanded', 'false')
 
-    await user.click(airportArrivalToggle)
+    await user.click(paymentToggle)
 
-    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(paymentToggle).toHaveAttribute('aria-expanded', 'true')
     expect(within(journeyMap).getAllByRole('note')).toHaveLength(1)
 
-    const airportArrivalCard = airportArrivalToggle.closest('.journey-node')
-    expect(airportArrivalCard).not.toBeNull()
+    const paymentCard = paymentToggle.closest('.journey-node')
+    expect(paymentCard).not.toBeNull()
 
-    const airportArrivalPreview = within(airportArrivalCard as HTMLElement).getByRole('note')
-    expect(airportArrivalPreview).toHaveTextContent(/coming soon/i)
-    expect(airportArrivalPreview).toHaveTextContent(/immigration/i)
-    expect(within(airportArrivalCard as HTMLElement).queryByRole('link')).not.toBeInTheDocument()
+    const paymentPreview = within(paymentCard as HTMLElement).getByRole('note')
+    expect(paymentPreview).toHaveTextContent(/coming soon/i)
+    expect(paymentPreview).toHaveTextContent(/pay by phone/i)
+    expect(within(paymentCard as HTMLElement).queryByRole('link')).not.toBeInTheDocument()
 
-    await user.click(airportArrivalToggle)
+    await user.click(paymentToggle)
 
-    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(paymentToggle).toHaveAttribute('aria-expanded', 'false')
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
   })
 })

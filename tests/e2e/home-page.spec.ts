@@ -10,7 +10,12 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await page.getByRole('button', { name: /start learning/i }).click()
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
-  await expect(journeyNodes).toHaveCount(8)
+  await expect(journeyNodes).toHaveCount(5)
+  await expect(page.getByRole('link', { name: /airport immigration basics/i })).toHaveAttribute(
+    'href',
+    '/lesson/self-intro',
+  )
+  await expect(page.getByRole('button', { name: /phone number & mobile payment/i })).toBeVisible()
 
   for (const width of [320, 390, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 })
