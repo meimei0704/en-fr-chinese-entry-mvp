@@ -9,5 +9,5 @@ import {
 export const course: CourseContent = {
   supportedExplanationLanguages,
   estimatedDailyMinutes: 10,
-  lessons: [selfIntroLesson, orderFoodLesson, askDirectionsLesson],
+  lessons: [selfIntroLesson, askDirectionsLesson, orderFoodLesson],
 }
