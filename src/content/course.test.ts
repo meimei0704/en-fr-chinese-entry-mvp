@@ -8,13 +8,6 @@ const expectedDialogueAudioByLesson = {
     '/audio/self-intro/line-03.mp3',
     '/audio/self-intro/line-04.mp3',
   ],
-  'order-food': [
-    '/audio/order-food/line-01.mp3',
-    '/audio/order-food/line-02.mp3',
-    '/audio/order-food/line-03.mp3',
-    '/audio/order-food/line-04.mp3',
-    '/audio/order-food/line-05.mp3',
-  ],
   'ask-directions': [
     '/audio/ask-directions/line-01.mp3',
     '/audio/ask-directions/line-02.mp3',
@@ -22,12 +15,19 @@ const expectedDialogueAudioByLesson = {
     '/audio/ask-directions/line-04.mp3',
     '/audio/ask-directions/line-05.mp3',
   ],
+  'order-food': [
+    '/audio/order-food/line-01.mp3',
+    '/audio/order-food/line-02.mp3',
+    '/audio/order-food/line-03.mp3',
+    '/audio/order-food/line-04.mp3',
+    '/audio/order-food/line-05.mp3',
+  ],
 } as const
 
 const expectedShortInputAudioByLesson = {
   'self-intro': '/audio/self-intro/short-input-01.mp3',
-  'order-food': '/audio/order-food/short-input-01.mp3',
   'ask-directions': '/audio/ask-directions/short-input-01.mp3',
+  'order-food': '/audio/order-food/short-input-01.mp3',
 } as const
 
 async function collectAudioPaths() {
@@ -67,7 +67,7 @@ function expectLocalizedField(value: unknown, fieldPath: string) {
 }
 
 describe('course content', () => {
-  it('exposes three lessons with bilingual explanations and static audio paths', async () => {
+  it('exposes three arrival lessons in journey order with bilingual explanations and static audio paths', async () => {
     const { course } = await import('./course')
 
     expect(course.supportedExplanationLanguages).toEqual(['en', 'fr'])
@@ -75,8 +75,8 @@ describe('course content', () => {
     expect(course.lessons).toHaveLength(3)
     expect(course.lessons.map((lesson) => lesson.id)).toEqual([
       'self-intro',
-      'order-food',
       'ask-directions',
+      'order-food',
     ])
 
     const firstLine = course.lessons[0].dialogue.lines[0]
@@ -116,58 +116,42 @@ describe('course content', () => {
       expect(lesson.shortInput.id).toBe(`${lesson.id}-short-input-01`)
       expect(lesson.shortInput.audio).toBe(expectedShortInputAudio)
     }
-
-    const directionsLesson = course.lessons.find((lesson) => lesson.id === 'ask-directions')
-
-    expect(directionsLesson?.dialogue.lines).toHaveLength(5)
-    expect(directionsLesson?.dialogue.lines.some((line) => line.hanzi.includes('地铁站'))).toBe(true)
-    expect(directionsLesson?.dialogue.lines.some((line) => line.hanzi.includes('往左拐'))).toBe(true)
-    expect(directionsLesson?.shortInput.target).toBe('地铁站在哪儿？')
   })
 
-  it('covers practical subway ticket, line, transfer, and exit concepts in ask-directions copy', async () => {
+  it('maps stable lesson ids onto the first three arrival tasks', async () => {
     const { course } = await import('./course')
-    const directionsLesson = course.lessons.find((lesson) => lesson.id === 'ask-directions')
+    const [immigrationLesson, taxiLesson, checkInLesson] = course.lessons
 
-    if (!directionsLesson) {
-      throw new Error('ask-directions lesson missing')
-    }
-
-    const dialogueHanzi = directionsLesson.dialogue.lines.map((line) => line.hanzi).join('\n')
-    const englishCopy = collectLocalizedStrings(directionsLesson, 'en').join('\n').toLowerCase()
-    const frenchCopy = collectLocalizedStrings(directionsLesson, 'fr').join('\n').toLowerCase()
-
-    expect(dialogueHanzi, 'Chinese examples should include buying a subway ticket').toMatch(
-      /买票|地铁票/,
+    expect(immigrationLesson.id).toBe('self-intro')
+    expect(immigrationLesson.title.en.toLowerCase()).toContain('airport')
+    expect(immigrationLesson.dialogue.lines).toHaveLength(4)
+    expect(immigrationLesson.dialogue.lines.map((line) => line.hanzi).join('\n')).toMatch(
+      /护照|你来中国做什么|我来旅游/,
     )
-    expect(dialogueHanzi, 'Chinese examples should include choosing or taking a subway line').toMatch(
-      /[一二三四五六七八九十\d]+号线/,
-    )
-    expect(dialogueHanzi, 'Chinese examples should include transferring lines').toMatch(
-      /换乘|换[一二三四五六七八九十\d]+号线/,
-    )
-    expect(dialogueHanzi, 'Chinese examples should include exits').toContain('出口')
+    expect(immigrationLesson.shortInput.prompt.en.toLowerCase()).toContain('why')
+    expect(immigrationLesson.shortInput.target).toBe('我来旅游。')
 
-    expect(englishCopy, 'English copy should cover ticket buying').toMatch(/\bticket\b/)
-    expect(englishCopy, 'English copy should cover subway line choice').toMatch(/\bline\b/)
-    expect(englishCopy, 'English copy should cover transfers').toMatch(/\btransfer\b/)
-    expect(englishCopy, 'English copy should cover exits').toMatch(/\bexit\b/)
+    expect(taxiLesson.id).toBe('ask-directions')
+    expect(taxiLesson.title.en.toLowerCase()).toContain('taxi')
+    expect(taxiLesson.dialogue.lines).toHaveLength(5)
+    expect(taxiLesson.dialogue.lines.map((line) => line.hanzi).join('\n')).toMatch(
+      /师傅，去这个酒店|地址|大概多久到|四十分钟左右/,
+    )
+    expect(taxiLesson.shortInput.target).toBe('师傅，去这个酒店。')
 
-    expect(frenchCopy, 'French copy should cover ticket buying').toMatch(/\b(ticket|billet)s?\b/)
-    expect(frenchCopy, 'French copy should cover subway line choice').toMatch(/\bligne\b/)
-    expect(frenchCopy, 'French copy should cover transfers').toMatch(/\b(correspondance|changer)\b/)
-    expect(frenchCopy, 'French copy should cover exits').toMatch(/\bsortie\b/)
+    expect(checkInLesson.id).toBe('order-food')
+    expect(checkInLesson.title.en.toLowerCase()).toMatch(/hotel|apartment|check-in/)
+    expect(checkInLesson.dialogue.lines).toHaveLength(5)
+    expect(checkInLesson.dialogue.lines.map((line) => line.hanzi).join('\n')).toMatch(
+      /我有预订|叫什么名字|请出示护照|房卡/,
+    )
+    expect(checkInLesson.shortInput.target).toBe('你好，我有预订。')
   })
 
-  it('keeps self-intro and order-food learner-facing copy consistently bilingual', async () => {
+  it('keeps all learner-facing copy consistently bilingual', async () => {
     const { course } = await import('./course')
-    const targetLessons = course.lessons.filter((lesson) =>
-      ['self-intro', 'order-food'].includes(lesson.id),
-    )
 
-    expect(targetLessons.map((lesson) => lesson.id)).toEqual(['self-intro', 'order-food'])
-
-    for (const lesson of targetLessons) {
+    for (const lesson of course.lessons) {
       expectLocalizedField(lesson.title, `${lesson.id}.title`)
       expectLocalizedField(lesson.scenario, `${lesson.id}.scenario`)
       expectLocalizedField(lesson.dialogue.title, `${lesson.id}.dialogue.title`)
@@ -215,80 +199,54 @@ describe('course content', () => {
     }
   })
 
-  it('adds practical high-frequency examples with natural English and matching French support', async () => {
+  it('locks the minimum review and short-input content for the arrival lessons', async () => {
     const { course } = await import('./course')
-    const selfIntroLesson = course.lessons.find((lesson) => lesson.id === 'self-intro')
-    const orderFoodLesson = course.lessons.find((lesson) => lesson.id === 'order-food')
+    const byId = Object.fromEntries(course.lessons.map((lesson) => [lesson.id, lesson]))
 
-    if (!selfIntroLesson || !orderFoodLesson) {
-      throw new Error('target lessons missing')
-    }
+    expect(byId['self-intro'].reviewCards.map((card) => card.front)).toEqual(
+      expect.arrayContaining(['护照', '我来旅游', '我住在这个酒店']),
+    )
+    expect(byId['ask-directions'].reviewCards.map((card) => card.front)).toEqual(
+      expect.arrayContaining(['去这个酒店', '地址', '大概多久到']),
+    )
+    expect(byId['order-food'].reviewCards.map((card) => card.front)).toEqual(
+      expect.arrayContaining(['我有预订', '请出示护照', '房卡']),
+    )
 
-    const selfIntroHanzi = collectLocalizedStrings(selfIntroLesson, 'en').join('\n')
     const selfIntroChinese = [
-      ...selfIntroLesson.sentencePatterns.map((pattern) => pattern.example),
-      ...selfIntroLesson.vocabulary.map((item) => item.hanzi),
-      ...selfIntroLesson.hanziRecognition.map((item) => item.hanzi),
-      ...Object.values(selfIntroLesson.practice).flatMap((prompts) =>
+      ...byId['self-intro'].sentencePatterns.map((pattern) => pattern.example),
+      ...byId['self-intro'].vocabulary.map((item) => item.hanzi),
+      ...Object.values(byId['self-intro'].practice).flatMap((prompts) =>
         prompts.map((prompt) => prompt.target),
       ),
-      selfIntroLesson.shortInput.target,
     ].join('\n')
-    const selfIntroFrench = collectLocalizedStrings(selfIntroLesson, 'fr').join('\n').toLowerCase()
-    const orderFoodHanzi = [
-      ...orderFoodLesson.sentencePatterns.map((pattern) => pattern.example),
-      ...orderFoodLesson.vocabulary.map((item) => item.hanzi),
-      ...orderFoodLesson.hanziRecognition.map((item) => item.hanzi),
-      ...Object.values(orderFoodLesson.practice).flatMap((prompts) =>
+    const taxiChinese = [
+      ...byId['ask-directions'].sentencePatterns.map((pattern) => pattern.example),
+      ...byId['ask-directions'].vocabulary.map((item) => item.hanzi),
+      ...Object.values(byId['ask-directions'].practice).flatMap((prompts) =>
         prompts.map((prompt) => prompt.target),
       ),
-      orderFoodLesson.shortInput.target,
     ].join('\n')
-    const orderFoodEnglish = collectLocalizedStrings(orderFoodLesson, 'en').join('\n').toLowerCase()
-    const orderFoodFrench = collectLocalizedStrings(orderFoodLesson, 'fr').join('\n').toLowerCase()
+    const checkInChinese = [
+      ...byId['order-food'].sentencePatterns.map((pattern) => pattern.example),
+      ...byId['order-food'].vocabulary.map((item) => item.hanzi),
+      ...Object.values(byId['order-food'].practice).flatMap((prompts) =>
+        prompts.map((prompt) => prompt.target),
+      ),
+    ].join('\n')
 
-    expect(selfIntroHanzi.toLowerCase()).toContain('introducing yourself')
-    expect(selfIntroHanzi.toLowerCase()).not.toMatch(/\bself introduction\b/)
-    expect(selfIntroChinese, 'Self-intro examples should cover saying where you are from').toMatch(
-      /我来自|我从.+来/,
-    )
-    expect(selfIntroChinese, 'Self-intro examples should cover a common identity').toMatch(
-      /我是(学生|老师|医生|工程师)/,
-    )
-    expect(selfIntroChinese, 'Self-intro examples should include asking “and you?”').toContain(
-      '你呢',
-    )
-    expect(selfIntroFrench, 'French self-intro support should mention coming from a place').toMatch(
-      /je viens de|je suis de/,
-    )
-    expect(selfIntroFrench, 'French self-intro support should mention student identity').toMatch(
-      /étudiant|étudiante/,
-    )
-    expect(selfIntroFrench, 'French self-intro support should include “et toi ?”').toContain(
-      'et toi',
-    )
+    expect(selfIntroChinese).toMatch(/护照|旅游|酒店|住在/)
+    expect(taxiChinese).toMatch(/酒店|地址|多久|分钟左右/)
+    expect(checkInChinese).toMatch(/预订|名字|护照|房卡/)
 
-    expect(orderFoodEnglish, 'English restaurant copy should use natural requests').not.toMatch(
-      /\bplease give me\b/,
+    expect(collectLocalizedStrings(byId['self-intro'], 'en').join('\n').toLowerCase()).toMatch(
+      /passport|travel|hotel/,
     )
-    expect(orderFoodEnglish, 'English restaurant copy should model “I’d like”').toMatch(
-      /\bi(?:'|’)d like\b/,
+    expect(collectLocalizedStrings(byId['ask-directions'], 'fr').join('\n').toLowerCase()).toMatch(
+      /chauffeur|adresse|hôtel/,
     )
-    expect(orderFoodHanzi, 'Order-food examples should cover asking for a menu').toContain('菜单')
-    expect(orderFoodHanzi, 'Order-food examples should cover ordering water').toContain('水')
-    expect(orderFoodHanzi, 'Order-food examples should cover spice preferences').toMatch(
-      /不辣|少辣/,
-    )
-    expect(orderFoodHanzi, 'Order-food examples should cover takeaway or paying').toMatch(
-      /打包|带走|买单|结账/,
-    )
-    expect(orderFoodFrench, 'French order-food support should mention a menu').toContain('menu')
-    expect(orderFoodFrench, 'French order-food support should mention water').toMatch(/\beau\b/)
-    expect(orderFoodFrench, 'French order-food support should mention spice preferences').toMatch(
-      /pas épicé|moins épicé/,
-    )
-    expect(orderFoodFrench, 'French order-food support should mention takeaway or the bill').toMatch(
-      /à emporter|addition/,
+    expect(collectLocalizedStrings(byId['order-food'], 'en').join('\n').toLowerCase()).toMatch(
+      /reservation|room card|front desk/,
     )
   })
 

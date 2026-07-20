@@ -52,7 +52,7 @@ describe('ProgressPage', () => {
 
     const summary = screen.getByRole('region', { name: /résumé du parcours/i })
     expect(within(summary).getByRole('heading', { name: /leçon en cours/i })).toBeVisible()
-    expect(within(summary).getByText(/commander à manger/i)).toBeVisible()
+    expect(within(summary).getByText(/arrivée à l’hôtel ou à l’appartement/i)).toBeVisible()
 
     const stats = screen.getByRole('region', { name: /indicateurs d’apprentissage/i })
     expect(within(stats).getByText(/leçons terminées/i)).toBeVisible()
@@ -75,7 +75,7 @@ describe('ProgressPage', () => {
     expect(within(journeyMap).getByText('À venir')).toBeVisible()
   })
 
-  it('renders the shared journey map in path order with all complete lesson and preview nodes', () => {
+  it('renders the shared arrival journey map in path order with three complete lessons and two preview nodes', () => {
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
@@ -88,7 +88,7 @@ describe('ProgressPage', () => {
     expect(
       cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent),
     ).toEqual(orderedJourneyNodes.map((node) => journeyTitle(node)))
-    expect(within(journeyMap).getAllByText('Preview')).toHaveLength(5)
+    expect(within(journeyMap).getAllByText('Preview')).toHaveLength(2)
     expect(within(journeyMap).getAllByText('Upcoming')).toHaveLength(3)
   })
 
@@ -96,33 +96,33 @@ describe('ProgressPage', () => {
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
-    const cityTravelCard = getJourneyNodeCard('City travel')
-    const airportArrivalCard = getJourneyNodeCard('Airport arrival')
+    const taxiCard = getJourneyNodeCard('Taxi to your stay')
+    const paymentCard = getJourneyNodeCard('Phone number & mobile payment')
 
     expect(journeyMap.querySelectorAll('.journey-node')).toHaveLength(orderedJourneyNodes.length)
-    expect(cityTravelCard).toHaveClass(
+    expect(taxiCard).toHaveClass(
       'journey-node',
       'journey-node--lesson',
       'journey-node--card-link',
     )
-    expect(cityTravelCard.querySelector('.journey-node__doodle')).toHaveTextContent('🚇')
-    expect(within(cityTravelCard).getByText('Open lesson')).toHaveClass('journey-node__stamp')
+    expect(taxiCard.querySelector('.journey-node__doodle')).toHaveTextContent('🚕')
+    expect(within(taxiCard).getByText('Open lesson')).toHaveClass('journey-node__stamp')
 
-    expect(airportArrivalCard).toHaveClass('journey-node', 'journey-node--preview')
-    expect(airportArrivalCard.querySelector('.journey-node__doodle')).toHaveTextContent('✈️')
-    expect(within(airportArrivalCard).getByText(/coming soon/i)).toHaveClass(
+    expect(paymentCard).toHaveClass('journey-node', 'journey-node--preview')
+    expect(paymentCard.querySelector('.journey-node__doodle')).toHaveTextContent('📱')
+    expect(within(paymentCard).getByText(/coming soon/i)).toHaveClass(
       'journey-node__stamp',
     )
     expect(
-      within(airportArrivalCard).getByRole('button', { name: /airport arrival/i }),
+      within(paymentCard).getByRole('button', { name: /phone number & mobile payment/i }),
     ).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('counts mastery from complete lesson nodes only, excluding display-only previews', () => {
     saveProgress({
       ...createDefaultProgress(),
-      completedLessons: ['ask-directions'],
-      lastVisitedLesson: 'ask-directions',
+      completedLessons: ['self-intro'],
+      lastVisitedLesson: 'self-intro',
     })
 
     renderRoute('/progress')
@@ -131,21 +131,21 @@ describe('ProgressPage', () => {
     expect(within(stats).getByText('1/3')).toBeVisible()
     expect(within(stats).getByText('33%')).toBeVisible()
     expect(screen.getAllByText(/1 of 3 lessons completed/i)[0]).toBeVisible()
-    expect(screen.queryByText(/1 of 8/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
   })
 
   it('maps learner progress to completed, current, upcoming, and preview journey statuses', () => {
     saveProgress({
       ...createDefaultProgress(),
-      completedLessons: ['ask-directions'],
-      lastVisitedLesson: 'self-intro',
+      completedLessons: ['self-intro'],
+      lastVisitedLesson: 'ask-directions',
     })
 
     renderRoute('/progress')
 
-    expect(within(getJourneyNodeCard('City travel')).getByText('Complete')).toBeVisible()
-    expect(within(getJourneyNodeCard('Meet people')).getByText('Current')).toBeVisible()
-    expect(within(getJourneyNodeCard('Restaurant ordering')).getByText('Upcoming')).toBeVisible()
+    expect(within(getJourneyNodeCard('Airport immigration basics')).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard('Taxi to your stay')).getByText('Current')).toBeVisible()
+    expect(within(getJourneyNodeCard('Hotel / apartment check-in')).getByText('Upcoming')).toBeVisible()
 
     const previewTitles = orderedJourneyNodes
       .filter((node) => node.kind === 'preview')
@@ -180,31 +180,31 @@ describe('ProgressPage', () => {
     const user = userEvent.setup()
     const savedProgress = {
       ...createDefaultProgress(),
-      completedLessons: ['ask-directions'],
-      lastVisitedLesson: 'ask-directions',
-      reviewQueue: ['ask-directions-review-1'],
+      completedLessons: ['self-intro'],
+      lastVisitedLesson: 'self-intro',
+      reviewQueue: ['self-intro-review-1'],
     }
     saveProgress(savedProgress)
 
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
-    const airportArrivalCard = getJourneyNodeCard('Airport arrival')
-    const airportArrivalToggle = within(airportArrivalCard).getByRole('button', {
-      name: /airport arrival/i,
+    const paymentCard = getJourneyNodeCard('Phone number & mobile payment')
+    const paymentToggle = within(paymentCard).getByRole('button', {
+      name: /phone number & mobile payment/i,
     })
 
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
-    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'false')
+    expect(paymentToggle).toHaveAttribute('aria-expanded', 'false')
 
-    await user.click(airportArrivalToggle)
+    await user.click(paymentToggle)
 
-    expect(airportArrivalToggle).toHaveAttribute('aria-expanded', 'true')
+    expect(paymentToggle).toHaveAttribute('aria-expanded', 'true')
     expect(within(journeyMap).getAllByRole('note')).toHaveLength(1)
-    expect(within(airportArrivalCard).queryByRole('link')).not.toBeInTheDocument()
-    expect(within(airportArrivalCard).getByRole('note')).toHaveTextContent(/coming soon/i)
-    expect(within(airportArrivalCard).getByRole('note')).toHaveTextContent('出口在哪里？')
-    expect(within(airportArrivalCard).getByRole('note')).toHaveTextContent(/immigration/i)
+    expect(within(paymentCard).queryByRole('link')).not.toBeInTheDocument()
+    expect(within(paymentCard).getByRole('note')).toHaveTextContent(/coming soon/i)
+    expect(within(paymentCard).getByRole('note')).toHaveTextContent('可以用手机支付吗？')
+    expect(within(paymentCard).getByRole('note')).toHaveTextContent(/pay by phone/i)
 
     expect(loadProgress()).toEqual(savedProgress)
     expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('1/3')
@@ -212,6 +212,6 @@ describe('ProgressPage', () => {
     expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent(
       /1 review item waiting/i,
     )
-    expect(screen.queryByText(/1 of 8/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
   })
 })

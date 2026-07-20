@@ -33,7 +33,7 @@ export const uiCopy = {
       lede: 'Choose one of the three practical lessons, continue where you left off, or jump straight into review.',
       journeyEyebrow: 'Journey Map',
       journeyMapLabel: 'Journey Map',
-      journeyIntro: 'First conversations in China',
+      journeyIntro: 'Arrive in China step by step',
       continueLearning: 'Continue learning',
       goToReview: 'Go to review',
       viewProgress: 'View progress',
@@ -59,9 +59,9 @@ export const uiCopy = {
       completedLessonCount: (count: number) => `${count} complete`,
       reviewCount: (count: number) => `${count} review`,
       lessonScenarioBadges: {
-        'self-intro': 'Intro',
-        'order-food': 'Restaurant',
-        'ask-directions': 'Metro',
+        'self-intro': 'Immigration',
+        'ask-directions': 'Taxi',
+        'order-food': 'Check-in',
       },
     },
     lessonPage: {
@@ -200,7 +200,7 @@ export const uiCopy = {
       lede: 'Choisissez l’une des trois leçons pratiques, reprenez où vous vous êtes arrêté ou passez directement à la révision.',
       journeyEyebrow: 'Carte du parcours',
       journeyMapLabel: 'Carte du parcours',
-      journeyIntro: 'Premières conversations en Chine',
+      journeyIntro: 'Arriver en Chine étape par étape',
       continueLearning: 'Continuer la leçon',
       goToReview: 'Réviser',
       viewProgress: 'Voir les progrès',
@@ -226,9 +226,9 @@ export const uiCopy = {
       completedLessonCount: (count: number) => `${count} terminée${count > 1 ? 's' : ''}`,
       reviewCount: (count: number) => `${count} à réviser`,
       lessonScenarioBadges: {
-        'self-intro': 'Présentation',
-        'order-food': 'Restaurant',
-        'ask-directions': 'Métro',
+        'self-intro': 'Immigration',
+        'ask-directions': 'Taxi',
+        'order-food': 'Check-in',
       },
     },
     lessonPage: {

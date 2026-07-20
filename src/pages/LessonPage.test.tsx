@@ -16,8 +16,8 @@ describe('LessonPage', () => {
 
     expect(screen.getByRole('region', { name: /lesson overview/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /dialogue practice/i })).toBeVisible()
-    expect(screen.getAllByLabelText(/dialogue line speaker a/i)[0]).toHaveTextContent('你好')
-    expect(screen.getAllByLabelText(/dialogue line speaker a/i)[0]).toHaveTextContent('Nǐ hǎo')
+    expect(screen.getAllByLabelText(/dialogue line speaker officer/i)[0]).toHaveTextContent('你好')
+    expect(screen.getAllByLabelText(/dialogue line speaker officer/i)[0]).toHaveTextContent('Nǐ hǎo')
   })
 
   it('renders the full lesson template and lets the user switch explanations without changing progress', async () => {
@@ -30,7 +30,7 @@ describe('LessonPage', () => {
     renderRoute('/lesson/self-intro')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /se présenter/i }),
+      screen.getByRole('heading', { level: 1, name: /bases du passage à l’immigration/i }),
     ).toBeVisible()
     expect(screen.getByRole('region', { name: /aperçu de la leçon/i })).toBeVisible()
     expect(
@@ -38,7 +38,7 @@ describe('LessonPage', () => {
     ).toBeVisible()
     expect(screen.getByRole('region', { name: /aperçu de progression de la leçon/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /pratique du dialogue/i })).toBeVisible()
-    expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur a/i)[0]).toHaveTextContent(
+    expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur agent/i)[0]).toHaveTextContent(
       '你好',
     )
     expect(screen.getByRole('heading', { level: 2, name: /dialogue/i })).toBeVisible()
@@ -54,14 +54,14 @@ describe('LessonPage', () => {
     expect(
       screen.getByRole('heading', { level: 2, name: /reconnaissance des hanzi/i }),
     ).toBeVisible()
-    expect(screen.getByText(/je m[’']appelle anna\./i)).toBeVisible()
+    expect(screen.getByText(/voici mon passeport/i)).toBeVisible()
     expect(screen.getByRole('link', { name: /passer à la pratique/i })).toBeVisible()
     expect(screen.getByRole('link', { name: /terminer avec la mini-réponse/i })).toBeVisible()
     expect(screen.queryByRole('region', { name: /lesson overview/i })).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'English' }))
 
-    expect(screen.getByText(/my name is anna\./i)).toBeVisible()
+    expect(screen.getByText(/this is my passport/i)).toBeVisible()
     expect(loadProgress().selectedExplanationLanguage).toBe('en')
   })
 
@@ -73,6 +73,7 @@ describe('LessonPage', () => {
     expect(progressPreview).toHaveTextContent(/5 study layers/i)
     expect(progressPreview).toHaveTextContent(/dialogue/i)
     expect(progressPreview).toHaveTextContent(/practice next/i)
+    expect(progressPreview).toHaveTextContent(/immigration/i)
 
     const overview = screen.getByRole('region', { name: /lesson overview/i })
     expect(overview).toHaveClass('lesson-overview-card')

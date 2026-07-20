@@ -76,7 +76,11 @@ describe('learner progress', () => {
     })
 
     expect(updatedProgress.completedLessons).toEqual(['self-intro'])
-    expect(updatedProgress.reviewQueue).toEqual(['self-intro-review-1'])
+    expect(updatedProgress.reviewQueue).toEqual([
+      'self-intro-review-1',
+      'self-intro-review-2',
+      'self-intro-review-3',
+    ])
     expect(updatedProgress.lastVisitedLesson).toBe('self-intro')
     expect(updatedProgress.lessonStepProgress['self-intro']).toEqual({
       completedSections: ['dialogue', 'practice'],
@@ -86,6 +90,10 @@ describe('learner progress', () => {
     const repeatedCompletion = completeLesson('self-intro', updatedProgress)
 
     expect(repeatedCompletion.completedLessons).toEqual(['self-intro'])
-    expect(repeatedCompletion.reviewQueue).toEqual(['self-intro-review-1'])
+    expect(repeatedCompletion.reviewQueue).toEqual([
+      'self-intro-review-1',
+      'self-intro-review-2',
+      'self-intro-review-3',
+    ])
   })
 })
