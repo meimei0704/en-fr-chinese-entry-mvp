@@ -8,7 +8,12 @@ export type LocalizedField = string | LocalizedText
 
 export type BilingualExplanation = LocalizedText
 
-export type LessonId = 'self-intro' | 'order-food' | 'ask-directions'
+export type LessonId =
+  | 'self-intro'
+  | 'ask-directions'
+  | 'order-food'
+  | 'phone-and-payment'
+  | 'convenience-store-run'
 
 export type JourneyStageId = 'arrival-in-china'
 

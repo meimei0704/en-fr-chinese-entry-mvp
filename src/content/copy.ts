@@ -62,6 +62,8 @@ export const uiCopy = {
         'self-intro': 'Immigration',
         'ask-directions': 'Taxi',
         'order-food': 'Check-in',
+        'phone-and-payment': 'Setup',
+        'convenience-store-run': 'Store',
       },
     },
     lessonPage: {
@@ -229,6 +231,8 @@ export const uiCopy = {
         'self-intro': 'Immigration',
         'ask-directions': 'Taxi',
         'order-food': 'Check-in',
+        'phone-and-payment': 'Installation',
+        'convenience-store-run': 'Supérette',
       },
     },
     lessonPage: {
