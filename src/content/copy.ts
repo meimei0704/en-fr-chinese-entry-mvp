@@ -30,7 +30,7 @@ export const uiCopy = {
     homePage: {
       eyebrow: 'Core path',
       heading: 'Home',
-      lede: 'Choose one of the three practical lessons, continue where you left off, or jump straight into review.',
+      lede: 'Choose one of the five practical lessons, continue where you left off, or jump straight into review.',
       journeyEyebrow: 'Journey Map',
       journeyMapLabel: 'Journey Map',
       journeyIntro: 'Arrive in China step by step',
@@ -199,7 +199,7 @@ export const uiCopy = {
     homePage: {
       eyebrow: 'Parcours principal',
       heading: 'Accueil',
-      lede: 'Choisissez l’une des trois leçons pratiques, reprenez où vous vous êtes arrêté ou passez directement à la révision.',
+      lede: 'Choisissez l’une des cinq leçons pratiques, reprenez où vous vous êtes arrêté ou passez directement à la révision.',
       journeyEyebrow: 'Carte du parcours',
       journeyMapLabel: 'Carte du parcours',
       journeyIntro: 'Arriver en Chine étape par étape',

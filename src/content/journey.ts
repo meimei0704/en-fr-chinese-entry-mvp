@@ -14,6 +14,8 @@ function getLesson(lessonId: LessonId): LessonContent {
 const airportImmigrationLesson = getLesson('self-intro')
 const taxiToStayLesson = getLesson('ask-directions')
 const hotelCheckInLesson = getLesson('order-food')
+const phoneAndPaymentLesson = getLesson('phone-and-payment')
+const convenienceStoreRunLesson = getLesson('convenience-store-run')
 
 export const journeyNodeIcons: Record<JourneyNodeId, string> = {
   'airport-immigration': '🛂',
@@ -89,61 +91,33 @@ const journeyNodeData: JourneyNode[] = [
   {
     id: 'phone-and-payment',
     stageId: 'arrival-in-china',
-    kind: 'preview',
+    kind: 'lesson',
+    lessonId: phoneAndPaymentLesson.id,
     title: {
       en: 'Phone number & mobile payment',
       fr: 'Téléphone & paiement mobile',
     },
     eyebrow: {
-      en: 'Setup preview',
-      fr: 'Aperçu installation',
+      en: 'Setup',
+      fr: 'Installation',
     },
-    summary: {
-      en: 'Preview the next setup task: opening a phone number and getting ready to pay by phone.',
-      fr: 'Aperçu de la prochaine étape : ouvrir une ligne téléphonique et se préparer à payer avec son téléphone.',
-    },
-    previewDetails: {
-      phrase: '可以用手机支付吗？',
-      pinyin: 'Kěyǐ yòng shǒujī zhīfù ma?',
-      meaning: {
-        en: 'Can I pay by phone?',
-        fr: 'Puis-je payer avec mon téléphone ?',
-      },
-      goal: {
-        en: 'Recognize the phone/payment setup that comes after arrival without entering the full lesson flow yet.',
-        fr: 'Reconnaître l’étape téléphone/paiement qui suit l’arrivée, sans entrer encore dans un vrai parcours de leçon.',
-      },
-    },
+    summary: phoneAndPaymentLesson.scenario,
     pathOrder: 4,
   },
   {
     id: 'convenience-store-run',
     stageId: 'arrival-in-china',
-    kind: 'preview',
+    kind: 'lesson',
+    lessonId: convenienceStoreRunLesson.id,
     title: {
       en: 'First convenience store run',
       fr: 'Première course en supérette',
     },
     eyebrow: {
-      en: 'Errand preview',
-      fr: 'Aperçu courses',
+      en: 'Store',
+      fr: 'Supérette',
     },
-    summary: {
-      en: 'Preview buying water or a simple item after you have reached your stay.',
-      fr: 'Aperçu de l’achat d’eau ou d’un article simple après l’arrivée au logement.',
-    },
-    previewDetails: {
-      phrase: '我要一瓶水。',
-      pinyin: 'Wǒ yào yì píng shuǐ.',
-      meaning: {
-        en: 'I want a bottle of water.',
-        fr: 'Je voudrais une bouteille d’eau.',
-      },
-      goal: {
-        en: 'See the first shopping task without adding a new full lesson in this release.',
-        fr: 'Voir la première tâche d’achat sans ajouter une nouvelle leçon complète dans cette version.',
-      },
-    },
+    summary: convenienceStoreRunLesson.scenario,
     pathOrder: 5,
   },
 ]

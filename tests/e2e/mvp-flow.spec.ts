@@ -21,7 +21,7 @@ test('a first-time learner can choose a language, finish lesson one, and reach r
 
   await page.getByRole('link', { name: /view progress/i }).click()
   const learningIndicators = page.getByRole('region', { name: /learning indicators/i })
-  await expect(learningIndicators).toContainText('1 of 3 lessons completed')
+  await expect(learningIndicators).toContainText('1 of 5 lessons completed')
   await expect(learningIndicators).toContainText('2 review items waiting')
 
   await page.getByRole('link', { name: /back to home/i }).click()

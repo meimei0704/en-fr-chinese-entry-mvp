@@ -1,18 +1,25 @@
 import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { course } from '../content/course'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
+const expectedLessonHrefs = [
+  '/lesson/self-intro',
+  '/lesson/ask-directions',
+  '/lesson/order-food',
+  '/lesson/phone-and-payment',
+  '/lesson/convenience-store-run',
+]
+
 describe('HomePage', () => {
   beforeEach(() => {
     localStorage.clear()
   })
 
-  it('shows the three arrival lesson cards and a review shortcut on the home page', () => {
+  it('shows all five arrival lesson cards and a review shortcut on the home page', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
@@ -23,13 +30,9 @@ describe('HomePage', () => {
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
-    expect(journeyLessonLinks).toHaveLength(3)
-    expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual([
-      '/lesson/self-intro',
-      '/lesson/ask-directions',
-      '/lesson/order-food',
-    ])
-    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(2)
+    expect(journeyLessonLinks).toHaveLength(5)
+    expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
+    expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
     expect(
       within(journeyMap).getByRole('heading', { level: 2, name: /airport immigration basics/i }),
     ).toBeVisible()
@@ -37,9 +40,15 @@ describe('HomePage', () => {
     expect(
       within(journeyMap).getByRole('heading', { level: 2, name: /hotel \/ apartment check-in/i }),
     ).toBeVisible()
+    expect(
+      within(journeyMap).getByRole('heading', { level: 2, name: /phone number & mobile payment/i }),
+    ).toBeVisible()
+    expect(
+      within(journeyMap).getByRole('heading', { level: 2, name: /first convenience store run/i }),
+    ).toBeVisible()
   })
 
-  it('shows the refreshed hero phrase, progress cues, and journey status copy', () => {
+  it('shows the refreshed hero phrase, five-lesson progress cues, and no preview status copy', () => {
     renderRoute('/home')
 
     const heroPhrase = screen.getByRole('group', { name: /hero phrase/i })
@@ -49,7 +58,9 @@ describe('HomePage', () => {
     expect(screen.getByText(/listen & repeat/i)).toBeVisible()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    expect(within(journeyMap).getAllByText(/coming soon/i)).toHaveLength(2)
+    expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
+    expect(within(journeyMap).queryByRole('button', { name: /phone number & mobile payment/i }))
+      .not.toBeInTheDocument()
     expect(within(journeyMap).getByText(/arrive in china step by step/i)).toBeVisible()
   })
 
@@ -84,7 +95,9 @@ describe('HomePage', () => {
 
     expect(screen.getByText('Immigration')).toBeVisible()
     expect(screen.getByText('Taxi')).toBeVisible()
-    expect(screen.getAllByText(/bientôt/i)).toHaveLength(2)
+    expect(screen.getByText('Installation')).toBeVisible()
+    expect(screen.getByText('Supérette')).toBeVisible()
+    expect(screen.queryAllByText(/bientôt/i)).toHaveLength(0)
     expect(screen.queryByText(`${course.lessons.length} lessons`)).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
   })
@@ -116,6 +129,21 @@ describe('HomePage', () => {
     ).toHaveAttribute('href', '/progress')
   })
 
+  it('continues from lesson three into lesson four after check-in is complete', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro', 'ask-directions', 'order-food'],
+      lastVisitedLesson: 'order-food',
+    })
+
+    renderRoute('/home')
+
+    expect(screen.getByRole('link', { name: /continue learning/i })).toHaveAttribute(
+      'href',
+      '/lesson/phone-and-payment',
+    )
+  })
+
   it('makes each lesson journey node a whole-card link to its real lesson route', () => {
     renderRoute('/home')
 
@@ -123,10 +151,14 @@ describe('HomePage', () => {
     const immigrationCard = within(journeyMap).getByRole('link', { name: /airport immigration basics/i })
     const taxiCard = within(journeyMap).getByRole('link', { name: /taxi to your stay/i })
     const checkInCard = within(journeyMap).getByRole('link', { name: /hotel \/ apartment check-in/i })
+    const paymentCard = within(journeyMap).getByRole('link', { name: /phone number & mobile payment/i })
+    const storeCard = within(journeyMap).getByRole('link', { name: /first convenience store run/i })
 
     expect(immigrationCard).toHaveAttribute('href', '/lesson/self-intro')
     expect(taxiCard).toHaveAttribute('href', '/lesson/ask-directions')
     expect(checkInCard).toHaveAttribute('href', '/lesson/order-food')
+    expect(paymentCard).toHaveAttribute('href', '/lesson/phone-and-payment')
+    expect(storeCard).toHaveAttribute('href', '/lesson/convenience-store-run')
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
   })
 
@@ -138,7 +170,7 @@ describe('HomePage', () => {
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     const taxiCard = within(journeyMap).getByRole('link', { name: /taxi to your stay/i })
-    const paymentToggle = within(journeyMap).getByRole('button', { name: /phone number & mobile payment/i })
+    const paymentCard = within(journeyMap).getByRole('link', { name: /phone number & mobile payment/i })
 
     expect(
       taxiCard.querySelector(
@@ -146,39 +178,22 @@ describe('HomePage', () => {
       ),
     ).toBeInTheDocument()
     expect(
-      paymentToggle.querySelector(
+      paymentCard.querySelector(
         '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
       ),
     ).toBeInTheDocument()
   })
 
-  it('keeps preview journey nodes off routing and expands one in-card coming-soon panel on demand', async () => {
-    const user = userEvent.setup()
-
+  it('keeps upgraded phone/payment and convenience-store nodes out of preview affordances', () => {
     renderRoute('/home')
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
-
-    const paymentToggle = within(journeyMap).getByRole('button', { name: /phone number & mobile payment/i })
-    expect(paymentToggle).toHaveAttribute('aria-expanded', 'false')
-
-    await user.click(paymentToggle)
-
-    expect(paymentToggle).toHaveAttribute('aria-expanded', 'true')
-    expect(within(journeyMap).getAllByRole('note')).toHaveLength(1)
-
-    const paymentCard = paymentToggle.closest('.journey-node')
-    expect(paymentCard).not.toBeNull()
-
-    const paymentPreview = within(paymentCard as HTMLElement).getByRole('note')
-    expect(paymentPreview).toHaveTextContent(/coming soon/i)
-    expect(paymentPreview).toHaveTextContent(/pay by phone/i)
-    expect(within(paymentCard as HTMLElement).queryByRole('link')).not.toBeInTheDocument()
-
-    await user.click(paymentToggle)
-
-    expect(paymentToggle).toHaveAttribute('aria-expanded', 'false')
-    expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
+    expect(within(journeyMap).queryByRole('button', { name: /phone number & mobile payment/i }))
+      .not.toBeInTheDocument()
+    expect(within(journeyMap).queryByRole('button', { name: /first convenience store run/i }))
+      .not.toBeInTheDocument()
+    expect(within(journeyMap).queryAllByText(/peek inside/i)).toHaveLength(0)
+    expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
   })
 })
