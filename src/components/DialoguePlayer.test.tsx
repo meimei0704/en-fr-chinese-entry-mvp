@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { course } from '../content/course'
 import { DialoguePlayer } from './DialoguePlayer'
 
 class MockUtterance {
@@ -18,49 +19,53 @@ class MockUtterance {
 describe('DialoguePlayer', () => {
   const speak = vi.fn()
   const cancel = vi.fn()
+  const audioPlay = vi.fn()
+  const audioConstructor = vi.fn()
 
   beforeEach(() => {
     speak.mockReset()
     cancel.mockReset()
+    audioPlay.mockReset()
+    audioConstructor.mockReset()
     vi.stubGlobal('SpeechSynthesisUtterance', MockUtterance)
     vi.stubGlobal('speechSynthesis', {
       cancel,
       speak,
       getVoices: () => [],
     })
+    class MockAudio {
+      addEventListener = vi.fn()
+      currentTime = 0
+      pause = vi.fn()
+      play = audioPlay.mockResolvedValue(undefined)
+      src: string
+
+      constructor(src: string) {
+        audioConstructor(src)
+        this.src = src
+      }
+    }
+
+    vi.stubGlobal('Audio', MockAudio)
   })
 
-  it('offers a real playback button that speaks the Chinese line through browser TTS', async () => {
+  it('offers a real playback button that plays the Chinese line audio asset', async () => {
     const user = userEvent.setup()
+    const firstLine = course.lessons[0].dialogue.lines[0]
 
     render(
       <DialoguePlayer
         language="fr"
-        lines={[
-          {
-            id: 'line-1',
-            speaker: 'Agent',
-            hanzi: '请问，地铁票在哪儿买？',
-            pinyin: 'Qǐngwèn, dìtiě piào zài nǎr mǎi?',
-            translation: 'Où est-ce que je peux acheter un ticket de métro ?',
-            explanation: {
-              en: 'Test explanation',
-              fr: 'Explication de test',
-            },
-            audio: '/audio/test.mp3',
-          },
-        ]}
+        lines={[firstLine]}
       />,
     )
 
     await user.click(screen.getByRole('button', { name: /écouter le chinois/i }))
 
     expect(cancel).toHaveBeenCalledTimes(1)
-    expect(speak).toHaveBeenCalledTimes(1)
-    expect(speak.mock.calls[0]?.[0]).toMatchObject({
-      text: '请问，地铁票在哪儿买？',
-      lang: 'zh-CN',
-    })
+    expect(audioPlay).toHaveBeenCalledTimes(1)
+    expect(audioConstructor).toHaveBeenCalledWith(firstLine.audio)
+    expect(speak).not.toHaveBeenCalled()
   })
 
   it('uses localized accessible names for dialogue lines in French mode', () => {

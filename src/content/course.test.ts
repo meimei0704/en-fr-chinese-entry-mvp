@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const expectedDialogueAudioByLesson = {
@@ -315,14 +315,22 @@ describe('course content', () => {
     ).toMatch(/bouteille d’eau|combien|supérette/)
   })
 
-  it('ships placeholder audio files for every dialogue and short-input reference', async () => {
+  it('ships non-empty MP3 audio files for every dialogue and short-input reference', async () => {
     const audioPaths = await collectAudioPaths()
 
+    expect(audioPaths).toHaveLength(29)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {
+      expect(audioPath).toMatch(/^\/audio\/[a-z0-9-]+\/(?:line-\d{2}|short-input-\d{2})\.mp3$/)
       const publicPath = `${process.cwd()}/public${audioPath.replace('/audio', '/audio')}`
       expect(existsSync(publicPath), `missing ${audioPath}`).toBe(true)
+      expect(statSync(publicPath).size, `${audioPath} should not be a placeholder`).toBeGreaterThan(1024)
+
+      const header = readFileSync(publicPath).subarray(0, 3)
+      const hasId3Header = header.toString('utf8') === 'ID3'
+      const hasFrameSync = header[0] === 0xff && (header[1] & 0xe0) === 0xe0
+      expect(hasId3Header || hasFrameSync, `${audioPath} should look like an MP3 file`).toBe(true)
     }
   })
 })
