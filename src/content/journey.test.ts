@@ -5,22 +5,24 @@ import { course } from './course'
 import { journeyNodes, journeyStages } from './journey'
 
 describe('journey content', () => {
-  it('exposes the B1 arrival-in-China loop as three lessons plus two previews', () => {
+  it('exposes the B1 arrival-in-China loop as five official lessons with no preview nodes', () => {
     expect(journeyStages.map((stage) => stage.id)).toEqual(['arrival-in-china'])
 
     const lessonNodes = journeyNodes.filter((node) => node.kind === 'lesson')
     const previewNodes = journeyNodes.filter((node) => node.kind === 'preview')
 
     expect(journeyNodes.map((node) => node.pathOrder)).toEqual([1, 2, 3, 4, 5])
-    expect(lessonNodes).toHaveLength(3)
-    expect(previewNodes).toHaveLength(2)
-    expect(lessonNodes.map((node) => node.lessonId)).toEqual([
-      'self-intro',
-      'ask-directions',
-      'order-food',
+    expect(journeyNodes.map((node) => node.id)).toEqual([
+      'airport-immigration',
+      'taxi-to-stay',
+      'hotel-check-in',
+      'phone-and-payment',
+      'convenience-store-run',
     ])
+    expect(lessonNodes).toHaveLength(5)
+    expect(previewNodes).toHaveLength(0)
     expect(lessonNodes.map((node) => node.lessonId)).toEqual(course.lessons.map((lesson) => lesson.id))
-    expect(previewNodes.every((node) => node.lessonId === undefined)).toBe(true)
+    expect(journeyNodes.every((node) => node.previewDetails === undefined)).toBe(true)
   })
 
   it('pins the arrival path copy to immigration, taxi, check-in, phone payment, and convenience store', () => {

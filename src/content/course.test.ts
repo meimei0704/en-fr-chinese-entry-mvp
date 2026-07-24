@@ -22,12 +22,28 @@ const expectedDialogueAudioByLesson = {
     '/audio/order-food/line-04.mp3',
     '/audio/order-food/line-05.mp3',
   ],
+  'phone-and-payment': [
+    '/audio/phone-and-payment/line-01.mp3',
+    '/audio/phone-and-payment/line-02.mp3',
+    '/audio/phone-and-payment/line-03.mp3',
+    '/audio/phone-and-payment/line-04.mp3',
+    '/audio/phone-and-payment/line-05.mp3',
+  ],
+  'convenience-store-run': [
+    '/audio/convenience-store-run/line-01.mp3',
+    '/audio/convenience-store-run/line-02.mp3',
+    '/audio/convenience-store-run/line-03.mp3',
+    '/audio/convenience-store-run/line-04.mp3',
+    '/audio/convenience-store-run/line-05.mp3',
+  ],
 } as const
 
 const expectedShortInputAudioByLesson = {
   'self-intro': '/audio/self-intro/short-input-01.mp3',
   'ask-directions': '/audio/ask-directions/short-input-01.mp3',
   'order-food': '/audio/order-food/short-input-01.mp3',
+  'phone-and-payment': '/audio/phone-and-payment/short-input-01.mp3',
+  'convenience-store-run': '/audio/convenience-store-run/short-input-01.mp3',
 } as const
 
 async function collectAudioPaths() {
@@ -67,16 +83,18 @@ function expectLocalizedField(value: unknown, fieldPath: string) {
 }
 
 describe('course content', () => {
-  it('exposes three arrival lessons in journey order with bilingual explanations and static audio paths', async () => {
+  it('exposes five arrival lessons in journey order with bilingual explanations and static audio paths', async () => {
     const { course } = await import('./course')
 
     expect(course.supportedExplanationLanguages).toEqual(['en', 'fr'])
     expect(course.estimatedDailyMinutes).toBe(10)
-    expect(course.lessons).toHaveLength(3)
+    expect(course.lessons).toHaveLength(5)
     expect(course.lessons.map((lesson) => lesson.id)).toEqual([
       'self-intro',
       'ask-directions',
       'order-food',
+      'phone-and-payment',
+      'convenience-store-run',
     ])
 
     const firstLine = course.lessons[0].dialogue.lines[0]
@@ -118,9 +136,10 @@ describe('course content', () => {
     }
   })
 
-  it('maps stable lesson ids onto the first three arrival tasks', async () => {
+  it('maps stable lesson ids onto the five arrival tasks', async () => {
     const { course } = await import('./course')
-    const [immigrationLesson, taxiLesson, checkInLesson] = course.lessons
+    const [immigrationLesson, taxiLesson, checkInLesson, phonePaymentLesson, storeRunLesson] =
+      course.lessons
 
     expect(immigrationLesson.id).toBe('self-intro')
     expect(immigrationLesson.title.en.toLowerCase()).toContain('airport')
@@ -146,6 +165,24 @@ describe('course content', () => {
       /我有预订|叫什么名字|请出示护照|房卡/,
     )
     expect(checkInLesson.shortInput.target).toBe('你好，我有预订。')
+
+    expect(phonePaymentLesson.id).toBe('phone-and-payment')
+    expect(phonePaymentLesson.title.en.toLowerCase()).toMatch(/phone|payment/)
+    expect(phonePaymentLesson.dialogue.lines).toHaveLength(5)
+    expect(phonePaymentLesson.dialogue.lines.map((line) => line.hanzi).join('\n')).toMatch(
+      /手机卡|手机号码|支付|现金/,
+    )
+    expect(phonePaymentLesson.shortInput.prompt.en.toLowerCase()).toContain('phone')
+    expect(phonePaymentLesson.shortInput.target).toBe('可以用手机支付吗？')
+
+    expect(storeRunLesson.id).toBe('convenience-store-run')
+    expect(storeRunLesson.title.en.toLowerCase()).toMatch(/convenience store|store/)
+    expect(storeRunLesson.dialogue.lines).toHaveLength(5)
+    expect(storeRunLesson.dialogue.lines.map((line) => line.hanzi).join('\n')).toMatch(
+      /一瓶水|还要别的吗|多少钱|五块钱|手机支付/,
+    )
+    expect(storeRunLesson.shortInput.prompt.en.toLowerCase()).toContain('bottle of water')
+    expect(storeRunLesson.shortInput.target).toBe('我要一瓶水。')
   })
 
   it('keeps all learner-facing copy consistently bilingual', async () => {
@@ -212,6 +249,12 @@ describe('course content', () => {
     expect(byId['order-food'].reviewCards.map((card) => card.front)).toEqual(
       expect.arrayContaining(['我有预订', '请出示护照', '房卡']),
     )
+    expect(byId['phone-and-payment'].reviewCards.map((card) => card.front)).toEqual(
+      expect.arrayContaining(['手机卡', '手机号码', '可以用手机支付吗？']),
+    )
+    expect(byId['convenience-store-run'].reviewCards.map((card) => card.front)).toEqual(
+      expect.arrayContaining(['一瓶水', '多少钱', '不要了']),
+    )
 
     const selfIntroChinese = [
       ...byId['self-intro'].sentencePatterns.map((pattern) => pattern.example),
@@ -234,10 +277,26 @@ describe('course content', () => {
         prompts.map((prompt) => prompt.target),
       ),
     ].join('\n')
+    const phonePaymentChinese = [
+      ...byId['phone-and-payment'].sentencePatterns.map((pattern) => pattern.example),
+      ...byId['phone-and-payment'].vocabulary.map((item) => item.hanzi),
+      ...Object.values(byId['phone-and-payment'].practice).flatMap((prompts) =>
+        prompts.map((prompt) => prompt.target),
+      ),
+    ].join('\n')
+    const storeRunChinese = [
+      ...byId['convenience-store-run'].sentencePatterns.map((pattern) => pattern.example),
+      ...byId['convenience-store-run'].vocabulary.map((item) => item.hanzi),
+      ...Object.values(byId['convenience-store-run'].practice).flatMap((prompts) =>
+        prompts.map((prompt) => prompt.target),
+      ),
+    ].join('\n')
 
     expect(selfIntroChinese).toMatch(/护照|旅游|酒店|住在/)
     expect(taxiChinese).toMatch(/酒店|地址|多久|分钟左右/)
     expect(checkInChinese).toMatch(/预订|名字|护照|房卡/)
+    expect(phonePaymentChinese).toMatch(/手机卡|手机号码|支付|现金/)
+    expect(storeRunChinese).toMatch(/一瓶水|多少钱|不要了|手机支付/)
 
     expect(collectLocalizedStrings(byId['self-intro'], 'en').join('\n').toLowerCase()).toMatch(
       /passport|travel|hotel/,
@@ -248,6 +307,12 @@ describe('course content', () => {
     expect(collectLocalizedStrings(byId['order-food'], 'en').join('\n').toLowerCase()).toMatch(
       /reservation|room card|front desk/,
     )
+    expect(
+      collectLocalizedStrings(byId['phone-and-payment'], 'en').join('\n').toLowerCase(),
+    ).toMatch(/sim card|phone number|mobile payment|cash/)
+    expect(
+      collectLocalizedStrings(byId['convenience-store-run'], 'fr').join('\n').toLowerCase(),
+    ).toMatch(/bouteille d’eau|combien|supérette/)
   })
 
   it('ships placeholder audio files for every dialogue and short-input reference', async () => {

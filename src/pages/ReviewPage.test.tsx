@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
+import { completeLesson, createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
 function seedProgressWithFirstLessonLearned(selectedExplanationLanguage: 'en' | 'fr' = 'fr') {
@@ -52,6 +52,35 @@ describe('ReviewPage', () => {
     expect(screen.queryByText('护照')).not.toBeInTheDocument()
     expect(screen.getByRole('region', { name: /recto de la carte/i })).toHaveTextContent('我来旅游')
     expect(loadProgress().reviewQueue).toEqual(['self-intro-review-2', 'self-intro-review-3'])
+  })
+
+
+
+  it('shows review cards enqueued by the fourth and fifth formal lessons after progress reload', async () => {
+    const user = userEvent.setup()
+    const afterPhonePayment = completeLesson('phone-and-payment', createDefaultProgress())
+    const afterStoreRun = completeLesson('convenience-store-run', afterPhonePayment)
+
+    saveProgress(afterStoreRun)
+    renderRoute('/review')
+
+    expect(loadProgress().completedLessons).toEqual([
+      'phone-and-payment',
+      'convenience-store-run',
+    ])
+    expect(screen.getByText(/cards due today: 6/i)).toBeVisible()
+    expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('手机卡')
+
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+
+    expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('一瓶水')
+    expect(loadProgress().reviewQueue).toEqual([
+      'convenience-store-run-review-1',
+      'convenience-store-run-review-2',
+      'convenience-store-run-review-3',
+    ])
   })
 
   it('frames the review queue with status cards and a layered flashcard surface', () => {

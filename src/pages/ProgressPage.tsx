@@ -5,7 +5,7 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import type { JourneyNode, LessonId } from '../content/types'
-import { loadProgress } from '../lib/progress'
+import { getContinueLessonId, loadProgress } from '../lib/progress'
 
 type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
@@ -23,9 +23,9 @@ export function ProgressPage() {
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
-  const currentLesson = course.lessons.find(
-    (lesson) => lesson.id === progress.lastVisitedLesson,
-  )
+  const currentLessonId =
+    progress.lastVisitedLesson === null ? null : getContinueLessonId(progress)
+  const currentLesson = course.lessons.find((lesson) => lesson.id === currentLessonId)
   const completedLessonIds = new Set(
     progress.completedLessons.filter((lessonId) => lessonJourneyLessonIds.has(lessonId)),
   )
@@ -47,7 +47,7 @@ export function ProgressPage() {
       return 'complete'
     }
 
-    if (progress.lastVisitedLesson === node.lessonId) {
+    if (currentLessonId === node.lessonId) {
       return 'current'
     }
 

@@ -37,9 +37,8 @@ function isExplanationLanguage(value: unknown): value is ExplanationLanguage {
 
 function isLessonId(value: unknown): value is LessonId {
   return (
-    value === 'self-intro' ||
-    value === 'order-food' ||
-    value === 'ask-directions'
+    typeof value === 'string' &&
+    course.lessons.some((lesson) => lesson.id === value)
   )
 }
 

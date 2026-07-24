@@ -15,7 +15,10 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
     'href',
     '/lesson/self-intro',
   )
-  await expect(page.getByRole('button', { name: /phone number & mobile payment/i })).toBeVisible()
+  await expect(page.getByRole('link', { name: /phone number & mobile payment/i })).toHaveAttribute(
+    'href',
+    '/lesson/phone-and-payment',
+  )
 
   for (const width of [320, 390, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 })
