@@ -28,6 +28,10 @@ function getJourneyMap() {
   return screen.getByRole('region', { name: /progress journey map/i })
 }
 
+function getProgressSummary() {
+  return screen.getByRole('region', { name: /learning path summary/i })
+}
+
 function getJourneyNodeCard(title: string) {
   const name = new RegExp(`^${escapeRegExp(title)}\\b`, 'i')
 
@@ -155,6 +159,35 @@ describe('ProgressPage', () => {
     expect(within(getJourneyNodeCard('Phone number & mobile payment')).getByText('Current')).toBeVisible()
     expect(within(getJourneyNodeCard('First convenience store run')).getByText('Upcoming')).toBeVisible()
     expect(within(getJourneyMap()).queryAllByText('Preview')).toHaveLength(0)
+  })
+
+  it('uses the next lesson as current after completing lesson 3', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro', 'ask-directions', 'order-food'],
+      lastVisitedLesson: 'order-food',
+    })
+
+    renderRoute('/progress')
+
+    expect(within(getJourneyNodeCard('Hotel / apartment check-in')).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard('Phone number & mobile payment')).getByText('Current')).toBeVisible()
+    expect(within(getJourneyNodeCard('First convenience store run')).getByText('Upcoming')).toBeVisible()
+    expect(within(getProgressSummary()).getByText(/phone number & mobile payment/i)).toBeVisible()
+  })
+
+  it('uses the final lesson as current after completing lesson 4', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro', 'ask-directions', 'order-food', 'phone-and-payment'],
+      lastVisitedLesson: 'phone-and-payment',
+    })
+
+    renderRoute('/progress')
+
+    expect(within(getJourneyNodeCard('Phone number & mobile payment')).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard('First convenience store run')).getByText('Current')).toBeVisible()
+    expect(within(getProgressSummary()).getByText('First convenience store run')).toBeVisible()
   })
 
   it('makes all five journey nodes whole-card links to existing lesson routes', () => {
