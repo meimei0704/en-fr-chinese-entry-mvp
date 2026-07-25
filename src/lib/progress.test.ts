@@ -42,7 +42,7 @@ describe('learner progress', () => {
       selectedExplanationLanguage: 'fr' as const,
       completedLessons: ['self-intro'],
       reviewQueue: ['ni-hao', 'xie-xie'],
-      lastVisitedLesson: 'self-intro',
+      lastVisitedLesson: 'self-intro' as const,
       lessonStepProgress: {
         'self-intro': {
           completedSections: ['dialogue', 'practice'],
@@ -64,25 +64,38 @@ describe('learner progress', () => {
     })
   })
 
-
-
-  it('persists progress that references the fourth and fifth formal lessons', async () => {
+  it('persists progress that references the new sixth through tenth formal lessons', async () => {
     const { createDefaultProgress, loadProgress, saveProgress } = await importProgressModule()
     const updatedProgress: LearnerProgress = {
       ...createDefaultProgress(),
-      completedLessons: ['phone-and-payment'],
+      completedLessons: ['restaurant-order', 'metro-ticket', 'pharmacy-help'],
       reviewQueue: [
-        'phone-and-payment-review-1',
-        'convenience-store-run-review-1',
+        'restaurant-order-review-1',
+        'metro-ticket-review-1',
+        'pharmacy-help-review-1',
+        'ask-for-help-problem-review-1',
+        'train-station-ticket-review-1',
       ],
-      lastVisitedLesson: 'convenience-store-run',
+      lastVisitedLesson: 'train-station-ticket',
       lessonStepProgress: {
-        'phone-and-payment': {
+        'restaurant-order': {
           completedSections: ['dialogue', 'practice'],
           shortInputComplete: true,
         },
-        'convenience-store-run': {
+        'metro-ticket': {
           completedSections: ['dialogue'],
+          shortInputComplete: false,
+        },
+        'pharmacy-help': {
+          completedSections: ['dialogue', 'patterns'],
+          shortInputComplete: true,
+        },
+        'ask-for-help-problem': {
+          completedSections: ['dialogue'],
+          shortInputComplete: false,
+        },
+        'train-station-ticket': {
+          completedSections: [],
           shortInputComplete: false,
         },
       },
@@ -93,7 +106,60 @@ describe('learner progress', () => {
     expect(loadProgress()).toEqual(updatedProgress)
   })
 
-  it('continues through the fourth and fifth lessons in canonical course order', async () => {
+  it('continues from lesson five to six, lesson nine to ten, and does not overflow after lesson ten', async () => {
+    const { createDefaultProgress, getContinueLessonId } = await importProgressModule()
+
+    expect(
+      getContinueLessonId({
+        ...createDefaultProgress(),
+        completedLessons: [
+          'self-intro',
+          'ask-directions',
+          'order-food',
+          'phone-and-payment',
+          'convenience-store-run',
+        ],
+        lastVisitedLesson: 'convenience-store-run',
+      }),
+    ).toBe('restaurant-order')
+    expect(
+      getContinueLessonId({
+        ...createDefaultProgress(),
+        completedLessons: [
+          'self-intro',
+          'ask-directions',
+          'order-food',
+          'phone-and-payment',
+          'convenience-store-run',
+          'restaurant-order',
+          'metro-ticket',
+          'pharmacy-help',
+          'ask-for-help-problem',
+        ],
+        lastVisitedLesson: 'ask-for-help-problem',
+      }),
+    ).toBe('train-station-ticket')
+    expect(
+      getContinueLessonId({
+        ...createDefaultProgress(),
+        completedLessons: [
+          'self-intro',
+          'ask-directions',
+          'order-food',
+          'phone-and-payment',
+          'convenience-store-run',
+          'restaurant-order',
+          'metro-ticket',
+          'pharmacy-help',
+          'ask-for-help-problem',
+          'train-station-ticket',
+        ],
+        lastVisitedLesson: 'train-station-ticket',
+      }),
+    ).toBe('train-station-ticket')
+  })
+
+  it('continues through the original fourth and fifth lessons in canonical course order', async () => {
     const { createDefaultProgress, getContinueLessonId } = await importProgressModule()
 
     expect(
@@ -112,33 +178,38 @@ describe('learner progress', () => {
     ).toBe('convenience-store-run')
   })
 
-  it('completes lessons four and five by queuing their review cards', async () => {
+  it('completes new formal lessons by queuing their review cards', async () => {
     const { completeLesson, createDefaultProgress } = await importProgressModule()
 
-    const afterPhonePayment = completeLesson('phone-and-payment', createDefaultProgress())
-    const afterStoreRun = completeLesson('convenience-store-run', afterPhonePayment)
+    const afterRestaurant = completeLesson('restaurant-order', createDefaultProgress())
+    const afterProblemHelp = completeLesson('ask-for-help-problem', afterRestaurant)
+    const afterTrainTicket = completeLesson('train-station-ticket', afterProblemHelp)
 
-    expect(afterPhonePayment.completedLessons).toEqual(['phone-and-payment'])
-    expect(afterPhonePayment.reviewQueue).toEqual([
-      'phone-and-payment-review-1',
-      'phone-and-payment-review-2',
-      'phone-and-payment-review-3',
+    expect(afterRestaurant.completedLessons).toEqual(['restaurant-order'])
+    expect(afterRestaurant.reviewQueue).toEqual([
+      'restaurant-order-review-1',
+      'restaurant-order-review-2',
+      'restaurant-order-review-3',
     ])
-    expect(afterPhonePayment.lessonStepProgress['phone-and-payment']).toEqual({
+    expect(afterRestaurant.lessonStepProgress['restaurant-order']).toEqual({
       completedSections: [],
       shortInputComplete: true,
     })
-    expect(afterStoreRun.completedLessons).toEqual([
-      'phone-and-payment',
-      'convenience-store-run',
+    expect(afterTrainTicket.completedLessons).toEqual([
+      'restaurant-order',
+      'ask-for-help-problem',
+      'train-station-ticket',
     ])
-    expect(afterStoreRun.reviewQueue).toEqual([
-      'phone-and-payment-review-1',
-      'phone-and-payment-review-2',
-      'phone-and-payment-review-3',
-      'convenience-store-run-review-1',
-      'convenience-store-run-review-2',
-      'convenience-store-run-review-3',
+    expect(afterTrainTicket.reviewQueue).toEqual([
+      'restaurant-order-review-1',
+      'restaurant-order-review-2',
+      'restaurant-order-review-3',
+      'ask-for-help-problem-review-1',
+      'ask-for-help-problem-review-2',
+      'ask-for-help-problem-review-3',
+      'train-station-ticket-review-1',
+      'train-station-ticket-review-2',
+      'train-station-ticket-review-3',
     ])
   })
 

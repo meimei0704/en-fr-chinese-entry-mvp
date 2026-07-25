@@ -4,29 +4,50 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { renderRoute } from '../test/renderRoute'
 
-const upgradedLessons = [
+const newLessons = [
   {
-    id: 'phone-and-payment',
-    lessonHeading: /phone number & mobile payment setup/i,
-    practicePrompt: /phone payment is possible/i,
-    shortInputPrompt: /whether you can pay by phone/i,
-    target: '可以用手机支付吗？',
+    id: 'restaurant-order',
+    lessonHeading: /order a simple meal/i,
+    practicePrompt: /menu and order beef noodles/i,
+    shortInputPrompt: /order beef noodles without spice/i,
+    target: '我要一碗牛肉面，不要辣。',
   },
   {
-    id: 'convenience-store-run',
-    lessonHeading: /first convenience store run/i,
-    practicePrompt: /bottle of water/i,
-    shortInputPrompt: /buy a bottle of water/i,
-    target: '我要一瓶水。',
+    id: 'metro-ticket',
+    lessonHeading: /buy a metro ticket/i,
+    practicePrompt: /metro ticket to people's square/i,
+    shortInputPrompt: /ask how many stops/i,
+    target: '要几站？',
+  },
+  {
+    id: 'pharmacy-help',
+    lessonHeading: /ask for help at a pharmacy/i,
+    practicePrompt: /headache and no fever/i,
+    shortInputPrompt: /say that your head hurts/i,
+    target: '我头疼，不发烧。',
+  },
+  {
+    id: 'ask-for-help-problem',
+    lessonHeading: /ask for help with a problem/i,
+    practicePrompt: /phone has a problem/i,
+    shortInputPrompt: /ask someone to help you/i,
+    target: '可以帮我一下吗？',
+  },
+  {
+    id: 'train-station-ticket',
+    lessonHeading: /buy a train station ticket/i,
+    practicePrompt: /ticket to Shanghai/i,
+    shortInputPrompt: /buy a ticket to Shanghai/i,
+    target: '我想买一张去上海的票。',
   },
 ]
 
-describe('upgraded lesson routes', () => {
+describe('expanded lesson routes', () => {
   beforeEach(() => {
     localStorage.clear()
   })
 
-  it.each(upgradedLessons)('renders lesson, practice, and short-input routes for $id', (lesson) => {
+  it.each(newLessons)('renders lesson, practice, and short-input routes for $id', (lesson) => {
     renderRoute(`/lesson/${lesson.id}`)
 
     expect(screen.getByRole('heading', { level: 1, name: lesson.lessonHeading })).toBeVisible()
