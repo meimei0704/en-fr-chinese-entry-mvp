@@ -54,7 +54,13 @@ describe('ShortInputPage pronunciation playback', () => {
 
     renderRoute('/lesson/self-intro/short-input')
 
-    await user.click(screen.getByRole('button', { name: /play chinese/i }))
+    const playbackButton = screen.getByRole('button', { name: /play chinese/i })
+
+    expect(playbackButton).toHaveAttribute('title', 'Play Chinese')
+    expect(playbackButton).not.toHaveTextContent(/play chinese/i)
+    expect(screen.queryByText(/^Play Chinese$/i)).not.toBeInTheDocument()
+
+    await user.click(playbackButton)
 
     expect(audioConstructor).toHaveBeenCalledWith('/audio/self-intro/short-input-01.mp3')
     expect(play).toHaveBeenCalledTimes(1)

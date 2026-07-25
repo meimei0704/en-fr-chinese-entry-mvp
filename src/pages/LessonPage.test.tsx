@@ -138,6 +138,11 @@ describe('LessonPage', () => {
         lesson.vocabulary.length +
         lesson.pronunciation.length,
     )
+    expect(screen.queryAllByText(/^Play Chinese$/i)).toHaveLength(0)
+    playbackButtons.forEach((button) => {
+      expect(button).toHaveAttribute('title', 'Play Chinese')
+      expect(button).not.toHaveTextContent(/play chinese/i)
+    })
 
     await user.click(playbackButtons[lesson.dialogue.lines.length])
     await user.click(
