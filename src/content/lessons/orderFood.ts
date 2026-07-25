@@ -117,6 +117,7 @@ export const orderFoodLesson: LessonContent = {
         fr: 'J’ai une réservation.',
       },
       example: '你好，我有预订。',
+      audio: '/audio/order-food/pattern-01.mp3',
       explanation: {
         en: 'Use this as your first front desk sentence.',
         fr: 'Utilise cette phrase comme première phrase à la réception.',
@@ -130,6 +131,7 @@ export const orderFoodLesson: LessonContent = {
         fr: 'Je m’appelle ...',
       },
       example: '我叫 Alex。',
+      audio: '/audio/order-food/pattern-02.mp3',
       explanation: {
         en: 'This gives the name attached to the booking.',
         fr: 'Cela donne le nom associé à la réservation.',
@@ -143,6 +145,7 @@ export const orderFoodLesson: LessonContent = {
         fr: 'Voici votre ...',
       },
       example: '这是您的房卡。',
+      audio: '/audio/order-food/pattern-03.mp3',
       explanation: {
         en: 'You may hear this when receiving a room card or document.',
         fr: 'Tu peux entendre cette structure en recevant une carte de chambre ou un document.',
@@ -154,6 +157,7 @@ export const orderFoodLesson: LessonContent = {
       id: 'order-food-vocab-1',
       hanzi: '预订',
       pinyin: 'yùdìng',
+      audio: '/audio/order-food/vocab-01.mp3',
       meaning: {
         en: 'reservation',
         fr: 'réservation',
@@ -167,6 +171,7 @@ export const orderFoodLesson: LessonContent = {
       id: 'order-food-vocab-2',
       hanzi: '名字',
       pinyin: 'míngzi',
+      audio: '/audio/order-food/vocab-02.mp3',
       meaning: {
         en: 'name',
         fr: 'nom / prénom',
@@ -180,6 +185,7 @@ export const orderFoodLesson: LessonContent = {
       id: 'order-food-vocab-3',
       hanzi: '护照',
       pinyin: 'hùzhào',
+      audio: '/audio/order-food/vocab-03.mp3',
       meaning: {
         en: 'passport',
         fr: 'passeport',
@@ -193,6 +199,7 @@ export const orderFoodLesson: LessonContent = {
       id: 'order-food-vocab-4',
       hanzi: '房卡',
       pinyin: 'fángkǎ',
+      audio: '/audio/order-food/vocab-04.mp3',
       meaning: {
         en: 'room card',
         fr: 'carte de chambre',
@@ -206,6 +213,7 @@ export const orderFoodLesson: LessonContent = {
       id: 'order-food-vocab-5',
       hanzi: '前台',
       pinyin: 'qiántái',
+      audio: '/audio/order-food/vocab-05.mp3',
       meaning: {
         en: 'front desk',
         fr: 'réception',
@@ -223,6 +231,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'Name pattern in a front desk context',
         fr: 'Structure du nom à la réception',
       },
+      audioText: '我叫',
+      audio: '/audio/order-food/pronunciation-01.mp3',
       tip: {
         en: 'Say 我叫 plus your name clearly; keep the focus on the booking, not a social self-introduction.',
         fr: 'Dis clairement 我叫 suivi de ton nom ; le contexte reste la réservation, pas une présentation sociale.',
@@ -296,6 +306,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Quelle phrase commence un check-in à l’hôtel ?',
         },
         target: '你好，我有预订。',
+        audio: '/audio/order-food/practice-listening-01.mp3',
         explanation: {
           en: 'This tells the front desk to look for your booking.',
           fr: 'Cette phrase indique à la réception de chercher ta réservation.',
@@ -310,6 +321,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Réponds à la réception quand on te demande ton nom.',
         },
         target: '我叫 Alex。',
+        audio: '/audio/order-food/practice-speaking-01.mp3',
         explanation: {
           en: 'Use 我叫 plus the booking name.',
           fr: 'Utilise 我叫 suivi du nom de la réservation.',
@@ -324,6 +336,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Associe l’objet reçu après le check-in.',
         },
         target: '房卡',
+        audio: '/audio/order-food/practice-reading-01.mp3',
         explanation: {
           en: '房卡 is the room card for entering the hotel room.',
           fr: '房卡 est la carte pour entrer dans la chambre d’hôtel.',

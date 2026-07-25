@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import { PracticeChecklist } from '../components/PracticeChecklist'
+import { SpeechButton } from '../components/SpeechButton'
 import { course } from '../content/course'
 import type { ExplanationLanguage, LessonContent, PracticePrompt } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
@@ -18,12 +19,14 @@ function PracticeCard({
   answerLabel,
   answer,
   language,
+  listenLabel,
 }: {
   heading: string
   prompt: PracticePrompt
   answerLabel: string
   answer: string
   language: ExplanationLanguage
+  listenLabel: string
 }) {
   return (
     <article
@@ -39,6 +42,9 @@ function PracticeCard({
       <p style={{ margin: '0.5rem 0 0', fontWeight: 700 }}>
         {answerLabel}: {answer}
       </p>
+      <div style={{ marginTop: '0.75rem' }}>
+        <SpeechButton label={listenLabel} text={answer} audioSrc={prompt.audio} />
+      </div>
       <ExplanationBlock explanation={prompt.explanation} language={language} />
     </article>
   )
@@ -113,6 +119,7 @@ export function PracticePage() {
             answerLabel={copy.practicePage.answer}
             answer={listeningPrompt.target}
             language={selectedLanguage}
+            listenLabel={copy.practicePage.listenChinese}
           />
         ) : null}
 
@@ -130,6 +137,13 @@ export function PracticePage() {
             <p style={{ margin: '0.5rem 0 0', fontWeight: 700 }}>
               {copy.practicePage.modelAnswer}: {speakingPrompt.target}
             </p>
+            <div style={{ marginTop: '0.75rem' }}>
+              <SpeechButton
+                label={copy.practicePage.listenChinese}
+                text={speakingPrompt.target}
+                audioSrc={speakingPrompt.audio}
+              />
+            </div>
             <p style={{ margin: '0.75rem 0 0' }}>{copy.practicePage.selfCheck}</p>
             <ExplanationBlock explanation={speakingPrompt.explanation} language={selectedLanguage} />
           </article>
@@ -142,6 +156,7 @@ export function PracticePage() {
             answerLabel={copy.practicePage.readingGoal}
             answer={readingPrompt.target}
             language={selectedLanguage}
+            listenLabel={copy.practicePage.listenChinese}
           />
         ) : null}
 

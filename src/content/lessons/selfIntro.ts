@@ -99,6 +99,7 @@ export const selfIntroLesson: LessonContent = {
         fr: 'Veuillez présenter ...',
       },
       example: '请出示护照。',
+      audio: '/audio/self-intro/pattern-01.mp3',
       explanation: {
         en: 'You may hear this before handing over a passport, ticket, or booking.',
         fr: 'On peut entendre cette structure avant de présenter un passeport, un billet ou une réservation.',
@@ -112,6 +113,7 @@ export const selfIntroLesson: LessonContent = {
         fr: 'Je viens pour ...',
       },
       example: '我来旅游。',
+      audio: '/audio/self-intro/pattern-02.mp3',
       explanation: {
         en: 'Put the visit purpose after 我来, such as 旅游, 工作, or 学习.',
         fr: 'Place le motif après 我来, par exemple 旅游, 工作 ou 学习.',
@@ -125,6 +127,7 @@ export const selfIntroLesson: LessonContent = {
         fr: 'Je loge à ...',
       },
       example: '我住在这个酒店。',
+      audio: '/audio/self-intro/pattern-03.mp3',
       explanation: {
         en: 'Use it to give a hotel or temporary address.',
         fr: 'Utilise cette phrase pour indiquer un hôtel ou une adresse temporaire.',
@@ -136,6 +139,7 @@ export const selfIntroLesson: LessonContent = {
       id: 'self-intro-vocab-1',
       hanzi: '护照',
       pinyin: 'hùzhào',
+      audio: '/audio/self-intro/vocab-01.mp3',
       meaning: {
         en: 'passport',
         fr: 'passeport',
@@ -149,6 +153,7 @@ export const selfIntroLesson: LessonContent = {
       id: 'self-intro-vocab-2',
       hanzi: '出示',
       pinyin: 'chūshì',
+      audio: '/audio/self-intro/vocab-02.mp3',
       meaning: {
         en: 'show / present',
         fr: 'présenter / montrer',
@@ -162,6 +167,7 @@ export const selfIntroLesson: LessonContent = {
       id: 'self-intro-vocab-3',
       hanzi: '旅游',
       pinyin: 'lǚyóu',
+      audio: '/audio/self-intro/vocab-03.mp3',
       meaning: {
         en: 'travel / tourism',
         fr: 'voyage / tourisme',
@@ -175,6 +181,7 @@ export const selfIntroLesson: LessonContent = {
       id: 'self-intro-vocab-4',
       hanzi: '酒店',
       pinyin: 'jiǔdiàn',
+      audio: '/audio/self-intro/vocab-04.mp3',
       meaning: {
         en: 'hotel',
         fr: 'hôtel',
@@ -188,6 +195,7 @@ export const selfIntroLesson: LessonContent = {
       id: 'self-intro-vocab-5',
       hanzi: '住在',
       pinyin: 'zhù zài',
+      audio: '/audio/self-intro/vocab-05.mp3',
       meaning: {
         en: 'stay at / live at',
         fr: 'loger à / habiter à',
@@ -205,6 +213,8 @@ export const selfIntroLesson: LessonContent = {
         en: 'Linking 住在',
         fr: 'Enchaîner 住在',
       },
+      audioText: '住在这个酒店',
+      audio: '/audio/self-intro/pronunciation-01.mp3',
       tip: {
         en: 'Say 住在 smoothly as one phrase before the place: 住在这个酒店.',
         fr: 'Dis 住在 de façon fluide avant le lieu : 住在这个酒店.',
@@ -278,6 +288,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Quelle réponse correspond à « Pourquoi venez-vous en Chine ? »',
         },
         target: '我来旅游。',
+        audio: '/audio/self-intro/practice-listening-01.mp3',
         explanation: {
           en: 'Listen for 我来 followed by the purpose 旅游.',
           fr: 'Écoute 我来 suivi du motif 旅游.',
@@ -292,6 +303,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Réponds à l’agent avec le motif de ton séjour.',
         },
         target: '我来旅游。',
+        audio: '/audio/self-intro/practice-speaking-01.mp3',
         explanation: {
           en: 'This is the shortest complete answer to the purpose question.',
           fr: 'C’est la réponse complète la plus courte à la question du motif.',
@@ -306,6 +318,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Associe le mot du document à « passeport ».',
         },
         target: '护照',
+        audio: '/audio/self-intro/practice-reading-01.mp3',
         explanation: {
           en: '护照 is the word you need at immigration and hotel check-in.',
           fr: '护照 est le mot nécessaire à l’immigration et à l’hôtel.',

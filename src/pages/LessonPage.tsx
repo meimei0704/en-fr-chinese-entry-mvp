@@ -5,6 +5,7 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { DialoguePlayer } from '../components/DialoguePlayer'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import { LanguageToggle } from '../components/LanguageToggle'
+import { SpeechButton } from '../components/SpeechButton'
 import { course } from '../content/course'
 import type { ExplanationLanguage, LessonContent } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
@@ -130,6 +131,11 @@ export function LessonPage() {
                   <p className="study-item__title">{pattern.pattern}</p>
                   <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
                   <p className="pinyin-line">{pattern.example}</p>
+                  <SpeechButton
+                    label={copy.lessonPage.listenChinese}
+                    text={pattern.example}
+                    audioSrc={pattern.audio}
+                  />
                   <ExplanationBlock explanation={pattern.explanation} language={selectedLanguage} />
                 </article>
               ))}
@@ -144,6 +150,11 @@ export function LessonPage() {
                   <p className="study-item__title">
                     {item.hanzi} <span>{item.pinyin}</span>
                   </p>
+                  <SpeechButton
+                    label={copy.lessonPage.listenChinese}
+                    text={item.hanzi}
+                    audioSrc={item.audio}
+                  />
                   <p className="muted-text">{getLocalizedText(item.meaning, selectedLanguage)}</p>
                   <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
                 </article>
@@ -158,6 +169,12 @@ export function LessonPage() {
                 <article key={tip.id} className="study-item">
                   <p className="study-item__title">{getLocalizedText(tip.focus, selectedLanguage)}</p>
                   <p className="muted-text">{getLocalizedText(tip.tip, selectedLanguage)}</p>
+                  <p className="pinyin-line">{tip.audioText}</p>
+                  <SpeechButton
+                    label={copy.lessonPage.listenChinese}
+                    text={tip.audioText}
+                    audioSrc={tip.audio}
+                  />
                   <ExplanationBlock explanation={tip.explanation} language={selectedLanguage} />
                 </article>
               ))}

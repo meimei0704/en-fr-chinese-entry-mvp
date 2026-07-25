@@ -1,14 +1,55 @@
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { course } from '../content/course'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
+class MockUtterance {
+  lang = ''
+  rate = 1
+  text: string
+
+  constructor(text: string) {
+    this.text = text
+  }
+}
+
 describe('LessonPage', () => {
+  const speak = vi.fn()
+  const cancel = vi.fn()
+  const audioPlay = vi.fn()
+  const audioConstructor = vi.fn()
+
   beforeEach(() => {
     localStorage.clear()
+    speak.mockReset()
+    cancel.mockReset()
+    audioPlay.mockReset()
+    audioConstructor.mockReset()
+    vi.stubGlobal('SpeechSynthesisUtterance', MockUtterance)
+    vi.stubGlobal('speechSynthesis', {
+      cancel,
+      speak,
+      getVoices: () => [],
+    })
+
+    class MockAudio {
+      addEventListener = vi.fn()
+      currentTime = 0
+      pause = vi.fn()
+      play = audioPlay.mockResolvedValue(undefined)
+      src: string
+
+      constructor(src: string) {
+        audioConstructor(src)
+        this.src = src
+      }
+    }
+
+    vi.stubGlobal('Audio', MockAudio)
   })
 
   it('wraps the lesson in scannable overview and dialogue regions', () => {
@@ -82,5 +123,33 @@ describe('LessonPage', () => {
     expect(screen.getByRole('navigation', { name: /lesson actions/i })).toHaveClass(
       'lesson-action-dock',
     )
+  })
+
+  it('adds MP3-first playback controls for sentence patterns, vocabulary, and pronunciation materials', async () => {
+    const user = userEvent.setup()
+    const lesson = course.lessons[0]
+
+    renderRoute('/lesson/self-intro')
+
+    const playbackButtons = screen.getAllByRole('button', { name: /play chinese/i })
+    expect(playbackButtons).toHaveLength(
+      lesson.dialogue.lines.length +
+        lesson.sentencePatterns.length +
+        lesson.vocabulary.length +
+        lesson.pronunciation.length,
+    )
+
+    await user.click(playbackButtons[lesson.dialogue.lines.length])
+    await user.click(
+      playbackButtons[lesson.dialogue.lines.length + lesson.sentencePatterns.length],
+    )
+    await user.click(playbackButtons.at(-1)!)
+
+    expect(audioConstructor).toHaveBeenNthCalledWith(1, '/audio/self-intro/pattern-01.mp3')
+    expect(audioConstructor).toHaveBeenNthCalledWith(2, '/audio/self-intro/vocab-01.mp3')
+    expect(audioConstructor).toHaveBeenNthCalledWith(3, '/audio/self-intro/pronunciation-01.mp3')
+    expect(audioPlay).toHaveBeenCalledTimes(3)
+    expect(cancel).toHaveBeenCalledTimes(3)
+    expect(speak).not.toHaveBeenCalled()
   })
 })
