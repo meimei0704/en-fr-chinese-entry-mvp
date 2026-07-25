@@ -129,6 +129,34 @@ const expectedMaterialAudioByLesson = {
   },
 } as const
 
+const expectedPracticeAudioByLesson = {
+  'self-intro': {
+    listening: ['/audio/self-intro/practice-listening-01.mp3'],
+    speaking: ['/audio/self-intro/practice-speaking-01.mp3'],
+    reading: ['/audio/self-intro/practice-reading-01.mp3'],
+  },
+  'ask-directions': {
+    listening: ['/audio/ask-directions/practice-listening-01.mp3'],
+    speaking: ['/audio/ask-directions/practice-speaking-01.mp3'],
+    reading: ['/audio/ask-directions/practice-reading-01.mp3'],
+  },
+  'order-food': {
+    listening: ['/audio/order-food/practice-listening-01.mp3'],
+    speaking: ['/audio/order-food/practice-speaking-01.mp3'],
+    reading: ['/audio/order-food/practice-reading-01.mp3'],
+  },
+  'phone-and-payment': {
+    listening: ['/audio/phone-and-payment/practice-listening-01.mp3'],
+    speaking: ['/audio/phone-and-payment/practice-speaking-01.mp3'],
+    reading: ['/audio/phone-and-payment/practice-reading-01.mp3'],
+  },
+  'convenience-store-run': {
+    listening: ['/audio/convenience-store-run/practice-listening-01.mp3'],
+    speaking: ['/audio/convenience-store-run/practice-speaking-01.mp3'],
+    reading: ['/audio/convenience-store-run/practice-reading-01.mp3'],
+  },
+} as const
+
 async function collectAudioPaths() {
   const { course } = await import('./course')
 
@@ -137,6 +165,7 @@ async function collectAudioPaths() {
     ...lesson.sentencePatterns.map((pattern) => pattern.audio),
     ...lesson.vocabulary.map((item) => item.audio),
     ...lesson.pronunciation.map((tip) => tip.audio),
+    ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
     lesson.shortInput.audio,
   ])
 }
@@ -213,6 +242,7 @@ describe('course content', () => {
       const expectedDialogueAudio = expectedDialogueAudioByLesson[lesson.id]
       const expectedShortInputAudio = expectedShortInputAudioByLesson[lesson.id]
       const expectedMaterialAudio = expectedMaterialAudioByLesson[lesson.id]
+      const expectedPracticeAudio = expectedPracticeAudioByLesson[lesson.id]
 
       expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
         expectedDialogueAudio.map((_, index) => `${lesson.id}-line-0${index + 1}`),
@@ -227,6 +257,15 @@ describe('course content', () => {
       )
       expect(lesson.pronunciation.map((tip) => tip.audioText)).toEqual(
         expectedMaterialAudio.pronunciationText,
+      )
+      expect(lesson.practice.listening.map((prompt) => prompt.audio)).toEqual(
+        expectedPracticeAudio.listening,
+      )
+      expect(lesson.practice.speaking.map((prompt) => prompt.audio)).toEqual(
+        expectedPracticeAudio.speaking,
+      )
+      expect(lesson.practice.reading.map((prompt) => prompt.audio)).toEqual(
+        expectedPracticeAudio.reading,
       )
       expect(lesson.shortInput.id).toBe(`${lesson.id}-short-input-01`)
       expect(lesson.shortInput.audio).toBe(expectedShortInputAudio)
@@ -415,12 +454,12 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(74)
+    expect(audioPaths).toHaveLength(89)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(
-        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|pronunciation|short-input)-\d{2}\.mp3$/,
+        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|pronunciation|short-input|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
       )
       const publicPath = `${process.cwd()}/public${audioPath.replace('/audio', '/audio')}`
       expect(existsSync(publicPath), `missing ${audioPath}`).toBe(true)

@@ -306,6 +306,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           fr: 'Écoute la phrase qui signifie une bouteille d’eau.',
         },
         target: '一瓶水',
+        audio: '/audio/convenience-store-run/practice-listening-01.mp3',
         explanation: {
           en: '一瓶水 is the item you are buying.',
           fr: '一瓶水 est l’article que tu achètes.',
@@ -320,6 +321,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           fr: 'Dis que tu n’as besoin de rien d’autre.',
         },
         target: '不要了。',
+        audio: '/audio/convenience-store-run/practice-speaking-01.mp3',
         explanation: {
           en: '不要了 answers the clerk’s “anything else?” question.',
           fr: '不要了 répond à la question « autre chose ? » de l’employé.',
@@ -334,6 +336,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           fr: 'Choisis la phrase pour demander le prix total.',
         },
         target: '一共多少钱？',
+        audio: '/audio/convenience-store-run/practice-reading-01.mp3',
         explanation: {
           en: '一共多少钱？ asks how much the purchase costs altogether.',
           fr: '一共多少钱？ demande combien coûte l’achat au total.',

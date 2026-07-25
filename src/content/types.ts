@@ -80,6 +80,7 @@ export interface PracticePrompt {
   id: string
   prompt: LocalizedField
   target: string
+  audio: string
   explanation: BilingualExplanation
 }
 

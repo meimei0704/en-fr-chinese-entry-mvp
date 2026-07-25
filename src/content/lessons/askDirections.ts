@@ -306,6 +306,7 @@ export const askDirectionsLesson: LessonContent = {
           fr: 'Quelle phrase indique la destination au chauffeur ?',
         },
         target: '师傅，去这个酒店。',
+        audio: '/audio/ask-directions/practice-listening-01.mp3',
         explanation: {
           en: 'This is the first taxi sentence to get moving from the airport.',
           fr: 'C’est la première phrase de taxi pour partir de l’aéroport.',
@@ -320,6 +321,7 @@ export const askDirectionsLesson: LessonContent = {
           fr: 'Dis au chauffeur d’aller à cet hôtel.',
         },
         target: '师傅，去这个酒店。',
+        audio: '/audio/ask-directions/practice-speaking-01.mp3',
         explanation: {
           en: 'You can swap 酒店 for 公寓 when going to an apartment.',
           fr: 'Tu peux remplacer 酒店 par 公寓 si tu vas à un appartement.',
@@ -334,6 +336,7 @@ export const askDirectionsLesson: LessonContent = {
           fr: 'Associe la phrase qui demande la durée du trajet.',
         },
         target: '大概多久到？',
+        audio: '/audio/ask-directions/practice-reading-01.mp3',
         explanation: {
           en: '大概多久到 asks about the approximate arrival time.',
           fr: '大概多久到 demande l’heure ou la durée approximative d’arrivée.',

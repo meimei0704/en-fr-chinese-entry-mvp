@@ -288,6 +288,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Quelle réponse correspond à « Pourquoi venez-vous en Chine ? »',
         },
         target: '我来旅游。',
+        audio: '/audio/self-intro/practice-listening-01.mp3',
         explanation: {
           en: 'Listen for 我来 followed by the purpose 旅游.',
           fr: 'Écoute 我来 suivi du motif 旅游.',
@@ -302,6 +303,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Réponds à l’agent avec le motif de ton séjour.',
         },
         target: '我来旅游。',
+        audio: '/audio/self-intro/practice-speaking-01.mp3',
         explanation: {
           en: 'This is the shortest complete answer to the purpose question.',
           fr: 'C’est la réponse complète la plus courte à la question du motif.',
@@ -316,6 +318,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Associe le mot du document à « passeport ».',
         },
         target: '护照',
+        audio: '/audio/self-intro/practice-reading-01.mp3',
         explanation: {
           en: '护照 is the word you need at immigration and hotel check-in.',
           fr: '护照 est le mot nécessaire à l’immigration et à l’hôtel.',

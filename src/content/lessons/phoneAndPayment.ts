@@ -306,6 +306,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fr: 'Écoute le mot qui signifie carte SIM.',
         },
         target: '手机卡',
+        audio: '/audio/phone-and-payment/practice-listening-01.mp3',
         explanation: {
           en: '手机卡 is the phone card or SIM card in this service exchange.',
           fr: '手机卡 désigne la carte SIM dans cet échange de service.',
@@ -320,6 +321,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fr: 'Demande si le paiement par téléphone est possible.',
         },
         target: '可以用手机支付吗？',
+        audio: '/audio/phone-and-payment/practice-speaking-01.mp3',
         explanation: {
           en: 'This question is the safest short way to check mobile payment.',
           fr: 'Cette question est la manière courte la plus sûre de vérifier le paiement mobile.',
@@ -334,6 +336,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fr: 'Associe 手机号码 à son sens.',
         },
         target: '手机号码',
+        audio: '/audio/phone-and-payment/practice-reading-01.mp3',
         explanation: {
           en: '手机号码 means phone number.',
           fr: '手机号码 signifie numéro de téléphone.',

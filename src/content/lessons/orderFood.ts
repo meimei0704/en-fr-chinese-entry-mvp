@@ -306,6 +306,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Quelle phrase commence un check-in à l’hôtel ?',
         },
         target: '你好，我有预订。',
+        audio: '/audio/order-food/practice-listening-01.mp3',
         explanation: {
           en: 'This tells the front desk to look for your booking.',
           fr: 'Cette phrase indique à la réception de chercher ta réservation.',
@@ -320,6 +321,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Réponds à la réception quand on te demande ton nom.',
         },
         target: '我叫 Alex。',
+        audio: '/audio/order-food/practice-speaking-01.mp3',
         explanation: {
           en: 'Use 我叫 plus the booking name.',
           fr: 'Utilise 我叫 suivi du nom de la réservation.',
@@ -334,6 +336,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Associe l’objet reçu après le check-in.',
         },
         target: '房卡',
+        audio: '/audio/order-food/practice-reading-01.mp3',
         explanation: {
           en: '房卡 is the room card for entering the hotel room.',
           fr: '房卡 est la carte pour entrer dans la chambre d’hôtel.',
