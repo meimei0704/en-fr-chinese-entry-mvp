@@ -14,6 +14,11 @@ export type LessonId =
   | 'order-food'
   | 'phone-and-payment'
   | 'convenience-store-run'
+  | 'restaurant-order'
+  | 'metro-ticket'
+  | 'pharmacy-help'
+  | 'ask-for-help-problem'
+  | 'train-station-ticket'
 
 export type JourneyStageId = 'arrival-in-china'
 
@@ -23,6 +28,11 @@ export type JourneyNodeId =
   | 'hotel-check-in'
   | 'phone-and-payment'
   | 'convenience-store-run'
+  | 'restaurant-order'
+  | 'metro-ticket'
+  | 'pharmacy-help'
+  | 'ask-for-help-problem'
+  | 'train-station-ticket'
 
 export type JourneyNodeKind = 'lesson' | 'preview'
 

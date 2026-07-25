@@ -12,6 +12,24 @@ const expectedLessonHrefs = [
   '/lesson/order-food',
   '/lesson/phone-and-payment',
   '/lesson/convenience-store-run',
+  '/lesson/restaurant-order',
+  '/lesson/metro-ticket',
+  '/lesson/pharmacy-help',
+  '/lesson/ask-for-help-problem',
+  '/lesson/train-station-ticket',
+]
+
+const expectedJourneyTitles = [
+  /airport immigration basics/i,
+  /taxi to your stay/i,
+  /hotel \/ apartment check-in/i,
+  /phone number & mobile payment/i,
+  /first convenience store run/i,
+  /order a simple meal/i,
+  /buy a metro ticket/i,
+  /ask for help at a pharmacy/i,
+  /ask for help with a problem/i,
+  /buy a train station ticket/i,
 ]
 
 describe('HomePage', () => {
@@ -19,7 +37,7 @@ describe('HomePage', () => {
     localStorage.clear()
   })
 
-  it('shows all five arrival lesson cards and a review shortcut on the home page', () => {
+  it('shows all ten arrival lesson cards and a review shortcut on the home page', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
@@ -30,36 +48,28 @@ describe('HomePage', () => {
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
-    expect(journeyLessonLinks).toHaveLength(5)
+    expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
-    expect(
-      within(journeyMap).getByRole('heading', { level: 2, name: /airport immigration basics/i }),
-    ).toBeVisible()
-    expect(within(journeyMap).getByRole('heading', { level: 2, name: /taxi to your stay/i })).toBeVisible()
-    expect(
-      within(journeyMap).getByRole('heading', { level: 2, name: /hotel \/ apartment check-in/i }),
-    ).toBeVisible()
-    expect(
-      within(journeyMap).getByRole('heading', { level: 2, name: /phone number & mobile payment/i }),
-    ).toBeVisible()
-    expect(
-      within(journeyMap).getByRole('heading', { level: 2, name: /first convenience store run/i }),
-    ).toBeVisible()
+
+    for (const title of expectedJourneyTitles) {
+      expect(within(journeyMap).getByRole('heading', { level: 2, name: title })).toBeVisible()
+    }
   })
 
-  it('shows the refreshed hero phrase, five-lesson progress cues, and no preview status copy', () => {
+  it('shows the refreshed hero phrase, ten-lesson progress cues, and no preview status copy', () => {
     renderRoute('/home')
 
     const heroPhrase = screen.getByRole('group', { name: /hero phrase/i })
     expect(heroPhrase).toHaveTextContent('护照')
     expect(heroPhrase).toHaveTextContent('hùzhào')
+    expect(screen.getByText('10 lessons')).toBeVisible()
     expect(screen.getByText(`${course.lessons.length} lessons`)).toBeVisible()
     expect(screen.getByText(/listen & repeat/i)).toBeVisible()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
-    expect(within(journeyMap).queryByRole('button', { name: /phone number & mobile payment/i }))
+    expect(within(journeyMap).queryByRole('button', { name: /buy a metro ticket/i }))
       .not.toBeInTheDocument()
     expect(within(journeyMap).getByText(/arrive in china step by step/i)).toBeVisible()
   })
@@ -81,6 +91,8 @@ describe('HomePage', () => {
         name: /bases de l’immigration à l’aéroport/i,
       }),
     ).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: /commander un repas simple/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: /acheter un billet en gare/i })).toBeVisible()
     expect(screen.getByLabelText(/points clés de l’apprentissage/i)).toHaveTextContent(
       'Guidage anglais/français',
     )
@@ -89,7 +101,7 @@ describe('HomePage', () => {
     expect(screen.getByLabelText(/phrase modèle/i)).toHaveTextContent('护照')
 
     const progressSummary = screen.getByLabelText(/résumé des progrès du cours/i)
-    expect(progressSummary).toHaveTextContent(`${course.lessons.length} leçons`)
+    expect(progressSummary).toHaveTextContent('10 leçons')
     expect(progressSummary).toHaveTextContent('0 terminée')
     expect(progressSummary).toHaveTextContent('0 à réviser')
 
@@ -97,8 +109,10 @@ describe('HomePage', () => {
     expect(screen.getByText('Taxi')).toBeVisible()
     expect(screen.getByText('Installation')).toBeVisible()
     expect(screen.getByText('Supérette')).toBeVisible()
+    expect(screen.getByText('Restaurant')).toBeVisible()
+    expect(screen.getByText('Métro')).toBeVisible()
     expect(screen.queryAllByText(/bientôt/i)).toHaveLength(0)
-    expect(screen.queryByText(`${course.lessons.length} lessons`)).not.toBeInTheDocument()
+    expect(screen.queryByText('10 lessons')).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
   })
 
@@ -129,18 +143,24 @@ describe('HomePage', () => {
     ).toHaveAttribute('href', '/progress')
   })
 
-  it('continues from lesson three into lesson four after check-in is complete', () => {
+  it('continues from lesson five into lesson six after the store run is complete', () => {
     saveProgress({
       ...createDefaultProgress(),
-      completedLessons: ['self-intro', 'ask-directions', 'order-food'],
-      lastVisitedLesson: 'order-food',
+      completedLessons: [
+        'self-intro',
+        'ask-directions',
+        'order-food',
+        'phone-and-payment',
+        'convenience-store-run',
+      ],
+      lastVisitedLesson: 'convenience-store-run',
     })
 
     renderRoute('/home')
 
     expect(screen.getByRole('link', { name: /continue learning/i })).toHaveAttribute(
       'href',
-      '/lesson/phone-and-payment',
+      '/lesson/restaurant-order',
     )
   })
 
@@ -148,17 +168,12 @@ describe('HomePage', () => {
     renderRoute('/home')
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    const immigrationCard = within(journeyMap).getByRole('link', { name: /airport immigration basics/i })
-    const taxiCard = within(journeyMap).getByRole('link', { name: /taxi to your stay/i })
-    const checkInCard = within(journeyMap).getByRole('link', { name: /hotel \/ apartment check-in/i })
-    const paymentCard = within(journeyMap).getByRole('link', { name: /phone number & mobile payment/i })
-    const storeCard = within(journeyMap).getByRole('link', { name: /first convenience store run/i })
 
-    expect(immigrationCard).toHaveAttribute('href', '/lesson/self-intro')
-    expect(taxiCard).toHaveAttribute('href', '/lesson/ask-directions')
-    expect(checkInCard).toHaveAttribute('href', '/lesson/order-food')
-    expect(paymentCard).toHaveAttribute('href', '/lesson/phone-and-payment')
-    expect(storeCard).toHaveAttribute('href', '/lesson/convenience-store-run')
+    for (const [index, title] of expectedJourneyTitles.entries()) {
+      const card = within(journeyMap).getByRole('link', { name: title })
+      expect(card).toHaveAttribute('href', expectedLessonHrefs[index])
+    }
+
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
   })
 
@@ -169,29 +184,29 @@ describe('HomePage', () => {
     expect(screen.queryByRole('region', { name: /lesson list/i })).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    const taxiCard = within(journeyMap).getByRole('link', { name: /taxi to your stay/i })
-    const paymentCard = within(journeyMap).getByRole('link', { name: /phone number & mobile payment/i })
+    const restaurantCard = within(journeyMap).getByRole('link', { name: /order a simple meal/i })
+    const trainCard = within(journeyMap).getByRole('link', { name: /buy a train station ticket/i })
 
     expect(
-      taxiCard.querySelector(
+      restaurantCard.querySelector(
         '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
       ),
     ).toBeInTheDocument()
     expect(
-      paymentCard.querySelector(
+      trainCard.querySelector(
         '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
       ),
     ).toBeInTheDocument()
   })
 
-  it('keeps upgraded phone/payment and convenience-store nodes out of preview affordances', () => {
+  it('keeps all formal lesson nodes out of preview affordances', () => {
     renderRoute('/home')
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
     expect(within(journeyMap).queryByRole('button', { name: /phone number & mobile payment/i }))
       .not.toBeInTheDocument()
-    expect(within(journeyMap).queryByRole('button', { name: /first convenience store run/i }))
+    expect(within(journeyMap).queryByRole('button', { name: /buy a metro ticket/i }))
       .not.toBeInTheDocument()
     expect(within(journeyMap).queryAllByText(/peek inside/i)).toHaveLength(0)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)

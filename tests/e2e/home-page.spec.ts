@@ -10,7 +10,7 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await page.getByRole('button', { name: /start learning/i }).click()
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
-  await expect(journeyNodes).toHaveCount(5)
+  await expect(journeyNodes).toHaveCount(10)
   await expect(page.getByRole('link', { name: /airport immigration basics/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
@@ -18,6 +18,14 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByRole('link', { name: /phone number & mobile payment/i })).toHaveAttribute(
     'href',
     '/lesson/phone-and-payment',
+  )
+  await expect(page.getByRole('link', { name: /order a simple meal/i })).toHaveAttribute(
+    'href',
+    '/lesson/restaurant-order',
+  )
+  await expect(page.getByRole('link', { name: /buy a train station ticket/i })).toHaveAttribute(
+    'href',
+    '/lesson/train-station-ticket',
   )
 
   for (const width of [320, 390, 1024, 1440]) {

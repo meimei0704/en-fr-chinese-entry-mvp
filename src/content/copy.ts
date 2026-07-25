@@ -30,7 +30,7 @@ export const uiCopy = {
     homePage: {
       eyebrow: 'Core path',
       heading: 'Home',
-      lede: 'Choose one of the five practical lessons, continue where you left off, or jump straight into review.',
+      lede: 'Choose one of the ten practical lessons, continue where you left off, or jump straight into review.',
       journeyEyebrow: 'Journey Map',
       journeyMapLabel: 'Journey Map',
       journeyIntro: 'Arrive in China step by step',
@@ -64,6 +64,11 @@ export const uiCopy = {
         'order-food': 'Check-in',
         'phone-and-payment': 'Setup',
         'convenience-store-run': 'Store',
+        'restaurant-order': 'Restaurant',
+        'metro-ticket': 'Metro',
+        'pharmacy-help': 'Pharmacy',
+        'ask-for-help-problem': 'Help',
+        'train-station-ticket': 'Train',
       },
     },
     lessonPage: {
@@ -200,7 +205,7 @@ export const uiCopy = {
     homePage: {
       eyebrow: 'Parcours principal',
       heading: 'Accueil',
-      lede: 'Choisissez l’une des cinq leçons pratiques, reprenez où vous vous êtes arrêté ou passez directement à la révision.',
+      lede: 'Choisissez l’une des dix leçons pratiques, reprenez où vous vous êtes arrêté ou passez directement à la révision.',
       journeyEyebrow: 'Carte du parcours',
       journeyMapLabel: 'Carte du parcours',
       journeyIntro: 'Arriver en Chine étape par étape',
@@ -234,6 +239,11 @@ export const uiCopy = {
         'order-food': 'Check-in',
         'phone-and-payment': 'Installation',
         'convenience-store-run': 'Supérette',
+        'restaurant-order': 'Restaurant',
+        'metro-ticket': 'Métro',
+        'pharmacy-help': 'Pharmacie',
+        'ask-for-help-problem': 'Aide',
+        'train-station-ticket': 'Train',
       },
     },
     lessonPage: {

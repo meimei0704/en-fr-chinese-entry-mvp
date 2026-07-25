@@ -16,6 +16,11 @@ const taxiToStayLesson = getLesson('ask-directions')
 const hotelCheckInLesson = getLesson('order-food')
 const phoneAndPaymentLesson = getLesson('phone-and-payment')
 const convenienceStoreRunLesson = getLesson('convenience-store-run')
+const restaurantOrderLesson = getLesson('restaurant-order')
+const metroTicketLesson = getLesson('metro-ticket')
+const pharmacyHelpLesson = getLesson('pharmacy-help')
+const askForHelpProblemLesson = getLesson('ask-for-help-problem')
+const trainStationTicketLesson = getLesson('train-station-ticket')
 
 export const journeyNodeIcons: Record<JourneyNodeId, string> = {
   'airport-immigration': '🛂',
@@ -23,6 +28,11 @@ export const journeyNodeIcons: Record<JourneyNodeId, string> = {
   'hotel-check-in': '🏨',
   'phone-and-payment': '📱',
   'convenience-store-run': '🛒',
+  'restaurant-order': '🍜',
+  'metro-ticket': '🚇',
+  'pharmacy-help': '💊',
+  'ask-for-help-problem': '🆘',
+  'train-station-ticket': '🚄',
 }
 
 export const journeyStages: JourneyStage[] = [
@@ -33,8 +43,8 @@ export const journeyStages: JourneyStage[] = [
       fr: 'Arriver en Chine',
     },
     summary: {
-      en: 'A compact first-day path from immigration to a first small purchase.',
-      fr: 'Un parcours compact du premier jour, de l’immigration au premier petit achat.',
+      en: 'A compact first-day path from immigration to a first small purchase, then food, transit, pharmacy, help, and train ticket survival tasks.',
+      fr: 'Un parcours compact du premier jour : immigration, premier achat, repas, transports, pharmacie, aide et billet de train.',
     },
   },
 ]
@@ -119,6 +129,86 @@ const journeyNodeData: JourneyNode[] = [
     },
     summary: convenienceStoreRunLesson.scenario,
     pathOrder: 5,
+  },
+  {
+    id: 'restaurant-order',
+    stageId: 'arrival-in-china',
+    kind: 'lesson',
+    lessonId: restaurantOrderLesson.id,
+    title: {
+      en: 'Order a simple meal',
+      fr: 'Commander un repas simple',
+    },
+    eyebrow: {
+      en: 'Restaurant',
+      fr: 'Restaurant',
+    },
+    summary: restaurantOrderLesson.scenario,
+    pathOrder: 6,
+  },
+  {
+    id: 'metro-ticket',
+    stageId: 'arrival-in-china',
+    kind: 'lesson',
+    lessonId: metroTicketLesson.id,
+    title: {
+      en: 'Buy a metro ticket',
+      fr: 'Acheter un ticket de métro',
+    },
+    eyebrow: {
+      en: 'Metro',
+      fr: 'Métro',
+    },
+    summary: metroTicketLesson.scenario,
+    pathOrder: 7,
+  },
+  {
+    id: 'pharmacy-help',
+    stageId: 'arrival-in-china',
+    kind: 'lesson',
+    lessonId: pharmacyHelpLesson.id,
+    title: {
+      en: 'Ask for help at a pharmacy',
+      fr: 'Demander de l’aide à la pharmacie',
+    },
+    eyebrow: {
+      en: 'Pharmacy',
+      fr: 'Pharmacie',
+    },
+    summary: pharmacyHelpLesson.scenario,
+    pathOrder: 8,
+  },
+  {
+    id: 'ask-for-help-problem',
+    stageId: 'arrival-in-china',
+    kind: 'lesson',
+    lessonId: askForHelpProblemLesson.id,
+    title: {
+      en: 'Ask for help with a problem',
+      fr: 'Demander de l’aide pour un problème',
+    },
+    eyebrow: {
+      en: 'Help',
+      fr: 'Aide',
+    },
+    summary: askForHelpProblemLesson.scenario,
+    pathOrder: 9,
+  },
+  {
+    id: 'train-station-ticket',
+    stageId: 'arrival-in-china',
+    kind: 'lesson',
+    lessonId: trainStationTicketLesson.id,
+    title: {
+      en: 'Buy a train station ticket',
+      fr: 'Acheter un billet en gare',
+    },
+    eyebrow: {
+      en: 'Train',
+      fr: 'Train',
+    },
+    summary: trainStationTicketLesson.scenario,
+    pathOrder: 10,
   },
 ]
 

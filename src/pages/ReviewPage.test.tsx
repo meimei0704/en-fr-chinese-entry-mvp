@@ -83,6 +83,34 @@ describe('ReviewPage', () => {
     ])
   })
 
+  it('shows review cards enqueued by the new restaurant and train-station lessons', async () => {
+    const user = userEvent.setup()
+    const afterRestaurant = completeLesson('restaurant-order', createDefaultProgress())
+    const afterTrainStation = completeLesson('train-station-ticket', afterRestaurant)
+
+    saveProgress(afterTrainStation)
+    renderRoute('/review')
+
+    expect(loadProgress().completedLessons).toEqual([
+      'restaurant-order',
+      'train-station-ticket',
+    ])
+    expect(screen.getByText(/cards due today: 6/i)).toBeVisible()
+    expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('菜单')
+
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+
+    expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('火车站')
+    expect(loadProgress().reviewQueue).toEqual([
+      'train-station-ticket-review-1',
+      'train-station-ticket-review-2',
+      'train-station-ticket-review-3',
+    ])
+  })
+
+
   it('frames the review queue with status cards and a layered flashcard surface', () => {
     seedProgressWithFirstLessonLearned('en')
     renderRoute('/review')
