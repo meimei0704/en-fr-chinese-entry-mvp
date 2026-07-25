@@ -46,11 +46,97 @@ const expectedShortInputAudioByLesson = {
   'convenience-store-run': '/audio/convenience-store-run/short-input-01.mp3',
 } as const
 
+const expectedMaterialAudioByLesson = {
+  'self-intro': {
+    sentencePatterns: [
+      '/audio/self-intro/pattern-01.mp3',
+      '/audio/self-intro/pattern-02.mp3',
+      '/audio/self-intro/pattern-03.mp3',
+    ],
+    vocabulary: [
+      '/audio/self-intro/vocab-01.mp3',
+      '/audio/self-intro/vocab-02.mp3',
+      '/audio/self-intro/vocab-03.mp3',
+      '/audio/self-intro/vocab-04.mp3',
+      '/audio/self-intro/vocab-05.mp3',
+    ],
+    pronunciation: ['/audio/self-intro/pronunciation-01.mp3'],
+    pronunciationText: ['住在这个酒店'],
+  },
+  'ask-directions': {
+    sentencePatterns: [
+      '/audio/ask-directions/pattern-01.mp3',
+      '/audio/ask-directions/pattern-02.mp3',
+      '/audio/ask-directions/pattern-03.mp3',
+    ],
+    vocabulary: [
+      '/audio/ask-directions/vocab-01.mp3',
+      '/audio/ask-directions/vocab-02.mp3',
+      '/audio/ask-directions/vocab-03.mp3',
+      '/audio/ask-directions/vocab-04.mp3',
+      '/audio/ask-directions/vocab-05.mp3',
+    ],
+    pronunciation: ['/audio/ask-directions/pronunciation-01.mp3'],
+    pronunciationText: ['师傅，地址，左右'],
+  },
+  'order-food': {
+    sentencePatterns: [
+      '/audio/order-food/pattern-01.mp3',
+      '/audio/order-food/pattern-02.mp3',
+      '/audio/order-food/pattern-03.mp3',
+    ],
+    vocabulary: [
+      '/audio/order-food/vocab-01.mp3',
+      '/audio/order-food/vocab-02.mp3',
+      '/audio/order-food/vocab-03.mp3',
+      '/audio/order-food/vocab-04.mp3',
+      '/audio/order-food/vocab-05.mp3',
+    ],
+    pronunciation: ['/audio/order-food/pronunciation-01.mp3'],
+    pronunciationText: ['我叫'],
+  },
+  'phone-and-payment': {
+    sentencePatterns: [
+      '/audio/phone-and-payment/pattern-01.mp3',
+      '/audio/phone-and-payment/pattern-02.mp3',
+      '/audio/phone-and-payment/pattern-03.mp3',
+    ],
+    vocabulary: [
+      '/audio/phone-and-payment/vocab-01.mp3',
+      '/audio/phone-and-payment/vocab-02.mp3',
+      '/audio/phone-and-payment/vocab-03.mp3',
+      '/audio/phone-and-payment/vocab-04.mp3',
+      '/audio/phone-and-payment/vocab-05.mp3',
+    ],
+    pronunciation: ['/audio/phone-and-payment/pronunciation-01.mp3'],
+    pronunciationText: ['手机，支付，现金'],
+  },
+  'convenience-store-run': {
+    sentencePatterns: [
+      '/audio/convenience-store-run/pattern-01.mp3',
+      '/audio/convenience-store-run/pattern-02.mp3',
+      '/audio/convenience-store-run/pattern-03.mp3',
+    ],
+    vocabulary: [
+      '/audio/convenience-store-run/vocab-01.mp3',
+      '/audio/convenience-store-run/vocab-02.mp3',
+      '/audio/convenience-store-run/vocab-03.mp3',
+      '/audio/convenience-store-run/vocab-04.mp3',
+      '/audio/convenience-store-run/vocab-05.mp3',
+    ],
+    pronunciation: ['/audio/convenience-store-run/pronunciation-01.mp3'],
+    pronunciationText: ['一瓶水，不要了，多少钱'],
+  },
+} as const
+
 async function collectAudioPaths() {
   const { course } = await import('./course')
 
   return course.lessons.flatMap((lesson) => [
     ...lesson.dialogue.lines.map((line) => line.audio),
+    ...lesson.sentencePatterns.map((pattern) => pattern.audio),
+    ...lesson.vocabulary.map((item) => item.audio),
+    ...lesson.pronunciation.map((tip) => tip.audio),
     lesson.shortInput.audio,
   ])
 }
@@ -126,11 +212,22 @@ describe('course content', () => {
 
       const expectedDialogueAudio = expectedDialogueAudioByLesson[lesson.id]
       const expectedShortInputAudio = expectedShortInputAudioByLesson[lesson.id]
+      const expectedMaterialAudio = expectedMaterialAudioByLesson[lesson.id]
 
       expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
         expectedDialogueAudio.map((_, index) => `${lesson.id}-line-0${index + 1}`),
       )
       expect(lesson.dialogue.lines.map((line) => line.audio)).toEqual(expectedDialogueAudio)
+      expect(lesson.sentencePatterns.map((pattern) => pattern.audio)).toEqual(
+        expectedMaterialAudio.sentencePatterns,
+      )
+      expect(lesson.vocabulary.map((item) => item.audio)).toEqual(expectedMaterialAudio.vocabulary)
+      expect(lesson.pronunciation.map((tip) => tip.audio)).toEqual(
+        expectedMaterialAudio.pronunciation,
+      )
+      expect(lesson.pronunciation.map((tip) => tip.audioText)).toEqual(
+        expectedMaterialAudio.pronunciationText,
+      )
       expect(lesson.shortInput.id).toBe(`${lesson.id}-short-input-01`)
       expect(lesson.shortInput.audio).toBe(expectedShortInputAudio)
     }
@@ -315,14 +412,16 @@ describe('course content', () => {
     ).toMatch(/bouteille d’eau|combien|supérette/)
   })
 
-  it('ships non-empty MP3 audio files for every dialogue and short-input reference', async () => {
+  it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(29)
+    expect(audioPaths).toHaveLength(74)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {
-      expect(audioPath).toMatch(/^\/audio\/[a-z0-9-]+\/(?:line-\d{2}|short-input-\d{2})\.mp3$/)
+      expect(audioPath).toMatch(
+        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|pronunciation|short-input)-\d{2}\.mp3$/,
+      )
       const publicPath = `${process.cwd()}/public${audioPath.replace('/audio', '/audio')}`
       expect(existsSync(publicPath), `missing ${audioPath}`).toBe(true)
       expect(statSync(publicPath).size, `${audioPath} should not be a placeholder`).toBeGreaterThan(1024)

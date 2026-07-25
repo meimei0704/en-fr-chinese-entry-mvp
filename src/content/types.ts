@@ -46,6 +46,7 @@ export interface SentencePattern {
   pattern: string
   meaning: LocalizedField
   example: string
+  audio: string
   explanation: BilingualExplanation
 }
 
@@ -53,6 +54,7 @@ export interface VocabularyItem {
   id: string
   hanzi: string
   pinyin: string
+  audio: string
   meaning: LocalizedField
   explanation: BilingualExplanation
 }
@@ -60,6 +62,8 @@ export interface VocabularyItem {
 export interface PronunciationTip {
   id: string
   focus: LocalizedField
+  audioText: string
+  audio: string
   tip: LocalizedField
   explanation: BilingualExplanation
 }

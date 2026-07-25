@@ -117,6 +117,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'Je voudrais obtenir / faire ...',
       },
       example: '我想办一张手机卡。',
+      audio: '/audio/phone-and-payment/pattern-01.mp3',
       explanation: {
         en: 'Use it for a compact service request at a counter.',
         fr: 'Utilise cette structure pour une demande simple au comptoir.',
@@ -130,6 +131,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'Puis-je utiliser ... ?',
       },
       example: '可以用手机支付吗？',
+      audio: '/audio/phone-and-payment/pattern-02.mp3',
       explanation: {
         en: 'This is the shortest useful question for checking a payment method.',
         fr: 'C’est la question utile la plus courte pour vérifier un moyen de paiement.',
@@ -143,6 +145,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'Il est aussi possible de d’abord ...',
       },
       example: '也可以先用现金。',
+      audio: '/audio/phone-and-payment/pattern-03.mp3',
       explanation: {
         en: 'This pattern introduces a fallback without adding complex payment details.',
         fr: 'Cette structure introduit une solution de secours sans détails de paiement complexes.',
@@ -154,6 +157,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       id: 'phone-and-payment-vocab-1',
       hanzi: '手机卡',
       pinyin: 'shǒujīkǎ',
+      audio: '/audio/phone-and-payment/vocab-01.mp3',
       meaning: {
         en: 'SIM card / phone card',
         fr: 'carte SIM / carte de téléphone',
@@ -167,6 +171,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       id: 'phone-and-payment-vocab-2',
       hanzi: '手机号码',
       pinyin: 'shǒujī hàomǎ',
+      audio: '/audio/phone-and-payment/vocab-02.mp3',
       meaning: {
         en: 'phone number',
         fr: 'numéro de téléphone',
@@ -180,6 +185,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       id: 'phone-and-payment-vocab-3',
       hanzi: '支付',
       pinyin: 'zhīfù',
+      audio: '/audio/phone-and-payment/vocab-03.mp3',
       meaning: {
         en: 'pay / payment',
         fr: 'payer / paiement',
@@ -193,6 +199,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       id: 'phone-and-payment-vocab-4',
       hanzi: '现金',
       pinyin: 'xiànjīn',
+      audio: '/audio/phone-and-payment/vocab-04.mp3',
       meaning: {
         en: 'cash',
         fr: 'espèces',
@@ -206,6 +213,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       id: 'phone-and-payment-vocab-5',
       hanzi: '可以',
       pinyin: 'kěyǐ',
+      audio: '/audio/phone-and-payment/vocab-05.mp3',
       meaning: {
         en: 'can / may',
         fr: 'pouvoir / être possible',
@@ -223,6 +231,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         en: 'Phone and payment words',
         fr: 'Mots du téléphone et du paiement',
       },
+      audioText: '手机，支付，现金',
+      audio: '/audio/phone-and-payment/pronunciation-01.mp3',
       tip: {
         en: 'Keep 手机, 支付, and 现金 short and clear; they carry the key meaning in this setup exchange.',
         fr: 'Prononce clairement 手机, 支付 et 现金 ; ce sont les mots clés de cet échange.',

@@ -117,6 +117,7 @@ export const convenienceStoreRunLesson: LessonContent = {
         fr: 'Je veux / je voudrais ...',
       },
       example: '我要一瓶水。',
+      audio: '/audio/convenience-store-run/pattern-01.mp3',
       explanation: {
         en: 'Use it for one simple item when the context is already clear.',
         fr: 'Utilise cette structure pour un article simple quand le contexte est clair.',
@@ -130,6 +131,7 @@ export const convenienceStoreRunLesson: LessonContent = {
         fr: 'Voulez-vous aussi ... ?',
       },
       example: '还要别的吗？',
+      audio: '/audio/convenience-store-run/pattern-02.mp3',
       explanation: {
         en: 'This is a common question from a clerk before payment.',
         fr: 'C’est une question courante de l’employé avant le paiement.',
@@ -143,6 +145,7 @@ export const convenienceStoreRunLesson: LessonContent = {
         fr: 'Combien ça fait au total ?',
       },
       example: '一共多少钱？',
+      audio: '/audio/convenience-store-run/pattern-03.mp3',
       explanation: {
         en: 'Ask this when you are ready to pay for the purchase.',
         fr: 'Demande cela quand tu es prêt à payer l’achat.',
@@ -154,6 +157,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       id: 'convenience-store-run-vocab-1',
       hanzi: '一瓶水',
       pinyin: 'yì píng shuǐ',
+      audio: '/audio/convenience-store-run/vocab-01.mp3',
       meaning: {
         en: 'a bottle of water',
         fr: 'une bouteille d’eau',
@@ -167,6 +171,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       id: 'convenience-store-run-vocab-2',
       hanzi: '还要别的吗',
       pinyin: 'hái yào bié de ma',
+      audio: '/audio/convenience-store-run/vocab-02.mp3',
       meaning: {
         en: 'anything else?',
         fr: 'autre chose ?',
@@ -180,6 +185,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       id: 'convenience-store-run-vocab-3',
       hanzi: '不要了',
       pinyin: 'bú yào le',
+      audio: '/audio/convenience-store-run/vocab-03.mp3',
       meaning: {
         en: 'no more / nothing else',
         fr: 'rien d’autre',
@@ -193,6 +199,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       id: 'convenience-store-run-vocab-4',
       hanzi: '一共',
       pinyin: 'yígòng',
+      audio: '/audio/convenience-store-run/vocab-04.mp3',
       meaning: {
         en: 'altogether / in total',
         fr: 'au total',
@@ -206,6 +213,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       id: 'convenience-store-run-vocab-5',
       hanzi: '多少钱',
       pinyin: 'duōshao qián',
+      audio: '/audio/convenience-store-run/vocab-05.mp3',
       meaning: {
         en: 'how much money?',
         fr: 'combien d’argent ? / combien ça coûte ?',
@@ -223,6 +231,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'Short checkout phrases',
         fr: 'Phrases courtes à la caisse',
       },
+      audioText: '一瓶水，不要了，多少钱',
+      audio: '/audio/convenience-store-run/pronunciation-01.mp3',
       tip: {
         en: 'Keep 一瓶水, 不要了, and 多少钱 short; each phrase can stand alone at checkout.',
         fr: 'Garde 一瓶水, 不要了 et 多少钱 courts ; chaque phrase fonctionne seule à la caisse.',

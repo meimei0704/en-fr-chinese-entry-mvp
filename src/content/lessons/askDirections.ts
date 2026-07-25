@@ -117,6 +117,7 @@ export const askDirectionsLesson: LessonContent = {
         fr: 'Aller à ce / cette ...',
       },
       example: '去这个酒店。',
+      audio: '/audio/ask-directions/pattern-01.mp3',
       explanation: {
         en: 'Point to your map or booking while saying the destination.',
         fr: 'Montre ta carte ou ta réservation en disant la destination.',
@@ -130,6 +131,7 @@ export const askDirectionsLesson: LessonContent = {
         fr: 'Montre-moi ... un instant',
       },
       example: '给我看一下地址。',
+      audio: '/audio/ask-directions/pattern-02.mp3',
       explanation: {
         en: 'Drivers may use this to ask for the address on your phone.',
         fr: 'Les chauffeurs peuvent utiliser cette phrase pour demander l’adresse sur ton téléphone.',
@@ -143,6 +145,7 @@ export const askDirectionsLesson: LessonContent = {
         fr: 'Environ ... pour arriver ?',
       },
       example: '大概多久到？',
+      audio: '/audio/ask-directions/pattern-03.mp3',
       explanation: {
         en: 'Use it to ask a short travel-time question in the taxi.',
         fr: 'Utilise-le pour demander rapidement la durée du trajet en taxi.',
@@ -154,6 +157,7 @@ export const askDirectionsLesson: LessonContent = {
       id: 'ask-directions-vocab-1',
       hanzi: '师傅',
       pinyin: 'shīfu',
+      audio: '/audio/ask-directions/vocab-01.mp3',
       meaning: {
         en: 'driver / master worker',
         fr: 'chauffeur / maître artisan',
@@ -167,6 +171,7 @@ export const askDirectionsLesson: LessonContent = {
       id: 'ask-directions-vocab-2',
       hanzi: '地址',
       pinyin: 'dìzhǐ',
+      audio: '/audio/ask-directions/vocab-02.mp3',
       meaning: {
         en: 'address',
         fr: 'adresse',
@@ -180,6 +185,7 @@ export const askDirectionsLesson: LessonContent = {
       id: 'ask-directions-vocab-3',
       hanzi: '酒店',
       pinyin: 'jiǔdiàn',
+      audio: '/audio/ask-directions/vocab-03.mp3',
       meaning: {
         en: 'hotel',
         fr: 'hôtel',
@@ -193,6 +199,7 @@ export const askDirectionsLesson: LessonContent = {
       id: 'ask-directions-vocab-4',
       hanzi: '多久',
       pinyin: 'duōjiǔ',
+      audio: '/audio/ask-directions/vocab-04.mp3',
       meaning: {
         en: 'how long',
         fr: 'combien de temps',
@@ -206,6 +213,7 @@ export const askDirectionsLesson: LessonContent = {
       id: 'ask-directions-vocab-5',
       hanzi: '左右',
       pinyin: 'zuǒyòu',
+      audio: '/audio/ask-directions/vocab-05.mp3',
       meaning: {
         en: 'around / about',
         fr: 'environ / à peu près',
@@ -223,6 +231,8 @@ export const askDirectionsLesson: LessonContent = {
         en: 'Practical taxi words',
         fr: 'Mots pratiques du taxi',
       },
+      audioText: '师傅，地址，左右',
+      audio: '/audio/ask-directions/pronunciation-01.mp3',
       tip: {
         en: 'Keep 师傅, 地址, and 左右 clear; avoid adding complex route talk in this first taxi lesson.',
         fr: 'Prononce clairement 师傅, 地址 et 左右 ; n’ajoute pas encore de phrases complexes sur l’itinéraire.',
