@@ -60,7 +60,13 @@ describe('DialoguePlayer', () => {
       />,
     )
 
-    await user.click(screen.getByRole('button', { name: /écouter le chinois/i }))
+    const playbackButton = screen.getByRole('button', { name: /écouter le chinois/i })
+
+    expect(playbackButton).toHaveAttribute('title', 'Écouter le chinois')
+    expect(playbackButton).not.toHaveTextContent(/écouter le chinois/i)
+    expect(screen.queryByText(/écouter le chinois/i)).not.toBeInTheDocument()
+
+    await user.click(playbackButton)
 
     expect(cancel).toHaveBeenCalledTimes(1)
     expect(audioPlay).toHaveBeenCalledTimes(1)

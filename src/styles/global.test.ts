@@ -130,4 +130,22 @@ describe('global color accessibility tokens', () => {
       expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
     }
   })
+
+  it('keeps the shared speech button as a small circular icon control with interaction states', () => {
+    const speechButtonDeclarations = [
+      ['.speech-button', 'width: 2.35rem;'],
+      ['.speech-button', 'min-height: 2.35rem;'],
+      ['.speech-button', 'padding: 0;'],
+      ['.speech-button', 'border-radius: 999px;'],
+      ['.speech-button__icon', 'width: 1.05rem;'],
+      ['.speech-button:hover:not(:disabled)', 'transform: translateY(-1px);'],
+      ['.speech-button:active:not(:disabled)', 'transform: translateY(0);'],
+      ['.speech-button:disabled', 'cursor: not-allowed;'],
+    ]
+
+    for (const [selector, declaration] of speechButtonDeclarations) {
+      expect(hasRule(selector)).toBe(true)
+      expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
+    }
+  })
 })

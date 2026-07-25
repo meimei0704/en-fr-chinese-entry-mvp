@@ -65,6 +65,11 @@ describe('PracticePage', () => {
 
     const playbackButtons = screen.getAllByRole('button', { name: /play chinese/i })
     expect(playbackButtons).toHaveLength(3)
+    expect(screen.queryAllByText(/^Play Chinese$/i)).toHaveLength(0)
+    playbackButtons.forEach((button) => {
+      expect(button).toHaveAttribute('title', 'Play Chinese')
+      expect(button).not.toHaveTextContent(/play chinese/i)
+    })
 
     for (const button of playbackButtons) {
       await user.click(button)
