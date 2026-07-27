@@ -13,10 +13,7 @@ values
 ('ask-for-help-problem', 'ask-for-help-problem', 9, true),
 ('train-station-ticket', 'train-station-ticket', 10, true)
 on duplicate key update
-  slug = values(slug),
-  display_order = values(display_order),
-  enabled = values(enabled),
-  updated_at = current_timestamp;
+  lesson_id = lesson_id;
 
 insert into lesson_modules (lesson_id, module_type)
 values
@@ -311,362 +308,632 @@ on duplicate key update
 update lesson_modules
 set current_published_revision_id = 1,
     current_draft_revision_id = 2
-where lesson_id = 'self-intro' and module_type = 'lessonMeta';
+where lesson_id = 'self-intro'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 3,
     current_draft_revision_id = 4
-where lesson_id = 'self-intro' and module_type = 'dialogue';
+where lesson_id = 'self-intro'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 5,
     current_draft_revision_id = 6
-where lesson_id = 'self-intro' and module_type = 'sentencePatterns';
+where lesson_id = 'self-intro'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 7,
     current_draft_revision_id = 8
-where lesson_id = 'self-intro' and module_type = 'vocabulary';
+where lesson_id = 'self-intro'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 9,
     current_draft_revision_id = 10
-where lesson_id = 'self-intro' and module_type = 'pronunciation';
+where lesson_id = 'self-intro'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 11,
     current_draft_revision_id = 12
-where lesson_id = 'self-intro' and module_type = 'hanziRecognition';
+where lesson_id = 'self-intro'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 13,
     current_draft_revision_id = 14
-where lesson_id = 'self-intro' and module_type = 'practice';
+where lesson_id = 'self-intro'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 15,
     current_draft_revision_id = 16
-where lesson_id = 'self-intro' and module_type = 'reviewCards';
+where lesson_id = 'self-intro'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 17,
     current_draft_revision_id = 18
-where lesson_id = 'self-intro' and module_type = 'shortInput';
+where lesson_id = 'self-intro'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 19,
     current_draft_revision_id = 20
-where lesson_id = 'ask-directions' and module_type = 'lessonMeta';
+where lesson_id = 'ask-directions'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 21,
     current_draft_revision_id = 22
-where lesson_id = 'ask-directions' and module_type = 'dialogue';
+where lesson_id = 'ask-directions'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 23,
     current_draft_revision_id = 24
-where lesson_id = 'ask-directions' and module_type = 'sentencePatterns';
+where lesson_id = 'ask-directions'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 25,
     current_draft_revision_id = 26
-where lesson_id = 'ask-directions' and module_type = 'vocabulary';
+where lesson_id = 'ask-directions'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 27,
     current_draft_revision_id = 28
-where lesson_id = 'ask-directions' and module_type = 'pronunciation';
+where lesson_id = 'ask-directions'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 29,
     current_draft_revision_id = 30
-where lesson_id = 'ask-directions' and module_type = 'hanziRecognition';
+where lesson_id = 'ask-directions'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 31,
     current_draft_revision_id = 32
-where lesson_id = 'ask-directions' and module_type = 'practice';
+where lesson_id = 'ask-directions'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 33,
     current_draft_revision_id = 34
-where lesson_id = 'ask-directions' and module_type = 'reviewCards';
+where lesson_id = 'ask-directions'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 35,
     current_draft_revision_id = 36
-where lesson_id = 'ask-directions' and module_type = 'shortInput';
+where lesson_id = 'ask-directions'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 37,
     current_draft_revision_id = 38
-where lesson_id = 'order-food' and module_type = 'lessonMeta';
+where lesson_id = 'order-food'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 39,
     current_draft_revision_id = 40
-where lesson_id = 'order-food' and module_type = 'dialogue';
+where lesson_id = 'order-food'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 41,
     current_draft_revision_id = 42
-where lesson_id = 'order-food' and module_type = 'sentencePatterns';
+where lesson_id = 'order-food'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 43,
     current_draft_revision_id = 44
-where lesson_id = 'order-food' and module_type = 'vocabulary';
+where lesson_id = 'order-food'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 45,
     current_draft_revision_id = 46
-where lesson_id = 'order-food' and module_type = 'pronunciation';
+where lesson_id = 'order-food'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 47,
     current_draft_revision_id = 48
-where lesson_id = 'order-food' and module_type = 'hanziRecognition';
+where lesson_id = 'order-food'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 49,
     current_draft_revision_id = 50
-where lesson_id = 'order-food' and module_type = 'practice';
+where lesson_id = 'order-food'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 51,
     current_draft_revision_id = 52
-where lesson_id = 'order-food' and module_type = 'reviewCards';
+where lesson_id = 'order-food'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 53,
     current_draft_revision_id = 54
-where lesson_id = 'order-food' and module_type = 'shortInput';
+where lesson_id = 'order-food'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 55,
     current_draft_revision_id = 56
-where lesson_id = 'phone-and-payment' and module_type = 'lessonMeta';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 57,
     current_draft_revision_id = 58
-where lesson_id = 'phone-and-payment' and module_type = 'dialogue';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 59,
     current_draft_revision_id = 60
-where lesson_id = 'phone-and-payment' and module_type = 'sentencePatterns';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 61,
     current_draft_revision_id = 62
-where lesson_id = 'phone-and-payment' and module_type = 'vocabulary';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 63,
     current_draft_revision_id = 64
-where lesson_id = 'phone-and-payment' and module_type = 'pronunciation';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 65,
     current_draft_revision_id = 66
-where lesson_id = 'phone-and-payment' and module_type = 'hanziRecognition';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 67,
     current_draft_revision_id = 68
-where lesson_id = 'phone-and-payment' and module_type = 'practice';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 69,
     current_draft_revision_id = 70
-where lesson_id = 'phone-and-payment' and module_type = 'reviewCards';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 71,
     current_draft_revision_id = 72
-where lesson_id = 'phone-and-payment' and module_type = 'shortInput';
+where lesson_id = 'phone-and-payment'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 73,
     current_draft_revision_id = 74
-where lesson_id = 'convenience-store-run' and module_type = 'lessonMeta';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 75,
     current_draft_revision_id = 76
-where lesson_id = 'convenience-store-run' and module_type = 'dialogue';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 77,
     current_draft_revision_id = 78
-where lesson_id = 'convenience-store-run' and module_type = 'sentencePatterns';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 79,
     current_draft_revision_id = 80
-where lesson_id = 'convenience-store-run' and module_type = 'vocabulary';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 81,
     current_draft_revision_id = 82
-where lesson_id = 'convenience-store-run' and module_type = 'pronunciation';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 83,
     current_draft_revision_id = 84
-where lesson_id = 'convenience-store-run' and module_type = 'hanziRecognition';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 85,
     current_draft_revision_id = 86
-where lesson_id = 'convenience-store-run' and module_type = 'practice';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 87,
     current_draft_revision_id = 88
-where lesson_id = 'convenience-store-run' and module_type = 'reviewCards';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 89,
     current_draft_revision_id = 90
-where lesson_id = 'convenience-store-run' and module_type = 'shortInput';
+where lesson_id = 'convenience-store-run'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 91,
     current_draft_revision_id = 92
-where lesson_id = 'restaurant-order' and module_type = 'lessonMeta';
+where lesson_id = 'restaurant-order'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 93,
     current_draft_revision_id = 94
-where lesson_id = 'restaurant-order' and module_type = 'dialogue';
+where lesson_id = 'restaurant-order'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 95,
     current_draft_revision_id = 96
-where lesson_id = 'restaurant-order' and module_type = 'sentencePatterns';
+where lesson_id = 'restaurant-order'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 97,
     current_draft_revision_id = 98
-where lesson_id = 'restaurant-order' and module_type = 'vocabulary';
+where lesson_id = 'restaurant-order'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 99,
     current_draft_revision_id = 100
-where lesson_id = 'restaurant-order' and module_type = 'pronunciation';
+where lesson_id = 'restaurant-order'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 101,
     current_draft_revision_id = 102
-where lesson_id = 'restaurant-order' and module_type = 'hanziRecognition';
+where lesson_id = 'restaurant-order'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 103,
     current_draft_revision_id = 104
-where lesson_id = 'restaurant-order' and module_type = 'practice';
+where lesson_id = 'restaurant-order'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 105,
     current_draft_revision_id = 106
-where lesson_id = 'restaurant-order' and module_type = 'reviewCards';
+where lesson_id = 'restaurant-order'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 107,
     current_draft_revision_id = 108
-where lesson_id = 'restaurant-order' and module_type = 'shortInput';
+where lesson_id = 'restaurant-order'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 109,
     current_draft_revision_id = 110
-where lesson_id = 'metro-ticket' and module_type = 'lessonMeta';
+where lesson_id = 'metro-ticket'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 111,
     current_draft_revision_id = 112
-where lesson_id = 'metro-ticket' and module_type = 'dialogue';
+where lesson_id = 'metro-ticket'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 113,
     current_draft_revision_id = 114
-where lesson_id = 'metro-ticket' and module_type = 'sentencePatterns';
+where lesson_id = 'metro-ticket'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 115,
     current_draft_revision_id = 116
-where lesson_id = 'metro-ticket' and module_type = 'vocabulary';
+where lesson_id = 'metro-ticket'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 117,
     current_draft_revision_id = 118
-where lesson_id = 'metro-ticket' and module_type = 'pronunciation';
+where lesson_id = 'metro-ticket'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 119,
     current_draft_revision_id = 120
-where lesson_id = 'metro-ticket' and module_type = 'hanziRecognition';
+where lesson_id = 'metro-ticket'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 121,
     current_draft_revision_id = 122
-where lesson_id = 'metro-ticket' and module_type = 'practice';
+where lesson_id = 'metro-ticket'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 123,
     current_draft_revision_id = 124
-where lesson_id = 'metro-ticket' and module_type = 'reviewCards';
+where lesson_id = 'metro-ticket'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 125,
     current_draft_revision_id = 126
-where lesson_id = 'metro-ticket' and module_type = 'shortInput';
+where lesson_id = 'metro-ticket'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 127,
     current_draft_revision_id = 128
-where lesson_id = 'pharmacy-help' and module_type = 'lessonMeta';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 129,
     current_draft_revision_id = 130
-where lesson_id = 'pharmacy-help' and module_type = 'dialogue';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 131,
     current_draft_revision_id = 132
-where lesson_id = 'pharmacy-help' and module_type = 'sentencePatterns';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 133,
     current_draft_revision_id = 134
-where lesson_id = 'pharmacy-help' and module_type = 'vocabulary';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 135,
     current_draft_revision_id = 136
-where lesson_id = 'pharmacy-help' and module_type = 'pronunciation';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 137,
     current_draft_revision_id = 138
-where lesson_id = 'pharmacy-help' and module_type = 'hanziRecognition';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 139,
     current_draft_revision_id = 140
-where lesson_id = 'pharmacy-help' and module_type = 'practice';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 141,
     current_draft_revision_id = 142
-where lesson_id = 'pharmacy-help' and module_type = 'reviewCards';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 143,
     current_draft_revision_id = 144
-where lesson_id = 'pharmacy-help' and module_type = 'shortInput';
+where lesson_id = 'pharmacy-help'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 145,
     current_draft_revision_id = 146
-where lesson_id = 'ask-for-help-problem' and module_type = 'lessonMeta';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 147,
     current_draft_revision_id = 148
-where lesson_id = 'ask-for-help-problem' and module_type = 'dialogue';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 149,
     current_draft_revision_id = 150
-where lesson_id = 'ask-for-help-problem' and module_type = 'sentencePatterns';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 151,
     current_draft_revision_id = 152
-where lesson_id = 'ask-for-help-problem' and module_type = 'vocabulary';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 153,
     current_draft_revision_id = 154
-where lesson_id = 'ask-for-help-problem' and module_type = 'pronunciation';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 155,
     current_draft_revision_id = 156
-where lesson_id = 'ask-for-help-problem' and module_type = 'hanziRecognition';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 157,
     current_draft_revision_id = 158
-where lesson_id = 'ask-for-help-problem' and module_type = 'practice';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 159,
     current_draft_revision_id = 160
-where lesson_id = 'ask-for-help-problem' and module_type = 'reviewCards';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 161,
     current_draft_revision_id = 162
-where lesson_id = 'ask-for-help-problem' and module_type = 'shortInput';
+where lesson_id = 'ask-for-help-problem'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 163,
     current_draft_revision_id = 164
-where lesson_id = 'train-station-ticket' and module_type = 'lessonMeta';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'lessonMeta'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 165,
     current_draft_revision_id = 166
-where lesson_id = 'train-station-ticket' and module_type = 'dialogue';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'dialogue'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 167,
     current_draft_revision_id = 168
-where lesson_id = 'train-station-ticket' and module_type = 'sentencePatterns';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'sentencePatterns'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 169,
     current_draft_revision_id = 170
-where lesson_id = 'train-station-ticket' and module_type = 'vocabulary';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'vocabulary'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 171,
     current_draft_revision_id = 172
-where lesson_id = 'train-station-ticket' and module_type = 'pronunciation';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'pronunciation'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 173,
     current_draft_revision_id = 174
-where lesson_id = 'train-station-ticket' and module_type = 'hanziRecognition';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'hanziRecognition'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 175,
     current_draft_revision_id = 176
-where lesson_id = 'train-station-ticket' and module_type = 'practice';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'practice'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 177,
     current_draft_revision_id = 178
-where lesson_id = 'train-station-ticket' and module_type = 'reviewCards';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'reviewCards'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 update lesson_modules
 set current_published_revision_id = 179,
     current_draft_revision_id = 180
-where lesson_id = 'train-station-ticket' and module_type = 'shortInput';
+where lesson_id = 'train-station-ticket'
+  and module_type = 'shortInput'
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;
 
 commit;

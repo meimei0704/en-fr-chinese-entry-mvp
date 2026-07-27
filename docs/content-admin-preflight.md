@@ -134,3 +134,20 @@ The user confirmed the provider as PingCAP/Pingkai MySQL-compatible cloud servic
 - Vite on Vercel: https://vercel.com/docs/frameworks/frontend/vite
 - Vercel routing overview: https://vercel.com/docs/routing
 - Vercel project configuration / `vercel.json`: https://vercel.com/docs/project-configuration/vercel-json
+
+## 2026-07-27 MySQL Apply Safety Review Follow-up
+
+Reviewer review of `f3066b0..8578288` found that the first MySQL runner was not safe to apply directly to a real or shared test database. The unsafe version is superseded by this hardening pass.
+
+### Hardened apply contract
+
+- `npm run content:mysql:apply` is now a **fresh bootstrap only** path: it validates the database URL target, checks the selected database with `select database()`, and refuses to execute migration/seed SQL if the selected schema already contains base tables.
+- The runtime guard rejects known system/default database names including `sys`, `mysql`, `information_schema`, `performance_schema`, `default`, and generic `test`, and error messages mention only database names, never usernames/passwords/tokens.
+- The generated seed guards bootstrap pointer updates with `current_published_revision_id is null` and `current_draft_revision_id is null`, so manually re-running the seed cannot roll edited `lesson_modules` pointers back to bootstrap revision IDs.
+- `module_revisions` append-only protection is handled through TiDB-compatible least-privilege runtime grants in `db/grants/content_admin_runtime.sql`: runtime/admin-write credentials may `select`/`insert` `module_revisions` but must not have `update`/`delete` on that table. The migration/bootstrap credential must not be used by runtime. PingCAP's TiDB FAQ lists triggers/stored procedures as unsupported, so this hardening does not depend on trigger-based guards: <https://docs.pingcap.com/tidb/stable/tidb-faq/>.
+
+### Remaining environment caveats
+
+- A dedicated content-admin MySQL/TiDB application/test database or schema is still required before real migration/seed.
+- `MYSQL_DATABASE_URL` must be injected through a secrets-safe channel; do not paste the value into threads, docs, or checkpoints.
+- Vercel link/auth or deploy hook and production URL/token are still required before production API smoke.

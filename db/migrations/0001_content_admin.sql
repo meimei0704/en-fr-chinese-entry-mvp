@@ -1,6 +1,8 @@
 -- Content admin core model for MySQL/TiDB-compatible providers.
 -- Rollback must copy a historical published revision into a new published revision and move the pointer.
 -- TiDB-compatible SQL intentionally avoids PostgreSQL-only types/casts/triggers.
+-- module_revisions append-only enforcement is handled by least-privilege runtime grants in
+-- db/grants/content_admin_runtime.sql because TiDB does not support trigger-based guards.
 
 begin;
 

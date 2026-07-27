@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const migrationSql = () => readFileSync('db/migrations/0001_content_admin.sql', 'utf8')
+const runtimeGrantSql = () => readFileSync('db/grants/content_admin_runtime.sql', 'utf8')
 
 describe('content admin database migration', () => {
   it('creates the three core MySQL tables with published and draft pointers', () => {
@@ -27,6 +28,26 @@ describe('content admin database migration', () => {
     expect(sql).toMatch(/check\s*\(revision_kind in \('draft', 'published'\)\)/i)
     expect(sql).toMatch(/module_revisions_source_fk/i)
     expect(sql).not.toMatch(/prevent_module_revision_mutation/i)
+  })
+
+  it('keeps module revisions append-only through TiDB-compatible runtime grants', () => {
+    const sql = runtimeGrantSql()
+    const grantStatements = sql
+      .split(';')
+      .map((statement) => statement.trim())
+      .filter((statement) => /^grant\b/i.test(statement))
+      .join(';\n')
+
+    expect(sql).toMatch(/migration\/bootstrap credential must not be used by runtime/i)
+    expect(grantStatements).toMatch(
+      /grant\s+select,\s*insert\s+on\s+`__CONTENT_ADMIN_DB__`\.`module_revisions`\s+to\s+'__CONTENT_ADMIN_RUNTIME_USER__'@'__CONTENT_ADMIN_RUNTIME_HOST__'/i,
+    )
+    expect(grantStatements).toMatch(
+      /grant\s+select,\s*update\s+on\s+`__CONTENT_ADMIN_DB__`\.`lesson_modules`\s+to\s+'__CONTENT_ADMIN_RUNTIME_USER__'@'__CONTENT_ADMIN_RUNTIME_HOST__'/i,
+    )
+    expect(grantStatements).not.toMatch(
+      /grant\s+[^;]*(update|delete)[^;]*on\s+`__CONTENT_ADMIN_DB__`\.`module_revisions`/i,
+    )
   })
 
   it('guards lesson module pointers by revision kind and same lesson module through composite foreign keys', () => {

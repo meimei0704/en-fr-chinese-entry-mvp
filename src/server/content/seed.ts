@@ -121,7 +121,10 @@ export function renderInitialContentSeedSql(course: CourseContent) {
       (module) => `update lesson_modules
 set current_published_revision_id = ${module.currentPublishedRevisionId},
     current_draft_revision_id = ${module.currentDraftRevisionId}
-where lesson_id = ${sqlString(module.lessonId)} and module_type = ${sqlString(module.moduleType)};`,
+where lesson_id = ${sqlString(module.lessonId)}
+  and module_type = ${sqlString(module.moduleType)}
+  and current_published_revision_id is null
+  and current_draft_revision_id is null;`,
     )
     .join('\n')
 
@@ -131,10 +134,7 @@ insert into lessons (lesson_id, slug, display_order, enabled)
 values
 ${lessonValues}
 on duplicate key update
-  slug = values(slug),
-  display_order = values(display_order),
-  enabled = values(enabled),
-  updated_at = current_timestamp;
+  lesson_id = lesson_id;
 
 insert into lesson_modules (lesson_id, module_type)
 values

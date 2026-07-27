@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { redactDatabaseUrl, resolveMysqlRunnerUrl, runMysqlSqlFiles } from './mysqlRunner.ts'
+import { redactDatabaseUrl, resolveMysqlRunnerUrl, runMysqlFreshBootstrapSqlFiles } from './mysqlRunner.ts'
 
 export const contentAdminSqlFiles = [
   'db/migrations/0001_content_admin.sql',
@@ -13,9 +13,9 @@ export async function runContentAdminMysqlMigration(env = process.env) {
     throw new Error('Missing MySQL connection env. Expected MYSQL_DATABASE_URL, MYSQL_URL, or DATABASE_URL.')
   }
 
-  console.log(`Applying content admin SQL files to ${redactDatabaseUrl(databaseUrl)}`)
-  await runMysqlSqlFiles({ databaseUrl, files: contentAdminSqlFiles })
-  console.log('Content admin MySQL migration and seed completed.')
+  console.log(`Applying fresh content admin MySQL bootstrap SQL files to ${redactDatabaseUrl(databaseUrl)}`)
+  await runMysqlFreshBootstrapSqlFiles({ databaseUrl, files: contentAdminSqlFiles })
+  console.log('Content admin MySQL bootstrap migration and seed completed.')
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

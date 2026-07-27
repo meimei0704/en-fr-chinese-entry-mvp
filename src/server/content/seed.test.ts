@@ -69,4 +69,16 @@ describe('initial content admin seed', () => {
     expect(sql).not.toMatch(/::timestamptz/i)
     expect(sql).not.toMatch(/on conflict/i)
   })
+
+  it('guards bootstrap pointer updates so manual seed reruns cannot roll edited modules back', () => {
+    const sql = renderInitialContentSeedSql(course)
+    const pointerUpdates = sql.match(/update lesson_modules[\s\S]*?;/g) ?? []
+
+    expect(pointerUpdates).toHaveLength(course.lessons.length * contentModuleTypes.length)
+
+    for (const pointerUpdate of pointerUpdates) {
+      expect(pointerUpdate).toMatch(/current_published_revision_id is null/i)
+      expect(pointerUpdate).toMatch(/current_draft_revision_id is null/i)
+    }
+  })
 })
