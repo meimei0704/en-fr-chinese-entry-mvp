@@ -2,6 +2,8 @@
 
 Date: 2026-07-26
 
+> **Current DB decision (2026-07-27):** the product requirement is **MySQL, not PostgreSQL**. PostgreSQL / `pg` / `psql` notes below are preserved as historical preflight evidence only and are superseded for final #t31 execution.
+
 ## Findings
 
 - Worktree: isolated task branch `t37-content-admin-db-api-t2`.
@@ -22,9 +24,11 @@ Date: 2026-07-26
 - **Deploy caveat:** production deploy cannot be verified from this worker because local Vercel project linking/authentication was not confirmed and deploy/push were out of scope.
 - **Provider-light path:** implementation continues with SQL migration, generated seed data, and public read API boundaries that can run on Vercel Functions with a standard Postgres connection string.
 
-## 2026-07-27 Environment Gate Refresh
+## 2026-07-27 PostgreSQL Environment Gate Refresh (superseded)
 
 This refresh was run by `dylan-t2-codex` for #t31 / #t40 after the implementation baseline became shareable as `origin/t37-content-admin-db-api-t2` and the runtime-provider merge baseline was reported as `t39-runtime-provider-foundation-merge` / `fac4e53`.
+
+> Superseded: later on 2026-07-27, the user clarified that the database must be MySQL and not PG. Use the MySQL refresh below as the current gate.
 
 ### Verified locally
 
@@ -56,6 +60,44 @@ This refresh was run by `dylan-t2-codex` for #t31 / #t40 after the implementatio
    - `GET /api/content/course`
    - `GET /api/content/lessons/<known-lesson-id>`
    - one learner route that uses runtime fallback.
+
+## 2026-07-27 MySQL Environment Gate Refresh
+
+This refresh supersedes the PostgreSQL gate. It does not claim the current DB implementation is MySQL-ready; it records the affected surface area and the secrets-safe local preflight result for the new MySQL requirement.
+
+### Verified locally
+
+- **Worktree state:** `t40-content-admin-env-preflight` is clean at `6fc2316` before this MySQL update.
+- **MySQL CLI is available locally:** `mysql Ver 8.0.18 for osx10.14 on x86_64 (Homebrew)`.
+- **Node/npm remain available locally:** Node `v24.15.0`, npm `11.12.1`.
+- **Vercel project link remains absent:** `.vercel/project.json` is still missing.
+- **No local `.env*` files are present** in this worktree.
+- **Existing migration/seed artifacts are present but PG-specific:** `db/migrations/0001_content_admin.sql` and `db/seeds/0001_initial_content_admin.sql` exist, but they use PostgreSQL syntax and must be ported before any MySQL apply step.
+
+### MySQL-specific blockers / caveats
+
+- **Implementation blocker — current DB foundation is PostgreSQL-specific:** current code still references `pg`, `ContentPostgresRepository`, `$1`-style query placeholders, `POSTGRES_*` env names, `jsonb`, `timestamptz`, `bigserial`, `::jsonb`, `::timestamptz`, PL/pgSQL trigger functions, and PostgreSQL `drop trigger ... on ...` syntax. This foundation can be used as a data-model reference only, not as final MySQL code.
+- **Dependency blocker — no MySQL Node driver is installed:** `package.json` / `package-lock.json` do not contain `mysql2` or `mysql`; they still contain `pg`.
+- **Environment blocker — no MySQL connection env is present in this shell:** `DATABASE_URL`, `MYSQL_URL`, `MYSQL_DATABASE_URL`, `PLANETSCALE_DATABASE_URL`, `JAWSDB_URL`, `CLEARDB_DATABASE_URL`, `MYSQLHOST`, `MYSQL_HOST`, `MYSQLPORT`, `MYSQL_PORT`, `MYSQLDATABASE`, `MYSQL_DATABASE`, `MYSQLUSER`, `MYSQL_USER`, `MYSQLPASSWORD`, and `MYSQL_PASSWORD` were all missing.
+- **Deploy/auth caveat — Vercel auth is still unresolved:** no installed `vercel` CLI was found, and bounded `npx --yes vercel@latest whoami` timed out without a usable authenticated result.
+- **Production smoke blocker — no production URL/env is present:** `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_URL`, and `VERCEL_TOKEN` were missing locally, so production API smoke cannot be run from this worker.
+
+### MySQL impact assessment / migration slice
+
+1. **Driver/env layer:** replace `pg` / `@types/pg` with a MySQL driver such as `mysql2`; rename repository classes and missing-env errors away from Postgres; support the chosen MySQL env contract (`DATABASE_URL` if it is a MySQL URL, or `MYSQL_*` fields).
+2. **Query adapter:** replace PostgreSQL `$1` placeholder rendering with MySQL `?` placeholders and confirm returned row shapes from the chosen driver.
+3. **Schema DDL:** port `jsonb` to MySQL `json`, `timestamptz` to `timestamp`/`datetime`, `bigserial` to `bigint auto_increment`, boolean/defaults/checks/index syntax as needed, and trigger definitions to MySQL `delimiter` / `before update` / `before delete` syntax.
+4. **Seed SQL:** remove PostgreSQL casts (`::jsonb`, `::timestamptz`), ensure JSON strings are valid for MySQL `json`, and keep the existing draft/published pair semantics.
+5. **Invariant tests:** keep the same business gates after the port: public API reads only `published`; draft is never returned by public endpoints; rollback creates a new `published` revision; historical revision rows remain immutable.
+6. **Environment gate:** once a MySQL provider/env is supplied, run MySQL migration + seed against the target DB, deploy a pushed integration branch, then smoke `GET /api/content/course`, `GET /api/content/lessons/<known-lesson-id>`, and one learner route using runtime fallback.
+
+### Required owner / environment actions under MySQL
+
+1. Pick/provide the target MySQL provider and connection injection path for Vercel.
+2. Confirm whether app code should consume one MySQL URL (`DATABASE_URL` / `MYSQL_URL`) or discrete `MYSQL_HOST` / `MYSQL_PORT` / `MYSQL_DATABASE` / `MYSQL_USER` / `MYSQL_PASSWORD` variables.
+3. Approve the Node driver choice (recommended default for a lightweight Vercel Functions implementation: `mysql2`).
+4. Keep DB-backed implementation paused for MySQL port/review; DB-agnostic slices can continue.
+5. After the MySQL port lands, run real migration + seed and production API smoke with secrets-safe output only.
 
 ## Official Docs Consulted
 
