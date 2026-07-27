@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createContentHttpHandlers } from './http'
-import { ContentPostgresRepository } from './repository'
+import { ContentMysqlRepository, resolveDatabaseUrl } from './repository'
 import { buildCourseFromPublishedModuleRows, buildLessonFromPublishedModuleRows } from './publicContent'
 import type { PublishedModuleRow, PublishedContentRepository } from './types'
 
@@ -181,14 +181,14 @@ describe('published public content reader', () => {
   })
 })
 
-describe('ContentPostgresRepository published queries', () => {
+describe('ContentMysqlRepository published queries', () => {
   it('joins through same-module published revisions and not current_draft_revision_id', async () => {
     const queries: string[] = []
     const sql = async (strings: TemplateStringsArray, ...values: unknown[]) => {
-      queries.push(String.raw({ raw: [...strings] }, ...values.map((_, index) => `$${index + 1}`)))
+      queries.push(String.raw({ raw: [...strings] }, ...values.map(() => '?')))
       return publishedRows()
     }
-    const repository = new ContentPostgresRepository(sql)
+    const repository = new ContentMysqlRepository(sql)
 
     await repository.listPublishedCourseModules()
     await repository.listPublishedLessonModules('self-intro')
@@ -200,6 +200,15 @@ describe('ContentPostgresRepository published queries', () => {
     expect(queryText).toContain('mr.module_type = lm.module_type')
     expect(queryText).not.toContain('current_draft_revision_id')
     expect(queryText).not.toContain("revision_kind = 'draft'")
-    expect(queryText).toContain('l.lesson_id = $1')
+    expect(queryText).toContain('l.lesson_id = ?')
+  })
+
+  it('resolves MySQL env names and does not depend on PostgreSQL env names', () => {
+    expect(resolveDatabaseUrl({ MYSQL_DATABASE_URL: 'mysql://example/db', POSTGRES_URL: 'postgres://wrong/db' })).toBe(
+      'mysql://example/db',
+    )
+    expect(resolveDatabaseUrl({ MYSQL_URL: 'mysql://fallback/db' })).toBe('mysql://fallback/db')
+    expect(resolveDatabaseUrl({ DATABASE_URL: 'mysql://generic/db' })).toBe('mysql://generic/db')
+    expect(resolveDatabaseUrl({ POSTGRES_URL: 'postgres://wrong/db' })).toBeUndefined()
   })
 })

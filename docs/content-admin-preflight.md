@@ -99,6 +99,35 @@ This refresh supersedes the PostgreSQL gate. It does not claim the current DB im
 4. Keep DB-backed implementation paused for MySQL port/review; DB-agnostic slices can continue.
 5. After the MySQL port lands, run real migration + seed and production API smoke with secrets-safe output only.
 
+## 2026-07-27 MySQL Provider / Runner Update
+
+The user confirmed the provider as PingCAP/Pingkai MySQL-compatible cloud service and provided a temporary test URL in the thread. The full URL included credentials, so it must be treated as exposed secret material and must not be copied into code, docs, checkpoints, or logs.
+
+### Current non-secret execution assumptions
+
+- **Provider/protocol:** PingCAP/Pingkai MySQL-compatible service.
+- **Runtime env name:** prefer `MYSQL_DATABASE_URL`; `MYSQL_URL` and `DATABASE_URL` remain fallback names in code for portability.
+- **Runner path:** Node migration runner using `mysql2`.
+- **Apply order:** `db/migrations/0001_content_admin.sql` then `db/seeds/0001_initial_content_admin.sql`.
+- **Command:** `npm run content:mysql:apply` with `MYSQL_DATABASE_URL` supplied by a secrets-safe environment.
+
+### Updated verified state
+
+- `mysql2` is now the Node database driver dependency; `pg` / `@types/pg` were removed.
+- `ContentMysqlRepository` reads only `current_published_revision_id` and preserves the published-only public API boundary.
+- The SQL query adapter now renders MySQL `?` placeholders.
+- The migration and generated seed SQL have been ported away from PostgreSQL-only casts/types.
+- The migration uses MySQL/TiDB-compatible table constraints and composite foreign keys for published/draft pointer integrity instead of PostgreSQL triggers.
+- The runner redacts database URLs before logging.
+
+### Remaining blockers / caveats
+
+- **Credential caveat:** the temporary test credential posted in-thread should be rotated after this task, and preferably before any shared production/pre-production deployment.
+- **Database target blocker:** the initially supplied URL targeted a system/default database. Do not apply content-admin DDL there. Create/use a dedicated content-admin application/test database or schema with least-privilege credentials.
+- **Safe env injection blocker:** the final/rotated connection string still needs to be injected through a local `.env`, Vercel Project Environment Variables, or another secure channel as `MYSQL_DATABASE_URL`.
+- **Deploy/auth caveat:** Vercel project link/auth or a deploy hook is still needed before production smoke.
+- **Production smoke blocker:** production URL/token is still needed for deployed API smoke.
+
 ## Official Docs Consulted
 
 - Vercel Functions: https://vercel.com/docs/functions

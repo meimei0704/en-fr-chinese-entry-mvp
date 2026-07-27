@@ -1,5 +1,5 @@
 import { buildCourseFromPublishedModuleRows, buildLessonFromPublishedModuleRows } from './publicContent'
-import { ContentPostgresRepository, createSqlFromEnv, MissingDatabaseUrlError, type DatabaseEnv } from './repository'
+import { ContentMysqlRepository, createSqlFromEnv, MissingDatabaseUrlError, type DatabaseEnv } from './repository'
 import type { PublishedContentRepository } from './types'
 
 export interface ContentApiRequest {
@@ -83,7 +83,7 @@ export function createLazyDatabaseContentHttpHandlers(env: DatabaseEnv = process
   let handlersPromise: Promise<ContentHttpHandlers> | undefined
 
   async function resolveHandlers() {
-    handlersPromise ??= createSqlFromEnv(env).then((sql) => createContentHttpHandlers(new ContentPostgresRepository(sql)))
+    handlersPromise ??= createSqlFromEnv(env).then((sql) => createContentHttpHandlers(new ContentMysqlRepository(sql)))
 
     return handlersPromise
   }

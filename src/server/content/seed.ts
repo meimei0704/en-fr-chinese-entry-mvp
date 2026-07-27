@@ -90,7 +90,7 @@ function sqlString(value: string) {
 }
 
 function sqlJson(value: unknown) {
-  return `${sqlString(JSON.stringify(value))}::jsonb`
+  return sqlString(JSON.stringify(value))
 }
 
 export function renderInitialContentSeedSql(course: CourseContent) {
@@ -111,7 +111,7 @@ export function renderInitialContentSeedSql(course: CourseContent) {
           revision.payload,
         )}, ${sqlString(revision.revisionKind)}, ${
           revision.sourceRevisionId === null ? 'null' : revision.sourceRevisionId
-        }, ${sqlString(revision.createdBy)}, ${sqlString(revision.createdAt)}::timestamptz, ${sqlString(
+        }, ${sqlString(revision.createdBy)}, ${sqlString(revision.createdAt)}, ${sqlString(
           revision.note,
         )})`,
     )
@@ -130,16 +130,17 @@ where lesson_id = ${sqlString(module.lessonId)} and module_type = ${sqlString(mo
 insert into lessons (lesson_id, slug, display_order, enabled)
 values
 ${lessonValues}
-on conflict (lesson_id) do update
-set slug = excluded.slug,
-    display_order = excluded.display_order,
-    enabled = excluded.enabled,
-    updated_at = now();
+on duplicate key update
+  slug = values(slug),
+  display_order = values(display_order),
+  enabled = values(enabled),
+  updated_at = current_timestamp;
 
 insert into lesson_modules (lesson_id, module_type)
 values
 ${moduleValues}
-on conflict (lesson_id, module_type) do nothing;
+on duplicate key update
+  lesson_id = values(lesson_id);
 
 insert into module_revisions (
   revision_id,
@@ -154,11 +155,10 @@ insert into module_revisions (
 )
 values
 ${revisionValues}
-on conflict (revision_id) do nothing;
+on duplicate key update
+  revision_id = revision_id;
 
 ${pointerUpdates}
-
-select setval(pg_get_serial_sequence('module_revisions', 'revision_id'), greatest((select max(revision_id) from module_revisions), 1));
 
 commit;
 `

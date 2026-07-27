@@ -60,4 +60,13 @@ describe('initial content admin seed', () => {
 
     expect(checkedInSeedSql).toBe(renderInitialContentSeedSql(course))
   })
+
+  it('renders MySQL-compatible seed SQL without PostgreSQL casts or conflict syntax', () => {
+    const sql = renderInitialContentSeedSql(course)
+
+    expect(sql).toContain('on duplicate key update')
+    expect(sql).not.toMatch(/::jsonb/i)
+    expect(sql).not.toMatch(/::timestamptz/i)
+    expect(sql).not.toMatch(/on conflict/i)
+  })
 })

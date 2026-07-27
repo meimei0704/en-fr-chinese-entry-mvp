@@ -9,10 +9,11 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest",
+    "content:mysql:apply": "node --experimental-strip-types src/server/content/runMysqlContentAdmin.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "pg": "^8.22.0",
+    "mysql2": "^3.23.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "6.30.4",
@@ -23,7 +24,6 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.13.2",
-    "@types/pg": "^8.20.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
