@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, rm, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { promisify } from 'node:util'
@@ -17,12 +17,21 @@ function formatDiagnostics(diagnostics: readonly ts.Diagnostic[]) {
   })
 }
 
-function emitContentApiEntrypoints(outDir: string) {
+async function emitContentApiEntrypoints(outDir: string) {
   const program = ts.createProgram(
     [
+      'api/admin/content/draft.ts',
+      'api/admin/content/lessons.ts',
+      'api/admin/content/publish.ts',
+      'api/admin/content/rollback.ts',
       'api/content/course.ts',
       'api/content/lessons.ts',
       'src/content/types.ts',
+      'src/content/schema.ts',
+      'src/server/content/adminHttp.ts',
+      'src/server/content/adminRepository.ts',
+      'src/server/content/adminStoreMysql.ts',
+      'src/server/content/adminTypes.ts',
       'src/server/content/http.ts',
       'src/server/content/publicContent.ts',
       'src/server/content/repository.ts',
@@ -46,6 +55,7 @@ function emitContentApiEntrypoints(outDir: string) {
   const diagnostics = [...ts.getPreEmitDiagnostics(program), ...emit.diagnostics]
 
   expect(formatDiagnostics(diagnostics)).toBe('')
+  await symlink(resolve('node_modules'), join(outDir, 'node_modules'), 'dir')
 }
 
 async function runEmittedApiHandlerImport(outDir: string, handlerPath: string) {
@@ -88,11 +98,31 @@ describe('Vercel content API entrypoints', () => {
     const outDir = await mkdtemp(join(tmpdir(), 'content-api-entrypoints-'))
 
     try {
-      emitContentApiEntrypoints(outDir)
+      await emitContentApiEntrypoints(outDir)
 
+      const adminLessons = await runEmittedApiHandlerImport(outDir, 'api/admin/content/lessons.js')
+      const adminDraft = await runEmittedApiHandlerImport(outDir, 'api/admin/content/draft.js')
+      const adminPublish = await runEmittedApiHandlerImport(outDir, 'api/admin/content/publish.js')
+      const adminRollback = await runEmittedApiHandlerImport(outDir, 'api/admin/content/rollback.js')
       const course = await runEmittedApiHandlerImport(outDir, 'api/content/course.js')
       const lesson = await runEmittedApiHandlerImport(outDir, 'api/content/lessons.js')
 
+      expect(JSON.parse(adminLessons.stdout)).toMatchObject({
+        statusCode: 503,
+        body: { error: 'Content admin database is not configured' },
+      })
+      expect(JSON.parse(adminDraft.stdout)).toMatchObject({
+        statusCode: 503,
+        body: { error: 'Content admin database is not configured' },
+      })
+      expect(JSON.parse(adminPublish.stdout)).toMatchObject({
+        statusCode: 503,
+        body: { error: 'Content admin database is not configured' },
+      })
+      expect(JSON.parse(adminRollback.stdout)).toMatchObject({
+        statusCode: 503,
+        body: { error: 'Content admin database is not configured' },
+      })
       expect(JSON.parse(course.stdout)).toMatchObject({
         statusCode: 503,
         body: { error: 'Published content database is not configured' },

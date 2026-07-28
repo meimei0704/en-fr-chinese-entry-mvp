@@ -16,6 +16,17 @@ interface MysqlExecutor {
   execute(query: string, values: unknown[]): Promise<[unknown, unknown]>
 }
 
+export interface MysqlConnectionClient extends MysqlExecutor {
+  beginTransaction(): Promise<void>
+  commit(): Promise<void>
+  rollback(): Promise<void>
+  release(): void
+}
+
+export interface MysqlPoolClient extends MysqlExecutor {
+  getConnection(): Promise<MysqlConnectionClient>
+}
+
 export class MissingDatabaseUrlError extends Error {
   constructor() {
     super('Missing MySQL connection env. Expected MYSQL_DATABASE_URL, MYSQL_URL, or DATABASE_URL.')
@@ -34,7 +45,16 @@ function templateToQuery(strings: TemplateStringsArray, values: unknown[]) {
   )
 }
 
-export async function createSqlFromEnv(env: DatabaseEnv): Promise<Sql> {
+function createMysqlPoolOptions(connectionString: string, env: DatabaseEnv) {
+  return {
+    uri: connectionString,
+    waitForConnections: true,
+    connectionLimit: 4,
+    ssl: env.MYSQL_SSL === 'required' ? { rejectUnauthorized: true } : undefined,
+  }
+}
+
+export async function createMysqlPoolFromEnv(env: DatabaseEnv): Promise<MysqlPoolClient> {
   const connectionString = resolveDatabaseUrl(env)
 
   if (!connectionString) {
@@ -42,12 +62,13 @@ export async function createSqlFromEnv(env: DatabaseEnv): Promise<Sql> {
   }
 
   const { createPool } = await import('mysql2/promise')
-  const pool = createPool({
-    uri: connectionString,
-    waitForConnections: true,
-    connectionLimit: 4,
-    ssl: env.MYSQL_SSL === 'required' ? { rejectUnauthorized: true } : undefined,
-  }) as unknown as MysqlExecutor
+  const pool = createPool(createMysqlPoolOptions(connectionString, env)) as unknown as MysqlPoolClient
+
+  return pool
+}
+
+export async function createSqlFromEnv(env: DatabaseEnv): Promise<Sql> {
+  const pool = await createMysqlPoolFromEnv(env)
 
   return async <TRow extends object = Record<string, unknown>>(
     strings: TemplateStringsArray,
