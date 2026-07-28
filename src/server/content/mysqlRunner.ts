@@ -15,6 +15,7 @@ const unsafeMysqlDatabaseNames = new Set([
 export interface MysqlRunnerEnv {
   DATABASE_URL?: string
   MYSQL_DATABASE_URL?: string
+  MYSQL_SSL?: string
   MYSQL_URL?: string
 }
 
@@ -167,14 +168,25 @@ export interface RunMysqlSqlFilesOptions {
   }
   databaseUrl: string
   files: string[]
+  mysqlSsl?: string
 }
 
-export async function runMysqlSqlFiles({ connection, databaseUrl, files }: RunMysqlSqlFilesOptions) {
+export function createMysqlConnectionOptions({
+  databaseUrl,
+  mysqlSsl,
+}: Pick<RunMysqlSqlFilesOptions, 'databaseUrl' | 'mysqlSsl'>) {
+  return {
+    uri: databaseUrl,
+    ssl: mysqlSsl === 'required' ? { rejectUnauthorized: true } : undefined,
+  }
+}
+
+export async function runMysqlSqlFiles({ connection, databaseUrl, files, mysqlSsl }: RunMysqlSqlFilesOptions) {
   const mysql =
     connection ??
-    ((await createConnection({
-      uri: databaseUrl,
-    })) as unknown as NonNullable<RunMysqlSqlFilesOptions['connection']>)
+    ((await createConnection(
+      createMysqlConnectionOptions({ databaseUrl, mysqlSsl }),
+    )) as unknown as NonNullable<RunMysqlSqlFilesOptions['connection']>)
 
   try {
     for (const file of files) {
@@ -274,17 +286,18 @@ export async function runMysqlFreshBootstrapSqlFiles({
   connection,
   databaseUrl,
   files,
+  mysqlSsl,
 }: RunMysqlSqlFilesOptions) {
   const expectedDatabaseName = assertSafeMysqlDatabaseTarget(databaseUrl)
   const mysql =
     connection ??
-    ((await createConnection({
-      uri: databaseUrl,
-    })) as unknown as NonNullable<RunMysqlSqlFilesOptions['connection']>)
+    ((await createConnection(
+      createMysqlConnectionOptions({ databaseUrl, mysqlSsl }),
+    )) as unknown as NonNullable<RunMysqlSqlFilesOptions['connection']>)
 
   try {
     await assertFreshMysqlDatabase(mysql, expectedDatabaseName)
-    await runMysqlSqlFiles({ connection: mysql, databaseUrl, files })
+    await runMysqlSqlFiles({ connection: mysql, databaseUrl, files, mysqlSsl })
   } finally {
     if (!connection) {
       await mysql.end()

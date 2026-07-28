@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import {
   assertSafeMysqlDatabaseTarget,
+  createMysqlConnectionOptions,
   redactDatabaseUrl,
   runMysqlFreshBootstrapSqlFiles,
   splitMysqlStatements,
@@ -56,6 +57,18 @@ describe('MySQL migration runner helpers', () => {
       'mysql://***:***@example.com:4000/content_admin',
     )
     expect(redactDatabaseUrl('not-a-url')).toBe('[invalid database url]')
+  })
+
+  it('enables TLS for TiDB Cloud connections when MYSQL_SSL is required', () => {
+    expect(
+      createMysqlConnectionOptions({
+        databaseUrl: 'mysql://user:password@example.com:4000/content_admin_test',
+        mysqlSsl: 'required',
+      }),
+    ).toEqual({
+      uri: 'mysql://user:password@example.com:4000/content_admin_test',
+      ssl: { rejectUnauthorized: true },
+    })
   })
 
   it('rejects unsafe MySQL database targets without echoing credentials', () => {

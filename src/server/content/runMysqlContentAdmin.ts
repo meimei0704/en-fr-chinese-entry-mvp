@@ -14,7 +14,11 @@ export async function runContentAdminMysqlMigration(env = process.env) {
   }
 
   console.log(`Applying fresh content admin MySQL bootstrap SQL files to ${redactDatabaseUrl(databaseUrl)}`)
-  await runMysqlFreshBootstrapSqlFiles({ databaseUrl, files: contentAdminSqlFiles })
+  await runMysqlFreshBootstrapSqlFiles({
+    databaseUrl,
+    files: contentAdminSqlFiles,
+    mysqlSsl: env.MYSQL_SSL,
+  })
   console.log('Content admin MySQL bootstrap migration and seed completed.')
 }
 
