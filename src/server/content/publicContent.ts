@@ -1,11 +1,11 @@
-import { supportedExplanationLanguages, type LessonContent } from '../../content/types.ts'
+import { supportedExplanationLanguages, type LessonContent } from '../../content/types.js'
 import {
   contentModuleTypes,
   type ContentModuleType,
   type LessonMetaPayload,
   type PublishedCourseContent,
   type PublishedModuleRow,
-} from './types.ts'
+} from './types.js'
 
 const estimatedDailyMinutes = 10
 

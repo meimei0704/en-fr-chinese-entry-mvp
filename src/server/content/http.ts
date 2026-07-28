@@ -1,6 +1,6 @@
-import { buildCourseFromPublishedModuleRows, buildLessonFromPublishedModuleRows } from './publicContent.ts'
-import { ContentMysqlRepository, createSqlFromEnv, MissingDatabaseUrlError, type DatabaseEnv } from './repository.ts'
-import type { PublishedContentRepository } from './types'
+import { buildCourseFromPublishedModuleRows, buildLessonFromPublishedModuleRows } from './publicContent.js'
+import { ContentMysqlRepository, createSqlFromEnv, MissingDatabaseUrlError, type DatabaseEnv } from './repository.js'
+import type { PublishedContentRepository } from './types.js'
 
 export interface ContentApiRequest {
   method?: string

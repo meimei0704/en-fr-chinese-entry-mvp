@@ -1,4 +1,4 @@
-import type { PublishedContentRepository, PublishedModuleRow } from './types'
+import type { PublishedContentRepository, PublishedModuleRow } from './types.js'
 
 export type Sql = <TRow extends object = Record<string, unknown>>(
   strings: TemplateStringsArray,

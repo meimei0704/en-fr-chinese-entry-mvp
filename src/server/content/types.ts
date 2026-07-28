@@ -1,4 +1,4 @@
-import type { CourseContent, LessonContent } from '../../content/types'
+import type { CourseContent, LessonContent } from '../../content/types.js'
 
 export const contentModuleTypes = [
   'lessonMeta',
