@@ -10,6 +10,8 @@ export interface DatabaseEnv {
   MYSQL_DATABASE_URL?: string
   MYSQL_URL?: string
   MYSQL_SSL?: string
+  CONTENT_ADMIN_USERNAME?: string
+  CONTENT_ADMIN_PASSWORD?: string
 }
 
 interface MysqlExecutor {

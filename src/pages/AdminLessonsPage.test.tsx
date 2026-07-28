@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { renderRoute } from '../test/renderRoute'
@@ -18,6 +19,7 @@ describe('AdminLessonsPage', () => {
   })
 
   afterEach(() => {
+    window.sessionStorage.clear()
     vi.unstubAllGlobals()
     vi.restoreAllMocks()
   })
@@ -65,5 +67,41 @@ describe('AdminLessonsPage', () => {
 
     expect(await screen.findByText(/content admin database is not configured/i)).toBeVisible()
     expect(screen.queryByRole('link', { name: /open self-intro editor/i })).not.toBeInTheDocument()
+  })
+
+  it('prompts for admin credentials after a 401 and retries the request with a basic auth header', async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse({ error: 'Admin authentication required' }, { status: 401 }))
+      .mockResolvedValueOnce(
+        jsonResponse([
+          {
+            lessonId: 'self-intro',
+            slug: 'self-intro',
+            displayOrder: 1,
+            enabled: true,
+            draftChangedModuleCount: 0,
+          },
+        ]),
+      )
+
+    renderRoute('/admin')
+
+    expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+
+    await user.type(screen.getByLabelText(/admin username/i), 'editor')
+    await user.type(screen.getByLabelText(/admin password/i), 'secret')
+    await user.click(screen.getByRole('button', { name: /unlock content admin/i }))
+
+    expect(await screen.findByRole('link', { name: /open self-intro editor/i })).toBeVisible()
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      '/api/admin/content/lessons',
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: 'Basic ZWRpdG9yOnNlY3JldA==',
+        }),
+      }),
+    )
   })
 })

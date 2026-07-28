@@ -1,5 +1,7 @@
 import type { AdminLessonSnapshot, AdminLessonSummary } from './types.js'
 
+const adminAuthStorageKey = 'content-admin-basic-auth'
+
 export class AdminApiError extends Error {
   readonly status: number
 
@@ -11,10 +13,12 @@ export class AdminApiError extends Error {
 }
 
 async function requestJson<T>(input: string, init: RequestInit = {}): Promise<T> {
+  const authHeader = readAdminBasicAuthHeader()
   const response = await fetch(input, {
     credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
+      ...(authHeader ? { Authorization: authHeader } : {}),
       ...(init.headers ?? {}),
     },
     ...init,
@@ -29,6 +33,35 @@ async function requestJson<T>(input: string, init: RequestInit = {}): Promise<T>
   }
 
   return body as T
+}
+
+function sessionStorageAvailable() {
+  return typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined'
+}
+
+export function readAdminBasicAuthHeader() {
+  if (!sessionStorageAvailable()) {
+    return null
+  }
+
+  return window.sessionStorage.getItem(adminAuthStorageKey)
+}
+
+export function saveAdminBasicAuth(username: string, password: string) {
+  if (!sessionStorageAvailable()) {
+    return
+  }
+
+  const encoded = window.btoa(`${username}:${password}`)
+  window.sessionStorage.setItem(adminAuthStorageKey, `Basic ${encoded}`)
+}
+
+export function clearAdminBasicAuth() {
+  if (!sessionStorageAvailable()) {
+    return
+  }
+
+  window.sessionStorage.removeItem(adminAuthStorageKey)
 }
 
 export function listAdminLessons() {

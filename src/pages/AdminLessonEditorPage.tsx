@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import {
   AdminApiError,
+  clearAdminBasicAuth,
   getAdminLessonSnapshot,
   publishAdminModule,
   rollbackAdminModule,
+  saveAdminBasicAuth,
   saveAdminDraftModule,
 } from '../admin/api.js'
 import type { AdminLessonSnapshot } from '../admin/types.js'
+import { AdminAccessForm } from '../components/admin/AdminAccessForm.js'
 import { DialogueEditor } from '../components/admin/DialogueEditor.js'
 import { JsonModuleEditor } from '../components/admin/JsonModuleEditor.js'
 import { LessonMetaEditor } from '../components/admin/LessonMetaEditor.js'
@@ -35,31 +38,35 @@ export function AdminLessonEditorPage() {
     kind: 'publish' | 'rollback'
     revisionId?: number
   } | null>(null)
+  const [requiresAuth, setRequiresAuth] = useState(false)
 
-  useEffect(() => {
-    let cancelled = false
-
-    getAdminLessonSnapshot(lessonId)
+  const loadSnapshot = useCallback(async () => {
+    return getAdminLessonSnapshot(lessonId)
       .then((result) => {
-        if (!cancelled) {
-          setSnapshot(result)
-          setError(null)
-          setActionError(null)
-        }
+        setSnapshot(result)
+        setError(null)
+        setActionError(null)
+        setRequiresAuth(false)
       })
       .catch((requestError: unknown) => {
-        if (!cancelled) {
-          setError(
-            requestError instanceof AdminApiError ? requestError.message : 'Unable to load lesson editor',
-          )
+        if (requestError instanceof AdminApiError && requestError.status === 401) {
+          clearAdminBasicAuth()
+          setRequiresAuth(true)
+          setError(requestError.message)
           setSnapshot(null)
+          return
         }
-      })
 
-    return () => {
-      cancelled = true
-    }
+        setError(
+          requestError instanceof AdminApiError ? requestError.message : 'Unable to load lesson editor',
+        )
+        setSnapshot(null)
+      })
   }, [lessonId])
+
+  useEffect(() => {
+    void loadSnapshot().catch(() => undefined)
+  }, [loadSnapshot])
 
   const pendingModuleCount = useMemo(
     () => snapshot?.modules.filter((module) => module.hasUnpublishedChanges).length ?? 0,
@@ -129,7 +136,28 @@ export function AdminLessonEditorPage() {
     }
   }
 
+  async function handleUnlock(username: string, password: string) {
+    saveAdminBasicAuth(username, password)
+    await loadSnapshot()
+  }
+
   if (error) {
+    if (requiresAuth) {
+      return (
+        <main className="page-shell page-shell--wide">
+          <section className="hero-card hero-card--compact">
+            <p className="eyebrow">Content Admin</p>
+            <h1>Lesson editor unavailable</h1>
+            <p>{error}</p>
+            <Link className="secondary-link" to="/admin">
+              Back to admin lesson list
+            </Link>
+          </section>
+          <AdminAccessForm error={error} onSubmit={handleUnlock} />
+        </main>
+      )
+    }
+
     return (
       <main className="page-shell page-shell--wide">
         <section className="hero-card hero-card--compact">

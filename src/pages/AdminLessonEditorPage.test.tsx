@@ -55,6 +55,7 @@ describe('AdminLessonEditorPage', () => {
   })
 
   afterEach(() => {
+    window.sessionStorage.clear()
     vi.unstubAllGlobals()
     vi.restoreAllMocks()
   })
@@ -80,6 +81,31 @@ describe('AdminLessonEditorPage', () => {
 
     expect(await screen.findByText(/editable lesson not found/i)).toBeVisible()
     expect(screen.queryByRole('heading', { level: 2, name: /draft preview/i })).not.toBeInTheDocument()
+  })
+
+  it('prompts for admin credentials after a 401 on the lesson editor route and retries with auth', async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse({ error: 'Admin authentication required' }, { status: 401 }))
+      .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    await user.type(screen.getByLabelText(/admin username/i), 'editor')
+    await user.type(screen.getByLabelText(/admin password/i), 'secret')
+    await user.click(screen.getByRole('button', { name: /unlock content admin/i }))
+
+    expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      `/api/admin/content/lessons?lessonId=${lesson.id}`,
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: 'Basic ZWRpdG9yOnNlY3JldA==',
+        }),
+      }),
+    )
   })
 
   it('saves structured lesson meta edits and refreshes the draft preview from the returned snapshot', async () => {

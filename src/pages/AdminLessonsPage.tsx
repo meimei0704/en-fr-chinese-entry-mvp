@@ -1,36 +1,46 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { AdminApiError, listAdminLessons } from '../admin/api.js'
+import { AdminApiError, clearAdminBasicAuth, listAdminLessons, saveAdminBasicAuth } from '../admin/api.js'
 import type { AdminLessonSummary } from '../admin/types.js'
+import { AdminAccessForm } from '../components/admin/AdminAccessForm.js'
 
 export function AdminLessonsPage() {
   const [lessons, setLessons] = useState<AdminLessonSummary[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [requiresAuth, setRequiresAuth] = useState(false)
 
-  useEffect(() => {
-    let cancelled = false
-
-    listAdminLessons()
+  async function loadLessons() {
+    return listAdminLessons()
       .then((result) => {
-        if (!cancelled) {
-          setLessons(result)
-          setError(null)
-        }
+        setLessons(result)
+        setError(null)
+        setRequiresAuth(false)
       })
       .catch((requestError: unknown) => {
-        if (!cancelled) {
-          setError(
-            requestError instanceof AdminApiError ? requestError.message : 'Unable to load content admin lessons',
-          )
+        if (requestError instanceof AdminApiError && requestError.status === 401) {
+          clearAdminBasicAuth()
+          setRequiresAuth(true)
+          setError(requestError.message)
           setLessons([])
+          return
         }
-      })
 
-    return () => {
-      cancelled = true
-    }
+        setError(
+          requestError instanceof AdminApiError ? requestError.message : 'Unable to load content admin lessons',
+        )
+        setLessons([])
+      })
+  }
+
+  useEffect(() => {
+    void loadLessons().catch(() => undefined)
   }, [])
+
+  async function handleUnlock(username: string, password: string) {
+    saveAdminBasicAuth(username, password)
+    await loadLessons()
+  }
 
   return (
     <main className="page-shell page-shell--wide">
@@ -41,9 +51,10 @@ export function AdminLessonsPage() {
       </section>
 
       {lessons === null ? <p>Loading lessons…</p> : null}
-      {error ? <p>{error}</p> : null}
+      {requiresAuth ? <AdminAccessForm error={error} onSubmit={handleUnlock} /> : null}
+      {error && !requiresAuth ? <p>{error}</p> : null}
 
-      {lessons && lessons.length > 0 ? (
+      {!requiresAuth && lessons && lessons.length > 0 ? (
         <section className="page-grid">
           {lessons.map((lesson) => (
             <article key={lesson.lessonId} className="surface-card lesson-card">
