@@ -32,17 +32,33 @@ function moduleLabel(moduleType: string) {
 
 export function ModuleHistoryList({ snapshot, pendingAction, onPublish, onRollback }: ModuleHistoryListProps) {
   return (
-    <section className="surface-card lesson-section-card" aria-label="Module history">
-      <h2>Module History</h2>
+    <section className="surface-card lesson-section-card admin-history-card" aria-label="Module history">
+      <div className="admin-section-heading">
+        <div>
+          <p className="eyebrow">Publish controls</p>
+          <h2>Module History</h2>
+          <p className="muted-text">Publish changed modules intentionally and keep a readable rollback trail for every revision.</p>
+        </div>
+        <span className="badge badge--gold">Review carefully</span>
+      </div>
       {snapshot.modules.map((module) => {
         const label = moduleLabel(module.moduleType)
         const history = snapshot.publishedHistory[module.moduleType] ?? []
         const moduleActionPending = pendingAction?.moduleType === module.moduleType
 
         return (
-          <article key={module.moduleType}>
-            <h3>{label}</h3>
-            <p>{module.hasUnpublishedChanges ? 'Draft differs from published' : 'Published in sync'}</p>
+          <article key={module.moduleType} className="admin-history-module">
+            <div className="admin-history-module__header">
+              <div>
+                <h3>{label}</h3>
+                <p className="muted-text">
+                  {module.hasUnpublishedChanges ? 'Draft differs from published' : 'Published in sync'}
+                </p>
+              </div>
+              <span className={`badge ${module.hasUnpublishedChanges ? 'badge--gold' : 'badge--jade'}`}>
+                {module.hasUnpublishedChanges ? 'Needs publish' : 'Published'}
+              </span>
+            </div>
             {module.hasUnpublishedChanges ? (
               <button
                 type="button"
@@ -55,14 +71,15 @@ export function ModuleHistoryList({ snapshot, pendingAction, onPublish, onRollba
                   : `Publish ${label.toLowerCase()}`}
               </button>
             ) : null}
-            <ul>
+            <ul className="admin-history-list">
               {history.map((entry) => (
-                <li key={entry.revisionId}>
-                  <span>{entry.note ?? `Published revision ${entry.revisionId}`}</span>
-                  <span>
-                    {' '}
-                    · Revision {entry.revisionId} · {entry.createdBy} · {entry.createdAt}
-                  </span>{' '}
+                <li key={entry.revisionId} className="admin-history-entry">
+                  <div className="admin-history-entry__meta">
+                    <strong>{entry.note ?? `Published revision ${entry.revisionId}`}</strong>
+                    <span>
+                      Revision {entry.revisionId} · {entry.createdBy} · {entry.createdAt}
+                    </span>
+                  </div>
                   {entry.revisionId !== module.publishedRevisionId ? (
                     <button
                       type="button"

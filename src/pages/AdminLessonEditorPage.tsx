@@ -186,48 +186,97 @@ export function AdminLessonEditorPage() {
   const draftLesson = snapshot.draftLesson
 
   return (
-    <main className="page-shell page-shell--wide">
-      <section className="hero-card lesson-header-card">
-        <p className="eyebrow">Content Admin</p>
-        <h1>Edit {snapshot.lessonId}</h1>
-        <p>
-          {pendingModuleCount > 0
-            ? `${pendingModuleCount} module pending publish`
-            : 'All modules published'}
-        </p>
+    <main className="page-shell page-shell--wide admin-page-shell">
+      <section className="hero-card lesson-header-card admin-editor-hero">
+        <div className="admin-editor-hero__header">
+          <div>
+            <p className="eyebrow">Content Admin</p>
+            <h1>Edit {snapshot.lessonId}</h1>
+            <p className="lede">Polish the draft module-by-module, preview the learner-facing output, then publish intentionally.</p>
+          </div>
+          <div className="admin-badge-column">
+            <span className="badge badge--sky">Lesson {snapshot.displayOrder}</span>
+            <span className={`badge ${pendingModuleCount > 0 ? 'badge--gold' : 'badge--jade'}`}>
+              {pendingModuleCount > 0 ? `${pendingModuleCount} pending` : 'Published in sync'}
+            </span>
+          </div>
+        </div>
+        <div className="admin-editor-hero__summary">
+          <article className="admin-metric-card">
+            <span>Lesson id</span>
+            <strong>{snapshot.lessonId}</strong>
+            <p>Slug: {snapshot.slug}</p>
+          </article>
+          <article className="admin-metric-card admin-metric-card--attention">
+            <span>Draft state</span>
+            <strong>{pendingModuleCount}</strong>
+            <p>
+              {pendingModuleCount > 0
+                ? `${pendingModuleCount} module pending publish`
+                : 'All modules published'}
+            </p>
+          </article>
+        </div>
         <nav className="button-row">
           <Link className="secondary-link" to="/admin">
             Back to admin lesson list
           </Link>
         </nav>
-        {actionError ? <p>{actionError}</p> : null}
+        {actionError ? <p className="admin-inline-feedback admin-inline-feedback--error">{actionError}</p> : null}
       </section>
 
-      <LessonPreviewPanel lesson={draftLesson} />
-      <LessonMetaEditor
-        lesson={draftLesson}
-        onSave={(payload) => handleSaveModule('lessonMeta', payload, 'Save lesson meta draft')}
-      />
-      <DialogueEditor
-        dialogue={draftLesson.dialogue}
-        onSave={(payload) => handleSaveModule('dialogue', payload, 'Save dialogue draft')}
-      />
+      <div className="admin-editor-layout" data-testid="admin-editor-layout">
+        <section className="admin-editor-main-column" data-testid="admin-editor-main-column">
+          <section className="surface-card lesson-section-card admin-workspace-card">
+            <div className="admin-section-heading">
+              <div>
+                <p className="eyebrow">Editing workspace</p>
+                <h2>Draft modules</h2>
+                <p className="muted-text">Structured fields stay lightweight; flexible modules keep JSON visible but better framed.</p>
+              </div>
+              <span className="badge badge--sky">No business logic changes</span>
+            </div>
+          </section>
+          <LessonMetaEditor
+            lesson={draftLesson}
+            onSave={(payload) => handleSaveModule('lessonMeta', payload, 'Save lesson meta draft')}
+          />
+          <DialogueEditor
+            dialogue={draftLesson.dialogue}
+            onSave={(payload) => handleSaveModule('dialogue', payload, 'Save dialogue draft')}
+          />
 
-      {jsonModuleConfigs.map(([moduleType, label]) => (
-        <JsonModuleEditor
-          key={moduleType}
-          label={label}
-          payload={draftLesson[moduleType]}
-          onSave={(payload) => handleSaveModule(moduleType, payload, `Save ${label.toLowerCase()} draft`)}
-        />
-      ))}
+          {jsonModuleConfigs.map(([moduleType, label]) => (
+            <JsonModuleEditor
+              key={moduleType}
+              label={label}
+              payload={draftLesson[moduleType]}
+              onSave={(payload) => handleSaveModule(moduleType, payload, `Save ${label.toLowerCase()} draft`)}
+            />
+          ))}
+        </section>
 
-      <ModuleHistoryList
-        snapshot={snapshot}
-        pendingAction={pendingHistoryAction}
-        onPublish={handlePublishModule}
-        onRollback={handleRollbackModule}
-      />
+        <aside className="admin-editor-side-column" data-testid="admin-editor-side-column">
+          <section className="surface-card lesson-section-card admin-workspace-card">
+            <div className="admin-section-heading">
+              <div>
+                <p className="eyebrow">Preview & publish</p>
+                <h2>Review before shipping</h2>
+                <p className="muted-text">Use this side rail to sanity-check the learner view, publish a module, or roll back safely.</p>
+              </div>
+              <span className="badge badge--gold">Review zone</span>
+            </div>
+          </section>
+
+          <LessonPreviewPanel lesson={draftLesson} />
+          <ModuleHistoryList
+            snapshot={snapshot}
+            pendingAction={pendingHistoryAction}
+            onPublish={handlePublishModule}
+            onRollback={handleRollbackModule}
+          />
+        </aside>
+      </div>
     </main>
   )
 }

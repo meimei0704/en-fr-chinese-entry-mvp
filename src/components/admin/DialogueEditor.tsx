@@ -43,23 +43,35 @@ export function DialogueEditor({ dialogue, onSave }: DialogueEditorProps) {
   }
 
   return (
-    <section className="surface-card lesson-section-card" aria-label="Dialogue">
-      <h2>Dialogue</h2>
-      <label>
-        Dialogue title (en)
-        <input value={titleEn} onChange={(event) => setTitleEn(event.target.value)} />
-      </label>
-      <label>
-        Dialogue title (fr)
-        <input value={titleFr} onChange={(event) => setTitleFr(event.target.value)} />
-      </label>
-      <label>
-        First line hanzi
-        <textarea value={firstLineHanzi} onChange={(event) => setFirstLineHanzi(event.target.value)} />
-      </label>
-      <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
-        Save dialogue draft
-      </button>
+    <section className="surface-card lesson-section-card admin-module-card" aria-label="Dialogue">
+      <div className="admin-section-heading">
+        <div>
+          <p className="eyebrow">Structured editor</p>
+          <h2>Dialogue</h2>
+          <p className="muted-text">Focus this quick editor on the bilingual title and the first visible spoken line.</p>
+        </div>
+        <span className="badge badge--gold">Learner-facing</span>
+      </div>
+      <div className="admin-field-grid admin-field-grid--two-column">
+        <label className="admin-field">
+          <span>Dialogue title (en)</span>
+          <input value={titleEn} onChange={(event) => setTitleEn(event.target.value)} />
+        </label>
+        <label className="admin-field">
+          <span>Dialogue title (fr)</span>
+          <input value={titleFr} onChange={(event) => setTitleFr(event.target.value)} />
+        </label>
+        <label className="admin-field admin-field--full">
+          <span>First line hanzi</span>
+          <textarea value={firstLineHanzi} onChange={(event) => setFirstLineHanzi(event.target.value)} />
+        </label>
+      </div>
+      <div className="admin-card-actions">
+        <span className="muted-text">Use the side preview to confirm the dialogue still reads naturally in context.</span>
+        <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
+          Save dialogue draft
+        </button>
+      </div>
     </section>
   )
 }

@@ -36,16 +36,30 @@ export function JsonModuleEditor({ label, payload, onSave }: JsonModuleEditorPro
   }
 
   return (
-    <section className="surface-card lesson-section-card" aria-label={label}>
-      <h2>{label}</h2>
-      <label>
-        {label} JSON
-        <textarea value={value} onChange={(event) => setValue(event.target.value)} rows={10} />
+    <section className="surface-card lesson-section-card admin-module-card" aria-label={label}>
+      <div className="admin-section-heading">
+        <div>
+          <p className="eyebrow">JSON editor</p>
+          <h2>{label}</h2>
+          <p className="muted-text">Keep the payload valid JSON. The browser validates this before any draft save request.</p>
+        </div>
+        <span className="badge badge--sky">Flexible module</span>
+      </div>
+      <label className="admin-field">
+        <span>{label} JSON</span>
+        <textarea
+          className="admin-code-area"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          rows={10}
+        />
       </label>
-      {error ? <p>{error}</p> : null}
-      <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
-        Save {label.toLowerCase()} draft
-      </button>
+      <div className="admin-card-actions">
+        {error ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : <span />}
+        <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
+          Save {label.toLowerCase()} draft
+        </button>
+      </div>
     </section>
   )
 }

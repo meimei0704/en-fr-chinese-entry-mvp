@@ -67,6 +67,9 @@ describe('AdminLessonEditorPage', () => {
 
     expect(screen.getByText(/loading lesson editor/i)).toBeVisible()
     expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(screen.getByTestId('admin-editor-layout')).toBeVisible()
+    expect(screen.getByTestId('admin-editor-main-column')).toBeVisible()
+    expect(screen.getByTestId('admin-editor-side-column')).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /draft preview/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /lesson meta/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /dialogue/i })).toBeVisible()
@@ -92,6 +95,7 @@ describe('AdminLessonEditorPage', () => {
     renderRoute(`/admin/lesson/${lesson.id}`)
 
     expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    expect(screen.getByTestId('admin-access-card')).toBeVisible()
     await user.type(screen.getByLabelText(/admin username/i), 'editor')
     await user.type(screen.getByLabelText(/admin password/i), 'secret')
     await user.click(screen.getByRole('button', { name: /unlock content admin/i }))

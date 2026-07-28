@@ -1824,6 +1824,308 @@ h2 {
   border-color: rgba(194, 65, 45, 0.16);
 }
 
+.admin-page-shell {
+  gap: 1rem;
+  align-content: start;
+}
+
+.admin-overview-card,
+.admin-editor-hero {
+  width: min(100%, 72rem);
+  display: grid;
+  gap: 1.25rem;
+  background:
+    radial-gradient(circle at top right, rgba(95, 143, 247, 0.12), transparent 18rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 253, 0.95));
+}
+
+.admin-overview-card__header,
+.admin-editor-hero__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.admin-badge-column {
+  display: grid;
+  justify-items: end;
+  gap: 0.55rem;
+}
+
+.admin-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.admin-metric-card {
+  min-width: 0;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid rgba(231, 234, 240, 0.92);
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.admin-metric-card span,
+.admin-preview-stat span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-metric-card strong,
+.admin-preview-stat strong {
+  color: var(--color-ink);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  line-height: 1;
+}
+
+.admin-metric-card p,
+.admin-lesson-card__status,
+.admin-history-entry__meta span,
+.admin-preview-callout span {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.admin-metric-card--attention {
+  background:
+    radial-gradient(circle at top right, rgba(255, 138, 61, 0.12), transparent 12rem),
+    rgba(255, 252, 246, 0.96);
+  border-color: rgba(243, 165, 63, 0.24);
+}
+
+.admin-lessons-grid {
+  width: min(100%, 72rem);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  align-items: stretch;
+}
+
+.admin-lesson-card {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 251, 254, 0.95));
+}
+
+.admin-lesson-card__topline,
+.admin-lesson-card__title-row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.admin-lesson-card__topline {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.admin-lesson-card__title-row .muted-text,
+.admin-inline-feedback {
+  margin: 0;
+}
+
+.admin-editor-hero__summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.admin-editor-layout {
+  width: min(100%, 72rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(19rem, 0.95fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.admin-editor-main-column,
+.admin-editor-side-column {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-editor-side-column {
+  position: sticky;
+  top: 1rem;
+}
+
+.admin-workspace-card,
+.admin-module-card,
+.admin-preview-card,
+.admin-history-card,
+.admin-access-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 253, 0.95));
+}
+
+.admin-section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.admin-section-heading h2,
+.admin-history-module h3 {
+  margin-bottom: 0.35rem;
+}
+
+.admin-form-grid,
+.admin-field-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-form-grid {
+  margin-top: 0.25rem;
+}
+
+.admin-field-grid--two-column {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-field {
+  display: grid;
+  gap: 0.45rem;
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.admin-field span {
+  font-size: 0.88rem;
+}
+
+.admin-field--full {
+  grid-column: 1 / -1;
+}
+
+.admin-field input,
+.admin-field textarea {
+  width: 100%;
+  border: 1px solid rgba(208, 214, 224, 0.94);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--color-ink);
+  font: inherit;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background 150ms ease;
+}
+
+.admin-field textarea {
+  min-height: 8rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.admin-field input:focus,
+.admin-field textarea:focus {
+  outline: none;
+  border-color: rgba(95, 143, 247, 0.5);
+  box-shadow: 0 0 0 4px rgba(95, 143, 247, 0.12);
+  background: #ffffff;
+}
+
+.admin-code-area {
+  min-height: 18rem;
+  font-family: 'SFMono-Regular', 'SF Mono', ui-monospace, monospace;
+  font-size: 0.9rem;
+}
+
+.admin-card-actions,
+.admin-form-actions {
+  display: grid;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.admin-card-actions {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.admin-form-actions {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.admin-inline-feedback {
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: rgba(238, 244, 255, 0.72);
+  color: var(--color-sky-ink);
+}
+
+.admin-inline-feedback--error {
+  background: rgba(255, 244, 230, 0.92);
+  color: var(--color-cinnabar-dark);
+  border: 1px solid rgba(243, 165, 63, 0.28);
+}
+
+.admin-preview-stack {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.admin-preview-stat,
+.admin-preview-callout,
+.admin-history-module {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(231, 234, 240, 0.92);
+  border-radius: 1.05rem;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.admin-preview-callout {
+  background:
+    radial-gradient(circle at top right, rgba(255, 138, 61, 0.12), transparent 11rem),
+    rgba(255, 253, 248, 0.96);
+}
+
+.admin-preview-callout p {
+  margin: 0;
+}
+
+.admin-history-card {
+  gap: 1.25rem;
+}
+
+.admin-history-module__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.admin-history-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-history-entry {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 1rem;
+  background: rgba(247, 248, 251, 0.78);
+}
+
+.admin-history-entry__meta {
+  display: grid;
+  gap: 0.2rem;
+}
+
 @media (max-width: 760px) {
   .home-hero,
   .home-quick-entry-grid,
@@ -1836,7 +2138,11 @@ h2 {
   .progress-summary-card,
   .lesson-overview-card,
   .lesson-progress-preview__rail,
-  .review-status-panel {
+  .review-status-panel,
+  .admin-metric-grid,
+  .admin-editor-hero__summary,
+  .admin-editor-layout,
+  .admin-field-grid--two-column {
     grid-template-columns: 1fr;
   }
 
@@ -1851,12 +2157,21 @@ h2 {
 
   .progress-hero__header,
   .progress-list-card__header,
-  .progress-lesson-row {
+  .progress-lesson-row,
+  .admin-overview-card__header,
+  .admin-editor-hero__header,
+  .admin-section-heading,
+  .admin-history-module__header,
+  .admin-lesson-card__topline {
     grid-template-columns: 1fr;
   }
 
   .progress-hero__seal {
     justify-self: start;
+  }
+
+  .admin-badge-column {
+    justify-items: start;
   }
 
   .progress-summary-card .button-row {
@@ -1877,10 +2192,17 @@ h2 {
     align-items: stretch;
   }
 
+  .admin-card-actions,
+  .admin-form-actions {
+    grid-template-columns: 1fr;
+  }
+
   .primary-button,
   .secondary-link,
   .journey-node__stamp,
-  .journey-node__cta {
+  .journey-node__cta,
+  .admin-card-actions .primary-button,
+  .admin-form-actions .primary-button {
     width: 100%;
   }
 

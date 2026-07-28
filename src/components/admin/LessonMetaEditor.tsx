@@ -40,27 +40,39 @@ export function LessonMetaEditor({ lesson, onSave }: LessonMetaEditorProps) {
   }
 
   return (
-    <section className="surface-card lesson-section-card" aria-label="Lesson meta">
-      <h2>Lesson Meta</h2>
-      <label>
-        Lesson title (en)
-        <input value={titleEn} onChange={(event) => setTitleEn(event.target.value)} />
-      </label>
-      <label>
-        Lesson title (fr)
-        <input value={titleFr} onChange={(event) => setTitleFr(event.target.value)} />
-      </label>
-      <label>
-        Scenario (en)
-        <textarea value={scenarioEn} onChange={(event) => setScenarioEn(event.target.value)} />
-      </label>
-      <label>
-        Scenario (fr)
-        <textarea value={scenarioFr} onChange={(event) => setScenarioFr(event.target.value)} />
-      </label>
-      <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
-        Save lesson meta draft
-      </button>
+    <section className="surface-card lesson-section-card admin-module-card" aria-label="Lesson meta">
+      <div className="admin-section-heading">
+        <div>
+          <p className="eyebrow">Structured editor</p>
+          <h2>Lesson Meta</h2>
+          <p className="muted-text">Keep the headline and scenario copy aligned across English and French.</p>
+        </div>
+        <span className="badge badge--jade">High visibility</span>
+      </div>
+      <div className="admin-field-grid admin-field-grid--two-column">
+        <label className="admin-field">
+          <span>Lesson title (en)</span>
+          <input value={titleEn} onChange={(event) => setTitleEn(event.target.value)} />
+        </label>
+        <label className="admin-field">
+          <span>Lesson title (fr)</span>
+          <input value={titleFr} onChange={(event) => setTitleFr(event.target.value)} />
+        </label>
+        <label className="admin-field admin-field--full">
+          <span>Scenario (en)</span>
+          <textarea value={scenarioEn} onChange={(event) => setScenarioEn(event.target.value)} />
+        </label>
+        <label className="admin-field admin-field--full">
+          <span>Scenario (fr)</span>
+          <textarea value={scenarioFr} onChange={(event) => setScenarioFr(event.target.value)} />
+        </label>
+      </div>
+      <div className="admin-card-actions">
+        <span className="muted-text">Edits stay in draft until you publish from the side panel.</span>
+        <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
+          Save lesson meta draft
+        </button>
+      </div>
     </section>
   )
 }

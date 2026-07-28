@@ -53,6 +53,10 @@ describe('AdminLessonsPage', () => {
       'href',
       '/admin/lesson/self-intro',
     )
+    expect(screen.getByTestId('admin-overview-metrics')).toBeVisible()
+    expect(screen.getByText(/2 lessons/i)).toBeVisible()
+    expect(screen.getByText(/1 pending module/i)).toBeVisible()
+    expect(screen.getByTestId('admin-lessons-grid')).toBeVisible()
     expect(screen.getByText(/1 module pending publish/i)).toBeVisible()
     expect(screen.getByText(/all modules published/i)).toBeVisible()
     expect(fetch).toHaveBeenCalledWith('/api/admin/content/lessons', expect.anything())
@@ -88,6 +92,7 @@ describe('AdminLessonsPage', () => {
     renderRoute('/admin')
 
     expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    expect(screen.getByTestId('admin-access-card')).toBeVisible()
 
     await user.type(screen.getByLabelText(/admin username/i), 'editor')
     await user.type(screen.getByLabelText(/admin password/i), 'secret')
