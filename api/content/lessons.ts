@@ -1,4 +1,4 @@
-import { createLazyDatabaseContentHttpHandlers } from '../../../src/server/content/http'
+import { createLazyDatabaseContentHttpHandlers } from '../../src/server/content/http.ts'
 
 const handlers = createLazyDatabaseContentHttpHandlers()
 

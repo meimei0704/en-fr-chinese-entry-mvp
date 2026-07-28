@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/content/lessons/:lessonId",
+      "destination": "/api/content/lessons?lessonId=:lessonId"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
