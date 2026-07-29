@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -65,7 +65,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    expect(screen.getByText(/loading lesson editor/i)).toBeVisible()
+    expect(screen.getByTestId('admin-editor-loading-shell')).toBeVisible()
     expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
     expect(screen.getByTestId('admin-editor-layout')).toBeVisible()
     expect(screen.getByTestId('admin-editor-main-column')).toBeVisible()
@@ -89,13 +89,15 @@ describe('AdminLessonEditorPage', () => {
     await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
     await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
 
-    expect(await screen.findByLabelText(/lesson title \(en\)/i)).toBeVisible()
+    const lessonMetaCard = screen.getByTestId('admin-module-card-lessonMeta')
+    expect(await within(lessonMetaCard).findByLabelText(/lesson title \(en\)/i)).toBeVisible()
     expect(screen.queryByLabelText(/dialogue title \(en\)/i)).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /edit dialogue/i }))
 
-    expect(await screen.findByLabelText(/dialogue title \(en\)/i)).toBeVisible()
-    expect(screen.queryByLabelText(/lesson title \(en\)/i)).not.toBeInTheDocument()
+    const dialogueCard = screen.getByTestId('admin-module-card-dialogue')
+    expect(await within(dialogueCard).findByLabelText(/dialogue title \(en\)/i)).toBeVisible()
+    expect(within(lessonMetaCard).queryByLabelText(/lesson title \(en\)/i)).not.toBeInTheDocument()
   })
 
   it('renders an unavailable state when the lesson snapshot request fails', async () => {

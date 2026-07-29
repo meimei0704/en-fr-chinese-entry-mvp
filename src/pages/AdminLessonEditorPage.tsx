@@ -163,10 +163,7 @@ export function AdminLessonEditorPage() {
     [snapshot],
   )
 
-  const selectedModule = useMemo(
-    () => (selectedModuleType ? moduleConfig[selectedModuleType] : null),
-    [selectedModuleType],
-  )
+  const selectedModule = useMemo(() => (selectedModuleType ? moduleConfig[selectedModuleType] : null), [selectedModuleType])
 
   const moduleSnapshots = useMemo(() => {
     return new Map(snapshot?.modules.map((module) => [module.moduleType, module]) ?? [])
@@ -240,14 +237,14 @@ export function AdminLessonEditorPage() {
     await loadSnapshot()
   }
 
-  function renderSelectedModuleEditor() {
-    if (!snapshot?.draftLesson || !selectedModuleType) {
+  function renderModuleEditor(moduleType: ContentModuleType) {
+    if (!snapshot?.draftLesson) {
       return null
     }
 
     const draftLesson = snapshot.draftLesson
 
-    switch (selectedModuleType) {
+    switch (moduleType) {
       case 'lessonMeta':
         return (
           <LessonMetaEditor
@@ -265,13 +262,13 @@ export function AdminLessonEditorPage() {
       default:
         return (
           <JsonModuleEditor
-            label={moduleConfig[selectedModuleType].label}
-            payload={draftLesson[selectedModuleType]}
+            label={moduleConfig[moduleType].label}
+            payload={draftLesson[moduleType]}
             onSave={(payload) =>
               handleSaveModule(
-                selectedModuleType,
+                moduleType,
                 payload,
-                `Save ${moduleConfig[selectedModuleType].label.toLowerCase()} draft`,
+                `Save ${moduleConfig[moduleType].label.toLowerCase()} draft`,
               )
             }
           />
@@ -312,11 +309,64 @@ export function AdminLessonEditorPage() {
 
   if (!snapshot || !snapshot.draftLesson) {
     return (
-      <main className="page-shell page-shell--wide">
-        <section className="hero-card hero-card--compact">
+      <main className="page-shell page-shell--wide admin-page-shell" data-testid="admin-editor-loading-shell">
+        <section className="hero-card lesson-header-card admin-editor-hero admin-loading-card" aria-busy="true">
           <p className="eyebrow">Content Admin</p>
-          <h1>Loading lesson editor…</h1>
+          <div className="admin-loading-heading">
+            <div className="admin-skeleton admin-skeleton--title" />
+            <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-wide" />
+          </div>
+          <div className="admin-editor-hero__summary">
+            <article className="admin-metric-card admin-loading-panel">
+              <div className="admin-skeleton admin-skeleton--label" />
+              <div className="admin-skeleton admin-skeleton--metric" />
+              <div className="admin-skeleton admin-skeleton--line" />
+            </article>
+            <article className="admin-metric-card admin-metric-card--attention admin-loading-panel">
+              <div className="admin-skeleton admin-skeleton--label" />
+              <div className="admin-skeleton admin-skeleton--metric" />
+              <div className="admin-skeleton admin-skeleton--line" />
+            </article>
+          </div>
         </section>
+
+        <div className="admin-editor-layout">
+          <section className="admin-editor-main-column">
+            <section className="surface-card lesson-section-card admin-module-directory-card admin-loading-card">
+              <div className="admin-loading-shell-grid">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <article key={`loading-module-${index}`} className="admin-directory-module admin-loading-panel">
+                    <div className="admin-loading-stack">
+                      <div className="admin-skeleton admin-skeleton--label" />
+                      <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-wide" />
+                      <div className="admin-skeleton admin-skeleton--line" />
+                      <div className="admin-skeleton admin-skeleton--button" />
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </section>
+
+          <aside className="admin-editor-side-column">
+            <section className="surface-card lesson-section-card admin-preview-card admin-loading-panel">
+              <div className="admin-loading-stack">
+                <div className="admin-skeleton admin-skeleton--label" />
+                <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-wide" />
+                <div className="admin-skeleton admin-skeleton--line" />
+                <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-short" />
+              </div>
+            </section>
+            <section className="surface-card lesson-section-card admin-history-card admin-loading-panel">
+              <div className="admin-loading-stack">
+                <div className="admin-skeleton admin-skeleton--label" />
+                <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-wide" />
+                <div className="admin-skeleton admin-skeleton--line" />
+                <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-short" />
+              </div>
+            </section>
+          </aside>
+        </div>
       </main>
     )
   }
@@ -403,6 +453,7 @@ export function AdminLessonEditorPage() {
                   <article
                     key={moduleType}
                     className={`admin-directory-module ${isSelected ? 'admin-directory-module--selected' : ''}`}
+                    data-testid={`admin-module-card-${moduleType}`}
                   >
                     <div className="admin-directory-module__header">
                       <div>
@@ -428,33 +479,34 @@ export function AdminLessonEditorPage() {
                     >
                       Edit {config.label.toLowerCase()}
                     </button>
+                    {isSelected ? (
+                      <div className="admin-directory-module__editor">
+                        <div className="admin-directory-module__editor-header">
+                          <div>
+                            <p className="eyebrow">Inline editor</p>
+                            <h4>Editing {config.label}</h4>
+                            <p className="muted-text">
+                              Save here, then use the side rail to publish or roll back when ready.
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            className="secondary-link"
+                            onClick={() => setSelectedModuleType(null)}
+                          >
+                            Collapse
+                          </button>
+                        </div>
+                        {renderModuleEditor(moduleType)}
+                      </div>
+                    ) : null}
                   </article>
                 )
               })}
             </div>
           </section>
 
-          {selectedModule ? (
-            <section className="surface-card lesson-section-card admin-module-focus-card">
-              <div className="admin-section-heading">
-                <div>
-                  <p className="eyebrow">Active editor</p>
-                  <h2>{selectedModule.label}</h2>
-                  <p className="muted-text">
-                    Only this module is expanded right now. Save here, then use the side rail to publish or
-                    roll back when ready.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  className="secondary-link"
-                  onClick={() => setSelectedModuleType(null)}
-                >
-                  Back to overview
-                </button>
-              </div>
-            </section>
-          ) : (
+          {!selectedModule ? (
             <section className="surface-card lesson-section-card admin-module-focus-card admin-module-focus-card--empty">
               <div className="admin-section-heading">
                 <div>
@@ -467,9 +519,7 @@ export function AdminLessonEditorPage() {
                 <span className="badge badge--sky">One module at a time</span>
               </div>
             </section>
-          )}
-
-          {renderSelectedModuleEditor()}
+          ) : null}
         </section>
 
         <aside className="admin-editor-side-column" data-testid="admin-editor-side-column">

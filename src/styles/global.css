@@ -2124,6 +2124,7 @@ h2 {
 }
 
 .admin-directory-module--selected {
+  grid-column: 1 / -1;
   border-color: rgba(95, 143, 247, 0.28);
   background:
     radial-gradient(circle at top right, rgba(95, 143, 247, 0.12), transparent 11rem),
@@ -2154,6 +2155,143 @@ h2 {
   gap: 0.4rem 0.85rem;
   color: var(--color-muted);
   font-size: 0.85rem;
+}
+
+.admin-directory-module__editor {
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 0.4rem;
+}
+
+.admin-directory-module__editor-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.admin-directory-module__editor-header h4 {
+  margin: 0 0 0.3rem;
+  color: var(--color-ink);
+  font-size: 1.1rem;
+}
+
+.admin-directory-module__editor .admin-module-card {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(231, 234, 240, 0.65);
+}
+
+.admin-access-card {
+  gap: 1rem;
+}
+
+.admin-access-card__trust,
+.admin-access-card__field-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.admin-access-card__trust {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-access-card__note {
+  display: grid;
+  gap: 0.28rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(95, 143, 247, 0.1), transparent 10rem),
+    rgba(245, 249, 255, 0.95);
+  border: 1px solid rgba(95, 143, 247, 0.16);
+}
+
+.admin-access-card__note strong {
+  color: var(--color-ink);
+}
+
+.admin-access-card__note span {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+}
+
+.admin-loading-card,
+.admin-loading-panel {
+  overflow: hidden;
+}
+
+.admin-loading-shell-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-loading-stack {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.admin-loading-heading {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(225, 231, 241, 0.95);
+}
+
+.admin-skeleton::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+  animation: admin-skeleton-shimmer 1.5s infinite;
+}
+
+.admin-skeleton--title {
+  height: 2.8rem;
+  width: min(70%, 24rem);
+  border-radius: 1.1rem;
+}
+
+.admin-skeleton--metric {
+  height: 2rem;
+  width: 5rem;
+}
+
+.admin-skeleton--label {
+  height: 0.78rem;
+  width: 6rem;
+}
+
+.admin-skeleton--line {
+  height: 0.92rem;
+  width: 100%;
+  border-radius: 0.7rem;
+}
+
+.admin-skeleton--line-wide {
+  width: 82%;
+}
+
+.admin-skeleton--line-short {
+  width: 58%;
+}
+
+.admin-skeleton--button {
+  height: 2.7rem;
+  width: 10rem;
+  border-radius: 999px;
+}
+
+@keyframes admin-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .admin-history-module__header {
@@ -2220,9 +2358,14 @@ h2 {
   .admin-overview-card__header,
   .admin-editor-hero__header,
   .admin-section-heading,
+  .admin-directory-module__editor-header,
   .admin-directory-module__header,
   .admin-history-module__header,
   .admin-lesson-card__topline {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-access-card__trust {
     grid-template-columns: 1fr;
   }
 

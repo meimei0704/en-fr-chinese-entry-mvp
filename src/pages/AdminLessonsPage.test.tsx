@@ -47,7 +47,7 @@ describe('AdminLessonsPage', () => {
     renderRoute('/admin')
 
     expect(screen.getByRole('heading', { level: 1, name: /content admin/i })).toBeVisible()
-    expect(screen.getByText(/loading lessons/i)).toBeVisible()
+    expect(screen.getByTestId('admin-lessons-loading-shell')).toBeVisible()
 
     expect(await screen.findByRole('link', { name: /open self-intro editor/i })).toHaveAttribute(
       'href',

@@ -9,6 +9,7 @@ export function AdminLessonsPage() {
   const [lessons, setLessons] = useState<AdminLessonSummary[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [requiresAuth, setRequiresAuth] = useState(false)
+  const isLoading = lessons === null
 
   async function loadLessons() {
     return listAdminLessons()
@@ -61,25 +62,54 @@ export function AdminLessonsPage() {
           </div>
         </div>
         <div className="admin-metric-grid" data-testid="admin-overview-metrics">
-          <article className="admin-metric-card">
-            <span>Lessons</span>
-            <strong>{totalLessons}</strong>
-            <p>{totalLessons === 1 ? '1 lesson ready for editing' : `${totalLessons} lessons in the workspace`}</p>
-          </article>
-          <article className="admin-metric-card admin-metric-card--attention">
-            <span>Pending modules</span>
-            <strong>{totalPendingModules}</strong>
-            <p>{totalPendingModules === 1 ? '1 pending module' : `${totalPendingModules} pending modules`}</p>
-          </article>
-          <article className="admin-metric-card">
-            <span>Published in sync</span>
-            <strong>{readyLessons}</strong>
-            <p>{readyLessons === 1 ? '1 lesson has no draft delta' : `${readyLessons} lessons have no draft delta`}</p>
-          </article>
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <article key={`loading-metric-${index}`} className="admin-metric-card admin-loading-panel">
+                <div className="admin-skeleton admin-skeleton--label" />
+                <div className="admin-skeleton admin-skeleton--metric" />
+                <div className="admin-skeleton admin-skeleton--line" />
+              </article>
+            ))
+          ) : (
+            <>
+              <article className="admin-metric-card">
+                <span>Lessons</span>
+                <strong>{totalLessons}</strong>
+                <p>{totalLessons === 1 ? '1 lesson ready for editing' : `${totalLessons} lessons in the workspace`}</p>
+              </article>
+              <article className="admin-metric-card admin-metric-card--attention">
+                <span>Pending modules</span>
+                <strong>{totalPendingModules}</strong>
+                <p>{totalPendingModules === 1 ? '1 pending module' : `${totalPendingModules} pending modules`}</p>
+              </article>
+              <article className="admin-metric-card">
+                <span>Published in sync</span>
+                <strong>{readyLessons}</strong>
+                <p>{readyLessons === 1 ? '1 lesson has no draft delta' : `${readyLessons} lessons have no draft delta`}</p>
+              </article>
+            </>
+          )}
         </div>
       </section>
 
-      {lessons === null ? <p className="admin-inline-feedback">Loading lessons…</p> : null}
+      {isLoading ? (
+        <section
+          className="page-grid admin-lessons-grid admin-loading-shell-grid"
+          data-testid="admin-lessons-loading-shell"
+          aria-busy="true"
+        >
+          {Array.from({ length: 4 }).map((_, index) => (
+            <article key={`loading-lesson-${index}`} className="surface-card lesson-card admin-lesson-card admin-loading-panel">
+              <div className="admin-loading-stack">
+                <div className="admin-skeleton admin-skeleton--label" />
+                <div className="admin-skeleton admin-skeleton--line admin-skeleton--line-wide" />
+                <div className="admin-skeleton admin-skeleton--line" />
+                <div className="admin-skeleton admin-skeleton--button" />
+              </div>
+            </article>
+          ))}
+        </section>
+      ) : null}
       {requiresAuth ? <AdminAccessForm error={error} onSubmit={handleUnlock} /> : null}
       {error && !requiresAuth ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : null}
 

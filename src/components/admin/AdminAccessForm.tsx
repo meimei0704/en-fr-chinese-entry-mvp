@@ -40,20 +40,32 @@ export function AdminAccessForm({
         </div>
         <span className="badge badge--sky">Credentials required</span>
       </div>
+      <div className="admin-access-card__trust">
+        <div className="admin-access-card__note">
+          <strong>After sign-in</strong>
+          <span>Unlock draft editing, preview, publish, and rollback tools for this admin workspace.</span>
+        </div>
+        <div className="admin-access-card__note">
+          <strong>Auth scope</strong>
+          <span>UI 会优化，但现有 Basic Auth / admin 凭证校验逻辑保持不变。</span>
+        </div>
+      </div>
       <form className="admin-form-grid" onSubmit={(event) => void handleSubmit(event)}>
-        <label className="admin-field">
-          <span>Admin username</span>
-          <input value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" />
-        </label>
-        <label className="admin-field">
-          <span>Admin password</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
-          />
-        </label>
+        <div className="admin-access-card__field-grid">
+          <label className="admin-field">
+            <span>Admin username</span>
+            <input value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" />
+          </label>
+          <label className="admin-field">
+            <span>Admin password</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
+            />
+          </label>
+        </div>
         <div className="admin-form-actions">
           {error ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : <span />}
           <button type="submit" className="primary-button" disabled={submitting}>
