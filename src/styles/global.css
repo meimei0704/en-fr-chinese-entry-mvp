@@ -2073,6 +2073,8 @@ h2 {
   gap: 0.85rem;
 }
 
+.admin-module-directory-card,
+.admin-module-focus-card,
 .admin-preview-stat,
 .admin-preview-callout,
 .admin-history-module {
@@ -2094,8 +2096,64 @@ h2 {
   margin: 0;
 }
 
+.admin-module-directory-card,
+.admin-module-focus-card,
 .admin-history-card {
   gap: 1.25rem;
+}
+
+.admin-module-focus-card--empty {
+  background:
+    radial-gradient(circle at top right, rgba(95, 143, 247, 0.08), transparent 14rem),
+    rgba(250, 252, 255, 0.98);
+}
+
+.admin-module-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+}
+
+.admin-directory-module {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border: 1px solid rgba(231, 234, 240, 0.92);
+  border-radius: 1.05rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.admin-directory-module--selected {
+  border-color: rgba(95, 143, 247, 0.28);
+  background:
+    radial-gradient(circle at top right, rgba(95, 143, 247, 0.12), transparent 11rem),
+    rgba(245, 249, 255, 0.96);
+  box-shadow: 0 22px 45px -36px rgba(47, 111, 186, 0.55);
+}
+
+.admin-directory-module__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.admin-directory-module__header h3 {
+  margin: 0 0 0.3rem;
+}
+
+.admin-directory-module__summary {
+  margin: 0;
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.admin-directory-module__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.85rem;
+  color: var(--color-muted);
+  font-size: 0.85rem;
 }
 
 .admin-history-module__header {
@@ -2140,6 +2198,7 @@ h2 {
   .lesson-progress-preview__rail,
   .review-status-panel,
   .admin-metric-grid,
+  .admin-module-directory-grid,
   .admin-editor-hero__summary,
   .admin-editor-layout,
   .admin-field-grid--two-column {
@@ -2161,6 +2220,7 @@ h2 {
   .admin-overview-card__header,
   .admin-editor-hero__header,
   .admin-section-heading,
+  .admin-directory-module__header,
   .admin-history-module__header,
   .admin-lesson-card__topline {
     grid-template-columns: 1fr;

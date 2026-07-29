@@ -70,11 +70,32 @@ describe('AdminLessonEditorPage', () => {
     expect(screen.getByTestId('admin-editor-layout')).toBeVisible()
     expect(screen.getByTestId('admin-editor-main-column')).toBeVisible()
     expect(screen.getByTestId('admin-editor-side-column')).toBeVisible()
+    expect(screen.getByTestId('admin-module-directory')).toBeVisible()
+    expect(screen.getByRole('button', { name: /edit lesson meta/i })).toBeVisible()
+    expect(screen.getByRole('button', { name: /edit dialogue/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /draft preview/i })).toBeVisible()
-    expect(screen.getByRole('heading', { level: 2, name: /lesson meta/i })).toBeVisible()
-    expect(screen.getByRole('heading', { level: 2, name: /dialogue/i })).toBeVisible()
+    expect(screen.queryByLabelText(/lesson title \(en\)/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/dialogue title \(en\)/i)).not.toBeInTheDocument()
     expect(screen.getByText(/1 module pending publish/i)).toBeVisible()
     expect(fetch).toHaveBeenCalledWith(`/api/admin/content/lessons?lessonId=${lesson.id}`, expect.anything())
+  })
+
+  it('opens one module editor at a time from the module directory', async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
+
+    expect(await screen.findByLabelText(/lesson title \(en\)/i)).toBeVisible()
+    expect(screen.queryByLabelText(/dialogue title \(en\)/i)).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /edit dialogue/i }))
+
+    expect(await screen.findByLabelText(/dialogue title \(en\)/i)).toBeVisible()
+    expect(screen.queryByLabelText(/lesson title \(en\)/i)).not.toBeInTheDocument()
   })
 
   it('renders an unavailable state when the lesson snapshot request fails', async () => {
@@ -128,6 +149,9 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
+
     const englishTitleInput = await screen.findByLabelText(/lesson title \(en\)/i)
     await user.clear(englishTitleInput)
     await user.type(englishTitleInput, 'Edited admin title')
@@ -149,6 +173,9 @@ describe('AdminLessonEditorPage', () => {
     vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /edit vocabulary/i }))
 
     const vocabularyJson = await screen.findByLabelText(/vocabulary json/i)
     await user.clear(vocabularyJson)
@@ -340,6 +367,7 @@ describe('AdminLessonEditorPage', () => {
         body: expect.stringContaining('"publishedRevisionId":88'),
       }),
     )
+    await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
     expect(await screen.findByDisplayValue('Older published title')).toBeVisible()
     expect(screen.getByText(/rollback to revision 88/i)).toBeVisible()
   })
