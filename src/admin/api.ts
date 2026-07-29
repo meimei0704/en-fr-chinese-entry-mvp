@@ -1,6 +1,8 @@
 import type { AdminLessonSnapshot, AdminLessonSummary } from './types.js'
 
 const adminAuthStorageKey = 'content-admin-basic-auth'
+const adminClientHeader = 'X-Content-Admin-Client'
+const adminClientHeaderValue = 'spa'
 
 export class AdminApiError extends Error {
   readonly status: number
@@ -18,6 +20,7 @@ async function requestJson<T>(input: string, init: RequestInit = {}): Promise<T>
     credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
+      [adminClientHeader]: adminClientHeaderValue,
       ...(authHeader ? { Authorization: authHeader } : {}),
       ...(init.headers ?? {}),
     },

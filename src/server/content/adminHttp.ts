@@ -111,8 +111,16 @@ function authUnavailable(res: ContentAdminApiResponse) {
   return res.status(503).json({ error: 'Content admin authentication is not configured' })
 }
 
-function unauthorized(res: ContentAdminApiResponse) {
-  res.setHeader('WWW-Authenticate', 'Basic realm="Content Admin"')
+function shouldSendBrowserAuthChallenge(headers: HeaderRecord | undefined) {
+  const adminClient = headers?.['x-content-admin-client'] ?? headers?.['X-Content-Admin-Client']
+  const marker = Array.isArray(adminClient) ? adminClient[0] : adminClient
+  return marker !== 'spa'
+}
+
+function unauthorized(res: ContentAdminApiResponse, headers: HeaderRecord | undefined) {
+  if (shouldSendBrowserAuthChallenge(headers)) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="Content Admin"')
+  }
   return res.status(401).json({ error: 'Admin authentication required' })
 }
 
@@ -120,7 +128,7 @@ function internalServerError(res: ContentAdminApiResponse) {
   return res.status(500).json({ error: 'Unable to process content admin request' })
 }
 
-function mapAdminError(error: unknown, res: ContentAdminApiResponse) {
+function mapAdminError(error: unknown, req: ContentAdminApiRequest, res: ContentAdminApiResponse) {
   if (error instanceof MissingDatabaseUrlError) {
     return serviceUnavailable(res)
   }
@@ -130,7 +138,7 @@ function mapAdminError(error: unknown, res: ContentAdminApiResponse) {
   }
 
   if (error instanceof UnauthorizedAdminAccessError) {
-    return unauthorized(res)
+    return unauthorized(res, req.headers)
   }
 
   if (error instanceof ContentAdminValidationError) {
@@ -148,11 +156,15 @@ function mapAdminError(error: unknown, res: ContentAdminApiResponse) {
   return internalServerError(res)
 }
 
-async function withAdminErrors(run: () => Promise<unknown>, res: ContentAdminApiResponse) {
+async function withAdminErrors(
+  req: ContentAdminApiRequest,
+  res: ContentAdminApiResponse,
+  run: () => Promise<unknown>,
+) {
   try {
     return await run()
   } catch (error) {
-    return mapAdminError(error, res)
+    return mapAdminError(error, req, res)
   }
 }
 
@@ -166,19 +178,19 @@ export function createAdminHttpHandlers(
         return methodNotAllowed(res, 'GET')
       }
 
-      return withAdminErrors(async () => {
+      return withAdminErrors(req, res, async () => {
         requireAdminAuthorization(req.headers, env)
         const lessonId = getQueryString(req.query?.lessonId)
         const body = lessonId ? await repository.getLessonSnapshot(lessonId) : await repository.listLessons()
         return res.status(200).json(body)
-      }, res)
+      })
     },
     async draft(req, res) {
       if (req.method !== 'PUT') {
         return methodNotAllowed(res, 'PUT')
       }
 
-      return withAdminErrors(async () => {
+      return withAdminErrors(req, res, async () => {
         requireAdminAuthorization(req.headers, env)
         const body = parseBody(req.body)
         const result = await repository.saveDraftModule({
@@ -189,14 +201,14 @@ export function createAdminHttpHandlers(
           note: typeof body.note === 'string' ? body.note : null,
         })
         return res.status(200).json(result)
-      }, res)
+      })
     },
     async publish(req, res) {
       if (req.method !== 'POST') {
         return methodNotAllowed(res, 'POST')
       }
 
-      return withAdminErrors(async () => {
+      return withAdminErrors(req, res, async () => {
         requireAdminAuthorization(req.headers, env)
         const body = parseBody(req.body)
         const result = await repository.publishModule({
@@ -206,14 +218,14 @@ export function createAdminHttpHandlers(
           note: typeof body.note === 'string' ? body.note : null,
         })
         return res.status(200).json(result)
-      }, res)
+      })
     },
     async rollback(req, res) {
       if (req.method !== 'POST') {
         return methodNotAllowed(res, 'POST')
       }
 
-      return withAdminErrors(async () => {
+      return withAdminErrors(req, res, async () => {
         requireAdminAuthorization(req.headers, env)
         const body = parseBody(req.body)
         const result = await repository.rollbackModule({
@@ -224,7 +236,7 @@ export function createAdminHttpHandlers(
           note: typeof body.note === 'string' ? body.note : null,
         })
         return res.status(200).json(result)
-      }, res)
+      })
     },
   }
 }
@@ -240,28 +252,29 @@ export function createLazyDatabaseAdminHttpHandlers(env: DatabaseEnv = process.e
   const createHandlers = (repository: ContentAdminRepository) => createAdminHttpHandlers(repository, env)
 
   async function withRepository(
+    req: ContentAdminApiRequest,
     run: (handlers: ContentAdminHttpHandlers) => Promise<unknown>,
     res: ContentAdminApiResponse,
   ) {
     try {
       return await run(createHandlers(await resolveRepository()))
     } catch (error) {
-      return mapAdminError(error, res)
+      return mapAdminError(error, req, res)
     }
   }
 
   return {
     lessons(req, res) {
-      return withRepository((handlers) => handlers.lessons(req, res), res)
+      return withRepository(req, (handlers) => handlers.lessons(req, res), res)
     },
     draft(req, res) {
-      return withRepository((handlers) => handlers.draft(req, res), res)
+      return withRepository(req, (handlers) => handlers.draft(req, res), res)
     },
     publish(req, res) {
-      return withRepository((handlers) => handlers.publish(req, res), res)
+      return withRepository(req, (handlers) => handlers.publish(req, res), res)
     },
     rollback(req, res) {
-      return withRepository((handlers) => handlers.rollback(req, res), res)
+      return withRepository(req, (handlers) => handlers.rollback(req, res), res)
     },
   }
 }

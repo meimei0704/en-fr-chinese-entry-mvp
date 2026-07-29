@@ -232,6 +232,32 @@ describe('content admin HTTP handlers', () => {
     expect(repository.listLessons).not.toHaveBeenCalled()
   })
 
+  it('returns a plain 401 without a browser auth challenge for admin UI fetch requests', async () => {
+    const repository = {
+      listLessons: vi.fn(),
+      getLessonSnapshot: vi.fn(),
+      saveDraftModule: vi.fn(),
+      publishModule: vi.fn(),
+      rollbackModule: vi.fn(),
+    }
+    const handlers = createAdminHttpHandlers(repository, adminAuthEnv)
+    const response = createResponseRecorder()
+
+    await handlers.lessons(
+      {
+        method: 'GET',
+        query: {},
+        headers: { 'x-content-admin-client': 'spa' },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(401)
+    expect(response.headers['WWW-Authenticate']).toBeUndefined()
+    expect(response.body).toEqual({ error: 'Admin authentication required' })
+    expect(repository.listLessons).not.toHaveBeenCalled()
+  })
+
   it('accepts authenticated admin requests and returns 400 for malformed JSON bodies instead of 500', async () => {
     const repository = {
       listLessons: vi.fn().mockResolvedValue([{ lessonId: 'self-intro' }]),

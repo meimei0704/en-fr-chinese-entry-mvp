@@ -59,7 +59,14 @@ describe('AdminLessonsPage', () => {
     expect(screen.getByTestId('admin-lessons-grid')).toBeVisible()
     expect(screen.getByText(/1 module pending publish/i)).toBeVisible()
     expect(screen.getByText(/all modules published/i)).toBeVisible()
-    expect(fetch).toHaveBeenCalledWith('/api/admin/content/lessons', expect.anything())
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/admin/content/lessons',
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          'X-Content-Admin-Client': 'spa',
+        }),
+      }),
+    )
   })
 
   it('renders a safe error state when the admin lesson list request fails', async () => {
