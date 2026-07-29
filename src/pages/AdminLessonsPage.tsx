@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import { AdminApiError, clearAdminBasicAuth, listAdminLessons, saveAdminBasicAuth } from '../admin/api.js'
 import type { AdminLessonSummary } from '../admin/types.js'
-import { AdminAccessForm } from '../components/admin/AdminAccessForm.js'
+import { AdminAccessScreen } from '../components/admin/AdminAccessScreen.js'
 
 export function AdminLessonsPage() {
   const [lessons, setLessons] = useState<AdminLessonSummary[] | null>(null)
@@ -41,6 +41,19 @@ export function AdminLessonsPage() {
   async function handleUnlock(username: string, password: string) {
     saveAdminBasicAuth(username, password)
     await loadLessons()
+  }
+
+  if (requiresAuth) {
+    return (
+      <AdminAccessScreen
+        heroTitle="Sign in to open content admin"
+        heroDescription="Unlock the centered admin workspace to edit lessons, preview changes, and publish intentionally."
+        formTitle="Admin sign in required"
+        formDescription="Enter the content admin credentials to continue into the lesson management workspace."
+        error={error}
+        onSubmit={handleUnlock}
+      />
+    )
   }
 
   const totalLessons = lessons?.length ?? 0
@@ -110,7 +123,6 @@ export function AdminLessonsPage() {
           ))}
         </section>
       ) : null}
-      {requiresAuth ? <AdminAccessForm error={error} onSubmit={handleUnlock} /> : null}
       {error && !requiresAuth ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : null}
 
       {!requiresAuth && lessons && lessons.length > 0 ? (

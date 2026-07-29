@@ -118,6 +118,7 @@ describe('AdminLessonEditorPage', () => {
     renderRoute(`/admin/lesson/${lesson.id}`)
 
     expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    expect(screen.getByTestId('admin-auth-layout')).toBeVisible()
     expect(screen.getByTestId('admin-access-card')).toBeVisible()
     await user.type(screen.getByLabelText(/admin username/i), 'editor')
     await user.type(screen.getByLabelText(/admin password/i), 'secret')
@@ -170,22 +171,61 @@ describe('AdminLessonEditorPage', () => {
     expect(await screen.findByText('Edited admin title')).toBeVisible()
   })
 
-  it('blocks invalid JSON module saves in the browser before posting to the admin draft endpoint', async () => {
+  it('renders vocabulary as structured content cards instead of a raw JSON textarea and saves edits', async () => {
     const user = userEvent.setup()
-    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+    const updatedSnapshot = lessonSnapshot()
+    updatedSnapshot.draftLesson = {
+      ...lesson,
+      vocabulary: lesson.vocabulary.map((item, index) =>
+        index === 0
+          ? {
+              ...item,
+              hanzi: '新护照',
+            }
+          : item,
+      ),
+    }
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
+      .mockResolvedValueOnce(jsonResponse(updatedSnapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
     await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
     await user.click(screen.getByRole('button', { name: /edit vocabulary/i }))
 
-    const vocabularyJson = await screen.findByLabelText(/vocabulary json/i)
-    await user.clear(vocabularyJson)
-    await user.type(vocabularyJson, 'not json')
+    expect(screen.queryByLabelText(/vocabulary json/i)).not.toBeInTheDocument()
+    const vocabularyCard = screen.getByTestId('admin-module-item-vocabulary-0')
+    const hanziInput = within(vocabularyCard).getByLabelText(/hanzi/i)
+    await user.clear(hanziInput)
+    await user.type(hanziInput, '新护照')
     await user.click(screen.getByRole('button', { name: /save vocabulary draft/i }))
 
-    expect(await screen.findByText(/invalid json for vocabulary/i)).toBeVisible()
-    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      '/api/admin/content/draft',
+      expect.objectContaining({
+        method: 'PUT',
+        body: expect.stringContaining('新护照'),
+      }),
+    )
+    expect(await screen.findByDisplayValue('新护照')).toBeVisible()
+  })
+
+  it('renders practice as grouped content sections instead of a raw JSON textarea', async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /edit practice/i }))
+
+    expect(screen.queryByLabelText(/practice json/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 3, name: /listening/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 3, name: /speaking/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 3, name: /reading/i })).toBeVisible()
+    expect(screen.getByLabelText(/listening prompt \(en\)/i)).toBeVisible()
   })
 
   it('publishes a changed module from the editor and refreshes module status/history', async () => {

@@ -92,6 +92,7 @@ describe('AdminLessonsPage', () => {
     renderRoute('/admin')
 
     expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    expect(screen.getByTestId('admin-auth-layout')).toBeVisible()
     expect(screen.getByTestId('admin-access-card')).toBeVisible()
 
     await user.type(screen.getByLabelText(/admin username/i), 'editor')

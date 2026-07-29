@@ -13,11 +13,22 @@ import {
 import { getEnglishText } from '../admin/localized.js'
 import type { AdminLessonSnapshot } from '../admin/types.js'
 import type { ContentModuleType } from '../server/content/types.js'
-import { AdminAccessForm } from '../components/admin/AdminAccessForm.js'
+import { AdminAccessScreen } from '../components/admin/AdminAccessScreen.js'
 import { DialogueEditor } from '../components/admin/DialogueEditor.js'
-import { JsonModuleEditor } from '../components/admin/JsonModuleEditor.js'
 import { LessonMetaEditor } from '../components/admin/LessonMetaEditor.js'
 import { ModuleHistoryList } from '../components/admin/ModuleHistoryList.js'
+import {
+  PracticeModuleEditor,
+  ShortInputModuleEditor,
+  StructuredListModuleEditor,
+} from '../components/admin/StructuredContentEditors.js'
+import {
+  hanziRecognitionFields,
+  pronunciationFields,
+  reviewCardFields,
+  sentencePatternFields,
+  vocabularyFields,
+} from '../components/admin/structuredEditorConfigs.js'
 import { LessonPreviewPanel } from '../components/admin/LessonPreviewPanel.js'
 
 const moduleOrder: ContentModuleType[] = [
@@ -69,6 +80,43 @@ const moduleConfig: Record<ContentModuleType, { label: string; description: stri
   shortInput: {
     label: 'Short Input',
     description: 'Short response prompts and compact learner inputs.',
+  },
+}
+
+const structuredModuleCopy: Partial<
+  Record<
+    ContentModuleType,
+    {
+      itemLabel: string
+      badgeLabel: string
+      description: string
+    }
+  >
+> = {
+  sentencePatterns: {
+    itemLabel: 'Pattern',
+    badgeLabel: 'Pattern cards',
+    description: 'Edit each sentence pattern as a content card with meaning, example, audio, and explanation fields.',
+  },
+  vocabulary: {
+    itemLabel: 'Vocabulary item',
+    badgeLabel: 'Vocabulary cards',
+    description: 'Edit each vocabulary item as readable content fields instead of a raw JSON blob.',
+  },
+  pronunciation: {
+    itemLabel: 'Pronunciation tip',
+    badgeLabel: 'Tip cards',
+    description: 'Keep pronunciation guidance structured by focus, audio text, tip, and explanation.',
+  },
+  hanziRecognition: {
+    itemLabel: 'Recognition item',
+    badgeLabel: 'Recognition cards',
+    description: 'Edit each hanzi recognition block with clear fields for hanzi, pinyin, meaning, and explanation.',
+  },
+  reviewCards: {
+    itemLabel: 'Review card',
+    badgeLabel: 'Flashcard stack',
+    description: 'Manage each review card as front/back content with a learner-facing explanation.',
   },
 }
 
@@ -259,37 +307,108 @@ export function AdminLessonEditorPage() {
             onSave={(payload) => handleSaveModule('dialogue', payload, 'Save dialogue draft')}
           />
         )
-      default:
+      case 'sentencePatterns':
         return (
-          <JsonModuleEditor
-            label={moduleConfig[moduleType].label}
-            payload={draftLesson[moduleType]}
-            onSave={(payload) =>
-              handleSaveModule(
-                moduleType,
-                payload,
-                `Save ${moduleConfig[moduleType].label.toLowerCase()} draft`,
-              )
-            }
+          <StructuredListModuleEditor
+            moduleKey="sentencePatterns"
+            label="Sentence Patterns"
+            description={structuredModuleCopy.sentencePatterns?.description ?? ''}
+            itemLabel={structuredModuleCopy.sentencePatterns?.itemLabel ?? 'Item'}
+            badgeLabel={structuredModuleCopy.sentencePatterns?.badgeLabel ?? 'Structured content'}
+            saveLabel="Save sentence patterns draft"
+            items={draftLesson.sentencePatterns}
+            fields={sentencePatternFields}
+            onSave={(payload) => handleSaveModule('sentencePatterns', payload, 'Save sentence patterns draft')}
           />
         )
+      case 'vocabulary':
+        return (
+          <StructuredListModuleEditor
+            moduleKey="vocabulary"
+            label="Vocabulary"
+            description={structuredModuleCopy.vocabulary?.description ?? ''}
+            itemLabel={structuredModuleCopy.vocabulary?.itemLabel ?? 'Item'}
+            badgeLabel={structuredModuleCopy.vocabulary?.badgeLabel ?? 'Structured content'}
+            saveLabel="Save vocabulary draft"
+            items={draftLesson.vocabulary}
+            fields={vocabularyFields}
+            onSave={(payload) => handleSaveModule('vocabulary', payload, 'Save vocabulary draft')}
+          />
+        )
+      case 'pronunciation':
+        return (
+          <StructuredListModuleEditor
+            moduleKey="pronunciation"
+            label="Pronunciation"
+            description={structuredModuleCopy.pronunciation?.description ?? ''}
+            itemLabel={structuredModuleCopy.pronunciation?.itemLabel ?? 'Item'}
+            badgeLabel={structuredModuleCopy.pronunciation?.badgeLabel ?? 'Structured content'}
+            saveLabel="Save pronunciation draft"
+            items={draftLesson.pronunciation}
+            fields={pronunciationFields}
+            onSave={(payload) => handleSaveModule('pronunciation', payload, 'Save pronunciation draft')}
+          />
+        )
+      case 'hanziRecognition':
+        return (
+          <StructuredListModuleEditor
+            moduleKey="hanziRecognition"
+            label="Hanzi Recognition"
+            description={structuredModuleCopy.hanziRecognition?.description ?? ''}
+            itemLabel={structuredModuleCopy.hanziRecognition?.itemLabel ?? 'Item'}
+            badgeLabel={structuredModuleCopy.hanziRecognition?.badgeLabel ?? 'Structured content'}
+            saveLabel="Save hanzi recognition draft"
+            items={draftLesson.hanziRecognition}
+            fields={hanziRecognitionFields}
+            onSave={(payload) => handleSaveModule('hanziRecognition', payload, 'Save hanzi recognition draft')}
+          />
+        )
+      case 'practice':
+        return (
+          <PracticeModuleEditor
+            practice={draftLesson.practice}
+            onSave={(payload) => handleSaveModule('practice', payload, 'Save practice draft')}
+          />
+        )
+      case 'reviewCards':
+        return (
+          <StructuredListModuleEditor
+            moduleKey="reviewCards"
+            label="Review Cards"
+            description={structuredModuleCopy.reviewCards?.description ?? ''}
+            itemLabel={structuredModuleCopy.reviewCards?.itemLabel ?? 'Item'}
+            badgeLabel={structuredModuleCopy.reviewCards?.badgeLabel ?? 'Structured content'}
+            saveLabel="Save review cards draft"
+            items={draftLesson.reviewCards}
+            fields={reviewCardFields}
+            onSave={(payload) => handleSaveModule('reviewCards', payload, 'Save review cards draft')}
+          />
+        )
+      case 'shortInput':
+        return (
+          <ShortInputModuleEditor
+            prompt={draftLesson.shortInput}
+            onSave={(payload) => handleSaveModule('shortInput', payload, 'Save short input draft')}
+          />
+        )
+      default:
+        return null
     }
   }
 
   if (error) {
     if (requiresAuth) {
       return (
-        <main className="page-shell page-shell--wide">
-          <section className="hero-card hero-card--compact">
-            <p className="eyebrow">Content Admin</p>
-            <h1>Lesson editor unavailable</h1>
-            <p>{error}</p>
-            <Link className="secondary-link" to="/admin">
-              Back to admin lesson list
-            </Link>
-          </section>
-          <AdminAccessForm error={error} onSubmit={handleUnlock} />
-        </main>
+        <AdminAccessScreen
+          heroTitle="Sign in to open the lesson editor"
+          heroDescription="Unlock this lesson workspace to edit content inline, preview changes, and publish modules intentionally."
+          formTitle="Admin sign in required"
+          formDescription="Enter the content admin credentials to continue into this lesson editor."
+          error={error}
+          backHref="/admin"
+          backLabel="Back to admin lesson list"
+          onSubmit={handleUnlock}
+        />
       )
     }
 
