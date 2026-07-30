@@ -295,12 +295,18 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   await expect(page.getByRole('heading', { name: /179 audio targets/i })).toBeVisible()
   await expect(page.getByText(/zh-cn only/i)).toBeVisible()
   await expect(page.getByText(/voice replacement/i)).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: /record voice sample/i })).toBeVisible()
+  await expect(page.getByText(/recommended mandarin prompt/i)).toBeVisible()
+  await expect(page.getByText(/you may read your own mandarin content/i)).toBeVisible()
 
   const generateAllButton = page.getByRole('button', { name: /generate all pending/i })
+  const startRecordingButton = page.getByRole('button', { name: /start recording/i })
   await expect(generateAllButton).toBeDisabled()
+  await expect(startRecordingButton).toBeDisabled()
   await page.getByLabel(/voice sample url/i).fill('https://storage.example/authorized-sample.wav')
   await expect(page.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
   await page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i).check()
+  await expect(startRecordingButton).toBeEnabled()
   await page.getByRole('button', { name: /create voice profile/i }).click()
   await expect(page.getByText(/profile id: profile_batch_authorized/i).first()).toBeVisible()
 

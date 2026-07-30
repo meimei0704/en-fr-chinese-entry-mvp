@@ -99,6 +99,80 @@ function installBatchFetchMock() {
   })
 }
 
+
+const originalMediaDevices = window.navigator.mediaDevices
+const originalCreateObjectURL = URL.createObjectURL
+const originalRevokeObjectURL = URL.revokeObjectURL
+
+function stubMediaDevices(mediaDevices: MediaDevices | undefined) {
+  Object.defineProperty(window.navigator, 'mediaDevices', {
+    configurable: true,
+    value: mediaDevices,
+  })
+}
+
+function restoreBrowserRecordingGlobals() {
+  Object.defineProperty(window.navigator, 'mediaDevices', {
+    configurable: true,
+    value: originalMediaDevices,
+  })
+
+  if (originalCreateObjectURL) {
+    Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: originalCreateObjectURL })
+  } else {
+    delete (URL as unknown as { createObjectURL?: unknown }).createObjectURL
+  }
+
+  if (originalRevokeObjectURL) {
+    Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: originalRevokeObjectURL })
+  } else {
+    delete (URL as unknown as { revokeObjectURL?: unknown }).revokeObjectURL
+  }
+}
+
+function installObjectUrlMock() {
+  Object.defineProperty(URL, 'createObjectURL', {
+    configurable: true,
+    value: vi.fn(() => 'blob:recorded-mandarin-sample'),
+  })
+  Object.defineProperty(URL, 'revokeObjectURL', {
+    configurable: true,
+    value: vi.fn(),
+  })
+}
+
+function installMediaRecorderMock() {
+  const stopTrack = vi.fn()
+  const getUserMedia = vi.fn().mockResolvedValue({
+    getTracks: () => [{ stop: stopTrack }],
+  })
+
+  class MockMediaRecorder {
+    readonly mimeType = 'audio/webm'
+    state: RecordingState = 'inactive'
+    ondataavailable: ((event: { data: Blob }) => void) | null = null
+    onstop: (() => void) | null = null
+    onerror: ((event: { error?: Error }) => void) | null = null
+
+    constructor(readonly stream: MediaStream) {}
+
+    start() {
+      this.state = 'recording'
+    }
+
+    stop() {
+      this.state = 'inactive'
+      this.ondataavailable?.({ data: new Blob(['recorded mandarin sample'], { type: 'audio/webm' }) })
+      this.onstop?.()
+    }
+  }
+
+  vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+  stubMediaDevices({ getUserMedia } as unknown as MediaDevices)
+
+  return { getUserMedia, stopTrack }
+}
+
 describe('AdminVoiceGenerationPage', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn())
@@ -107,6 +181,7 @@ describe('AdminVoiceGenerationPage', () => {
   afterEach(() => {
     window.sessionStorage.clear()
     vi.unstubAllGlobals()
+    restoreBrowserRecordingGlobals()
     vi.restoreAllMocks()
   })
 
@@ -122,6 +197,79 @@ describe('AdminVoiceGenerationPage', () => {
     expect(screen.getByRole('button', { name: /generate all pending/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /apply approved to drafts/i })).toBeDisabled()
     expect(screen.queryByText(/voice replacement/i)).not.toBeInTheDocument()
+  })
+
+  it('shows recorder guidance and gates microphone capture behind consent', async () => {
+    const user = userEvent.setup()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    expect(screen.getByRole('heading', { level: 2, name: /record voice sample/i })).toBeVisible()
+    expect(screen.getByText(/recommended mandarin prompt/i)).toBeVisible()
+    expect(screen.getByText(/you may read your own mandarin content/i)).toBeVisible()
+    expect(screen.getByText(/speak clearly in a quiet room/i)).toBeVisible()
+
+    const startRecordingButton = screen.getByRole('button', { name: /start recording/i })
+    expect(startRecordingButton).toBeDisabled()
+
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    expect(startRecordingButton).toBeEnabled()
+  })
+
+  it('records a browser microphone sample and submits it as base64 when creating the profile', async () => {
+    const user = userEvent.setup()
+    const { getUserMedia, stopTrack } = installMediaRecorderMock()
+    installObjectUrlMock()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+
+    expect(getUserMedia).toHaveBeenCalledWith({ audio: true })
+    expect(screen.getByRole('button', { name: /stop recording/i })).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: /stop recording/i }))
+
+    expect(await screen.findByLabelText(/preview recorded voice sample/i)).toHaveAttribute('src', 'blob:recorded-mandarin-sample')
+    expect(stopTrack).toHaveBeenCalled()
+    await user.click(screen.getByRole('button', { name: /create voice profile/i }))
+
+    await waitFor(() => {
+      expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/samples')).toBe(true)
+    })
+    const sampleCall = vi.mocked(fetch).mock.calls.find((call) => call[0] === '/api/admin/voice/samples')!
+    const sampleBody = JSON.parse(String(sampleCall[1]!.body)) as {
+      consentConfirmed?: boolean
+      sampleAudioBase64?: string
+      sampleAudioUrl?: string
+    }
+    expect(sampleBody.consentConfirmed).toBe(true)
+    expect(sampleBody.sampleAudioBase64).toMatch(/^cmVjb3JkZWQgbWFuZGFyaW4gc2FtcGxl/)
+    expect(sampleBody.sampleAudioUrl).toBeUndefined()
+    expect((await screen.findAllByText(/profile id: profile_batch_authorized/i))[0]).toBeVisible()
+  })
+
+  it('shows a microphone permission error without enabling profile creation', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('MediaRecorder', class {})
+    stubMediaDevices({
+      getUserMedia: vi.fn().mockRejectedValue(new Error('Permission denied')),
+    } as unknown as MediaDevices)
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+
+    expect(await screen.findByText(/unable to access microphone/i)).toBeVisible()
+    expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
   })
 
   it('requires admin auth like the rest of the admin workspace', async () => {

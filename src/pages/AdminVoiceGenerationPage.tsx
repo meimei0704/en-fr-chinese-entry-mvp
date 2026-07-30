@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -26,6 +26,8 @@ interface VoiceGenerationRow {
   generatedAudioUrl: string
   error: string | null
 }
+
+type VoiceSampleRecordingState = 'idle' | 'recording' | 'recorded'
 
 function getVoiceErrorMessage(error: unknown, fallback: string) {
   return error instanceof AdminApiError ? error.message : fallback
@@ -60,6 +62,18 @@ function readFileAsBase64(file: File) {
   })
 }
 
+function readBlobAsBase64(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      const result = String(reader.result ?? '')
+      resolve(result.includes(',') ? result.split(',').at(1) ?? '' : result)
+    }
+    reader.onerror = () => reject(new Error('Unable to prepare recorded voice sample'))
+    reader.readAsDataURL(blob)
+  })
+}
+
 export function AdminVoiceGenerationPage() {
   const [snapshots, setSnapshots] = useState<AdminLessonSnapshot[]>([])
   const [rows, setRows] = useState<VoiceGenerationRow[]>([])
@@ -73,6 +87,12 @@ export function AdminVoiceGenerationPage() {
   const [sampleAudioBase64, setSampleAudioBase64] = useState('')
   const [profileId, setProfileId] = useState('')
   const [pendingAction, setPendingAction] = useState<'profile' | 'generate' | 'apply' | null>(null)
+  const [recordingState, setRecordingState] = useState<VoiceSampleRecordingState>('idle')
+  const [recordedSampleUrl, setRecordedSampleUrl] = useState('')
+  const [recorderError, setRecorderError] = useState<string | null>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const recordedChunksRef = useRef<Blob[]>([])
+  const recordingStreamRef = useRef<MediaStream | null>(null)
 
   const draftLessons = useMemo(
     () => snapshots.map((snapshot) => snapshot.draftLesson).filter((lesson): lesson is LessonContent => lesson !== null),
@@ -89,6 +109,7 @@ export function AdminVoiceGenerationPage() {
   }, [rows])
   const hasSampleAudio = sampleAudioUrl.trim() !== '' || sampleAudioBase64.trim() !== ''
   const canCreateProfile = consentConfirmed && hasSampleAudio && pendingAction === null
+  const canStartRecording = consentConfirmed && pendingAction === null && recordingState !== 'recording'
   const canGenerate = consentConfirmed && profileId.trim() !== '' && pendingAction === null
   const canGenerateAll = canGenerate && rows.some((row) => row.status === 'pending' || row.status === 'failed')
   const approvedRows = rows.filter((row) => row.status === 'approved' && row.generatedAudioUrl.trim() !== '')
@@ -131,6 +152,130 @@ export function AdminVoiceGenerationPage() {
     void loadSnapshots().catch(() => undefined)
   }, [loadSnapshots])
 
+  useEffect(() => {
+    return () => {
+      recordingStreamRef.current?.getTracks().forEach((track) => track.stop())
+    }
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (recordedSampleUrl && typeof URL.revokeObjectURL === 'function') {
+        URL.revokeObjectURL(recordedSampleUrl)
+      }
+    }
+  }, [recordedSampleUrl])
+
+  function stopRecordingStream() {
+    recordingStreamRef.current?.getTracks().forEach((track) => track.stop())
+    recordingStreamRef.current = null
+  }
+
+  function clearRecordedSample() {
+    setRecordedSampleUrl('')
+    setSampleAudioBase64('')
+    recordedChunksRef.current = []
+  }
+
+  async function finalizeRecordedSample(recorder: MediaRecorder) {
+    const chunks = recordedChunksRef.current
+    stopRecordingStream()
+    mediaRecorderRef.current = null
+
+    if (chunks.length === 0) {
+      setRecordingState('idle')
+      setRecorderError('No voice sample was captured. Please record again.')
+      return
+    }
+
+    const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' })
+    const objectUrl = typeof URL.createObjectURL === 'function' ? URL.createObjectURL(blob) : ''
+    setRecordedSampleUrl(objectUrl)
+
+    try {
+      const base64 = await readBlobAsBase64(blob)
+      setSampleAudioBase64(base64)
+      setSampleAudioUrl('')
+      setRecordingState('recorded')
+      setRecorderError(null)
+    } catch (sampleError) {
+      clearRecordedSample()
+      setRecordingState('idle')
+      setRecorderError(sampleError instanceof Error ? sampleError.message : 'Unable to prepare recorded voice sample')
+    }
+  }
+
+  async function handleStartRecording() {
+    if (!canStartRecording) {
+      return
+    }
+
+    setError(null)
+    setSuccessMessage(null)
+    setRecorderError(null)
+    clearRecordedSample()
+
+    if (!window.navigator.mediaDevices?.getUserMedia || typeof window.MediaRecorder === 'undefined') {
+      setRecorderError('Recording is not supported by this browser. Please upload a voice sample file instead.')
+      return
+    }
+
+    try {
+      const stream = await window.navigator.mediaDevices.getUserMedia({ audio: true })
+      const recorder = new window.MediaRecorder(stream)
+      recordingStreamRef.current = stream
+      mediaRecorderRef.current = recorder
+      recordedChunksRef.current = []
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunksRef.current.push(event.data)
+        }
+      }
+      recorder.onstop = () => {
+        void finalizeRecordedSample(recorder)
+      }
+      recorder.onerror = () => {
+        stopRecordingStream()
+        mediaRecorderRef.current = null
+        clearRecordedSample()
+        setRecordingState('idle')
+        setRecorderError('Unable to record voice sample. Please try again or upload a file.')
+      }
+
+      recorder.start()
+      setRecordingState('recording')
+    } catch {
+      stopRecordingStream()
+      mediaRecorderRef.current = null
+      setRecordingState('idle')
+      setRecorderError('Unable to access microphone. Check browser permission and try again, or upload a file.')
+    }
+  }
+
+  function handleStopRecording() {
+    const recorder = mediaRecorderRef.current
+    if (!recorder || recorder.state === 'inactive') {
+      setRecordingState('idle')
+      return
+    }
+
+    recorder.stop()
+  }
+
+  function handleDiscardRecording() {
+    const recorder = mediaRecorderRef.current
+    if (recorder && recorder.state !== 'inactive') {
+      recorder.onstop = null
+      recorder.stop()
+    }
+    stopRecordingStream()
+    mediaRecorderRef.current = null
+    clearRecordedSample()
+    setRecordingState('idle')
+    setRecorderError(null)
+  }
+
   async function handleUnlock(username: string, password: string) {
     saveAdminBasicAuth(username, password)
     await loadSnapshots()
@@ -156,6 +301,9 @@ export function AdminVoiceGenerationPage() {
 
     try {
       setError(null)
+      setRecorderError(null)
+      setRecordedSampleUrl('')
+      setRecordingState('idle')
       setSampleAudioBase64(await readFileAsBase64(file))
       setSampleName((current) => current || file.name)
     } catch (fileError) {
@@ -408,6 +556,65 @@ export function AdminVoiceGenerationPage() {
             I confirm this voice sample is mine or explicitly authorized
           </span>
         </label>
+        <article className="surface-card lesson-card admin-lesson-card" aria-label="Browser voice sample recorder">
+          <div className="admin-section-heading">
+            <div>
+              <p className="eyebrow">Mic capture</p>
+              <h2>Record voice sample</h2>
+              <p className="muted-text">
+                Record a self-authorized Mandarin sample directly in the browser, then use it to create the voice profile.
+              </p>
+            </div>
+            <span className="badge badge--jade">30–60 sec</span>
+          </div>
+          <div className="admin-field-grid">
+            <div className="admin-field">
+              <span>Recommended Mandarin prompt</span>
+              <p className="muted-text">
+                你好，我正在录制一段普通话声音样本。今天的天气很好，我会用自然的语速清楚地说话。请你帮我确认地址、时间和票价。我们一起练习中文声调：妈、麻、马、骂；也练习常用句子：你好，请问洗手间在哪里？我想买一张车票，谢谢你的帮助。
+              </p>
+            </div>
+            <div className="admin-field">
+              <span>Recording guidance</span>
+              <p className="muted-text">
+                You may read your own Mandarin content instead; the prompt is only a quality guide. Speak clearly in a quiet room for about 30–60 seconds, use natural pacing, and avoid background music.
+              </p>
+            </div>
+          </div>
+          <div className="admin-card-actions">
+            <button
+              type="button"
+              className="secondary-link"
+              onClick={handleStartRecording}
+              disabled={!canStartRecording}
+            >
+              Start recording
+            </button>
+            {recordingState === 'recording' ? (
+              <button type="button" className="primary-button" onClick={handleStopRecording}>
+                Stop recording
+              </button>
+            ) : null}
+            {recordedSampleUrl ? (
+              <button type="button" className="secondary-link" onClick={handleDiscardRecording}>
+                Re-record
+              </button>
+            ) : null}
+            <span className="muted-text">
+              {recordingState === 'recording'
+                ? 'Recording… read the prompt or your own Mandarin text.'
+                : recordedSampleUrl
+                  ? 'Recorded sample ready. Preview it before creating the profile.'
+                  : 'Start recording after consent, or use the URL/file fallback below.'}
+            </span>
+          </div>
+          {recordedSampleUrl ? (
+            <audio aria-label="Preview recorded voice sample" controls src={recordedSampleUrl} />
+          ) : null}
+          {recorderError ? (
+            <p className="admin-inline-feedback admin-inline-feedback--error">{recorderError}</p>
+          ) : null}
+        </article>
         <div className="admin-field-grid">
           <label className="admin-field">
             <span>Voice sample name</span>
