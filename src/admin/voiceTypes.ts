@@ -45,6 +45,7 @@ export interface AdminVoiceSampleProfileResponse {
 }
 
 export interface GenerateAdminVoiceReplacementInput {
+  consentConfirmed: boolean
   profileId: string
   text: string
   target: {

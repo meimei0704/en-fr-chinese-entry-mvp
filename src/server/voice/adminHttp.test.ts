@@ -86,6 +86,31 @@ describe('admin voice HTTP handlers', () => {
     expect(provider.createVoiceProfile).not.toHaveBeenCalled()
   })
 
+
+  it('requires explicit consent before generating replacement audio for an existing profile', async () => {
+    const { provider, storage } = createFakeServices()
+    const handlers = createAdminVoiceHttpHandlers({ provider, storage }, adminAuthEnv)
+    const response = createResponseRecorder()
+
+    await handlers.generate(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: {
+          profileId: 'profile_self_intro',
+          text: '你好',
+          target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+        },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body).toEqual({ error: 'Voice generation consent must be confirmed before replacement audio is created' })
+    expect(provider.generateReplacementAudio).not.toHaveBeenCalled()
+    expect(storage.saveGeneratedAudio).not.toHaveBeenCalled()
+  })
+
   it('returns clear 503 responses when runtime voice provider or storage is not configured', async () => {
     const handlers = createLazyAdminVoiceHttpHandlers(adminAuthEnv)
 
@@ -107,6 +132,7 @@ describe('admin voice HTTP handlers', () => {
         method: 'POST',
         headers: { authorization: adminAuthHeader },
         body: {
+          consentConfirmed: true,
           profileId: 'profile_self_intro',
           text: '你好',
           target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
@@ -146,6 +172,7 @@ describe('admin voice HTTP handlers', () => {
         method: 'POST',
         headers: { authorization: adminAuthHeader },
         body: {
+          consentConfirmed: true,
           profileId: 'profile_self_intro',
           text: '你好，我叫崔秋',
           target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },

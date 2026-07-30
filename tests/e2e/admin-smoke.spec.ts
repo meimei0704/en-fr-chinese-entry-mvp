@@ -176,10 +176,12 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
 
     expect(auth).toBe(encodedAdminAuth)
     const body = JSON.parse(request.postData() ?? '{}') as {
+      consentConfirmed?: boolean
       profileId?: string
       text?: string
       target?: { lessonId?: string; moduleType?: string; targetId?: string }
     }
+    expect(body.consentConfirmed).toBe(true)
     expect(body.profileId).toBe('profile_self_intro')
     expect(body.text).toBe(lesson.dialogue.lines[0]!.hanzi)
     expect(body.target).toMatchObject({ lessonId: lesson.id, moduleType: 'dialogue' })
@@ -260,7 +262,12 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
   await page.getByRole('button', { name: /generate replacement audio/i }).click()
   await expect(page.getByLabel(/replacement audio url/i)).toHaveValue(generatedVoiceAudio)
   await expect(page.getByLabel(/preview replacement audio/i)).toHaveAttribute('src', generatedVoiceAudio)
-  await page.getByRole('button', { name: /apply to draft/i }).click()
+  const applyVoiceDraftButton = page.getByRole('button', { name: /apply to draft/i })
+  await expect(applyVoiceDraftButton).toBeDisabled()
+  await page.getByLabel(/i have previewed and approve this replacement audio/i).check()
+  await expect(applyVoiceDraftButton).toBeEnabled()
+  await applyVoiceDraftButton.focus()
+  await page.keyboard.press('Enter')
   await expect(page.getByText(/voice replacement saved to dialogue draft/i)).toBeVisible()
   await expect(page.getByTestId('admin-editor-side-column').getByText(generatedVoiceAudio)).toBeVisible()
 

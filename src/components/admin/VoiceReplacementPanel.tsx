@@ -35,6 +35,7 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
   const [selectedTargetId, setSelectedTargetId] = useState<string>(targets[0]?.id ?? '')
   const [profileId, setProfileId] = useState('')
   const [replacementAudioUrl, setReplacementAudioUrl] = useState('')
+  const [previewConfirmed, setPreviewConfirmed] = useState(false)
   const [pendingAction, setPendingAction] = useState<'profile' | 'generate' | 'apply' | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -43,7 +44,7 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
   const hasSampleAudio = sampleAudioUrl.trim() !== '' || sampleAudioBase64.trim() !== ''
   const canCreateProfile = consentConfirmed && hasSampleAudio && pendingAction === null
   const canGenerate = consentConfirmed && profileId.trim() !== '' && selectedTarget !== null && pendingAction === null
-  const canApply = consentConfirmed && selectedTarget !== null && replacementAudioUrl.trim() !== '' && pendingAction === null
+  const canApply = consentConfirmed && previewConfirmed && selectedTarget !== null && replacementAudioUrl.trim() !== '' && pendingAction === null
 
   async function handleSampleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -103,6 +104,7 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
 
     try {
       const result = await generateAdminVoiceReplacement({
+        consentConfirmed,
         profileId: profileId.trim(),
         text: selectedTarget.text,
         target: {
@@ -112,9 +114,11 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
         },
       })
       setReplacementAudioUrl(result.audioUrl)
+      setPreviewConfirmed(false)
       setSuccessMessage('Replacement audio generated. Preview it before applying to the draft.')
     } catch (requestError) {
       setReplacementAudioUrl('')
+      setPreviewConfirmed(false)
       setError(getVoiceErrorMessage(requestError, 'Unable to generate replacement audio'))
     } finally {
       setPendingAction(null)
@@ -146,6 +150,7 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
   function handleTargetChange(nextTargetId: string) {
     setSelectedTargetId(nextTargetId)
     setReplacementAudioUrl('')
+    setPreviewConfirmed(false)
     setError(null)
     setSuccessMessage(null)
   }
@@ -229,7 +234,10 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
           <input
             placeholder="Generated URL or already-uploaded authorized replacement"
             value={replacementAudioUrl}
-            onChange={(event) => setReplacementAudioUrl(event.target.value)}
+            onChange={(event) => {
+              setReplacementAudioUrl(event.target.value)
+              setPreviewConfirmed(false)
+            }}
           />
         </label>
       </div>
@@ -244,7 +252,19 @@ export function VoiceReplacementPanel({ lesson, lessonId, onApply }: VoiceReplac
       </div>
 
       {replacementAudioUrl.trim() ? (
-        <audio aria-label="Preview replacement audio" controls src={replacementAudioUrl.trim()} />
+        <div className="admin-field-grid">
+          <audio aria-label="Preview replacement audio" controls src={replacementAudioUrl.trim()} />
+          <label className="admin-field admin-consent-field">
+            <span>
+              <input
+                type="checkbox"
+                checked={previewConfirmed}
+                onChange={(event) => setPreviewConfirmed(event.target.checked)}
+              />{' '}
+              I have previewed and approve this replacement audio
+            </span>
+          </label>
+        </div>
       ) : null}
 
       <div className="admin-card-actions">

@@ -141,10 +141,15 @@ describe('AdminLessonEditorPage', () => {
 
     await user.click(screen.getByRole('button', { name: /generate replacement audio/i }))
 
+    const generateBody = JSON.parse(String(vi.mocked(fetch).mock.calls[2]![1]!.body)) as { consentConfirmed?: boolean }
+    expect(generateBody.consentConfirmed).toBe(true)
+
     const replacementInput = await screen.findByLabelText(/replacement audio url/i)
     expect(replacementInput).toHaveValue(generatedAudioUrl)
     expect(screen.getByLabelText(/preview replacement audio/i)).toHaveAttribute('src', generatedAudioUrl)
+    expect(screen.getByRole('button', { name: /apply to draft/i })).toBeDisabled()
 
+    await user.click(screen.getByLabelText(/i have previewed and approve this replacement audio/i))
     await user.click(screen.getByRole('button', { name: /apply to draft/i }))
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(4))

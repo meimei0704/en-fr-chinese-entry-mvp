@@ -166,6 +166,11 @@ export function createAdminVoiceHttpHandlers(
       return withAdminVoiceErrors(req, res, async () => {
         requireAdminAuthorization(req.headers, env)
         const body = parseBody(req.body)
+
+        if (body.consentConfirmed !== true) {
+          throw new AdminVoiceValidationError('Voice generation consent must be confirmed before replacement audio is created')
+        }
+
         const target = requireTarget(body.target)
         const generated = await services.provider.generateReplacementAudio({
           profileId: requireString(body.profileId, 'profileId'),
