@@ -2068,6 +2068,12 @@ h2 {
   border: 1px solid rgba(243, 165, 63, 0.28);
 }
 
+.admin-inline-feedback--success {
+  background: rgba(235, 247, 239, 0.92);
+  color: #17603b;
+  border: 1px solid rgba(69, 151, 103, 0.24);
+}
+
 .admin-preview-stack {
   display: grid;
   gap: 0.85rem;

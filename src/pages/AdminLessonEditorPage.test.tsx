@@ -283,6 +283,7 @@ describe('AdminLessonEditorPage', () => {
 
   it('publishes a changed module from the editor and refreshes module status/history', async () => {
     const user = userEvent.setup()
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
     const changedSnapshot = lessonSnapshot()
     changedSnapshot.draftLesson = {
       ...lesson,
@@ -331,6 +332,7 @@ describe('AdminLessonEditorPage', () => {
     await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
     await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
 
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/publish lesson meta/i))
     expect(fetch).toHaveBeenNthCalledWith(
       2,
       '/api/admin/content/publish',
@@ -340,11 +342,32 @@ describe('AdminLessonEditorPage', () => {
       }),
     )
     expect(await screen.findByText(/all modules published/i)).toBeVisible()
+    expect(screen.getByText(/lesson meta published successfully/i)).toBeVisible()
     expect(screen.getByText(/publish lesson meta draft/i)).toBeVisible()
+  })
+
+  it('does not publish when the confirmation is cancelled', async () => {
+    const user = userEvent.setup()
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    const changedSnapshot = lessonSnapshot()
+    changedSnapshot.modules[0] = {
+      ...changedSnapshot.modules[0]!,
+      hasUnpublishedChanges: true,
+    }
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(changedSnapshot))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/publish lesson meta/i))
+    expect(fetch).toHaveBeenCalledTimes(1)
   })
 
   it('disables publish controls while a module publish request is in flight', async () => {
     const user = userEvent.setup()
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
     const changedSnapshot = lessonSnapshot()
     changedSnapshot.modules[0] = {
       ...changedSnapshot.modules[0]!,
@@ -366,13 +389,37 @@ describe('AdminLessonEditorPage', () => {
     await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
 
     expect(screen.getByRole('button', { name: /publishing lesson meta/i })).toBeDisabled()
+    expect(screen.getAllByText(/publishing lesson meta/i)).toHaveLength(2)
 
     resolvePublishRequest?.(jsonResponse(lessonSnapshot()))
     expect(await screen.findByRole('button', { name: /publish lesson meta/i })).toBeEnabled()
   })
 
+  it('shows an action-specific publish failure message', async () => {
+    const user = userEvent.setup()
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    const changedSnapshot = lessonSnapshot()
+    changedSnapshot.modules[0] = {
+      ...changedSnapshot.modules[0]!,
+      hasUnpublishedChanges: true,
+    }
+
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(changedSnapshot))
+      .mockResolvedValueOnce(jsonResponse({ error: 'Publish service unavailable' }, { status: 503 }))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
+
+    expect(await screen.findByText(/failed to publish lesson meta/i)).toBeVisible()
+    expect(screen.getByText(/publish service unavailable/i)).toBeVisible()
+  })
+
   it('rolls back to a historical published revision from the editor history list', async () => {
     const user = userEvent.setup()
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
     const currentSnapshot = lessonSnapshot()
     currentSnapshot.publishedLesson = {
       ...lesson,
@@ -454,6 +501,7 @@ describe('AdminLessonEditorPage', () => {
     await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
     await user.click(screen.getByRole('button', { name: /rollback lesson meta to revision 88/i }))
 
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/revision 88/i))
     expect(fetch).toHaveBeenNthCalledWith(
       2,
       '/api/admin/content/rollback',
@@ -464,6 +512,58 @@ describe('AdminLessonEditorPage', () => {
     )
     await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
     expect(await screen.findByDisplayValue('Older published title')).toBeVisible()
+    expect(screen.getByText(/lesson meta rolled back to revision 88/i)).toBeVisible()
     expect(screen.getByText(/rollback to revision 88/i)).toBeVisible()
+  })
+
+  it('does not roll back when the confirmation is cancelled', async () => {
+    const user = userEvent.setup()
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    const currentSnapshot = lessonSnapshot()
+    currentSnapshot.modules[0] = {
+      ...currentSnapshot.modules[0]!,
+      hasUnpublishedChanges: false,
+      draftRevisionId: 302,
+      publishedRevisionId: 301,
+    }
+    currentSnapshot.publishedHistory.lessonMeta = [
+      {
+        revisionId: 301,
+        createdAt: '2026-07-28T01:00:00.000Z',
+        createdBy: 'admin-ui',
+        note: 'Current published title',
+        sourceRevisionId: 201,
+        payload: {
+          id: lesson.id,
+          title: lesson.title,
+          scenario: lesson.scenario,
+        },
+        lessonId: lesson.id,
+        moduleType: 'lessonMeta',
+      },
+      {
+        revisionId: 88,
+        createdAt: '2026-07-27T23:00:00.000Z',
+        createdBy: 'admin-ui',
+        note: 'Older published title',
+        sourceRevisionId: 77,
+        payload: {
+          id: lesson.id,
+          title: { ...lesson.title, en: 'Older published title' },
+          scenario: lesson.scenario,
+        },
+        lessonId: lesson.id,
+        moduleType: 'lessonMeta',
+      },
+    ]
+    vi.mocked(fetch).mockResolvedValueOnce(jsonResponse(currentSnapshot))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /rollback lesson meta to revision 88/i }))
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/revision 88/i))
+    expect(fetch).toHaveBeenCalledTimes(1)
   })
 })

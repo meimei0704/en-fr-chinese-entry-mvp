@@ -161,6 +161,10 @@ function getModuleSummary(snapshot: AdminLessonSnapshot, moduleType: ContentModu
   }
 }
 
+function getModuleLabel(moduleType: string) {
+  return moduleConfig[moduleType as ContentModuleType]?.label ?? moduleType
+}
+
 export function AdminLessonEditorPage() {
   const { lessonId = '' } = useParams()
   const [snapshot, setSnapshot] = useState<AdminLessonSnapshot | null>(null)
@@ -170,6 +174,10 @@ export function AdminLessonEditorPage() {
     moduleType: string
     kind: 'publish' | 'rollback'
     revisionId?: number
+  } | null>(null)
+  const [actionFeedback, setActionFeedback] = useState<{
+    kind: 'info' | 'success'
+    message: string
   } | null>(null)
   const [requiresAuth, setRequiresAuth] = useState(false)
   const [selectedModuleType, setSelectedModuleType] = useState<ContentModuleType | null>(null)
@@ -181,6 +189,7 @@ export function AdminLessonEditorPage() {
         setSnapshot(result)
         setError(null)
         setActionError(null)
+        setActionFeedback(null)
         setRequiresAuth(false)
         setHasUnsavedChanges(false)
       })
@@ -190,6 +199,7 @@ export function AdminLessonEditorPage() {
           setRequiresAuth(true)
           setError(requestError.message)
           setSnapshot(null)
+          setActionFeedback(null)
           setHasUnsavedChanges(false)
           return
         }
@@ -198,6 +208,7 @@ export function AdminLessonEditorPage() {
           requestError instanceof AdminApiError ? requestError.message : 'Unable to load lesson editor',
         )
         setSnapshot(null)
+        setActionFeedback(null)
         setHasUnsavedChanges(false)
       })
   }, [lessonId])
@@ -248,6 +259,7 @@ export function AdminLessonEditorPage() {
       setSnapshot(nextSnapshot)
       setError(null)
       setActionError(null)
+      setActionFeedback(null)
       setHasUnsavedChanges(false)
     } catch (requestError: unknown) {
       setActionError(
@@ -257,7 +269,18 @@ export function AdminLessonEditorPage() {
   }
 
   async function handlePublishModule(moduleType: string) {
+    const moduleLabel = getModuleLabel(moduleType)
+    const confirmed = window.confirm(
+      `Publish ${moduleLabel} now? This will make the current draft live for learners.`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
     setPendingHistoryAction({ moduleType, kind: 'publish' })
+    setActionError(null)
+    setActionFeedback({ kind: 'info', message: `Publishing ${moduleLabel.toLowerCase()}…` })
 
     try {
       const nextSnapshot = await publishAdminModule({
@@ -268,18 +291,36 @@ export function AdminLessonEditorPage() {
       setSnapshot(nextSnapshot)
       setError(null)
       setActionError(null)
+      setActionFeedback({ kind: 'success', message: `${moduleLabel} published successfully.` })
       setHasUnsavedChanges(false)
     } catch (requestError: unknown) {
       setActionError(
-        requestError instanceof AdminApiError ? requestError.message : `Unable to publish ${moduleType}`,
+        requestError instanceof AdminApiError
+          ? `Failed to publish ${moduleLabel}. ${requestError.message}`
+          : `Failed to publish ${moduleLabel}. Unable to publish ${moduleType}`,
       )
+      setActionFeedback(null)
     } finally {
       setPendingHistoryAction(null)
     }
   }
 
   async function handleRollbackModule(moduleType: string, publishedRevisionId: number) {
+    const moduleLabel = getModuleLabel(moduleType)
+    const confirmed = window.confirm(
+      `Rollback ${moduleLabel} to revision ${publishedRevisionId}? This will replace the currently published version for learners.`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
     setPendingHistoryAction({ moduleType, kind: 'rollback', revisionId: publishedRevisionId })
+    setActionError(null)
+    setActionFeedback({
+      kind: 'info',
+      message: `Rolling back ${moduleLabel.toLowerCase()} to revision ${publishedRevisionId}…`,
+    })
 
     try {
       const nextSnapshot = await rollbackAdminModule({
@@ -291,13 +332,18 @@ export function AdminLessonEditorPage() {
       setSnapshot(nextSnapshot)
       setError(null)
       setActionError(null)
+      setActionFeedback({
+        kind: 'success',
+        message: `${moduleLabel} rolled back to revision ${publishedRevisionId} successfully.`,
+      })
       setHasUnsavedChanges(false)
     } catch (requestError: unknown) {
       setActionError(
         requestError instanceof AdminApiError
-          ? requestError.message
-          : `Unable to roll back ${moduleType} to revision ${publishedRevisionId}`,
+          ? `Failed to roll back ${moduleLabel} to revision ${publishedRevisionId}. ${requestError.message}`
+          : `Failed to roll back ${moduleLabel} to revision ${publishedRevisionId}.`,
       )
+      setActionFeedback(null)
     } finally {
       setPendingHistoryAction(null)
     }
@@ -356,6 +402,7 @@ export function AdminLessonEditorPage() {
     setSnapshot(null)
     setError(null)
     setActionError(null)
+    setActionFeedback(null)
     setSelectedModuleType(null)
     setHasUnsavedChanges(false)
   }
@@ -618,6 +665,15 @@ export function AdminLessonEditorPage() {
         {hasUnsavedChanges ? (
           <p className="admin-inline-feedback admin-inline-feedback--error">
             You have unsaved changes in the open module. Save the draft or confirm before leaving this editor.
+          </p>
+        ) : null}
+        {actionFeedback ? (
+          <p
+            className={`admin-inline-feedback ${
+              actionFeedback.kind === 'success' ? 'admin-inline-feedback--success' : ''
+            }`}
+          >
+            {actionFeedback.message}
           </p>
         ) : null}
         {actionError ? <p className="admin-inline-feedback admin-inline-feedback--error">{actionError}</p> : null}
