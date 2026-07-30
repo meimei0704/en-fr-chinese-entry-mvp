@@ -19,6 +19,7 @@ const dialogueLineSchema = z.object({
   translation: localizedFieldSchema,
   explanation: bilingualExplanationSchema,
   audio: z.string(),
+  audioFallback: z.string().optional(),
 })
 
 const dialogueSectionSchema = z.object({
@@ -32,6 +33,7 @@ const sentencePatternSchema = z.object({
   meaning: localizedFieldSchema,
   example: z.string(),
   audio: z.string(),
+  audioFallback: z.string().optional(),
   explanation: bilingualExplanationSchema,
 })
 
@@ -40,6 +42,7 @@ const vocabularyItemSchema = z.object({
   hanzi: z.string(),
   pinyin: z.string(),
   audio: z.string(),
+  audioFallback: z.string().optional(),
   meaning: localizedFieldSchema,
   explanation: bilingualExplanationSchema,
 })
@@ -49,6 +52,7 @@ const pronunciationTipSchema = z.object({
   focus: localizedFieldSchema,
   audioText: z.string(),
   audio: z.string(),
+  audioFallback: z.string().optional(),
   tip: localizedFieldSchema,
   explanation: bilingualExplanationSchema,
 })
@@ -66,6 +70,7 @@ const practicePromptSchema = z.object({
   prompt: localizedFieldSchema,
   target: z.string(),
   audio: z.string(),
+  audioFallback: z.string().optional(),
   explanation: bilingualExplanationSchema,
 })
 
@@ -88,6 +93,7 @@ const shortInputPromptSchema = z.object({
   target: z.string(),
   explanation: bilingualExplanationSchema,
   audio: z.string(),
+  audioFallback: z.string().optional(),
 })
 
 export const lessonMetaPayloadSchema = z.object({

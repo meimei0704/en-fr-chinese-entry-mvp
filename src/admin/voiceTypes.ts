@@ -1,7 +1,9 @@
-import type { LessonContent } from '../content/types.js'
+import type { LessonContent, LessonId } from '../content/types.js'
 import type { ContentModuleType } from '../server/content/types.js'
 
-export type VoiceReplacementTargetId =
+export type VoiceAudioLanguage = 'zh-CN'
+
+export type VoiceAudioTargetId =
   | `dialogue:${string}`
   | `sentencePatterns:${string}`
   | `vocabulary:${string}`
@@ -11,19 +13,31 @@ export type VoiceReplacementTargetId =
   | `practice:reading:${string}`
   | `shortInput:${string}`
 
-export type VoiceReplacementPracticeSection = 'listening' | 'speaking' | 'reading'
+export type VoiceAudioPracticeSection = 'listening' | 'speaking' | 'reading'
 
-export interface VoiceReplacementTarget {
-  id: VoiceReplacementTargetId
-  moduleType: Exclude<ContentModuleType, 'lessonMeta' | 'hanziRecognition' | 'reviewCards'>
+export type VoiceAudioModuleType = Exclude<ContentModuleType, 'lessonMeta' | 'hanziRecognition' | 'reviewCards'>
+
+export interface VoiceAudioTarget {
+  targetId: VoiceAudioTargetId
+  lessonId: LessonId
+  moduleType: VoiceAudioModuleType
   itemId: string
   label: string
   text: string
-  audio: string
+  originalAudio: string
+  currentAudio: string
+  language: VoiceAudioLanguage
+  storageKey: string
 }
 
-export interface VoiceReplacementPatch {
-  moduleType: VoiceReplacementTarget['moduleType']
+export interface VoiceGenerationApprovedResult {
+  lessonId: string
+  targetId: VoiceAudioTargetId | string
+  generatedAudioUrl: string
+}
+
+export interface VoiceGenerationBatchPatch {
+  moduleType: VoiceAudioModuleType
   payload:
     | LessonContent['dialogue']
     | LessonContent['sentencePatterns']
@@ -32,6 +46,20 @@ export interface VoiceReplacementPatch {
     | LessonContent['practice']
     | LessonContent['shortInput']
 }
+
+export type VoiceReplacementTargetId = VoiceAudioTargetId
+export type VoiceReplacementPracticeSection = VoiceAudioPracticeSection
+
+export interface VoiceReplacementTarget {
+  id: VoiceReplacementTargetId
+  moduleType: VoiceAudioModuleType
+  itemId: string
+  label: string
+  text: string
+  audio: string
+}
+
+export type VoiceReplacementPatch = VoiceGenerationBatchPatch
 
 export interface CreateAdminVoiceSampleProfileInput {
   consentConfirmed: boolean
@@ -52,6 +80,9 @@ export interface GenerateAdminVoiceReplacementInput {
     lessonId: string
     targetId: string
     moduleType: string
+    originalAudio?: string
+    storageKey?: string
+    language?: VoiceAudioLanguage
   }
 }
 

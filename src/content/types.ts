@@ -44,6 +44,7 @@ export interface DialogueLine {
   translation: LocalizedField
   explanation: BilingualExplanation
   audio: string
+  audioFallback?: string
 }
 
 export interface DialogueSection {
@@ -57,6 +58,7 @@ export interface SentencePattern {
   meaning: LocalizedField
   example: string
   audio: string
+  audioFallback?: string
   explanation: BilingualExplanation
 }
 
@@ -65,6 +67,7 @@ export interface VocabularyItem {
   hanzi: string
   pinyin: string
   audio: string
+  audioFallback?: string
   meaning: LocalizedField
   explanation: BilingualExplanation
 }
@@ -74,6 +77,7 @@ export interface PronunciationTip {
   focus: LocalizedField
   audioText: string
   audio: string
+  audioFallback?: string
   tip: LocalizedField
   explanation: BilingualExplanation
 }
@@ -91,6 +95,7 @@ export interface PracticePrompt {
   prompt: LocalizedField
   target: string
   audio: string
+  audioFallback?: string
   explanation: BilingualExplanation
 }
 
@@ -113,6 +118,7 @@ export interface ShortInputPrompt {
   target: string
   explanation: BilingualExplanation
   audio: string
+  audioFallback?: string
 }
 
 export interface LessonContent {
