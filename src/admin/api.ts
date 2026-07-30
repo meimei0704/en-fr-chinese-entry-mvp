@@ -1,4 +1,10 @@
 import type { AdminLessonSnapshot, AdminLessonSummary } from './types.js'
+import type {
+  AdminVoiceGenerateResponse,
+  AdminVoiceSampleProfileResponse,
+  CreateAdminVoiceSampleProfileInput,
+  GenerateAdminVoiceReplacementInput,
+} from './voiceTypes.js'
 
 const adminAuthStorageKey = 'content-admin-basic-auth'
 const adminClientHeader = 'X-Content-Admin-Client'
@@ -105,6 +111,21 @@ export function rollbackAdminModule(input: {
   note?: string
 }) {
   return requestJson<AdminLessonSnapshot>('/api/admin/content/rollback', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  })
+}
+
+
+export function createAdminVoiceSampleProfile(input: CreateAdminVoiceSampleProfileInput) {
+  return requestJson<AdminVoiceSampleProfileResponse>('/api/admin/voice/samples', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  })
+}
+
+export function generateAdminVoiceReplacement(input: GenerateAdminVoiceReplacementInput) {
+  return requestJson<AdminVoiceGenerateResponse>('/api/admin/voice/generate', {
     method: 'POST',
     body: JSON.stringify(input),
   })

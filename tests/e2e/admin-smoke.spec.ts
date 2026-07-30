@@ -18,7 +18,10 @@ function buildLessonSummary(): AdminLessonSummary[] {
   ]
 }
 
-function buildLessonSnapshot(titleEn: string): AdminLessonSnapshot {
+function buildLessonSnapshot(
+  titleEn: string,
+  dialogueAudio = lesson.dialogue.lines[0]!.audio,
+): AdminLessonSnapshot {
   return {
     lessonId: lesson.id,
     slug: lesson.id,
@@ -29,6 +32,12 @@ function buildLessonSnapshot(titleEn: string): AdminLessonSnapshot {
       title: {
         ...lesson.title,
         en: titleEn,
+      },
+      dialogue: {
+        ...lesson.dialogue,
+        lines: lesson.dialogue.lines.map((line, index) =>
+          index === 0 ? { ...line, audio: dialogueAudio } : line,
+        ),
       },
     },
     publishedLesson: lesson,
@@ -77,6 +86,8 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
 }) => {
   let dialogCount = 0
   let draftTitleEn = typeof lesson.title === 'string' ? lesson.title : lesson.title.en
+  let dialogueAudio = lesson.dialogue.lines[0]!.audio
+  const generatedVoiceAudio = '/voice/generated/self-intro-line-01.mp3'
 
   page.on('dialog', async (dialog) => {
     dialogCount += 1
@@ -106,7 +117,7 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(buildLessonSnapshot(draftTitleEn)),
+        body: JSON.stringify(buildLessonSnapshot(draftTitleEn, dialogueAudio)),
       })
       return
     }
@@ -115,6 +126,68 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(buildLessonSummary()),
+    })
+  })
+
+
+  await page.route('**/api/admin/voice/samples', async (route) => {
+    const request = route.request()
+    const auth = await request.headerValue('authorization')
+    const client = await request.headerValue('x-content-admin-client')
+
+    expect(client).toBe('spa')
+
+    if (!auth) {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Admin authentication required' }),
+      })
+      return
+    }
+
+    expect(auth).toBe(encodedAdminAuth)
+    const body = JSON.parse(request.postData() ?? '{}') as { consentConfirmed?: boolean; sampleAudioUrl?: string }
+    expect(body.consentConfirmed).toBe(true)
+    expect(body.sampleAudioUrl).toBe('https://storage.example/authorized-sample.wav')
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ profileId: 'profile_self_intro' }),
+    })
+  })
+
+  await page.route('**/api/admin/voice/generate', async (route) => {
+    const request = route.request()
+    const auth = await request.headerValue('authorization')
+    const client = await request.headerValue('x-content-admin-client')
+
+    expect(client).toBe('spa')
+
+    if (!auth) {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Admin authentication required' }),
+      })
+      return
+    }
+
+    expect(auth).toBe(encodedAdminAuth)
+    const body = JSON.parse(request.postData() ?? '{}') as {
+      profileId?: string
+      text?: string
+      target?: { lessonId?: string; moduleType?: string; targetId?: string }
+    }
+    expect(body.profileId).toBe('profile_self_intro')
+    expect(body.text).toBe(lesson.dialogue.lines[0]!.hanzi)
+    expect(body.target).toMatchObject({ lessonId: lesson.id, moduleType: 'dialogue' })
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ audioUrl: generatedVoiceAudio }),
     })
   })
 
@@ -127,18 +200,35 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
     expect(client).toBe('spa')
 
     const body = JSON.parse(request.postData() ?? '{}') as {
-      payload?: { title?: { en?: string } }
+      moduleType?: string
+      payload?: { title?: { en?: string }; lines?: Array<{ audio?: string }> }
     }
     draftTitleEn = body.payload?.title?.en ?? draftTitleEn
+    if (body.moduleType === 'dialogue') {
+      dialogueAudio = body.payload?.lines?.[0]?.audio ?? dialogueAudio
+    }
 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(buildLessonSnapshot(draftTitleEn)),
+      body: JSON.stringify(buildLessonSnapshot(draftTitleEn, dialogueAudio)),
     })
   })
 
   await page.goto('/admin')
+
+  const unauthVoiceStatus = await page.evaluate(async () => {
+    const response = await fetch('/api/admin/voice/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Content-Admin-Client': 'spa',
+      },
+      body: JSON.stringify({ profileId: 'missing', text: '你好', target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' } }),
+    })
+    return response.status
+  })
+  expect(unauthVoiceStatus).toBe(401)
 
   await expect(page.getByRole('heading', { name: /admin sign in required/i })).toBeVisible()
   expect(dialogCount).toBe(0)
@@ -162,5 +252,17 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
 
   await expect(titleInput).toHaveValue('Edited in browser smoke')
   await expect(page.getByTestId('admin-editor-side-column').getByText('Edited in browser smoke')).toBeVisible()
+
+  await page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i).check()
+  await page.getByLabel(/voice sample url/i).fill('https://storage.example/authorized-sample.wav')
+  await page.getByRole('button', { name: /create voice profile/i }).click()
+  await expect(page.getByText(/voice profile ready/i)).toBeVisible()
+  await page.getByRole('button', { name: /generate replacement audio/i }).click()
+  await expect(page.getByLabel(/replacement audio url/i)).toHaveValue(generatedVoiceAudio)
+  await expect(page.getByLabel(/preview replacement audio/i)).toHaveAttribute('src', generatedVoiceAudio)
+  await page.getByRole('button', { name: /apply to draft/i }).click()
+  await expect(page.getByText(/voice replacement saved to dialogue draft/i)).toBeVisible()
+  await expect(page.getByTestId('admin-editor-side-column').getByText(generatedVoiceAudio)).toBeVisible()
+
   expect(dialogCount).toBe(0)
 })

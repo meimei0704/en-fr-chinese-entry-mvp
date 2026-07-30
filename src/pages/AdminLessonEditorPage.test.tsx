@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -78,6 +78,113 @@ describe('AdminLessonEditorPage', () => {
     expect(screen.queryByLabelText(/dialogue title \(en\)/i)).not.toBeInTheDocument()
     expect(screen.getByText(/1 module pending publish/i)).toBeVisible()
     expect(fetch).toHaveBeenCalledWith(`/api/admin/content/lessons?lessonId=${lesson.id}`, expect.anything())
+  })
+
+
+
+  it('renders the admin-only voice replacement panel in the lesson editor side rail', async () => {
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    expect(await screen.findByRole('heading', { level: 2, name: /voice replacement/i })).toBeVisible()
+    expect(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i)).toBeVisible()
+    expect(screen.getByText(/apply saves a draft only/i)).toBeVisible()
+  })
+
+  it('keeps voice sample upload and generation disabled until authorization consent is confirmed', async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 2, name: /voice replacement/i })
+    await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
+
+    expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /generate replacement audio/i })).toBeDisabled()
+  })
+
+  it('generates a replacement preview and applies only one target audio URL to the draft module', async () => {
+    const user = userEvent.setup()
+    const updatedSnapshot = lessonSnapshot()
+    const generatedAudioUrl = '/voice/generated/self-intro-line-01.mp3'
+    updatedSnapshot.draftLesson = {
+      ...lesson,
+      dialogue: {
+        ...lesson.dialogue,
+        lines: lesson.dialogue.lines.map((line, index) =>
+          index === 0 ? { ...line, audio: generatedAudioUrl } : line,
+        ),
+      },
+    }
+    updatedSnapshot.modules[1] = {
+      ...updatedSnapshot.modules[1]!,
+      hasUnpublishedChanges: true,
+      draftRevisionId: 204,
+    }
+
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
+      .mockResolvedValueOnce(jsonResponse({ profileId: 'profile_self_intro' }))
+      .mockResolvedValueOnce(jsonResponse({ audioUrl: generatedAudioUrl }))
+      .mockResolvedValueOnce(jsonResponse(updatedSnapshot))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 2, name: /voice replacement/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
+    await user.click(screen.getByRole('button', { name: /create voice profile/i }))
+
+    expect(await screen.findByText(/voice profile ready/i)).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: /generate replacement audio/i }))
+
+    const replacementInput = await screen.findByLabelText(/replacement audio url/i)
+    expect(replacementInput).toHaveValue(generatedAudioUrl)
+    expect(screen.getByLabelText(/preview replacement audio/i)).toHaveAttribute('src', generatedAudioUrl)
+
+    await user.click(screen.getByRole('button', { name: /apply to draft/i }))
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(4))
+    expect(fetch).toHaveBeenNthCalledWith(
+      4,
+      '/api/admin/content/draft',
+      expect.objectContaining({ method: 'PUT' }),
+    )
+    const draftBody = JSON.parse(String(vi.mocked(fetch).mock.calls[3]![1]!.body)) as {
+      moduleType: string
+      payload: typeof lesson.dialogue
+    }
+    expect(draftBody.moduleType).toBe('dialogue')
+    expect(draftBody.payload.lines[0]!.audio).toBe(generatedAudioUrl)
+    expect(draftBody.payload.lines[1]).toEqual(lesson.dialogue.lines[1])
+    expect(draftBody.payload.title).toEqual(lesson.dialogue.title)
+    expect(await screen.findByText(/voice replacement saved to dialogue draft/i)).toBeVisible()
+  })
+
+  it('shows a provider configuration error without changing the selected original audio URL', async () => {
+    const user = userEvent.setup()
+    const originalAudioUrl = lesson.dialogue.lines[0]!.audio
+
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
+      .mockResolvedValueOnce(jsonResponse({ profileId: 'profile_self_intro' }))
+      .mockResolvedValueOnce(jsonResponse({ error: 'Voice cloning provider is not configured' }, { status: 503 }))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 2, name: /voice replacement/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
+    await user.click(screen.getByRole('button', { name: /create voice profile/i }))
+    await user.click(await screen.findByRole('button', { name: /generate replacement audio/i }))
+
+    expect(await screen.findByText(/voice cloning provider is not configured/i)).toBeVisible()
+    expect(screen.getByText(originalAudioUrl)).toBeVisible()
+    expect(screen.getByLabelText(/replacement audio url/i)).toHaveValue('')
+    expect(fetch).toHaveBeenCalledTimes(3)
   })
 
   it('opens one module editor at a time from the module directory', async () => {

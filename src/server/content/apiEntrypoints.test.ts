@@ -24,6 +24,8 @@ async function emitContentApiEntrypoints(outDir: string) {
       'api/admin/content/lessons.ts',
       'api/admin/content/publish.ts',
       'api/admin/content/rollback.ts',
+      'api/admin/voice/generate.ts',
+      'api/admin/voice/samples.ts',
       'api/content/course.ts',
       'api/content/lessons.ts',
       'src/content/types.ts',
@@ -36,6 +38,9 @@ async function emitContentApiEntrypoints(outDir: string) {
       'src/server/content/publicContent.ts',
       'src/server/content/repository.ts',
       'src/server/content/types.ts',
+      'src/server/voice/adminHttp.ts',
+      'src/server/voice/provider.ts',
+      'src/server/voice/storage.ts',
     ],
     {
       esModuleInterop: true,
@@ -58,12 +63,12 @@ async function emitContentApiEntrypoints(outDir: string) {
   await symlink(resolve('node_modules'), join(outDir, 'node_modules'), 'dir')
 }
 
-async function runEmittedApiHandlerImport(outDir: string, handlerPath: string) {
+async function runEmittedApiHandlerImport(outDir: string, handlerPath: string, method = 'GET') {
   const handlerUrl = pathToFileURL(join(outDir, handlerPath)).href
   const script = `
     const mod = await import(${JSON.stringify(handlerUrl)})
     const handler = mod.default
-    const req = { method: 'GET', query: { lessonId: 'self-intro' } }
+    const req = { method: ${JSON.stringify(method)}, query: { lessonId: 'self-intro' } }
     const res = {
       statusCode: 200,
       body: undefined,
@@ -104,6 +109,8 @@ describe('Vercel content API entrypoints', () => {
       const adminDraft = await runEmittedApiHandlerImport(outDir, 'api/admin/content/draft.js')
       const adminPublish = await runEmittedApiHandlerImport(outDir, 'api/admin/content/publish.js')
       const adminRollback = await runEmittedApiHandlerImport(outDir, 'api/admin/content/rollback.js')
+      const adminVoiceGenerate = await runEmittedApiHandlerImport(outDir, 'api/admin/voice/generate.js', 'POST')
+      const adminVoiceSamples = await runEmittedApiHandlerImport(outDir, 'api/admin/voice/samples.js', 'POST')
       const course = await runEmittedApiHandlerImport(outDir, 'api/content/course.js')
       const lesson = await runEmittedApiHandlerImport(outDir, 'api/content/lessons.js')
 
@@ -122,6 +129,14 @@ describe('Vercel content API entrypoints', () => {
       expect(JSON.parse(adminRollback.stdout)).toMatchObject({
         statusCode: 503,
         body: { error: 'Content admin database is not configured' },
+      })
+      expect(JSON.parse(adminVoiceGenerate.stdout)).toMatchObject({
+        statusCode: 503,
+        body: { error: 'Content admin authentication is not configured' },
+      })
+      expect(JSON.parse(adminVoiceSamples.stdout)).toMatchObject({
+        statusCode: 503,
+        body: { error: 'Content admin authentication is not configured' },
       })
       expect(JSON.parse(course.stdout)).toMatchObject({
         statusCode: 503,
