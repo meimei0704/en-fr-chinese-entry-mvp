@@ -173,6 +173,34 @@ function installMediaRecorderMock(chunkText = 'recorded mandarin sample '.repeat
   return { getUserMedia, stopTrack }
 }
 
+function installPendingMediaRecorderMock() {
+  const getUserMedia = vi.fn(() => new Promise<MediaStream>(() => undefined))
+
+  class MockMediaRecorder {
+    readonly mimeType = 'audio/webm'
+    state: RecordingState = 'inactive'
+    ondataavailable: ((event: { data: Blob }) => void) | null = null
+    onstop: (() => void) | null = null
+    onerror: ((event: { error?: Error }) => void) | null = null
+
+    constructor(readonly stream: MediaStream) {}
+
+    start() {
+      this.state = 'recording'
+    }
+
+    stop() {
+      this.state = 'inactive'
+      this.onstop?.()
+    }
+  }
+
+  vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+  stubMediaDevices({ getUserMedia } as unknown as MediaDevices)
+
+  return { getUserMedia }
+}
+
 describe('AdminVoiceGenerationPage', () => {
   beforeEach(() => {
     vi.stubGlobal('fetch', vi.fn())
@@ -213,9 +241,26 @@ describe('AdminVoiceGenerationPage', () => {
 
     const startRecordingButton = screen.getByRole('button', { name: /start recording/i })
     expect(startRecordingButton).toBeDisabled()
+    expect(screen.getByText(/confirm authorization to enable recording/i)).toBeVisible()
 
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     expect(startRecordingButton).toBeEnabled()
+  })
+
+  it('shows immediate feedback while waiting for the browser microphone prompt', async () => {
+    const user = userEvent.setup()
+    const { getUserMedia } = installPendingMediaRecorderMock()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+
+    expect(getUserMedia).toHaveBeenCalledWith({ audio: true })
+    expect(screen.getByRole('button', { name: /requesting microphone/i })).toBeDisabled()
+    expect(screen.getByText(/check your browser microphone prompt/i)).toBeVisible()
   })
 
   it('records a browser microphone sample and submits it as base64 when creating the profile', async () => {

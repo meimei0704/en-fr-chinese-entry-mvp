@@ -27,7 +27,7 @@ interface VoiceGenerationRow {
   error: string | null
 }
 
-type VoiceSampleRecordingState = 'idle' | 'recording' | 'recorded'
+type VoiceSampleRecordingState = 'idle' | 'requesting' | 'recording' | 'recorded'
 const MIN_RECORDED_SAMPLE_DURATION_MS = 10_000
 const MIN_RECORDED_SAMPLE_BYTES = 1_024
 
@@ -116,7 +116,8 @@ export function AdminVoiceGenerationPage() {
   }, [rows])
   const hasSampleAudio = sampleAudioUrl.trim() !== '' || sampleAudioBase64.trim() !== ''
   const canCreateProfile = consentConfirmed && hasSampleAudio && pendingAction === null
-  const canStartRecording = consentConfirmed && pendingAction === null && recordingState !== 'recording'
+  const canStartRecording =
+    consentConfirmed && pendingAction === null && recordingState !== 'requesting' && recordingState !== 'recording'
   const canGenerate = consentConfirmed && profileId.trim() !== '' && pendingAction === null
   const canGenerateAll = canGenerate && rows.some((row) => row.status === 'pending' || row.status === 'failed')
   const approvedRows = rows.filter((row) => row.status === 'approved' && row.generatedAudioUrl.trim() !== '')
@@ -239,6 +240,8 @@ export function AdminVoiceGenerationPage() {
       setRecorderError('Recording is not supported by this browser. Please upload a voice sample file instead.')
       return
     }
+
+    setRecordingState('requesting')
 
     try {
       const stream = await window.navigator.mediaDevices.getUserMedia({ audio: true })
@@ -611,7 +614,7 @@ export function AdminVoiceGenerationPage() {
               onClick={handleStartRecording}
               disabled={!canStartRecording}
             >
-              Start recording
+              {recordingState === 'requesting' ? 'Requesting microphone…' : 'Start recording'}
             </button>
             {recordingState === 'recording' ? (
               <button type="button" className="primary-button" onClick={handleStopRecording}>
@@ -626,9 +629,13 @@ export function AdminVoiceGenerationPage() {
             <span className="muted-text">
               {recordingState === 'recording'
                 ? 'Recording… read the prompt or your own Mandarin text.'
-                : recordedSampleUrl
+                : recordingState === 'requesting'
+                  ? 'Check your browser microphone prompt and allow access to start recording.'
+                  : recordedSampleUrl
                   ? 'Recorded sample ready. Preview it before creating the profile.'
-                  : 'Start recording after consent, or use the URL/file fallback below.'}
+                  : consentConfirmed
+                    ? 'Start recording now, or use the URL/file fallback below.'
+                    : 'Confirm authorization to enable recording, or use the URL/file fallback below.'}
             </span>
           </div>
           {recordedSampleUrl ? (
