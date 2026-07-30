@@ -53,6 +53,28 @@ describe('SpeechButton', () => {
     })
   })
 
+
+  it('passes generated and fallback audio sources to the playback helper', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <SpeechButton
+        label="Play Chinese"
+        text="你好"
+        audioSrc="/voice/generated/self-intro/line-01.mp3"
+        fallbackAudioSrc="/audio/self-intro/line-01.mp3"
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Play Chinese' }))
+
+    expect(speakChineseMock).toHaveBeenCalledWith({
+      text: '你好',
+      audioSrc: '/voice/generated/self-intro/line-01.mp3',
+      fallbackAudioSrc: '/audio/self-intro/line-01.mp3',
+    })
+  })
+
   it('preserves native disabled behavior for unavailable playback entry points', async () => {
     const user = userEvent.setup()
 

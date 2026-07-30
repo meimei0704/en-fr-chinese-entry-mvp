@@ -124,6 +124,36 @@ describe('speakChinese', () => {
     })
   })
 
+
+  it('tries generated audio, original fallback audio, then browser TTS', () => {
+    const { audioConstructor, instances, play } = installMockAudio()
+
+    const didStart = speakChinese({
+      text: '你好，我来旅游。',
+      audioSrc: '/voice/generated/self-intro/line-01.mp3',
+      fallbackAudioSrc: '/audio/self-intro/line-01.mp3',
+    })
+
+    expect(didStart).toBe(true)
+    expect(audioConstructor).toHaveBeenNthCalledWith(1, '/voice/generated/self-intro/line-01.mp3')
+    expect(play).toHaveBeenCalledTimes(1)
+
+    instances[0]!.listeners.error()
+
+    expect(audioConstructor).toHaveBeenNthCalledWith(2, '/audio/self-intro/line-01.mp3')
+    expect(play).toHaveBeenCalledTimes(2)
+    expect(speak).not.toHaveBeenCalled()
+
+    instances[1]!.listeners.error()
+
+    expect(speak).toHaveBeenCalledTimes(1)
+    expect(speak.mock.calls[0]?.[0]).toMatchObject({
+      text: '你好，我来旅游。',
+      lang: 'zh-CN',
+      rate: 0.9,
+    })
+  })
+
   it('uses browser TTS when no audio source is available', () => {
     const didStart = speakChinese({ text: '我要一瓶水。' })
 

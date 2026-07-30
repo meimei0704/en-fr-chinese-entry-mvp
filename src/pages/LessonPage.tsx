@@ -135,6 +135,7 @@ export function LessonPage() {
                     label={copy.lessonPage.listenChinese}
                     text={pattern.example}
                     audioSrc={pattern.audio}
+                    fallbackAudioSrc={pattern.audioFallback}
                   />
                   <ExplanationBlock explanation={pattern.explanation} language={selectedLanguage} />
                 </article>
@@ -154,6 +155,7 @@ export function LessonPage() {
                     label={copy.lessonPage.listenChinese}
                     text={item.hanzi}
                     audioSrc={item.audio}
+                    fallbackAudioSrc={item.audioFallback}
                   />
                   <p className="muted-text">{getLocalizedText(item.meaning, selectedLanguage)}</p>
                   <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
@@ -174,6 +176,7 @@ export function LessonPage() {
                     label={copy.lessonPage.listenChinese}
                     text={tip.audioText}
                     audioSrc={tip.audio}
+                    fallbackAudioSrc={tip.audioFallback}
                   />
                   <ExplanationBlock explanation={tip.explanation} language={selectedLanguage} />
                 </article>

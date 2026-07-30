@@ -79,6 +79,7 @@ export function ShortInputPage() {
             label={copy.shortInputPage.listenChinese}
             text={currentLesson.shortInput.target}
             audioSrc={currentLesson.shortInput.audio}
+            fallbackAudioSrc={currentLesson.shortInput.audioFallback}
           />
           <p style={{ marginTop: '0.75rem', fontWeight: 700 }}>
             {copy.shortInputPage.targetAnswer}: {currentLesson.shortInput.target}

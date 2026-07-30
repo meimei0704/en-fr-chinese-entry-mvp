@@ -29,6 +29,7 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
             label={copy.lessonPage.listenChinese}
             text={line.hanzi}
             audioSrc={line.audio}
+            fallbackAudioSrc={line.audioFallback}
           />
           <ExplanationBlock explanation={line.explanation} language={language} />
         </article>

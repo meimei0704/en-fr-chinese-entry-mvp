@@ -10,6 +10,14 @@ const adminAuthEnv = {
 }
 
 const adminAuthHeader = 'Basic ZWRpdG9yOnNlY3JldA=='
+const batchTarget = {
+  lessonId: 'self-intro',
+  targetId: 'dialogue:line-1',
+  moduleType: 'dialogue',
+  originalAudio: '/audio/self-intro/line-01.mp3',
+  storageKey: 'audio/self-intro/line-01.mp3',
+  language: 'zh-CN',
+}
 
 function createResponseRecorder() {
   return {
@@ -57,7 +65,7 @@ describe('admin voice HTTP handlers', () => {
       {
         method: 'POST',
         headers: { 'x-content-admin-client': 'spa' },
-        body: { profileId: 'profile_self_intro', text: '你好', target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' } },
+        body: { profileId: 'profile_self_intro', text: '你好', target: batchTarget },
       },
       spaResponse,
     )
@@ -99,7 +107,7 @@ describe('admin voice HTTP handlers', () => {
         body: {
           profileId: 'profile_self_intro',
           text: '你好',
-          target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+          target: batchTarget,
         },
       },
       response,
@@ -107,6 +115,32 @@ describe('admin voice HTTP handlers', () => {
 
     expect(response.statusCode).toBe(400)
     expect(response.body).toEqual({ error: 'Voice generation consent must be confirmed before replacement audio is created' })
+    expect(provider.generateReplacementAudio).not.toHaveBeenCalled()
+    expect(storage.saveGeneratedAudio).not.toHaveBeenCalled()
+  })
+
+
+  it('requires batch target metadata before generating audio', async () => {
+    const { provider, storage } = createFakeServices()
+    const handlers = createAdminVoiceHttpHandlers({ provider, storage }, adminAuthEnv)
+    const response = createResponseRecorder()
+
+    await handlers.generate(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: {
+          consentConfirmed: true,
+          profileId: 'profile_self_intro',
+          text: '你好',
+          target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+        },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body).toEqual({ error: 'Missing target.originalAudio' })
     expect(provider.generateReplacementAudio).not.toHaveBeenCalled()
     expect(storage.saveGeneratedAudio).not.toHaveBeenCalled()
   })
@@ -135,7 +169,7 @@ describe('admin voice HTTP handlers', () => {
           consentConfirmed: true,
           profileId: 'profile_self_intro',
           text: '你好',
-          target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+          target: batchTarget,
         },
       },
       generateResponse,
@@ -175,7 +209,7 @@ describe('admin voice HTTP handlers', () => {
           consentConfirmed: true,
           profileId: 'profile_self_intro',
           text: '你好，我叫崔秋',
-          target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+          target: batchTarget,
         },
       },
       generateResponse,
@@ -184,12 +218,16 @@ describe('admin voice HTTP handlers', () => {
     expect(generateResponse.statusCode).toBe(200)
     expect(generateResponse.body).toEqual({ audioUrl: '/voice/generated/self-intro-line-01.mp3' })
     expect(provider.generateReplacementAudio).toHaveBeenCalledWith(
-      expect.objectContaining({ profileId: 'profile_self_intro', text: '你好，我叫崔秋' }),
+      expect.objectContaining({
+        profileId: 'profile_self_intro',
+        text: '你好，我叫崔秋',
+        target: batchTarget,
+      }),
     )
     expect(storage.saveGeneratedAudio).toHaveBeenCalledWith(
       expect.objectContaining({
         profileId: 'profile_self_intro',
-        target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+        target: batchTarget,
         audioBase64: 'ZmFrZS1tcDM=',
         contentType: 'audio/mpeg',
       }),

@@ -14,6 +14,9 @@ export interface GenerateReplacementAudioInput {
     lessonId: string
     targetId: string
     moduleType: string
+    originalAudio: string
+    storageKey: string
+    language: 'zh-CN'
   }
 }
 

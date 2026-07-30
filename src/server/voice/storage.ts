@@ -14,6 +14,9 @@ export interface SaveGeneratedAudioInput {
     lessonId: string
     targetId: string
     moduleType: string
+    originalAudio: string
+    storageKey: string
+    language: 'zh-CN'
   }
   audioBase64: string
   contentType: string

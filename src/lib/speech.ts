@@ -1,6 +1,7 @@
 interface SpeakChineseOptions {
   text: string
   audioSrc?: string
+  fallbackAudioSrc?: string
 }
 
 let activeAudio: HTMLAudioElement | null = null
@@ -42,7 +43,7 @@ function speakWithBrowserTts(text: string) {
   return true
 }
 
-function playAudioSrc(audioSrc: string, text: string) {
+function playAudioSrc(audioSrc: string, text: string, fallbackAudioSrc?: string) {
   if (typeof Audio === 'undefined') {
     return speakWithBrowserTts(text)
   }
@@ -63,28 +64,34 @@ function playAudioSrc(audioSrc: string, text: string) {
     }
   }
 
-  function fallbackToBrowserTts() {
+  function fallbackFromAudio() {
     if (didFallback) {
       return
     }
 
     didFallback = true
     clearIfCurrent()
+
+    if (fallbackAudioSrc && fallbackAudioSrc !== audioSrc) {
+      playAudioSrc(fallbackAudioSrc, text)
+      return
+    }
+
     speakWithBrowserTts(text)
   }
 
   audio.addEventListener('ended', clearIfCurrent, { once: true })
-  audio.addEventListener('error', fallbackToBrowserTts, { once: true })
+  audio.addEventListener('error', fallbackFromAudio, { once: true })
 
   const playResult = audio.play()
-  playResult?.catch(fallbackToBrowserTts)
+  playResult?.catch(fallbackFromAudio)
 
   return true
 }
 
-export function speakChinese({ text, audioSrc }: SpeakChineseOptions) {
+export function speakChinese({ text, audioSrc, fallbackAudioSrc }: SpeakChineseOptions) {
   if (audioSrc) {
-    return playAudioSrc(audioSrc, text)
+    return playAudioSrc(audioSrc, text, fallbackAudioSrc)
   }
 
   return speakWithBrowserTts(text)

@@ -43,7 +43,7 @@ function PracticeCard({
         {answerLabel}: {answer}
       </p>
       <div style={{ marginTop: '0.75rem' }}>
-        <SpeechButton label={listenLabel} text={answer} audioSrc={prompt.audio} />
+        <SpeechButton label={listenLabel} text={answer} audioSrc={prompt.audio} fallbackAudioSrc={prompt.audioFallback} />
       </div>
       <ExplanationBlock explanation={prompt.explanation} language={language} />
     </article>
@@ -142,6 +142,7 @@ export function PracticePage() {
                 label={copy.practicePage.listenChinese}
                 text={speakingPrompt.target}
                 audioSrc={speakingPrompt.audio}
+                fallbackAudioSrc={speakingPrompt.audioFallback}
               />
             </div>
             <p style={{ margin: '0.75rem 0 0' }}>{copy.practicePage.selfCheck}</p>

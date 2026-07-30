@@ -62,10 +62,22 @@ function requireTarget(value: unknown) {
   }
 
   const target = value as Record<string, unknown>
-  return {
+  const parsedTarget = {
     lessonId: requireString(target.lessonId, 'target.lessonId'),
     targetId: requireString(target.targetId, 'target.targetId'),
     moduleType: requireString(target.moduleType, 'target.moduleType'),
+    originalAudio: requireString(target.originalAudio, 'target.originalAudio'),
+    storageKey: requireString(target.storageKey, 'target.storageKey'),
+    language: requireString(target.language, 'target.language'),
+  }
+
+  if (parsedTarget.language !== 'zh-CN') {
+    throw new AdminVoiceValidationError('Voice generation only supports zh-CN targets in this batch')
+  }
+
+  return {
+    ...parsedTarget,
+    language: 'zh-CN' as const,
   }
 }
 
