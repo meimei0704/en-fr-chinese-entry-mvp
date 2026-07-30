@@ -28,9 +28,15 @@ interface VoiceGenerationRow {
 }
 
 type VoiceSampleRecordingState = 'idle' | 'recording' | 'recorded'
+const MIN_RECORDED_SAMPLE_DURATION_MS = 10_000
+const MIN_RECORDED_SAMPLE_BYTES = 1_024
 
 function getVoiceErrorMessage(error: unknown, fallback: string) {
   return error instanceof AdminApiError ? error.message : fallback
+}
+
+function getRecordingNowMs() {
+  return typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now()
 }
 
 function buildRows(lessons: readonly LessonContent[]): VoiceGenerationRow[] {
@@ -93,6 +99,7 @@ export function AdminVoiceGenerationPage() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const recordedChunksRef = useRef<Blob[]>([])
   const recordingStreamRef = useRef<MediaStream | null>(null)
+  const recordingStartedAtMsRef = useRef<number | null>(null)
 
   const draftLessons = useMemo(
     () => snapshots.map((snapshot) => snapshot.draftLesson).filter((lesson): lesson is LessonContent => lesson !== null),
@@ -175,20 +182,32 @@ export function AdminVoiceGenerationPage() {
     setRecordedSampleUrl('')
     setSampleAudioBase64('')
     recordedChunksRef.current = []
+    recordingStartedAtMsRef.current = null
   }
 
   async function finalizeRecordedSample(recorder: MediaRecorder) {
     const chunks = recordedChunksRef.current
+    const recordedDurationMs =
+      recordingStartedAtMsRef.current === null ? 0 : getRecordingNowMs() - recordingStartedAtMsRef.current
     stopRecordingStream()
     mediaRecorderRef.current = null
 
     if (chunks.length === 0) {
+      recordingStartedAtMsRef.current = null
       setRecordingState('idle')
       setRecorderError('No voice sample was captured. Please record again.')
       return
     }
 
     const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' })
+
+    if (recordedDurationMs < MIN_RECORDED_SAMPLE_DURATION_MS || blob.size < MIN_RECORDED_SAMPLE_BYTES) {
+      clearRecordedSample()
+      setRecordingState('idle')
+      setRecorderError('Recording is too short or empty. Please record a clear 30–60 second Mandarin sample.')
+      return
+    }
+
     const objectUrl = typeof URL.createObjectURL === 'function' ? URL.createObjectURL(blob) : ''
     setRecordedSampleUrl(objectUrl)
 
@@ -196,6 +215,7 @@ export function AdminVoiceGenerationPage() {
       const base64 = await readBlobAsBase64(blob)
       setSampleAudioBase64(base64)
       setSampleAudioUrl('')
+      recordingStartedAtMsRef.current = null
       setRecordingState('recorded')
       setRecorderError(null)
     } catch (sampleError) {
@@ -244,10 +264,12 @@ export function AdminVoiceGenerationPage() {
       }
 
       recorder.start()
+      recordingStartedAtMsRef.current = getRecordingNowMs()
       setRecordingState('recording')
     } catch {
       stopRecordingStream()
       mediaRecorderRef.current = null
+      recordingStartedAtMsRef.current = null
       setRecordingState('idle')
       setRecorderError('Unable to access microphone. Check browser permission and try again, or upload a file.')
     }
@@ -271,6 +293,7 @@ export function AdminVoiceGenerationPage() {
     }
     stopRecordingStream()
     mediaRecorderRef.current = null
+    recordingStartedAtMsRef.current = null
     clearRecordedSample()
     setRecordingState('idle')
     setRecorderError(null)

@@ -141,7 +141,7 @@ function installObjectUrlMock() {
   })
 }
 
-function installMediaRecorderMock() {
+function installMediaRecorderMock(chunkText = 'recorded mandarin sample '.repeat(80)) {
   const stopTrack = vi.fn()
   const getUserMedia = vi.fn().mockResolvedValue({
     getTracks: () => [{ stop: stopTrack }],
@@ -162,7 +162,7 @@ function installMediaRecorderMock() {
 
     stop() {
       this.state = 'inactive'
-      this.ondataavailable?.({ data: new Blob(['recorded mandarin sample'], { type: 'audio/webm' }) })
+      this.ondataavailable?.({ data: new Blob([chunkText], { type: 'audio/webm' }) })
       this.onstop?.()
     }
   }
@@ -220,6 +220,8 @@ describe('AdminVoiceGenerationPage', () => {
 
   it('records a browser microphone sample and submits it as base64 when creating the profile', async () => {
     const user = userEvent.setup()
+    let mockNow = 0
+    vi.spyOn(performance, 'now').mockImplementation(() => mockNow)
     const { getUserMedia, stopTrack } = installMediaRecorderMock()
     installObjectUrlMock()
     installBatchFetchMock()
@@ -233,6 +235,7 @@ describe('AdminVoiceGenerationPage', () => {
     expect(getUserMedia).toHaveBeenCalledWith({ audio: true })
     expect(screen.getByRole('button', { name: /stop recording/i })).toBeVisible()
 
+    mockNow = 15_000
     await user.click(screen.getByRole('button', { name: /stop recording/i }))
 
     expect(await screen.findByLabelText(/preview recorded voice sample/i)).toHaveAttribute('src', 'blob:recorded-mandarin-sample')
@@ -270,6 +273,47 @@ describe('AdminVoiceGenerationPage', () => {
 
     expect(await screen.findByText(/unable to access microphone/i)).toBeVisible()
     expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
+  })
+
+  it('rejects a too-short microphone sample without calling the profile API', async () => {
+    const user = userEvent.setup()
+    installMediaRecorderMock('tiny')
+    installObjectUrlMock()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+    await user.click(screen.getByRole('button', { name: /stop recording/i }))
+
+    expect(await screen.findByText(/recording is too short/i)).toBeVisible()
+    expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
+    expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/samples')).toBe(false)
+  })
+
+  it('rejects microphone samples shorter than the minimum duration even when audio data exists', async () => {
+    const user = userEvent.setup()
+    let mockNow = 0
+    vi.spyOn(performance, 'now').mockImplementation(() => mockNow)
+    installMediaRecorderMock()
+    installObjectUrlMock()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+
+    mockNow = 1_000
+    await user.click(screen.getByRole('button', { name: /stop recording/i }))
+
+    expect(await screen.findByText(/recording is too short/i)).toBeVisible()
+    expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
+    expect(screen.queryByLabelText(/preview recorded voice sample/i)).not.toBeInTheDocument()
+    expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/samples')).toBe(false)
   })
 
   it('requires admin auth like the rest of the admin workspace', async () => {
