@@ -117,4 +117,29 @@ describe('AdminLessonsPage', () => {
       }),
     )
   })
+
+  it('clears stored credentials and returns to the sign-in screen when signing out from the lesson list', async () => {
+    const user = userEvent.setup()
+    window.sessionStorage.setItem('content-admin-basic-auth', 'Basic ZWRpdG9yOnNlY3JldA==')
+    vi.mocked(fetch).mockResolvedValue(
+      jsonResponse([
+        {
+          lessonId: 'self-intro',
+          slug: 'self-intro',
+          displayOrder: 1,
+          enabled: true,
+          draftChangedModuleCount: 0,
+        },
+      ]),
+    )
+
+    renderRoute('/admin')
+
+    expect(await screen.findByRole('link', { name: /open self-intro editor/i })).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: /sign out/i }))
+
+    expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    expect(window.sessionStorage.getItem('content-admin-basic-auth')).toBeNull()
+  })
 })

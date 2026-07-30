@@ -136,6 +136,59 @@ describe('AdminLessonEditorPage', () => {
     )
   })
 
+  it('clears stored credentials and returns to the sign-in screen when signing out from the editor', async () => {
+    const user = userEvent.setup()
+    window.sessionStorage.setItem('content-admin-basic-auth', 'Basic ZWRpdG9yOnNlY3JldA==')
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+
+    await user.click(screen.getByRole('button', { name: /sign out/i }))
+
+    expect(await screen.findByRole('heading', { level: 2, name: /admin sign in required/i })).toBeVisible()
+    expect(window.sessionStorage.getItem('content-admin-basic-auth')).toBeNull()
+  })
+
+  it('warns before leaving the editor when there are unsaved changes', async () => {
+    const user = userEvent.setup()
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
+    const englishTitleInput = await screen.findByLabelText(/lesson title \(en\)/i)
+    await user.type(englishTitleInput, ' updated')
+
+    await user.click(screen.getByRole('link', { name: /back to admin lesson list/i }))
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/unsaved changes/i))
+    expect(screen.getByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(screen.getByDisplayValue(/updated/i)).toBeVisible()
+  })
+
+  it('warns before browser unload when there are unsaved changes', async () => {
+    const user = userEvent.setup()
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(lessonSnapshot()))
+
+    renderRoute(`/admin/lesson/${lesson.id}`)
+
+    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
+    const englishTitleInput = await screen.findByLabelText(/lesson title \(en\)/i)
+    await user.type(englishTitleInput, ' updated')
+
+    const event = new Event('beforeunload', { cancelable: true })
+    const preventDefaultSpy = vi.spyOn(event, 'preventDefault')
+    window.dispatchEvent(event)
+
+    expect(preventDefaultSpy).toHaveBeenCalled()
+    expect(event.defaultPrevented).toBe(true)
+  })
+
   it('saves structured lesson meta edits and refreshes the draft preview from the returned snapshot', async () => {
     const user = userEvent.setup()
     const updatedSnapshot = lessonSnapshot()

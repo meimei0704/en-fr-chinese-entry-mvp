@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react'
+import { Link, useBeforeUnload, useParams } from 'react-router-dom'
 
 import {
   AdminApiError,
@@ -173,6 +173,7 @@ export function AdminLessonEditorPage() {
   } | null>(null)
   const [requiresAuth, setRequiresAuth] = useState(false)
   const [selectedModuleType, setSelectedModuleType] = useState<ContentModuleType | null>(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
   const loadSnapshot = useCallback(async () => {
     return getAdminLessonSnapshot(lessonId)
@@ -181,6 +182,7 @@ export function AdminLessonEditorPage() {
         setError(null)
         setActionError(null)
         setRequiresAuth(false)
+        setHasUnsavedChanges(false)
       })
       .catch((requestError: unknown) => {
         if (requestError instanceof AdminApiError && requestError.status === 401) {
@@ -188,6 +190,7 @@ export function AdminLessonEditorPage() {
           setRequiresAuth(true)
           setError(requestError.message)
           setSnapshot(null)
+          setHasUnsavedChanges(false)
           return
         }
 
@@ -195,11 +198,13 @@ export function AdminLessonEditorPage() {
           requestError instanceof AdminApiError ? requestError.message : 'Unable to load lesson editor',
         )
         setSnapshot(null)
+        setHasUnsavedChanges(false)
       })
   }, [lessonId])
 
   useEffect(() => {
     setSelectedModuleType(null)
+    setHasUnsavedChanges(false)
   }, [lessonId])
 
   useEffect(() => {
@@ -217,6 +222,21 @@ export function AdminLessonEditorPage() {
     return new Map(snapshot?.modules.map((module) => [module.moduleType, module]) ?? [])
   }, [snapshot])
 
+  useBeforeUnload(
+    useCallback(
+      (event) => {
+        if (!hasUnsavedChanges) {
+          return
+        }
+
+        event.preventDefault()
+        event.returnValue = ''
+      },
+      [hasUnsavedChanges],
+    ),
+    { capture: true },
+  )
+
   async function handleSaveModule(moduleType: string, payload: unknown, note: string) {
     try {
       const nextSnapshot = await saveAdminDraftModule({
@@ -228,6 +248,7 @@ export function AdminLessonEditorPage() {
       setSnapshot(nextSnapshot)
       setError(null)
       setActionError(null)
+      setHasUnsavedChanges(false)
     } catch (requestError: unknown) {
       setActionError(
         requestError instanceof AdminApiError ? requestError.message : `Unable to save ${moduleType} draft`,
@@ -247,6 +268,7 @@ export function AdminLessonEditorPage() {
       setSnapshot(nextSnapshot)
       setError(null)
       setActionError(null)
+      setHasUnsavedChanges(false)
     } catch (requestError: unknown) {
       setActionError(
         requestError instanceof AdminApiError ? requestError.message : `Unable to publish ${moduleType}`,
@@ -269,6 +291,7 @@ export function AdminLessonEditorPage() {
       setSnapshot(nextSnapshot)
       setError(null)
       setActionError(null)
+      setHasUnsavedChanges(false)
     } catch (requestError: unknown) {
       setActionError(
         requestError instanceof AdminApiError
@@ -285,6 +308,58 @@ export function AdminLessonEditorPage() {
     await loadSnapshot()
   }
 
+  function confirmDiscardUnsavedChanges() {
+    if (!hasUnsavedChanges) {
+      return true
+    }
+
+    return window.confirm('You have unsaved changes in the current admin editor. Discard them and continue?')
+  }
+
+  function handleSelectModule(moduleType: ContentModuleType) {
+    if (moduleType === selectedModuleType) {
+      return
+    }
+
+    if (!confirmDiscardUnsavedChanges()) {
+      return
+    }
+
+    setSelectedModuleType(moduleType)
+    setHasUnsavedChanges(false)
+  }
+
+  function handleCollapseModule() {
+    if (!confirmDiscardUnsavedChanges()) {
+      return
+    }
+
+    setSelectedModuleType(null)
+    setHasUnsavedChanges(false)
+  }
+
+  function handleBackToAdmin(event: MouseEvent<HTMLAnchorElement>) {
+    if (confirmDiscardUnsavedChanges()) {
+      return
+    }
+
+    event.preventDefault()
+  }
+
+  function handleSignOut() {
+    if (!confirmDiscardUnsavedChanges()) {
+      return
+    }
+
+    clearAdminBasicAuth()
+    setRequiresAuth(true)
+    setSnapshot(null)
+    setError(null)
+    setActionError(null)
+    setSelectedModuleType(null)
+    setHasUnsavedChanges(false)
+  }
+
   function renderModuleEditor(moduleType: ContentModuleType) {
     if (!snapshot?.draftLesson) {
       return null
@@ -298,6 +373,7 @@ export function AdminLessonEditorPage() {
           <LessonMetaEditor
             lesson={draftLesson}
             onSave={(payload) => handleSaveModule('lessonMeta', payload, 'Save lesson meta draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'dialogue':
@@ -305,6 +381,7 @@ export function AdminLessonEditorPage() {
           <DialogueEditor
             dialogue={draftLesson.dialogue}
             onSave={(payload) => handleSaveModule('dialogue', payload, 'Save dialogue draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'sentencePatterns':
@@ -319,6 +396,7 @@ export function AdminLessonEditorPage() {
             items={draftLesson.sentencePatterns}
             fields={sentencePatternFields}
             onSave={(payload) => handleSaveModule('sentencePatterns', payload, 'Save sentence patterns draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'vocabulary':
@@ -333,6 +411,7 @@ export function AdminLessonEditorPage() {
             items={draftLesson.vocabulary}
             fields={vocabularyFields}
             onSave={(payload) => handleSaveModule('vocabulary', payload, 'Save vocabulary draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'pronunciation':
@@ -347,6 +426,7 @@ export function AdminLessonEditorPage() {
             items={draftLesson.pronunciation}
             fields={pronunciationFields}
             onSave={(payload) => handleSaveModule('pronunciation', payload, 'Save pronunciation draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'hanziRecognition':
@@ -361,6 +441,7 @@ export function AdminLessonEditorPage() {
             items={draftLesson.hanziRecognition}
             fields={hanziRecognitionFields}
             onSave={(payload) => handleSaveModule('hanziRecognition', payload, 'Save hanzi recognition draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'practice':
@@ -368,6 +449,7 @@ export function AdminLessonEditorPage() {
           <PracticeModuleEditor
             practice={draftLesson.practice}
             onSave={(payload) => handleSaveModule('practice', payload, 'Save practice draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'reviewCards':
@@ -382,6 +464,7 @@ export function AdminLessonEditorPage() {
             items={draftLesson.reviewCards}
             fields={reviewCardFields}
             onSave={(payload) => handleSaveModule('reviewCards', payload, 'Save review cards draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       case 'shortInput':
@@ -389,6 +472,7 @@ export function AdminLessonEditorPage() {
           <ShortInputModuleEditor
             prompt={draftLesson.shortInput}
             onSave={(payload) => handleSaveModule('shortInput', payload, 'Save short input draft')}
+            onDirtyChange={setHasUnsavedChanges}
           />
         )
       default:
@@ -396,22 +480,22 @@ export function AdminLessonEditorPage() {
     }
   }
 
-  if (error) {
-    if (requiresAuth) {
-      return (
-        <AdminAccessScreen
-          heroTitle="Sign in to open the lesson editor"
-          heroDescription="Unlock this lesson workspace to edit content inline, preview changes, and publish modules intentionally."
-          formTitle="Admin sign in required"
-          formDescription="Enter the content admin credentials to continue into this lesson editor."
-          error={error}
-          backHref="/admin"
-          backLabel="Back to admin lesson list"
-          onSubmit={handleUnlock}
-        />
-      )
-    }
+  if (requiresAuth) {
+    return (
+      <AdminAccessScreen
+        heroTitle="Sign in to open the lesson editor"
+        heroDescription="Unlock this lesson workspace to edit content inline, preview changes, and publish modules intentionally."
+        formTitle="Admin sign in required"
+        formDescription="Enter the content admin credentials to continue into this lesson editor."
+        error={error}
+        backHref="/admin"
+        backLabel="Back to admin lesson list"
+        onSubmit={handleUnlock}
+      />
+    )
+  }
 
+  if (error) {
     return (
       <main className="page-shell page-shell--wide">
         <section className="hero-card hero-card--compact">
@@ -524,10 +608,18 @@ export function AdminLessonEditorPage() {
           </article>
         </div>
         <nav className="button-row">
-          <Link className="secondary-link" to="/admin">
+          <Link className="secondary-link" to="/admin" onClick={handleBackToAdmin}>
             Back to admin lesson list
           </Link>
+          <button type="button" className="secondary-link" onClick={handleSignOut}>
+            Sign out
+          </button>
         </nav>
+        {hasUnsavedChanges ? (
+          <p className="admin-inline-feedback admin-inline-feedback--error">
+            You have unsaved changes in the open module. Save the draft or confirm before leaving this editor.
+          </p>
+        ) : null}
         {actionError ? <p className="admin-inline-feedback admin-inline-feedback--error">{actionError}</p> : null}
       </section>
 
@@ -593,7 +685,7 @@ export function AdminLessonEditorPage() {
                     <button
                       type="button"
                       className={isSelected ? 'primary-button' : 'secondary-link'}
-                      onClick={() => setSelectedModuleType(moduleType)}
+                      onClick={() => handleSelectModule(moduleType)}
                       aria-pressed={isSelected}
                     >
                       Edit {config.label.toLowerCase()}
@@ -611,7 +703,7 @@ export function AdminLessonEditorPage() {
                           <button
                             type="button"
                             className="secondary-link"
-                            onClick={() => setSelectedModuleType(null)}
+                            onClick={handleCollapseModule}
                           >
                             Collapse
                           </button>

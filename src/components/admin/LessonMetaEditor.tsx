@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { toEditableLocalizedText } from '../../admin/localized.js'
 import type { LessonContent } from '../../content/types.js'
@@ -6,9 +6,10 @@ import type { LessonContent } from '../../content/types.js'
 interface LessonMetaEditorProps {
   lesson: LessonContent
   onSave(payload: { id: string; title: LessonContent['title']; scenario: LessonContent['scenario'] }): Promise<void>
+  onDirtyChange?(dirty: boolean): void
 }
 
-export function LessonMetaEditor({ lesson, onSave }: LessonMetaEditorProps) {
+export function LessonMetaEditor({ lesson, onSave, onDirtyChange }: LessonMetaEditorProps) {
   const initialTitle = toEditableLocalizedText(lesson.title)
   const initialScenario = toEditableLocalizedText(lesson.scenario)
   const [titleEn, setTitleEn] = useState(initialTitle.en)
@@ -26,13 +27,41 @@ export function LessonMetaEditor({ lesson, onSave }: LessonMetaEditorProps) {
     setScenarioFr(nextScenario.fr)
   }, [lesson])
 
+  const initialPayload = useMemo(
+    () => ({
+      id: lesson.id,
+      title: {
+        en: initialTitle.en,
+        fr: initialTitle.fr,
+      },
+      scenario: {
+        en: initialScenario.en,
+        fr: initialScenario.fr,
+      },
+    }),
+    [initialScenario.en, initialScenario.fr, initialTitle.en, initialTitle.fr, lesson.id],
+  )
+
+  const draftPayload = useMemo(
+    () => ({
+      id: lesson.id,
+      title: { en: titleEn, fr: titleFr },
+      scenario: { en: scenarioEn, fr: scenarioFr },
+    }),
+    [lesson.id, scenarioEn, scenarioFr, titleEn, titleFr],
+  )
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(draftPayload) !== JSON.stringify(initialPayload))
+  }, [draftPayload, initialPayload, onDirtyChange])
+
   async function handleSave() {
     setSaving(true)
     try {
       await onSave({
-        id: lesson.id,
-        title: { en: titleEn, fr: titleFr },
-        scenario: { en: scenarioEn, fr: scenarioFr },
+        id: draftPayload.id,
+        title: draftPayload.title,
+        scenario: draftPayload.scenario,
       })
     } finally {
       setSaving(false)

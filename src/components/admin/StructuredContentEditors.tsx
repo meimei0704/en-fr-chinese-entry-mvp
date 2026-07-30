@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { toEditableLocalizedText } from '../../admin/localized.js'
 import type {
@@ -174,6 +174,7 @@ interface StructuredListModuleEditorProps<T extends { id: string }> {
   items: T[]
   fields: readonly StructuredFieldConfig<T>[]
   onSave(payload: T[]): Promise<void>
+  onDirtyChange?(dirty: boolean): void
 }
 
 export function StructuredListModuleEditor<T extends { id: string }>({
@@ -186,6 +187,7 @@ export function StructuredListModuleEditor<T extends { id: string }>({
   items,
   fields,
   onSave,
+  onDirtyChange,
 }: StructuredListModuleEditorProps<T>) {
   const [draftItems, setDraftItems] = useState(() => items.map((item) => toEditableItem(item, fields)))
   const [saving, setSaving] = useState(false)
@@ -194,10 +196,19 @@ export function StructuredListModuleEditor<T extends { id: string }>({
     setDraftItems(items.map((item) => toEditableItem(item, fields)))
   }, [items, fields])
 
+  const draftPayload = useMemo(
+    () => draftItems.map((item) => buildSavedItem(item, fields)),
+    [draftItems, fields],
+  )
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(draftPayload) !== JSON.stringify(items))
+  }, [draftPayload, items, onDirtyChange])
+
   async function handleSave() {
     setSaving(true)
     try {
-      await onSave(draftItems.map((item) => buildSavedItem(item, fields)))
+      await onSave(draftPayload)
     } finally {
       setSaving(false)
     }
@@ -259,6 +270,7 @@ export function StructuredListModuleEditor<T extends { id: string }>({
 interface PracticeModuleEditorProps {
   practice: { listening: PracticePrompt[]; speaking: PracticePrompt[]; reading: PracticePrompt[] }
   onSave(payload: { listening: PracticePrompt[]; speaking: PracticePrompt[]; reading: PracticePrompt[] }): Promise<void>
+  onDirtyChange?(dirty: boolean): void
 }
 
 const practiceSections = [
@@ -267,7 +279,7 @@ const practiceSections = [
   ['reading', 'Reading'],
 ] as const
 
-export function PracticeModuleEditor({ practice, onSave }: PracticeModuleEditorProps) {
+export function PracticeModuleEditor({ practice, onSave, onDirtyChange }: PracticeModuleEditorProps) {
   const [draftPractice, setDraftPractice] = useState(() => ({
     listening: practice.listening.map((item) => toEditableItem(item, practiceFields)),
     speaking: practice.speaking.map((item) => toEditableItem(item, practiceFields)),
@@ -283,14 +295,23 @@ export function PracticeModuleEditor({ practice, onSave }: PracticeModuleEditorP
     })
   }, [practice])
 
+  const draftPayload = useMemo(
+    () => ({
+      listening: draftPractice.listening.map((item) => buildSavedItem(item, practiceFields)),
+      speaking: draftPractice.speaking.map((item) => buildSavedItem(item, practiceFields)),
+      reading: draftPractice.reading.map((item) => buildSavedItem(item, practiceFields)),
+    }),
+    [draftPractice],
+  )
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(draftPayload) !== JSON.stringify(practice))
+  }, [draftPayload, onDirtyChange, practice])
+
   async function handleSave() {
     setSaving(true)
     try {
-      await onSave({
-        listening: draftPractice.listening.map((item) => buildSavedItem(item, practiceFields)),
-        speaking: draftPractice.speaking.map((item) => buildSavedItem(item, practiceFields)),
-        reading: draftPractice.reading.map((item) => buildSavedItem(item, practiceFields)),
-      })
+      await onSave(draftPayload)
     } finally {
       setSaving(false)
     }
@@ -368,9 +389,10 @@ export function PracticeModuleEditor({ practice, onSave }: PracticeModuleEditorP
 interface ShortInputModuleEditorProps {
   prompt: ShortInputPrompt
   onSave(payload: ShortInputPrompt): Promise<void>
+  onDirtyChange?(dirty: boolean): void
 }
 
-export function ShortInputModuleEditor({ prompt, onSave }: ShortInputModuleEditorProps) {
+export function ShortInputModuleEditor({ prompt, onSave, onDirtyChange }: ShortInputModuleEditorProps) {
   const [draftPrompt, setDraftPrompt] = useState(() => toEditableItem(prompt, shortInputFields))
   const [saving, setSaving] = useState(false)
 
@@ -378,10 +400,19 @@ export function ShortInputModuleEditor({ prompt, onSave }: ShortInputModuleEdito
     setDraftPrompt(toEditableItem(prompt, shortInputFields))
   }, [prompt])
 
+  const draftPayload = useMemo(
+    () => buildSavedItem(draftPrompt, shortInputFields),
+    [draftPrompt],
+  )
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(draftPayload) !== JSON.stringify(prompt))
+  }, [draftPayload, onDirtyChange, prompt])
+
   async function handleSave() {
     setSaving(true)
     try {
-      await onSave(buildSavedItem(draftPrompt, shortInputFields))
+      await onSave(draftPayload)
     } finally {
       setSaving(false)
     }

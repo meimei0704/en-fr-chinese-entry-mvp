@@ -43,6 +43,13 @@ export function AdminLessonsPage() {
     await loadLessons()
   }
 
+  function handleSignOut() {
+    clearAdminBasicAuth()
+    setRequiresAuth(true)
+    setError(null)
+    setLessons([])
+  }
+
   if (requiresAuth) {
     return (
       <AdminAccessScreen
@@ -72,6 +79,9 @@ export function AdminLessonsPage() {
           <div className="admin-badge-column">
             <span className="badge badge--sky">Draft workflow</span>
             <span className="badge badge--jade">Published data stays read-only</span>
+            <button type="button" className="secondary-link" onClick={handleSignOut}>
+              Sign out
+            </button>
           </div>
         </div>
         <div className="admin-metric-grid" data-testid="admin-overview-metrics">

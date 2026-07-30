@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { toEditableLocalizedText } from '../../admin/localized.js'
 import type { LessonContent } from '../../content/types.js'
@@ -6,9 +6,10 @@ import type { LessonContent } from '../../content/types.js'
 interface DialogueEditorProps {
   dialogue: LessonContent['dialogue']
   onSave(payload: LessonContent['dialogue']): Promise<void>
+  onDirtyChange?(dirty: boolean): void
 }
 
-export function DialogueEditor({ dialogue, onSave }: DialogueEditorProps) {
+export function DialogueEditor({ dialogue, onSave, onDirtyChange }: DialogueEditorProps) {
   const initialTitle = toEditableLocalizedText(dialogue.title)
   const [titleEn, setTitleEn] = useState(initialTitle.en)
   const [titleFr, setTitleFr] = useState(initialTitle.fr)
@@ -22,20 +23,43 @@ export function DialogueEditor({ dialogue, onSave }: DialogueEditorProps) {
     setFirstLineHanzi(dialogue.lines[0]?.hanzi ?? '')
   }, [dialogue])
 
+  const initialPayload = useMemo(
+    () => ({
+      ...dialogue,
+      title: {
+        en: initialTitle.en,
+        fr: initialTitle.fr,
+      },
+      lines: dialogue.lines.map((line) => ({ ...line })),
+    }),
+    [dialogue, initialTitle.en, initialTitle.fr],
+  )
+
+  const draftPayload = useMemo(
+    () => ({
+      ...dialogue,
+      title: { en: titleEn, fr: titleFr },
+      lines: dialogue.lines.map((line, index) =>
+        index === 0
+          ? {
+              ...line,
+              hanzi: firstLineHanzi,
+            }
+          : line,
+      ),
+    }),
+    [dialogue, firstLineHanzi, titleEn, titleFr],
+  )
+
+  useEffect(() => {
+    onDirtyChange?.(JSON.stringify(draftPayload) !== JSON.stringify(initialPayload))
+  }, [draftPayload, initialPayload, onDirtyChange])
+
   async function handleSave() {
     setSaving(true)
     try {
       await onSave({
-        ...dialogue,
-        title: { en: titleEn, fr: titleFr },
-        lines: dialogue.lines.map((line, index) =>
-          index === 0
-            ? {
-                ...line,
-                hanzi: firstLineHanzi,
-              }
-            : line,
-        ),
+        ...draftPayload,
       })
     } finally {
       setSaving(false)
