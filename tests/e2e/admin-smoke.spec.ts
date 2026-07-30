@@ -2,45 +2,33 @@ import { expect, test } from 'playwright/test'
 
 import { course } from '../../src/content/course'
 import type { AdminLessonSnapshot, AdminLessonSummary } from '../../src/admin/types'
+import { collectCourseVoiceAudioTargets } from '../../src/admin/voiceTargets'
+import type { LessonContent } from '../../src/content/types'
 
-const lesson = course.lessons[0]
+const lesson = course.lessons[0]!
+const firstDialogueLine = lesson.dialogue.lines[0]!
 const encodedAdminAuth = 'Basic ZWRpdG9yOnNlY3JldA=='
+const voiceTargets = collectCourseVoiceAudioTargets(course.lessons)
+const voiceTargetById = new Map(voiceTargets.map((target) => [target.targetId, target]))
 
-function buildLessonSummary(): AdminLessonSummary[] {
-  return [
-    {
-      lessonId: lesson.id,
-      slug: lesson.id,
-      displayOrder: 1,
-      enabled: true,
-      draftChangedModuleCount: 1,
-    },
-  ]
+function buildLessonSummary(lessons: readonly LessonContent[]): AdminLessonSummary[] {
+  return lessons.map((item, index) => ({
+    lessonId: item.id,
+    slug: item.id,
+    displayOrder: index + 1,
+    enabled: true,
+    draftChangedModuleCount: item.id === lesson.id ? 1 : 0,
+  }))
 }
 
-function buildLessonSnapshot(
-  titleEn: string,
-  dialogueAudio = lesson.dialogue.lines[0]!.audio,
-): AdminLessonSnapshot {
+function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
   return {
-    lessonId: lesson.id,
-    slug: lesson.id,
-    displayOrder: 1,
+    lessonId: draftLesson.id,
+    slug: draftLesson.id,
+    displayOrder: course.lessons.findIndex((item) => item.id === draftLesson.id) + 1,
     enabled: true,
-    draftLesson: {
-      ...lesson,
-      title: {
-        ...lesson.title,
-        en: titleEn,
-      },
-      dialogue: {
-        ...lesson.dialogue,
-        lines: lesson.dialogue.lines.map((line, index) =>
-          index === 0 ? { ...line, audio: dialogueAudio } : line,
-        ),
-      },
-    },
-    publishedLesson: lesson,
+    draftLesson,
+    publishedLesson: course.lessons.find((item) => item.id === draftLesson.id) ?? draftLesson,
     modules: [
       { moduleType: 'lessonMeta', draftRevisionId: 102, publishedRevisionId: 101, hasUnpublishedChanges: true },
       { moduleType: 'dialogue', draftRevisionId: 104, publishedRevisionId: 103, hasUnpublishedChanges: false },
@@ -81,13 +69,12 @@ function buildLessonSnapshot(
   }
 }
 
-test('admin uses the in-page sign-in flow without a browser auth dialog and can save a draft', async ({
+test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice generation', async ({
   page,
 }) => {
   let dialogCount = 0
-  let draftTitleEn = typeof lesson.title === 'string' ? lesson.title : lesson.title.en
-  let dialogueAudio = lesson.dialogue.lines[0]!.audio
-  const generatedVoiceAudio = '/voice/generated/self-intro-line-01.mp3'
+  const draftLessonsById = new Map(course.lessons.map((item) => [item.id, item]))
+  const draftRequests: Array<{ lessonId: string; moduleType: string; payload: unknown }> = []
 
   page.on('dialog', async (dialog) => {
     dialogCount += 1
@@ -113,11 +100,13 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
 
     expect(auth).toBe(encodedAdminAuth)
 
-    if (url.searchParams.get('lessonId') === lesson.id) {
+    const lessonId = url.searchParams.get('lessonId')
+    if (lessonId) {
+      const draftLesson = draftLessonsById.get(lessonId) ?? lesson
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(buildLessonSnapshot(draftTitleEn, dialogueAudio)),
+        body: JSON.stringify(buildLessonSnapshot(draftLesson)),
       })
       return
     }
@@ -125,10 +114,9 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(buildLessonSummary()),
+      body: JSON.stringify(buildLessonSummary([...draftLessonsById.values()])),
     })
   })
-
 
   await page.route('**/api/admin/voice/samples', async (route) => {
     const request = route.request()
@@ -154,7 +142,7 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ profileId: 'profile_self_intro' }),
+      body: JSON.stringify({ profileId: 'profile_batch_authorized' }),
     })
   })
 
@@ -179,17 +167,34 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
       consentConfirmed?: boolean
       profileId?: string
       text?: string
-      target?: { lessonId?: string; moduleType?: string; targetId?: string }
+      target?: {
+        lessonId?: string
+        moduleType?: string
+        targetId?: string
+        originalAudio?: string
+        storageKey?: string
+        language?: string
+      }
     }
+    const target = body.target?.targetId ? voiceTargetById.get(body.target.targetId) : undefined
+
     expect(body.consentConfirmed).toBe(true)
-    expect(body.profileId).toBe('profile_self_intro')
-    expect(body.text).toBe(lesson.dialogue.lines[0]!.hanzi)
-    expect(body.target).toMatchObject({ lessonId: lesson.id, moduleType: 'dialogue' })
+    expect(body.profileId).toBe('profile_batch_authorized')
+    expect(target).toBeDefined()
+    expect(body.text).toBe(target!.text)
+    expect(body.target).toMatchObject({
+      lessonId: target!.lessonId,
+      moduleType: target!.moduleType,
+      targetId: target!.targetId,
+      originalAudio: target!.originalAudio,
+      storageKey: target!.storageKey,
+      language: 'zh-CN',
+    })
 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ audioUrl: generatedVoiceAudio }),
+      body: JSON.stringify({ audioUrl: `/voice/generated/${target!.storageKey}` }),
     })
   })
 
@@ -202,18 +207,32 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
     expect(client).toBe('spa')
 
     const body = JSON.parse(request.postData() ?? '{}') as {
-      moduleType?: string
-      payload?: { title?: { en?: string }; lines?: Array<{ audio?: string }> }
+      lessonId: LessonContent['id']
+      moduleType: string
+      payload: Partial<LessonContent> | LessonContent[keyof LessonContent]
     }
-    draftTitleEn = body.payload?.title?.en ?? draftTitleEn
+    const currentLesson = draftLessonsById.get(body.lessonId) ?? lesson
+
+    if (body.moduleType === 'lessonMeta') {
+      draftLessonsById.set(body.lessonId, {
+        ...currentLesson,
+        ...(body.payload as Pick<LessonContent, 'id' | 'title' | 'scenario'>),
+      })
+    }
+
     if (body.moduleType === 'dialogue') {
-      dialogueAudio = body.payload?.lines?.[0]?.audio ?? dialogueAudio
+      draftLessonsById.set(body.lessonId, {
+        ...currentLesson,
+        dialogue: body.payload as LessonContent['dialogue'],
+      })
     }
+
+    draftRequests.push({ lessonId: body.lessonId, moduleType: body.moduleType, payload: body.payload })
 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(buildLessonSnapshot(draftTitleEn, dialogueAudio)),
+      body: JSON.stringify(buildLessonSnapshot(draftLessonsById.get(body.lessonId) ?? currentLesson)),
     })
   })
 
@@ -226,7 +245,19 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
         'Content-Type': 'application/json',
         'X-Content-Admin-Client': 'spa',
       },
-      body: JSON.stringify({ profileId: 'missing', text: '你好', target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' } }),
+      body: JSON.stringify({
+        consentConfirmed: true,
+        profileId: 'missing',
+        text: '你好',
+        target: {
+          lessonId: 'self-intro',
+          targetId: 'dialogue:self-intro-line-01',
+          moduleType: 'dialogue',
+          originalAudio: '/audio/self-intro/line-01.mp3',
+          storageKey: 'audio/self-intro/line-01.mp3',
+          language: 'zh-CN',
+        },
+      }),
     })
     return response.status
   })
@@ -240,6 +271,7 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
   await page.getByRole('button', { name: /unlock content admin/i }).click()
 
   await expect(page.getByRole('link', { name: /open self-intro editor/i })).toBeVisible()
+  await expect(page.getByRole('link', { name: /batch voice generation/i })).toBeVisible()
   expect(dialogCount).toBe(0)
 
   await page.getByRole('link', { name: /open self-intro editor/i }).click()
@@ -255,21 +287,46 @@ test('admin uses the in-page sign-in flow without a browser auth dialog and can 
   await expect(titleInput).toHaveValue('Edited in browser smoke')
   await expect(page.getByTestId('admin-editor-side-column').getByText('Edited in browser smoke')).toBeVisible()
 
-  await page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i).check()
+  await page.getByRole('link', { name: /back to admin lesson list/i }).click()
+  await page.getByRole('link', { name: /batch voice generation/i }).click()
+
+  await expect(page).toHaveURL(/\/admin\/voice$/)
+  await expect(page.getByRole('heading', { name: /batch voice generation/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /179 audio targets/i })).toBeVisible()
+  await expect(page.getByText(/zh-cn only/i)).toBeVisible()
+  await expect(page.getByText(/voice replacement/i)).toHaveCount(0)
+
+  const generateAllButton = page.getByRole('button', { name: /generate all pending/i })
+  await expect(generateAllButton).toBeDisabled()
   await page.getByLabel(/voice sample url/i).fill('https://storage.example/authorized-sample.wav')
+  await expect(page.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
+  await page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i).check()
   await page.getByRole('button', { name: /create voice profile/i }).click()
-  await expect(page.getByText(/voice profile ready/i)).toBeVisible()
-  await page.getByRole('button', { name: /generate replacement audio/i }).click()
-  await expect(page.getByLabel(/replacement audio url/i)).toHaveValue(generatedVoiceAudio)
-  await expect(page.getByLabel(/preview replacement audio/i)).toHaveAttribute('src', generatedVoiceAudio)
-  const applyVoiceDraftButton = page.getByRole('button', { name: /apply to draft/i })
-  await expect(applyVoiceDraftButton).toBeDisabled()
-  await page.getByLabel(/i have previewed and approve this replacement audio/i).check()
-  await expect(applyVoiceDraftButton).toBeEnabled()
-  await applyVoiceDraftButton.focus()
-  await page.keyboard.press('Enter')
-  await expect(page.getByText(/voice replacement saved to dialogue draft/i)).toBeVisible()
-  await expect(page.getByTestId('admin-editor-side-column').getByText(generatedVoiceAudio)).toBeVisible()
+  await expect(page.getByText(/profile id: profile_batch_authorized/i).first()).toBeVisible()
+
+  await expect(generateAllButton).toBeEnabled()
+  await generateAllButton.click()
+  await expect(page.getByText(/179 generated/i).first()).toBeVisible()
+
+  const applyApprovedButton = page.getByRole('button', { name: /apply approved to drafts/i })
+  await expect(applyApprovedButton).toBeDisabled()
+
+  const firstRow = page.getByTestId(`voice-target-row-dialogue:${firstDialogueLine.id}`)
+  const generatedFirstAudio = `/voice/generated/audio/self-intro/line-01.mp3`
+  await expect(firstRow.getByLabel(/preview generated audio/i)).toHaveAttribute('src', generatedFirstAudio)
+  await firstRow.getByLabel(/previewed and approve/i).check()
+  await expect(applyApprovedButton).toBeEnabled()
+
+  await applyApprovedButton.click()
+  await expect(page.getByText(/applied 1 approved target/i)).toBeVisible()
+
+  const dialogueDraftRequest = draftRequests.find((request) => request.moduleType === 'dialogue')
+  expect(dialogueDraftRequest).toBeDefined()
+  const dialoguePayload = dialogueDraftRequest!.payload as LessonContent['dialogue']
+  expect(dialogueDraftRequest!.lessonId).toBe('self-intro')
+  expect(dialoguePayload.lines[0]!.audio).toBe(generatedFirstAudio)
+  expect(dialoguePayload.lines[0]!.audioFallback).toBe('/audio/self-intro/line-01.mp3')
+  expect(dialoguePayload.lines[1]!.audio).toBe('/audio/self-intro/line-02.mp3')
 
   expect(dialogCount).toBe(0)
 })

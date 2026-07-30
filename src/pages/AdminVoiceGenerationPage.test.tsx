@@ -193,7 +193,7 @@ describe('AdminVoiceGenerationPage', () => {
 
   it('marks provider failures per row without changing original audio targets', async () => {
     const user = userEvent.setup()
-    vi.mocked(fetch).mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+    vi.mocked(fetch).mockImplementation(async (input: RequestInfo | URL, _init?: RequestInit) => {
       const url = String(input)
       if (url === '/api/admin/content/lessons') return jsonResponse(lessonSummaries())
       if (url.startsWith('/api/admin/content/lessons?lessonId=')) {
