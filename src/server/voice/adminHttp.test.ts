@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
+import { collectCourseVoiceAudioTargets } from '../../admin/voiceTargets'
+import { course } from '../../content/course'
 import { createAdminVoiceHttpHandlers, createLazyAdminVoiceHttpHandlers } from './adminHttp'
 import type { VoiceCloneProvider } from './provider'
 import type { VoiceStorage } from './storage'
@@ -10,13 +12,26 @@ const adminAuthEnv = {
 }
 
 const adminAuthHeader = 'Basic ZWRpdG9yOnNlY3JldA=='
+const manifestTarget = collectCourseVoiceAudioTargets(course.lessons).find(
+  (target) => target.targetId === 'dialogue:self-intro-line-01',
+)!
 const batchTarget = {
-  lessonId: 'self-intro',
-  targetId: 'dialogue:line-1',
-  moduleType: 'dialogue',
-  originalAudio: '/audio/self-intro/line-01.mp3',
-  storageKey: 'audio/self-intro/line-01.mp3',
-  language: 'zh-CN',
+  lessonId: manifestTarget.lessonId,
+  targetId: manifestTarget.targetId,
+  moduleType: manifestTarget.moduleType,
+  originalAudio: manifestTarget.originalAudio,
+  storageKey: manifestTarget.storageKey,
+  language: manifestTarget.language,
+}
+
+function generateBody(overrides: Record<string, unknown> = {}) {
+  return {
+    consentConfirmed: true,
+    profileId: 'profile_self_intro',
+    text: manifestTarget.text,
+    target: batchTarget,
+    ...overrides,
+  }
 }
 
 function createResponseRecorder() {
@@ -65,7 +80,7 @@ describe('admin voice HTTP handlers', () => {
       {
         method: 'POST',
         headers: { 'x-content-admin-client': 'spa' },
-        body: { profileId: 'profile_self_intro', text: '你好', target: batchTarget },
+        body: generateBody({ consentConfirmed: undefined }),
       },
       spaResponse,
     )
@@ -132,8 +147,12 @@ describe('admin voice HTTP handlers', () => {
         body: {
           consentConfirmed: true,
           profileId: 'profile_self_intro',
-          text: '你好',
-          target: { lessonId: 'self-intro', targetId: 'dialogue:line-1', moduleType: 'dialogue' },
+          text: manifestTarget.text,
+          target: {
+            lessonId: manifestTarget.lessonId,
+            targetId: manifestTarget.targetId,
+            moduleType: manifestTarget.moduleType,
+          },
         },
       },
       response,
@@ -143,6 +162,44 @@ describe('admin voice HTTP handlers', () => {
     expect(response.body).toEqual({ error: 'Missing target.originalAudio' })
     expect(provider.generateReplacementAudio).not.toHaveBeenCalled()
     expect(storage.saveGeneratedAudio).not.toHaveBeenCalled()
+  })
+
+
+  it('rejects generate requests that do not exactly match the 179-target course manifest', async () => {
+    const invalidRequests = [
+      {
+        name: 'unknown target id',
+        body: generateBody({ target: { ...batchTarget, targetId: 'dialogue:not-in-manifest' } }),
+      },
+      {
+        name: 'tampered storage key',
+        body: generateBody({ target: { ...batchTarget, storageKey: 'audio/other/path.mp3' } }),
+      },
+      {
+        name: 'tampered text',
+        body: generateBody({ text: '这是未在课程 manifest 中登记的中文。' }),
+      },
+    ]
+
+    for (const invalidRequest of invalidRequests) {
+      const { provider, storage } = createFakeServices()
+      const handlers = createAdminVoiceHttpHandlers({ provider, storage }, adminAuthEnv)
+      const response = createResponseRecorder()
+
+      await handlers.generate(
+        {
+          method: 'POST',
+          headers: { authorization: adminAuthHeader },
+          body: invalidRequest.body,
+        },
+        response,
+      )
+
+      expect(response.statusCode, invalidRequest.name).toBe(400)
+      expect(response.body, invalidRequest.name).toEqual({ error: 'Voice generation target does not match the course audio manifest' })
+      expect(provider.generateReplacementAudio, invalidRequest.name).not.toHaveBeenCalled()
+      expect(storage.saveGeneratedAudio, invalidRequest.name).not.toHaveBeenCalled()
+    }
   })
 
   it('returns clear 503 responses when runtime voice provider or storage is not configured', async () => {
@@ -165,12 +222,7 @@ describe('admin voice HTTP handlers', () => {
       {
         method: 'POST',
         headers: { authorization: adminAuthHeader },
-        body: {
-          consentConfirmed: true,
-          profileId: 'profile_self_intro',
-          text: '你好',
-          target: batchTarget,
-        },
+        body: generateBody(),
       },
       generateResponse,
     )
@@ -205,12 +257,7 @@ describe('admin voice HTTP handlers', () => {
       {
         method: 'POST',
         headers: { authorization: adminAuthHeader },
-        body: {
-          consentConfirmed: true,
-          profileId: 'profile_self_intro',
-          text: '你好，我叫崔秋',
-          target: batchTarget,
-        },
+        body: generateBody(),
       },
       generateResponse,
     )
@@ -220,7 +267,7 @@ describe('admin voice HTTP handlers', () => {
     expect(provider.generateReplacementAudio).toHaveBeenCalledWith(
       expect.objectContaining({
         profileId: 'profile_self_intro',
-        text: '你好，我叫崔秋',
+        text: manifestTarget.text,
         target: batchTarget,
       }),
     )

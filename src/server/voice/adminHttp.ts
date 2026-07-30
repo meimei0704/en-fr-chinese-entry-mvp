@@ -1,3 +1,5 @@
+import { collectCourseVoiceAudioTargets } from '../../admin/voiceTargets.js'
+import { course } from '../../content/course.js'
 import {
   MissingAdminAuthConfigurationError,
   requireAdminAuthorization,
@@ -13,6 +15,12 @@ interface AdminVoiceServices {
   provider: VoiceCloneProvider
   storage: VoiceStorage
 }
+
+const manifestMismatchMessage = 'Voice generation target does not match the course audio manifest'
+const voiceTargetManifest = collectCourseVoiceAudioTargets(course.lessons)
+const voiceTargetManifestByLessonAndTarget = new Map(
+  voiceTargetManifest.map((target) => [`${target.lessonId}::${target.targetId}`, target]),
+)
 
 export interface AdminVoiceHttpHandlers {
   samples(req: ContentAdminApiRequest, res: ContentAdminApiResponse): Promise<unknown>
@@ -78,6 +86,33 @@ function requireTarget(value: unknown) {
   return {
     ...parsedTarget,
     language: 'zh-CN' as const,
+  }
+}
+
+function requireManifestTargetMatch(input: {
+  text: string
+  target: ReturnType<typeof requireTarget>
+}) {
+  const manifestTarget = voiceTargetManifestByLessonAndTarget.get(`${input.target.lessonId}::${input.target.targetId}`)
+
+  if (
+    !manifestTarget ||
+    manifestTarget.text !== input.text ||
+    manifestTarget.moduleType !== input.target.moduleType ||
+    manifestTarget.originalAudio !== input.target.originalAudio ||
+    manifestTarget.storageKey !== input.target.storageKey ||
+    manifestTarget.language !== input.target.language
+  ) {
+    throw new AdminVoiceValidationError(manifestMismatchMessage)
+  }
+
+  return {
+    lessonId: manifestTarget.lessonId,
+    targetId: manifestTarget.targetId,
+    moduleType: manifestTarget.moduleType,
+    originalAudio: manifestTarget.originalAudio,
+    storageKey: manifestTarget.storageKey,
+    language: manifestTarget.language,
   }
 }
 
@@ -183,14 +218,19 @@ export function createAdminVoiceHttpHandlers(
           throw new AdminVoiceValidationError('Voice generation consent must be confirmed before replacement audio is created')
         }
 
-        const target = requireTarget(body.target)
+        const text = requireString(body.text, 'text')
+        const target = requireManifestTargetMatch({
+          text,
+          target: requireTarget(body.target),
+        })
+        const profileId = requireString(body.profileId, 'profileId')
         const generated = await services.provider.generateReplacementAudio({
-          profileId: requireString(body.profileId, 'profileId'),
-          text: requireString(body.text, 'text'),
+          profileId,
+          text,
           target,
         })
         const savedAudio = await services.storage.saveGeneratedAudio({
-          profileId: requireString(body.profileId, 'profileId'),
+          profileId,
           target,
           audioBase64: generated.audioBase64,
           contentType: generated.contentType,

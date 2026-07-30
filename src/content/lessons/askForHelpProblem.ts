@@ -1,4 +1,4 @@
-import type { LessonContent } from '../types'
+import type { LessonContent } from '../types.js'
 
 export const askForHelpProblemLesson: LessonContent = {
   id: 'ask-for-help-problem',
