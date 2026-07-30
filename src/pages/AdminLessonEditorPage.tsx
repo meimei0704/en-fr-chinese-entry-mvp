@@ -30,8 +30,6 @@ import {
   vocabularyFields,
 } from '../components/admin/structuredEditorConfigs.js'
 import { LessonPreviewPanel } from '../components/admin/LessonPreviewPanel.js'
-import { VoiceReplacementPanel } from '../components/admin/VoiceReplacementPanel.js'
-import type { VoiceReplacementPatch } from '../admin/voiceTypes.js'
 
 const moduleOrder: ContentModuleType[] = [
   'lessonMeta',
@@ -271,32 +269,6 @@ export function AdminLessonEditorPage() {
   }
 
 
-
-  async function handleApplyVoiceReplacement(input: VoiceReplacementPatch & { targetId: string }) {
-    try {
-      const nextSnapshot = await saveAdminDraftModule({
-        lessonId,
-        moduleType: input.moduleType,
-        payload: input.payload,
-        note: `Apply authorized voice replacement ${input.targetId}`,
-      })
-      setSnapshot(nextSnapshot)
-      setError(null)
-      setActionError(null)
-      setActionFeedback({
-        kind: 'success',
-        message: `Voice replacement saved to ${getModuleLabel(input.moduleType).toLowerCase()} draft.`,
-      })
-      setHasUnsavedChanges(false)
-    } catch (requestError: unknown) {
-      setActionError(
-        requestError instanceof AdminApiError
-          ? requestError.message
-          : `Unable to save ${input.moduleType} voice replacement draft`,
-      )
-      throw requestError
-    }
-  }
 
   async function handlePublishModule(moduleType: string) {
     const moduleLabel = getModuleLabel(moduleType)
@@ -836,11 +808,6 @@ export function AdminLessonEditorPage() {
           </section>
 
           <LessonPreviewPanel lesson={draftLesson} />
-          <VoiceReplacementPanel
-            lesson={draftLesson}
-            lessonId={lessonId}
-            onApply={handleApplyVoiceReplacement}
-          />
           <ModuleHistoryList
             snapshot={snapshot}
             pendingAction={pendingHistoryAction}

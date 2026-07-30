@@ -2,6 +2,7 @@ import { createBrowserRouter, type RouteObject } from 'react-router-dom'
 
 import { AdminLessonEditorPage } from '../pages/AdminLessonEditorPage'
 import { AdminLessonsPage } from '../pages/AdminLessonsPage'
+import { AdminVoiceGenerationPage } from '../pages/AdminVoiceGenerationPage'
 import { HomePage } from '../pages/HomePage'
 import { LanguageSelectionPage } from '../pages/LanguageSelectionPage'
 import { LessonPage } from '../pages/LessonPage'
@@ -13,6 +14,7 @@ import { ShortInputPage } from '../pages/ShortInputPage'
 export const appRoutes: RouteObject[] = [
   { path: '/', element: <LanguageSelectionPage /> },
   { path: '/admin', element: <AdminLessonsPage /> },
+  { path: '/admin/voice', element: <AdminVoiceGenerationPage /> },
   { path: '/admin/lesson/:lessonId', element: <AdminLessonEditorPage /> },
   { path: '/home', element: <HomePage /> },
   { path: '/lesson/:lessonId', element: <LessonPage /> },

@@ -79,6 +79,9 @@ export function AdminLessonsPage() {
           <div className="admin-badge-column">
             <span className="badge badge--sky">Draft workflow</span>
             <span className="badge badge--jade">Published data stays read-only</span>
+            <Link className="secondary-link" to="/admin/voice">
+              Batch voice generation
+            </Link>
             <button type="button" className="secondary-link" onClick={handleSignOut}>
               Sign out
             </button>

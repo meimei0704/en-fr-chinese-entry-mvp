@@ -53,6 +53,7 @@ describe('AdminLessonsPage', () => {
       'href',
       '/admin/lesson/self-intro',
     )
+    expect(screen.getByRole('link', { name: /batch voice generation/i })).toHaveAttribute('href', '/admin/voice')
     expect(screen.getByTestId('admin-overview-metrics')).toBeVisible()
     expect(screen.getByText(/2 lessons/i)).toBeVisible()
     expect(screen.getByText(/1 pending module/i)).toBeVisible()
