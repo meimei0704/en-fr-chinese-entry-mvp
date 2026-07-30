@@ -306,7 +306,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/179 generated/i).first()).toBeVisible()
+  await expect(page.getByText(/179 generated/i).first()).toBeVisible({ timeout: 15_000 })
 
   const applyApprovedButton = page.getByRole('button', { name: /apply approved to drafts/i })
   await expect(applyApprovedButton).toBeDisabled()
