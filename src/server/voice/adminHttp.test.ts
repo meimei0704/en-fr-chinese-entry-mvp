@@ -239,14 +239,25 @@ describe('admin voice HTTP handlers', () => {
       {
         method: 'POST',
         headers: { authorization: adminAuthHeader },
-        body: { consentConfirmed: true, sampleName: '崔秋本人授权样本', sampleAudioBase64: 'ZmFrZQ==' },
+        body: {
+          consentConfirmed: true,
+          sampleName: '崔秋本人授权样本',
+          sampleAudioBase64: 'ZmFrZQ==',
+          sampleAudioContentType: 'audio/wav',
+          sampleAudioFilename: 'authorized-mandarin-sample.wav',
+        },
       },
       sampleResponse,
     )
     expect(sampleResponse.statusCode).toBe(200)
     expect(sampleResponse.body).toEqual({ profileId: 'profile_self_intro' })
     expect(storage.saveVoiceSample).toHaveBeenCalledWith(
-      expect.objectContaining({ sampleName: '崔秋本人授权样本', sampleAudioBase64: 'ZmFrZQ==' }),
+      expect.objectContaining({
+        sampleName: '崔秋本人授权样本',
+        sampleAudioBase64: 'ZmFrZQ==',
+        sampleAudioContentType: 'audio/wav',
+        sampleAudioFilename: 'authorized-mandarin-sample.wav',
+      }),
     )
     expect(provider.createVoiceProfile).toHaveBeenCalledWith(
       expect.objectContaining({ sampleUrl: 'voice-storage://samples/self-intro.wav' }),

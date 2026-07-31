@@ -30,6 +30,11 @@ interface VoiceGenerationRow {
 type VoiceSampleRecordingState = 'idle' | 'requesting' | 'recording' | 'recorded'
 const MIN_RECORDED_SAMPLE_DURATION_MS = 10_000
 const MIN_RECORDED_SAMPLE_BYTES = 1_024
+const RECORDED_SAMPLE_FILENAME = 'recorded-mandarin-sample.wav'
+
+interface WindowWithWebkitAudioContext extends Window {
+  webkitAudioContext?: typeof AudioContext
+}
 
 function getVoiceErrorMessage(error: unknown, fallback: string) {
   return error instanceof AdminApiError ? error.message : fallback
@@ -80,6 +85,81 @@ function readBlobAsBase64(blob: Blob) {
   })
 }
 
+function writeAscii(view: DataView, offset: number, value: string) {
+  for (let index = 0; index < value.length; index += 1) {
+    view.setUint8(offset + index, value.charCodeAt(index))
+  }
+}
+
+function encodeAudioBufferAsWav(audioBuffer: AudioBuffer) {
+  const channelCount = Math.min(audioBuffer.numberOfChannels, 2)
+  const bytesPerSample = 2
+  const blockAlign = channelCount * bytesPerSample
+  const dataSize = audioBuffer.length * blockAlign
+  const buffer = new ArrayBuffer(44 + dataSize)
+  const view = new DataView(buffer)
+  let offset = 0
+
+  writeAscii(view, offset, 'RIFF')
+  offset += 4
+  view.setUint32(offset, 36 + dataSize, true)
+  offset += 4
+  writeAscii(view, offset, 'WAVE')
+  offset += 4
+  writeAscii(view, offset, 'fmt ')
+  offset += 4
+  view.setUint32(offset, 16, true)
+  offset += 4
+  view.setUint16(offset, 1, true)
+  offset += 2
+  view.setUint16(offset, channelCount, true)
+  offset += 2
+  view.setUint32(offset, audioBuffer.sampleRate, true)
+  offset += 4
+  view.setUint32(offset, audioBuffer.sampleRate * blockAlign, true)
+  offset += 4
+  view.setUint16(offset, blockAlign, true)
+  offset += 2
+  view.setUint16(offset, bytesPerSample * 8, true)
+  offset += 2
+  writeAscii(view, offset, 'data')
+  offset += 4
+  view.setUint32(offset, dataSize, true)
+  offset += 4
+
+  const channels = Array.from({ length: channelCount }, (_, channelIndex) => audioBuffer.getChannelData(channelIndex))
+
+  for (let sampleIndex = 0; sampleIndex < audioBuffer.length; sampleIndex += 1) {
+    for (const channel of channels) {
+      const sample = Math.max(-1, Math.min(1, channel[sampleIndex] ?? 0))
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true)
+      offset += bytesPerSample
+    }
+  }
+
+  return buffer
+}
+
+async function convertRecordedBlobToWav(blob: Blob) {
+  const AudioContextCtor = window.AudioContext ?? (window as WindowWithWebkitAudioContext).webkitAudioContext
+
+  if (!AudioContextCtor) {
+    throw new Error('Unable to prepare a MiniMax-compatible WAV sample. Please upload an mp3, m4a, or wav file.')
+  }
+
+  const audioContext = new AudioContextCtor()
+
+  try {
+    const audioBuffer = await audioContext.decodeAudioData(await blob.arrayBuffer())
+    return new Blob([encodeAudioBufferAsWav(audioBuffer)], { type: 'audio/wav' })
+  } finally {
+    const closeResult = audioContext.close()
+    if (typeof closeResult?.catch === 'function') {
+      await closeResult.catch(() => undefined)
+    }
+  }
+}
+
 export function AdminVoiceGenerationPage() {
   const [snapshots, setSnapshots] = useState<AdminLessonSnapshot[]>([])
   const [rows, setRows] = useState<VoiceGenerationRow[]>([])
@@ -91,6 +171,8 @@ export function AdminVoiceGenerationPage() {
   const [sampleName, setSampleName] = useState('Authorized admin voice sample')
   const [sampleAudioUrl, setSampleAudioUrl] = useState('')
   const [sampleAudioBase64, setSampleAudioBase64] = useState('')
+  const [sampleAudioContentType, setSampleAudioContentType] = useState('')
+  const [sampleAudioFilename, setSampleAudioFilename] = useState('')
   const [profileId, setProfileId] = useState('')
   const [pendingAction, setPendingAction] = useState<'profile' | 'generate' | 'apply' | null>(null)
   const [recordingState, setRecordingState] = useState<VoiceSampleRecordingState>('idle')
@@ -182,6 +264,8 @@ export function AdminVoiceGenerationPage() {
   function clearRecordedSample() {
     setRecordedSampleUrl('')
     setSampleAudioBase64('')
+    setSampleAudioContentType('')
+    setSampleAudioFilename('')
     recordedChunksRef.current = []
     recordingStartedAtMsRef.current = null
   }
@@ -209,12 +293,14 @@ export function AdminVoiceGenerationPage() {
       return
     }
 
-    const objectUrl = typeof URL.createObjectURL === 'function' ? URL.createObjectURL(blob) : ''
-    setRecordedSampleUrl(objectUrl)
-
     try {
-      const base64 = await readBlobAsBase64(blob)
+      const wavBlob = await convertRecordedBlobToWav(blob)
+      const objectUrl = typeof URL.createObjectURL === 'function' ? URL.createObjectURL(wavBlob) : ''
+      const base64 = await readBlobAsBase64(wavBlob)
+      setRecordedSampleUrl(objectUrl)
       setSampleAudioBase64(base64)
+      setSampleAudioContentType('audio/wav')
+      setSampleAudioFilename(RECORDED_SAMPLE_FILENAME)
       setSampleAudioUrl('')
       recordingStartedAtMsRef.current = null
       setRecordingState('recorded')
@@ -330,7 +416,10 @@ export function AdminVoiceGenerationPage() {
       setRecorderError(null)
       setRecordedSampleUrl('')
       setRecordingState('idle')
+      setSampleAudioUrl('')
       setSampleAudioBase64(await readFileAsBase64(file))
+      setSampleAudioContentType(file.type)
+      setSampleAudioFilename(file.name)
       setSampleName((current) => current || file.name)
     } catch (fileError) {
       setSampleAudioBase64('')
@@ -353,6 +442,8 @@ export function AdminVoiceGenerationPage() {
         sampleName,
         sampleAudioUrl: sampleAudioUrl.trim() || undefined,
         sampleAudioBase64: sampleAudioBase64.trim() || undefined,
+        sampleAudioContentType: sampleAudioContentType.trim() || undefined,
+        sampleAudioFilename: sampleAudioFilename.trim() || undefined,
       })
       setProfileId(result.profileId)
       setSuccessMessage(`Profile id: ${result.profileId}`)
@@ -655,12 +746,17 @@ export function AdminVoiceGenerationPage() {
             <input
               placeholder="https://storage.example/authorized-sample.wav"
               value={sampleAudioUrl}
-              onChange={(event) => setSampleAudioUrl(event.target.value)}
+              onChange={(event) => {
+                setSampleAudioUrl(event.target.value)
+                setSampleAudioBase64('')
+                setSampleAudioContentType('')
+                setSampleAudioFilename('')
+              }}
             />
           </label>
           <label className="admin-field">
             <span>Voice sample file</span>
-            <input type="file" accept="audio/*" onChange={handleSampleFileChange} />
+            <input type="file" accept=".mp3,.m4a,.wav,audio/mpeg,audio/mp4,audio/wav" onChange={handleSampleFileChange} />
           </label>
         </div>
         <div className="admin-card-actions">

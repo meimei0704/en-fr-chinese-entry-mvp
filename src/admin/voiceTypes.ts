@@ -66,6 +66,8 @@ export interface CreateAdminVoiceSampleProfileInput {
   sampleName?: string
   sampleAudioUrl?: string
   sampleAudioBase64?: string
+  sampleAudioContentType?: string
+  sampleAudioFilename?: string
 }
 
 export interface AdminVoiceSampleProfileResponse {

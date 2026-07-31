@@ -8,13 +8,27 @@ import {
   type HeaderRecord,
 } from '../content/adminAuth.js'
 import type { ContentAdminApiRequest, ContentAdminApiResponse } from '../content/adminHttp.js'
-import { createDisabledVoiceCloneProvider, VoiceProviderNotConfiguredError, type VoiceCloneProvider } from './provider.js'
-import { createDisabledVoiceStorage, VoiceStorageNotConfiguredError, type VoiceStorage } from './storage.js'
+import {
+  VoiceProviderNotConfiguredError,
+  VoiceProviderRequestError,
+  createVoiceCloneProviderFromEnv,
+  type VoiceProviderEnv,
+  type VoiceCloneProvider,
+} from './provider.js'
+import {
+  VoiceStorageNotConfiguredError,
+  VoiceStorageWriteError,
+  createVoiceStorageFromEnv,
+  type VoiceStorageEnv,
+  type VoiceStorage,
+} from './storage.js'
 
 interface AdminVoiceServices {
   provider: VoiceCloneProvider
   storage: VoiceStorage
 }
+
+type AdminVoiceEnv = AdminAuthEnv & VoiceProviderEnv & VoiceStorageEnv
 
 const manifestMismatchMessage = 'Voice generation target does not match the course audio manifest'
 const voiceTargetManifest = collectCourseVoiceAudioTargets(course.lessons)
@@ -152,6 +166,10 @@ function mapAdminVoiceError(error: unknown, req: ContentAdminApiRequest, res: Co
     return res.status(503).json({ error: error.message })
   }
 
+  if (error instanceof VoiceStorageWriteError || error instanceof VoiceProviderRequestError) {
+    return res.status(502).json({ error: error.message })
+  }
+
   return res.status(500).json({ error: 'Unable to process admin voice request' })
 }
 
@@ -196,6 +214,8 @@ export function createAdminVoiceHttpHandlers(
           sampleName: optionalString(body.sampleName),
           sampleAudioUrl,
           sampleAudioBase64,
+          sampleAudioContentType: optionalString(body.sampleAudioContentType),
+          sampleAudioFilename: optionalString(body.sampleAudioFilename),
         })
         const profile = await services.provider.createVoiceProfile({
           sampleName: optionalString(body.sampleName),
@@ -242,11 +262,11 @@ export function createAdminVoiceHttpHandlers(
   }
 }
 
-export function createLazyAdminVoiceHttpHandlers(env: AdminAuthEnv = process.env): AdminVoiceHttpHandlers {
+export function createLazyAdminVoiceHttpHandlers(env: AdminVoiceEnv = process.env): AdminVoiceHttpHandlers {
   return createAdminVoiceHttpHandlers(
     {
-      provider: createDisabledVoiceCloneProvider(),
-      storage: createDisabledVoiceStorage(),
+      provider: createVoiceCloneProviderFromEnv(env),
+      storage: createVoiceStorageFromEnv(env),
     },
     env,
   )

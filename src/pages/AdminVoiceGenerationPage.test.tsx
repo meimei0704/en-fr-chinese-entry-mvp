@@ -141,6 +141,24 @@ function installObjectUrlMock() {
   })
 }
 
+function installAudioContextMock() {
+  const channel = new Float32Array(16_000)
+  channel.fill(0.1)
+
+  class MockAudioContext {
+    readonly sampleRate = 16_000
+    readonly decodeAudioData = vi.fn(async () => ({
+      length: channel.length,
+      numberOfChannels: 1,
+      sampleRate: 16_000,
+      getChannelData: () => channel,
+    }))
+    readonly close = vi.fn()
+  }
+
+  vi.stubGlobal('AudioContext', MockAudioContext)
+}
+
 function installMediaRecorderMock(chunkText = 'recorded mandarin sample '.repeat(80)) {
   const stopTrack = vi.fn()
   const getUserMedia = vi.fn().mockResolvedValue({
@@ -268,6 +286,7 @@ describe('AdminVoiceGenerationPage', () => {
     let mockNow = 0
     vi.spyOn(performance, 'now').mockImplementation(() => mockNow)
     const { getUserMedia, stopTrack } = installMediaRecorderMock()
+    installAudioContextMock()
     installObjectUrlMock()
     installBatchFetchMock()
 
@@ -294,10 +313,14 @@ describe('AdminVoiceGenerationPage', () => {
     const sampleBody = JSON.parse(String(sampleCall[1]!.body)) as {
       consentConfirmed?: boolean
       sampleAudioBase64?: string
+      sampleAudioContentType?: string
+      sampleAudioFilename?: string
       sampleAudioUrl?: string
     }
     expect(sampleBody.consentConfirmed).toBe(true)
-    expect(sampleBody.sampleAudioBase64).toMatch(/^cmVjb3JkZWQgbWFuZGFyaW4gc2FtcGxl/)
+    expect(sampleBody.sampleAudioBase64).toMatch(/^UklGR/)
+    expect(sampleBody.sampleAudioContentType).toBe('audio/wav')
+    expect(sampleBody.sampleAudioFilename).toMatch(/\.wav$/)
     expect(sampleBody.sampleAudioUrl).toBeUndefined()
     expect((await screen.findAllByText(/profile id: profile_batch_authorized/i))[0]).toBeVisible()
   })
