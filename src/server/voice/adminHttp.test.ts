@@ -27,6 +27,12 @@ const minimaxEnv = {
   MINIMAX_API_KEY: 'test-minimax-key',
 }
 
+const fullVoiceEnv = {
+  ...blobEnv,
+  VOICE_PROVIDER: 'minimax',
+  MINIMAX_API_KEY: 'test-minimax-key',
+}
+
 const adminAuthHeader = 'Basic ZWRpdG9yOnNlY3JldA=='
 const manifestTarget = collectCourseVoiceAudioTargets(course.lessons).find(
   (target) => target.targetId === 'dialogue:self-intro-line-01',
@@ -296,6 +302,29 @@ describe('admin voice HTTP handlers', () => {
     expect(response.statusCode).toBe(503)
     expect(response.body).toEqual({ error: 'Voice sample storage is not configured' })
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('returns a safe 502 when Vercel Blob sample upload fails after preflight', async () => {
+    mockBlobPut.mockRejectedValue(new Error('raw blob token or transport failure'))
+    const handlers = createLazyAdminVoiceHttpHandlers(fullVoiceEnv)
+    const response = createResponseRecorder()
+
+    await handlers.samples(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: {
+          consentConfirmed: true,
+          sampleName: 'Authorized sample',
+          sampleAudioBase64: 'ZmFrZQ==',
+          sampleAudioContentType: 'audio/wav',
+        },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(502)
+    expect(response.body).toEqual({ error: 'Vercel Blob voice sample upload failed' })
   })
 
   it('creates a profile and generated audio URL with injected storage and provider adapters', async () => {

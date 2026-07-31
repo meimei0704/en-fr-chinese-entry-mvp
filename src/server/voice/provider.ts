@@ -204,6 +204,19 @@ async function readMiniMaxJson(response: Response, action: string) {
   return body
 }
 
+async function fetchForMiniMax(
+  fetchImpl: typeof fetch,
+  input: Parameters<typeof fetch>[0],
+  init: Parameters<typeof fetch>[1],
+  action: string,
+) {
+  try {
+    return await fetchImpl(input, init)
+  } catch {
+    throw new VoiceProviderRequestError(`MiniMax ${action} failed: request failed`)
+  }
+}
+
 class MiniMaxVoiceCloneProvider implements VoiceCloneProvider {
   private readonly apiKey: string
   private readonly baseUrl: string
@@ -239,7 +252,7 @@ class MiniMaxVoiceCloneProvider implements VoiceCloneProvider {
 
   async createVoiceProfile(input: CreateVoiceProfileInput): Promise<CreateVoiceProfileResult> {
     const voiceId = this.createVoiceId()
-    const source = await this.fetch(input.sampleUrl)
+    const source = await fetchForMiniMax(this.fetch, input.sampleUrl, undefined, 'sample download')
 
     if (!source.ok) {
       throw new VoiceProviderRequestError(`MiniMax sample download failed: HTTP ${source.status}`)
@@ -251,61 +264,76 @@ class MiniMaxVoiceCloneProvider implements VoiceCloneProvider {
     formData.set('purpose', 'voice_clone')
     formData.set('file', new Blob([await source.arrayBuffer()], { type: contentType }), `${voiceId}.${extension}`)
 
-    const uploadResponse = await this.fetch(`${this.baseUrl}/v1/files/upload`, {
-      method: 'POST',
-      headers: this.authHeaders(),
-      body: formData,
-    })
+    const uploadResponse = await fetchForMiniMax(
+      this.fetch,
+      `${this.baseUrl}/v1/files/upload`,
+      {
+        method: 'POST',
+        headers: this.authHeaders(),
+        body: formData,
+      },
+      'voice clone upload',
+    )
     const uploadBody = await readMiniMaxJson(uploadResponse, 'voice clone upload')
     const fileId = this.requireFileId(uploadBody)
 
-    const cloneResponse = await this.fetch(`${this.baseUrl}/v1/voice_clone`, {
-      method: 'POST',
-      headers: {
-        ...this.authHeaders(),
-        'Content-Type': 'application/json',
+    const cloneResponse = await fetchForMiniMax(
+      this.fetch,
+      `${this.baseUrl}/v1/voice_clone`,
+      {
+        method: 'POST',
+        headers: {
+          ...this.authHeaders(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          file_id: fileId,
+          voice_id: voiceId,
+          language_boost: this.languageBoost,
+          need_noise_reduction: this.needNoiseReduction,
+          need_volume_normalization: this.needVolumeNormalization,
+          aigc_watermark: false,
+        }),
       },
-      body: JSON.stringify({
-        file_id: fileId,
-        voice_id: voiceId,
-        language_boost: this.languageBoost,
-        need_noise_reduction: this.needNoiseReduction,
-        need_volume_normalization: this.needVolumeNormalization,
-        aigc_watermark: false,
-      }),
-    })
+      'voice clone',
+    )
     await readMiniMaxJson(cloneResponse, 'voice clone')
 
     return { profileId: voiceId }
   }
 
   async generateReplacementAudio(input: GenerateReplacementAudioInput): Promise<GenerateReplacementAudioResult> {
-    const response = await this.fetch(`${this.baseUrl}/v1/t2a_v2`, {
-      method: 'POST',
-      headers: {
-        ...this.authHeaders(),
-        'Content-Type': 'application/json',
+    const response = await fetchForMiniMax(
+      this.fetch,
+      `${this.baseUrl}/v1/t2a_v2`,
+      {
+        method: 'POST',
+        headers: {
+          ...this.authHeaders(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: this.model,
+          text: input.text,
+          stream: false,
+          output_format: 'hex',
+          language_boost: this.languageBoost,
+          voice_setting: {
+            voice_id: input.profileId,
+            speed: 1,
+            vol: 1,
+            pitch: 0,
+          },
+          audio_setting: {
+            sample_rate: this.sampleRate,
+            bitrate: this.bitrate,
+            format: this.audioFormat,
+            channel: 1,
+          },
+        }),
       },
-      body: JSON.stringify({
-        model: this.model,
-        text: input.text,
-        stream: false,
-        output_format: 'hex',
-        language_boost: this.languageBoost,
-        voice_setting: {
-          voice_id: input.profileId,
-          speed: 1,
-          vol: 1,
-          pitch: 0,
-        },
-        audio_setting: {
-          sample_rate: this.sampleRate,
-          bitrate: this.bitrate,
-          format: this.audioFormat,
-          channel: 1,
-        },
-      }),
-    })
+      'T2A',
+    )
     const body = await readMiniMaxJson(response, 'T2A')
     const audioHex = this.requireAudioHex(body)
 

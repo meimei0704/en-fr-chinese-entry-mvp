@@ -216,12 +216,17 @@ class VercelBlobVoiceStorage implements VoiceStorage {
       .toLowerCase()
     const extension = extensionForContentType(sample.contentType, sample.filename)
     const pathname = `${this.prefix}/samples/${sampleName}-${this.now()}.${extension}`
-    const blob = await this.put(pathname, sample.bytes, {
-      access: this.access,
-      addRandomSuffix: true,
-      contentType: sample.contentType,
-      ...(this.token ? { token: this.token } : {}),
-    })
+    const blob = await this.putBlob(
+      pathname,
+      sample.bytes,
+      {
+        access: this.access,
+        addRandomSuffix: true,
+        contentType: sample.contentType,
+        ...(this.token ? { token: this.token } : {}),
+      },
+      'Vercel Blob voice sample upload failed',
+    )
 
     return { sampleUrl: blob.url }
   }
@@ -235,14 +240,32 @@ class VercelBlobVoiceStorage implements VoiceStorage {
     }
 
     const pathname = `${this.prefix}/generated/${profileId}/${storageKey}`
-    const blob = await this.put(pathname, Buffer.from(input.audioBase64, 'base64'), {
-      access: this.access,
-      allowOverwrite: true,
-      contentType: input.contentType,
-      ...(this.token ? { token: this.token } : {}),
-    })
+    const blob = await this.putBlob(
+      pathname,
+      Buffer.from(input.audioBase64, 'base64'),
+      {
+        access: this.access,
+        allowOverwrite: true,
+        contentType: input.contentType,
+        ...(this.token ? { token: this.token } : {}),
+      },
+      'Vercel Blob generated audio upload failed',
+    )
 
     return { audioUrl: blob.url }
+  }
+
+  private async putBlob(
+    pathname: string,
+    body: ArrayBuffer | Blob | Buffer | string,
+    options: VercelBlobPutOptions,
+    failureMessage: string,
+  ) {
+    try {
+      return await this.put(pathname, body, options)
+    } catch {
+      throw new VoiceStorageWriteError(failureMessage)
+    }
   }
 
   private async readSample(input: SaveVoiceSampleInput) {

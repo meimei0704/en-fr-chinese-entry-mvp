@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import {
   VoiceStorageNotConfiguredError,
+  VoiceStorageWriteError,
   createVercelBlobVoiceStorage,
   createVoiceStorageFromEnv,
 } from './storage'
@@ -55,6 +56,26 @@ describe('VercelBlobVoiceStorage', () => {
       contentType: 'audio/wav',
       addRandomSuffix: true,
     })
+  })
+
+  it('wraps Vercel Blob sample upload failures in a safe storage error', async () => {
+    const put = vi.fn(async () => {
+      throw new Error('raw blob token or transport failure')
+    })
+    const storage = createVercelBlobVoiceStorage(
+      { VOICE_BLOB_PREFIX: 'voice', VOICE_BLOB_ACCESS: 'public', BLOB_READ_WRITE_TOKEN: 'test-token' },
+      { put },
+    )
+
+    await expect(storage.saveVoiceSample({
+      sampleName: 'Authorized Mandarin sample',
+      sampleAudioBase64: Buffer.from('riff bytes').toString('base64'),
+      sampleAudioContentType: 'audio/wav',
+      sampleAudioFilename: 'authorized-sample.wav',
+    })).rejects.toMatchObject({
+      name: 'VoiceStorageWriteError',
+      message: 'Vercel Blob voice sample upload failed',
+    } satisfies Partial<VoiceStorageWriteError>)
   })
 
   it('saves generated audio under the target storage key and returns the Blob URL', async () => {

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import {
   VoiceProviderNotConfiguredError,
+  VoiceProviderRequestError,
   createMiniMaxVoiceCloneProvider,
   createVoiceCloneProviderFromEnv,
 } from './provider'
@@ -131,6 +132,27 @@ describe('MiniMaxVoiceCloneProvider', () => {
         },
       }),
     ).rejects.toThrow('MiniMax T2A failed: no balance')
+  })
+
+  it('wraps MiniMax voice profile request failures in a safe provider error', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input)
+
+      if (url === 'https://blob.example/voice/samples/sample.wav') {
+        return new Response(Buffer.from('wav sample'), { headers: { 'Content-Type': 'audio/wav' } })
+      }
+
+      throw new Error('raw MiniMax transport failure')
+    }) as unknown as typeof fetch
+    const provider = createMiniMaxVoiceCloneProvider({ MINIMAX_API_KEY: 'test-minimax-key' }, { fetch: fetchMock })
+
+    await expect(provider.createVoiceProfile({
+      sampleName: 'Authorized Mandarin sample',
+      sampleUrl: 'https://blob.example/voice/samples/sample.wav',
+    })).rejects.toMatchObject({
+      name: 'VoiceProviderRequestError',
+      message: 'MiniMax voice clone upload failed: request failed',
+    } satisfies Partial<VoiceProviderRequestError>)
   })
 
   it('keeps provider disabled unless env opts into MiniMax with an API key', async () => {
