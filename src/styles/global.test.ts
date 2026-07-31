@@ -148,4 +148,17 @@ describe('global color accessibility tokens', () => {
       expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
     }
   })
+
+  it('shows shared button disabled states instead of preserving hover affordance', () => {
+    const sharedButtonDeclarations = [
+      ['.option-button:hover:not(:disabled),\n.primary-button:hover:not(:disabled),\n.secondary-link:hover:not(:disabled),\n.chip-button:hover:not(:disabled)', 'transform: translateY(-1px);'],
+      ['.option-button:disabled,\n.primary-button:disabled,\n.secondary-link:disabled,\n.chip-button:disabled', 'cursor: not-allowed;'],
+      ['.option-button:disabled,\n.primary-button:disabled,\n.secondary-link:disabled,\n.chip-button:disabled', 'opacity: 0.55;'],
+    ]
+
+    for (const [selector, declaration] of sharedButtonDeclarations) {
+      expect(hasRule(selector)).toBe(true)
+      expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
+    }
+  })
 })

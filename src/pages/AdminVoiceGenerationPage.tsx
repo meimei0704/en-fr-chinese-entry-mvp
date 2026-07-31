@@ -61,6 +61,32 @@ function replaceRow(
   return rows.map((row) => (row.target.targetId === targetId ? update(row) : row))
 }
 
+function getSingleTargetGenerateUnavailableReason(
+  consentConfirmed: boolean,
+  profileId: string,
+  pendingAction: 'profile' | 'generate' | 'apply' | null,
+) {
+  const hasProfile = profileId.trim() !== ''
+
+  if (!consentConfirmed && !hasProfile) {
+    return 'Confirm authorization and create a voice profile before generating this target.'
+  }
+
+  if (!consentConfirmed) {
+    return 'Confirm authorization before generating this target.'
+  }
+
+  if (!hasProfile) {
+    return 'Create a voice profile before generating this target.'
+  }
+
+  if (pendingAction !== null) {
+    return 'Finish the current voice action before generating another target.'
+  }
+
+  return null
+}
+
 function readFileAsBase64(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
@@ -815,53 +841,68 @@ export function AdminVoiceGenerationPage() {
           </div>
           <p className="muted-text">Existing `/audio/...mp3` paths remain the fallback for generated audio.</p>
         </div>
-        {rows.map((row) => (
-          <article
-            key={`${row.target.lessonId}:${row.target.targetId}`}
-            className="surface-card lesson-card admin-lesson-card"
-            data-testid={`voice-target-row-${row.target.targetId}`}
-          >
-            <div className="admin-lesson-card__topline">
-              <p className="eyebrow">{row.target.lessonId}</p>
-              <span className={`badge ${row.status === 'failed' ? 'badge--gold' : 'badge--jade'}`}>{row.status}</span>
-            </div>
-            <div className="admin-lesson-card__title-row">
-              <h3>{row.target.label}</h3>
-              <p className="muted-text">{row.target.language}</p>
-            </div>
-            <p className="hanzi-display hanzi-display--compact">{row.target.text}</p>
-            <p className="admin-lesson-card__status">{row.target.originalAudio}</p>
-            <p className="muted-text">Storage key: {row.target.storageKey}</p>
-            {row.status === 'pending' || row.status === 'failed' || row.status === 'generating' ? (
-              <div className="admin-card-actions">
-                <button
-                  type="button"
-                  className="secondary-link"
-                  onClick={() => void handleGenerateSingleTarget(row)}
-                  disabled={!canGenerate || row.status === 'generating'}
-                >
-                  {row.status === 'generating' ? 'Generating this target…' : 'Generate this target'}
-                </button>
+        {rows.map((row) => {
+          const singleTargetGenerateUnavailableReason = getSingleTargetGenerateUnavailableReason(
+            consentConfirmed,
+            profileId,
+            pendingAction,
+          )
+          const singleTargetGenerateHelpId = `voice-target-generate-help-${row.target.targetId}`
+
+          return (
+            <article
+              key={`${row.target.lessonId}:${row.target.targetId}`}
+              className="surface-card lesson-card admin-lesson-card"
+              data-testid={`voice-target-row-${row.target.targetId}`}
+            >
+              <div className="admin-lesson-card__topline">
+                <p className="eyebrow">{row.target.lessonId}</p>
+                <span className={`badge ${row.status === 'failed' ? 'badge--gold' : 'badge--jade'}`}>{row.status}</span>
               </div>
-            ) : null}
-            {row.generatedAudioUrl ? (
-              <div className="admin-field-grid">
-                <audio aria-label={`Preview generated audio for ${row.target.label}`} controls src={row.generatedAudioUrl} />
-                <label className="admin-field admin-consent-field">
-                  <span>
-                    <input
-                      type="checkbox"
-                      checked={row.status === 'approved'}
-                      onChange={(event) => handleApprovalChange(row, event.target.checked)}
-                    />{' '}
-                    Previewed and approve {row.target.label}
-                  </span>
-                </label>
+              <div className="admin-lesson-card__title-row">
+                <h3>{row.target.label}</h3>
+                <p className="muted-text">{row.target.language}</p>
               </div>
-            ) : null}
-            {row.error ? <p className="admin-inline-feedback admin-inline-feedback--error">{row.error}</p> : null}
-          </article>
-        ))}
+              <p className="hanzi-display hanzi-display--compact">{row.target.text}</p>
+              <p className="admin-lesson-card__status">{row.target.originalAudio}</p>
+              <p className="muted-text">Storage key: {row.target.storageKey}</p>
+              {row.status === 'pending' || row.status === 'failed' || row.status === 'generating' ? (
+                <div className="admin-card-actions">
+                  <button
+                    type="button"
+                    className="secondary-link"
+                    onClick={() => void handleGenerateSingleTarget(row)}
+                    disabled={singleTargetGenerateUnavailableReason !== null || row.status === 'generating'}
+                    aria-describedby={singleTargetGenerateUnavailableReason ? singleTargetGenerateHelpId : undefined}
+                  >
+                    {row.status === 'generating' ? 'Generating this target…' : 'Generate this target'}
+                  </button>
+                  {singleTargetGenerateUnavailableReason ? (
+                    <span id={singleTargetGenerateHelpId} className="muted-text">
+                      {singleTargetGenerateUnavailableReason}
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
+              {row.generatedAudioUrl ? (
+                <div className="admin-field-grid">
+                  <audio aria-label={`Preview generated audio for ${row.target.label}`} controls src={row.generatedAudioUrl} />
+                  <label className="admin-field admin-consent-field">
+                    <span>
+                      <input
+                        type="checkbox"
+                        checked={row.status === 'approved'}
+                        onChange={(event) => handleApprovalChange(row, event.target.checked)}
+                      />{' '}
+                      Previewed and approve {row.target.label}
+                    </span>
+                  </label>
+                </div>
+              ) : null}
+              {row.error ? <p className="admin-inline-feedback admin-inline-feedback--error">{row.error}</p> : null}
+            </article>
+          )
+        })}
       </section>
     </main>
   )

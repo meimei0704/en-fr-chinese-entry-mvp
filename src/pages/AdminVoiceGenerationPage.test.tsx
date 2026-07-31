@@ -451,6 +451,29 @@ describe('AdminVoiceGenerationPage', () => {
     expect(await screen.findByText(/applied 1 approved target/i)).toBeVisible()
   })
 
+  it('explains why a row generate button is unavailable before authorization and profile setup', async () => {
+    const user = userEvent.setup()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+
+    const firstTargetId = `dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`
+    const firstRow = screen.getByTestId(`voice-target-row-${firstTargetId}`)
+    const generateButton = within(firstRow).getByRole('button', { name: /generate this target/i })
+
+    expect(generateButton).toBeDisabled()
+    expect(
+      within(firstRow).getByText(/confirm authorization and create a voice profile before generating this target/i),
+    ).toBeVisible()
+
+    await user.click(generateButton)
+
+    const generateCalls = vi.mocked(fetch).mock.calls.filter((call) => call[0] === '/api/admin/voice/generate')
+    expect(generateCalls).toHaveLength(0)
+  })
+
   it('generates one target from a row without triggering the full batch', async () => {
     const user = userEvent.setup()
     installBatchFetchMock()
