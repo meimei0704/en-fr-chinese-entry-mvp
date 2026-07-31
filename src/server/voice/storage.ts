@@ -280,11 +280,14 @@ export function createVercelBlobVoiceStorage(
   return new VercelBlobVoiceStorage(env, deps)
 }
 
-export function createVoiceStorageFromEnv(env: VoiceStorageEnv = process.env, deps: VercelBlobVoiceStorageDeps = {}) {
+export function isVercelBlobVoiceStorageConfigured(env: VoiceStorageEnv = process.env) {
   const hasReadWriteToken = Boolean(env.BLOB_READ_WRITE_TOKEN)
   const hasOidcBinding = Boolean(env.BLOB_STORE_ID && env.VERCEL_OIDC_TOKEN)
+  return env.VOICE_STORAGE_PROVIDER === 'vercel_blob' && (hasReadWriteToken || hasOidcBinding)
+}
 
-  if (env.VOICE_STORAGE_PROVIDER === 'vercel_blob' && (hasReadWriteToken || hasOidcBinding)) {
+export function createVoiceStorageFromEnv(env: VoiceStorageEnv = process.env, deps: VercelBlobVoiceStorageDeps = {}) {
+  if (isVercelBlobVoiceStorageConfigured(env)) {
     return createVercelBlobVoiceStorage(env, deps)
   }
 

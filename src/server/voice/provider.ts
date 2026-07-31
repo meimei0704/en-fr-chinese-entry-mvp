@@ -361,8 +361,12 @@ export function createMiniMaxVoiceCloneProvider(
   return new MiniMaxVoiceCloneProvider(env, deps)
 }
 
+export function isMiniMaxVoiceProviderConfigured(env: VoiceProviderEnv = process.env) {
+  return env.VOICE_PROVIDER === 'minimax' && Boolean(env.MINIMAX_API_KEY)
+}
+
 export function createVoiceCloneProviderFromEnv(env: VoiceProviderEnv = process.env, deps: MiniMaxProviderDeps = {}) {
-  if (env.VOICE_PROVIDER === 'minimax' && env.MINIMAX_API_KEY) {
+  if (isMiniMaxVoiceProviderConfigured(env)) {
     return createMiniMaxVoiceCloneProvider(env, deps)
   }
 

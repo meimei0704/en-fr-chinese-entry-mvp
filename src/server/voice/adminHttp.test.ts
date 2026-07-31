@@ -1,4 +1,8 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+const mockBlobPut = vi.hoisted(() => vi.fn())
+
+vi.mock('@vercel/blob', () => ({ put: mockBlobPut }))
 
 import { collectCourseVoiceAudioTargets } from '../../admin/voiceTargets'
 import { course } from '../../content/course'
@@ -9,6 +13,18 @@ import type { VoiceStorage } from './storage'
 const adminAuthEnv = {
   CONTENT_ADMIN_USERNAME: 'editor',
   CONTENT_ADMIN_PASSWORD: 'secret',
+}
+
+const blobEnv = {
+  ...adminAuthEnv,
+  VOICE_STORAGE_PROVIDER: 'vercel_blob',
+  BLOB_READ_WRITE_TOKEN: 'test-blob-token',
+}
+
+const minimaxEnv = {
+  ...adminAuthEnv,
+  VOICE_PROVIDER: 'minimax',
+  MINIMAX_API_KEY: 'test-minimax-key',
 }
 
 const adminAuthHeader = 'Basic ZWRpdG9yOnNlY3JldA=='
@@ -67,6 +83,11 @@ function createFakeServices() {
 }
 
 describe('admin voice HTTP handlers', () => {
+  beforeEach(() => {
+    mockBlobPut.mockReset()
+    vi.unstubAllGlobals()
+  })
+
   it('rejects unauthenticated voice requests with admin-only 401 behavior', async () => {
     const handlers = createAdminVoiceHttpHandlers(createFakeServices(), adminAuthEnv)
 
@@ -228,6 +249,53 @@ describe('admin voice HTTP handlers', () => {
     )
     expect(generateResponse.statusCode).toBe(503)
     expect(generateResponse.body).toEqual({ error: 'Voice cloning provider is not configured' })
+  })
+
+  it('does not write Blob samples when only storage is configured without a provider', async () => {
+    mockBlobPut.mockResolvedValue({ url: 'https://blob.example/voice/samples/partial.wav' })
+    const handlers = createLazyAdminVoiceHttpHandlers(blobEnv)
+    const response = createResponseRecorder()
+
+    await handlers.samples(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: {
+          consentConfirmed: true,
+          sampleName: 'Authorized sample',
+          sampleAudioBase64: 'ZmFrZQ==',
+          sampleAudioContentType: 'audio/wav',
+        },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(503)
+    expect(response.body).toEqual({ error: 'Voice cloning provider is not configured' })
+    expect(mockBlobPut).not.toHaveBeenCalled()
+  })
+
+  it('does not call MiniMax T2A when only provider is configured without storage', async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({
+      data: { audio: Buffer.from('mp3').toString('hex'), status: 2 },
+      base_resp: { status_code: 0, status_msg: 'success' },
+    })))
+    vi.stubGlobal('fetch', fetchMock)
+    const handlers = createLazyAdminVoiceHttpHandlers(minimaxEnv)
+    const response = createResponseRecorder()
+
+    await handlers.generate(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: generateBody(),
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(503)
+    expect(response.body).toEqual({ error: 'Voice sample storage is not configured' })
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('creates a profile and generated audio URL with injected storage and provider adapters', async () => {

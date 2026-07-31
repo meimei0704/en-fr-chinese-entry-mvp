@@ -11,14 +11,18 @@ import type { ContentAdminApiRequest, ContentAdminApiResponse } from '../content
 import {
   VoiceProviderNotConfiguredError,
   VoiceProviderRequestError,
+  createDisabledVoiceCloneProvider,
   createVoiceCloneProviderFromEnv,
+  isMiniMaxVoiceProviderConfigured,
   type VoiceProviderEnv,
   type VoiceCloneProvider,
 } from './provider.js'
 import {
   VoiceStorageNotConfiguredError,
   VoiceStorageWriteError,
+  createDisabledVoiceStorage,
   createVoiceStorageFromEnv,
+  isVercelBlobVoiceStorageConfigured,
   type VoiceStorageEnv,
   type VoiceStorage,
 } from './storage.js'
@@ -26,6 +30,7 @@ import {
 interface AdminVoiceServices {
   provider: VoiceCloneProvider
   storage: VoiceStorage
+  preflight?: () => void
 }
 
 type AdminVoiceEnv = AdminAuthEnv & VoiceProviderEnv & VoiceStorageEnv
@@ -210,6 +215,8 @@ export function createAdminVoiceHttpHandlers(
           throw new AdminVoiceValidationError('Missing sample audio')
         }
 
+        services.preflight?.()
+
         const savedSample = await services.storage.saveVoiceSample({
           sampleName: optionalString(body.sampleName),
           sampleAudioUrl,
@@ -244,6 +251,8 @@ export function createAdminVoiceHttpHandlers(
           target: requireTarget(body.target),
         })
         const profileId = requireString(body.profileId, 'profileId')
+        services.preflight?.()
+
         const generated = await services.provider.generateReplacementAudio({
           profileId,
           text,
@@ -263,10 +272,34 @@ export function createAdminVoiceHttpHandlers(
 }
 
 export function createLazyAdminVoiceHttpHandlers(env: AdminVoiceEnv = process.env): AdminVoiceHttpHandlers {
+  const hasStorage = isVercelBlobVoiceStorageConfigured(env)
+  const hasProvider = isMiniMaxVoiceProviderConfigured(env)
+
+  if (hasStorage && hasProvider) {
+    return createAdminVoiceHttpHandlers(
+      {
+        provider: createVoiceCloneProviderFromEnv(env),
+        storage: createVoiceStorageFromEnv(env),
+      },
+      env,
+    )
+  }
+
+  const preflight = () => {
+    if (hasStorage && !hasProvider) {
+      throw new VoiceProviderNotConfiguredError()
+    }
+
+    if (hasProvider && !hasStorage) {
+      throw new VoiceStorageNotConfiguredError()
+    }
+  }
+
   return createAdminVoiceHttpHandlers(
     {
-      provider: createVoiceCloneProviderFromEnv(env),
-      storage: createVoiceStorageFromEnv(env),
+      provider: createDisabledVoiceCloneProvider(),
+      storage: createDisabledVoiceStorage(),
+      preflight,
     },
     env,
   )
