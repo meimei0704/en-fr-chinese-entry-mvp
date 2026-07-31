@@ -78,6 +78,26 @@ describe('VercelBlobVoiceStorage', () => {
     } satisfies Partial<VoiceStorageWriteError>)
   })
 
+  it('surfaces safe Vercel Blob SDK upload details while redacting token-shaped values', async () => {
+    const put = vi.fn(async () => {
+      throw new Error('Vercel Blob: Access denied for vercel_blob_rw_secret_store_token.')
+    })
+    const storage = createVercelBlobVoiceStorage(
+      { VOICE_BLOB_PREFIX: 'voice', VOICE_BLOB_ACCESS: 'public', BLOB_READ_WRITE_TOKEN: 'test-token' },
+      { put },
+    )
+
+    await expect(storage.saveVoiceSample({
+      sampleName: 'Authorized Mandarin sample',
+      sampleAudioBase64: Buffer.from('riff bytes').toString('base64'),
+      sampleAudioContentType: 'audio/wav',
+      sampleAudioFilename: 'authorized-sample.wav',
+    })).rejects.toMatchObject({
+      name: 'VoiceStorageWriteError',
+      message: 'Vercel Blob voice sample upload failed: Access denied for [redacted].',
+    } satisfies Partial<VoiceStorageWriteError>)
+  })
+
   it('saves generated audio under the target storage key and returns the Blob URL', async () => {
     const put = vi.fn(async (pathname: string) => ({
       url: `https://blob.example/${pathname}`,

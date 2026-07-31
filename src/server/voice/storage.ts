@@ -193,6 +193,23 @@ function parseBase64Audio(input: SaveVoiceSampleInput) {
   }
 }
 
+function safeVercelBlobErrorDetail(error: unknown) {
+  const message = error instanceof Error ? error.message : ''
+  const prefix = 'Vercel Blob: '
+
+  if (!message.startsWith(prefix)) {
+    return ''
+  }
+
+  return message
+    .slice(prefix.length)
+    .replace(/vercel_blob_[a-zA-Z0-9_=-]+/g, '[redacted]')
+    .replace(/BLOB_READ_WRITE_TOKEN=\S+/g, 'BLOB_READ_WRITE_TOKEN=[redacted]')
+    .replace(/[\r\n]+/g, ' ')
+    .trim()
+    .slice(0, 240)
+}
+
 class VercelBlobVoiceStorage implements VoiceStorage {
   private readonly prefix: string
   private readonly access: BlobAccess
@@ -263,8 +280,9 @@ class VercelBlobVoiceStorage implements VoiceStorage {
   ) {
     try {
       return await this.put(pathname, body, options)
-    } catch {
-      throw new VoiceStorageWriteError(failureMessage)
+    } catch (error) {
+      const safeDetail = safeVercelBlobErrorDetail(error)
+      throw new VoiceStorageWriteError(safeDetail ? `${failureMessage}: ${safeDetail}` : failureMessage)
     }
   }
 
