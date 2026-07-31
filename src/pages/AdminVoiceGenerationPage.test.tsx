@@ -451,6 +451,36 @@ describe('AdminVoiceGenerationPage', () => {
     expect(await screen.findByText(/applied 1 approved target/i)).toBeVisible()
   })
 
+  it('generates one target from a row without triggering the full batch', async () => {
+    const user = userEvent.setup()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.click(screen.getByRole('button', { name: /create voice profile/i }))
+    expect((await screen.findAllByText(/profile id: profile_batch_authorized/i))[0]).toBeVisible()
+
+    const firstTargetId = `dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`
+    const firstRow = screen.getByTestId(`voice-target-row-${firstTargetId}`)
+    await user.click(within(firstRow).getByRole('button', { name: /generate this target/i }))
+
+    expect(await within(firstRow).findByLabelText(/preview generated audio/i)).toHaveAttribute(
+      'src',
+      '/voice/generated/audio/self-intro/line-01.mp3',
+    )
+    expect((await screen.findAllByText(/^1 generated$/i)).some((element) => element.className.includes('success'))).toBe(true)
+
+    const generateCalls = vi.mocked(fetch).mock.calls.filter((call) => call[0] === '/api/admin/voice/generate')
+    expect(generateCalls).toHaveLength(1)
+    const generateBody = JSON.parse(String(generateCalls[0]![1]!.body)) as {
+      target: { targetId: string }
+    }
+    expect(generateBody.target.targetId).toBe(firstTargetId)
+  })
+
   it('marks provider failures per row without changing original audio targets', async () => {
     const user = userEvent.setup()
     vi.mocked(fetch).mockImplementation(async (input: RequestInfo | URL, _init?: RequestInit) => {

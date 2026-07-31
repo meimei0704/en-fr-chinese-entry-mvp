@@ -532,6 +532,20 @@ export function AdminVoiceGenerationPage() {
     )
   }
 
+  async function handleGenerateSingleTarget(row: VoiceGenerationRow) {
+    if (!canGenerate || (row.status !== 'pending' && row.status !== 'failed')) {
+      return
+    }
+
+    setPendingAction('generate')
+    setError(null)
+    setSuccessMessage(null)
+
+    const result = await generateOne(row)
+    setPendingAction(null)
+    setSuccessMessage(result === 'generated' ? '1 generated' : '1 failed')
+  }
+
   function handleApprovalChange(row: VoiceGenerationRow, checked: boolean) {
     setRows((currentRows) => replaceRow(currentRows, row.target.targetId, (currentRow) => ({
       ...currentRow,
@@ -787,6 +801,7 @@ export function AdminVoiceGenerationPage() {
           <button type="button" className="primary-button" onClick={handleApplyApproved} disabled={!canApplyApproved}>
             {pendingAction === 'apply' ? 'Applying approved drafts…' : 'Apply approved to drafts'}
           </button>
+          <span className="muted-text">For a first provider smoke, generate one target from a row before running the full batch.</span>
         </div>
         {successMessage ? <p className="admin-inline-feedback admin-inline-feedback--success">{successMessage}</p> : null}
         {error ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : null}
@@ -817,6 +832,18 @@ export function AdminVoiceGenerationPage() {
             <p className="hanzi-display hanzi-display--compact">{row.target.text}</p>
             <p className="admin-lesson-card__status">{row.target.originalAudio}</p>
             <p className="muted-text">Storage key: {row.target.storageKey}</p>
+            {row.status === 'pending' || row.status === 'failed' || row.status === 'generating' ? (
+              <div className="admin-card-actions">
+                <button
+                  type="button"
+                  className="secondary-link"
+                  onClick={() => void handleGenerateSingleTarget(row)}
+                  disabled={!canGenerate || row.status === 'generating'}
+                >
+                  {row.status === 'generating' ? 'Generating this target…' : 'Generate this target'}
+                </button>
+              </div>
+            ) : null}
             {row.generatedAudioUrl ? (
               <div className="admin-field-grid">
                 <audio aria-label={`Preview generated audio for ${row.target.label}`} controls src={row.generatedAudioUrl} />
