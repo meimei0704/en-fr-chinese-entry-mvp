@@ -468,6 +468,216 @@ async function readVolcengineJson(response: Response, action: string, secrets: s
   return body
 }
 
+const VOLCENGINE_TTS_COMPLETION_CODE = 20000000
+
+function parseVolcengineStreamJson(value: string, action: string) {
+  try {
+    return JSON.parse(value) as unknown
+  } catch {
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: invalid JSON response`)
+  }
+}
+
+function findCompleteJsonValueEnd(value: string) {
+  let depth = 0
+  let inString = false
+  let escaped = false
+  let started = false
+
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index]
+
+    if (!started) {
+      if (/\s/.test(character)) {
+        continue
+      }
+
+      if (character !== '{' && character !== '[') {
+        return null
+      }
+
+      started = true
+      depth = 1
+      continue
+    }
+
+    if (inString) {
+      if (escaped) {
+        escaped = false
+      } else if (character === '\\') {
+        escaped = true
+      } else if (character === '"') {
+        inString = false
+      }
+      continue
+    }
+
+    if (character === '"') {
+      inString = true
+      continue
+    }
+
+    if (character === '{' || character === '[') {
+      depth += 1
+    } else if (character === '}' || character === ']') {
+      depth -= 1
+      if (depth === 0) {
+        return index + 1
+      }
+    }
+  }
+
+  return null
+}
+
+function consumeVolcengineStreamMessages(buffer: string, action: string) {
+  const messages: unknown[] = []
+  let remaining = buffer
+
+  while (remaining.trimStart()) {
+    remaining = remaining.trimStart()
+
+    const lineEnd = remaining.search(/\r?\n/)
+    const lineEndLength = lineEnd >= 0 && remaining[lineEnd] === '\r' && remaining[lineEnd + 1] === '\n' ? 2 : 1
+    const line = lineEnd >= 0 ? remaining.slice(0, lineEnd).trim() : ''
+
+    if (line.startsWith('event:') || line.startsWith('id:') || line.startsWith('retry:')) {
+      remaining = remaining.slice(lineEnd + lineEndLength)
+      continue
+    }
+
+    if (line.startsWith('data:')) {
+      const payload = line.replace(/^data:\s*/u, '').trim()
+      remaining = remaining.slice(lineEnd + lineEndLength)
+
+      if (!payload || payload === '[DONE]') {
+        continue
+      }
+
+      messages.push(parseVolcengineStreamJson(payload, action))
+      continue
+    }
+
+    if (remaining.startsWith('data:')) {
+      break
+    }
+
+    const jsonEnd = findCompleteJsonValueEnd(remaining)
+    if (jsonEnd === null) {
+      break
+    }
+
+    messages.push(parseVolcengineStreamJson(remaining.slice(0, jsonEnd), action))
+    remaining = remaining.slice(jsonEnd)
+  }
+
+  return { messages, remaining }
+}
+
+function getVolcengineMessage(body: unknown, secrets: string[] = []) {
+  if (typeof body !== 'object' || body === null) {
+    return { code: undefined, message: '' }
+  }
+
+  return {
+    code: typeof (body as { code?: unknown }).code === 'number'
+      ? (body as { code: number }).code
+      : undefined,
+    message: typeof (body as { message?: unknown }).message === 'string'
+      ? safeProviderErrorDetail((body as { message: string }).message, secrets)
+      : '',
+  }
+}
+
+function getVolcengineAudioBase64(body: unknown) {
+  if (typeof body !== 'object' || body === null) {
+    return null
+  }
+
+  const data = (body as { data?: unknown }).data
+
+  if (typeof data === 'string' && data.trim()) {
+    return data
+  }
+
+  if (typeof data === 'object' && data !== null) {
+    const audio = (data as { audio?: unknown }).audio
+    if (typeof audio === 'string' && audio.trim()) {
+      return audio
+    }
+  }
+
+  return null
+}
+
+async function readVolcengineTtsStream(response: Response, action: string, secrets: string[] = []) {
+  const audioChunks: Buffer[] = []
+  let pending = ''
+  let sawMessage = false
+
+  const processMessages = () => {
+    const parsed = consumeVolcengineStreamMessages(pending, action)
+    pending = parsed.remaining
+
+    for (const body of parsed.messages) {
+      sawMessage = true
+      const { code, message } = getVolcengineMessage(body, secrets)
+
+      if (!response.ok && code === 0) {
+        throw new VoiceProviderRequestError(`Volcengine ${action} failed: ${message || `HTTP ${response.status}`}`)
+      }
+
+      if (code === VOLCENGINE_TTS_COMPLETION_CODE) {
+        continue
+      }
+
+      if (code !== 0) {
+        const detail = message || (typeof code === 'number' ? `code ${code}` : `HTTP ${response.status}`)
+        throw new VoiceProviderRequestError(`Volcengine ${action} failed: ${detail}`)
+      }
+
+      const audioBase64 = getVolcengineAudioBase64(body)
+      if (audioBase64) {
+        audioChunks.push(Buffer.from(audioBase64.replace(/\s+/g, ''), 'base64'))
+      }
+    }
+  }
+
+  if (response.body) {
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+
+    for (;;) {
+      const { done, value } = await reader.read()
+      if (done) {
+        pending += decoder.decode()
+        break
+      }
+
+      pending += decoder.decode(value, { stream: true })
+      processMessages()
+    }
+  } else {
+    pending = await response.text()
+  }
+
+  processMessages()
+
+  if (pending.trim()) {
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: invalid JSON response`)
+  }
+
+  if (!response.ok && !sawMessage) {
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: HTTP ${response.status}`)
+  }
+
+  if (audioChunks.length === 0) {
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: missing audio payload`)
+  }
+
+  return Buffer.concat(audioChunks).toString('base64')
+}
+
 function audioFormatFromContentType(contentType: string | undefined, filenameOrUrl?: string) {
   const extension = extensionForContentType(contentType ?? contentTypeFromUrl(filenameOrUrl ?? ''))
 
@@ -618,8 +828,7 @@ class VolcengineVoiceCloneProvider implements VoiceCloneProvider {
       },
       'TTS',
     )
-    const body = await readVolcengineJson(response, 'TTS', [this.apiKey])
-    const audioBase64 = this.requireAudioBase64(body)
+    const audioBase64 = await readVolcengineTtsStream(response, 'TTS', [this.apiKey])
 
     return {
       audioBase64,
@@ -694,26 +903,6 @@ class VolcengineVoiceCloneProvider implements VoiceCloneProvider {
 
     const status = (body as { status?: unknown }).status
     return typeof status === 'number' ? status : undefined
-  }
-
-  private requireAudioBase64(body: unknown) {
-    if (typeof body !== 'object' || body === null) {
-      throw new VoiceProviderRequestError('Volcengine TTS failed: missing audio payload')
-    }
-
-    const data = (body as { data?: unknown }).data
-    if (typeof data === 'string' && data.trim()) {
-      return data
-    }
-
-    if (typeof data === 'object' && data !== null) {
-      const audio = (data as { audio?: unknown }).audio
-      if (typeof audio === 'string' && audio.trim()) {
-        return audio
-      }
-    }
-
-    throw new VoiceProviderRequestError('Volcengine TTS failed: missing audio payload')
   }
 }
 

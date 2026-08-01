@@ -17,6 +17,23 @@ function jsonResponse(body: unknown, init: ResponseInit = {}) {
   })
 }
 
+function streamJsonLinesResponse(chunks: unknown[], init: ResponseInit = {}) {
+  const encoder = new TextEncoder()
+
+  return new Response(new ReadableStream<Uint8Array>({
+    start(controller) {
+      for (const chunk of chunks) {
+        controller.enqueue(encoder.encode(`${JSON.stringify(chunk)}\n`))
+      }
+      controller.close()
+    },
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+    ...init,
+  })
+}
+
 describe('voice provider adapters', () => {
   it('uploads a stored sample and creates a MiniMax cloned voice profile', async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -240,7 +257,7 @@ describe('voice provider adapters', () => {
     })).rejects.toThrow('Volcengine voice clone training is not ready: status 1')
   })
 
-  it('generates replacement audio with Volcengine TTS and returns base64 audio', async () => {
+  it('generates replacement audio from Volcengine HTTP chunked TTS data chunks', async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       expect(String(input)).toBe('https://openspeech.bytedance.com/api/v3/tts/unidirectional')
       expect(init?.method).toBe('POST')
@@ -263,7 +280,11 @@ describe('voice provider adapters', () => {
         model: 'seed-tts-2.0-standard',
         audio_params: { format: 'mp3', sample_rate: 32000, bit_rate: 128000 },
       })
-      return jsonResponse({ code: 0, message: 'success', data: Buffer.from('mp3 bytes').toString('base64') })
+      return streamJsonLinesResponse([
+        { code: 0, message: '', data: Buffer.from('mp3 ').toString('base64') },
+        { code: 0, message: '', data: Buffer.from('bytes').toString('base64') },
+        { code: 20000000, message: 'ok', data: null, usage: { text_words: 2 } },
+      ])
     }) as unknown as typeof fetch
     const provider = createVolcengineVoiceCloneProvider({ VOLCENGINE_API_KEY: 'test-volcengine-key' }, { fetch: fetchMock })
 
