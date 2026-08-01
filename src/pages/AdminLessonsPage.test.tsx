@@ -70,15 +70,37 @@ describe('AdminLessonsPage', () => {
     )
   })
 
-  it('renders a safe error state when the admin lesson list request fails', async () => {
+  it('renders a retryable error state instead of showing zero lessons when the lesson list fails', async () => {
+    const user = userEvent.setup()
     vi.mocked(fetch).mockResolvedValue(
-      jsonResponse({ error: 'Content admin database is not configured' }, { status: 503 }),
+      jsonResponse({ error: 'Unable to process content admin request' }, { status: 500 }),
     )
 
     renderRoute('/admin')
 
-    expect(await screen.findByText(/content admin database is not configured/i)).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 2, name: /unable to load course content/i })).toBeVisible()
+    expect(screen.getByText(/database connection may be temporarily unavailable/i)).toBeVisible()
+    expect(screen.getAllByText(/your lessons were not cleared/i).length).toBeGreaterThan(0)
+    expect(screen.getByText(/unable to process content admin request/i)).toBeVisible()
+    expect(screen.queryByText(/0 lessons/i)).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /open self-intro editor/i })).not.toBeInTheDocument()
+
+    vi.mocked(fetch).mockResolvedValueOnce(
+      jsonResponse([
+        {
+          lessonId: 'self-intro',
+          slug: 'self-intro',
+          displayOrder: 1,
+          enabled: true,
+          draftChangedModuleCount: 0,
+        },
+      ]),
+    )
+
+    await user.click(screen.getByRole('button', { name: /retry loading lessons/i }))
+
+    expect(await screen.findByRole('link', { name: /open self-intro editor/i })).toBeVisible()
+    expect(screen.getByText(/1 lesson ready for editing/i)).toBeVisible()
   })
 
   it('prompts for admin credentials after a 401 and retries the request with a basic auth header', async () => {

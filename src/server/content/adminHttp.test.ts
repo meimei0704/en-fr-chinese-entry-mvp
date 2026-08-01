@@ -82,6 +82,30 @@ describe('content admin HTTP handlers', () => {
     expect(repository.getLessonSnapshot).toHaveBeenCalledWith('self-intro')
   })
 
+  it('retries one transient MySQL connect timeout while loading admin lessons', async () => {
+    const transientTimeout = Object.assign(new Error('connect ETIMEDOUT'), {
+      code: 'ETIMEDOUT',
+      syscall: 'connect',
+    })
+    const repository = {
+      listLessons: vi.fn()
+        .mockRejectedValueOnce(transientTimeout)
+        .mockResolvedValueOnce([{ lessonId: 'self-intro', slug: 'self-intro', displayOrder: 1, enabled: true, draftChangedModuleCount: 0 }]),
+      getLessonSnapshot: vi.fn(),
+      saveDraftModule: vi.fn(),
+      publishModule: vi.fn(),
+      rollbackModule: vi.fn(),
+    }
+    const handlers = createAdminHttpHandlers(repository, adminAuthEnv)
+    const response = createResponseRecorder()
+
+    await handlers.lessons({ method: 'GET', query: {}, headers: { authorization: 'Basic ZWRpdG9yOnNlY3JldA==' } }, response)
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual([{ lessonId: 'self-intro', slug: 'self-intro', displayOrder: 1, enabled: true, draftChangedModuleCount: 0 }])
+    expect(repository.listLessons).toHaveBeenCalledTimes(2)
+  })
+
   it('saves drafts, publishes modules, and rolls back published revisions from JSON request bodies', async () => {
     const repository = {
       listLessons: vi.fn(),

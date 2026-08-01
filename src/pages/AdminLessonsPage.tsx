@@ -6,32 +6,34 @@ import type { AdminLessonSummary } from '../admin/types.js'
 import { AdminAccessScreen } from '../components/admin/AdminAccessScreen.js'
 
 export function AdminLessonsPage() {
-  const [lessons, setLessons] = useState<AdminLessonSummary[] | null>(null)
+  const [lessons, setLessons] = useState<AdminLessonSummary[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [requiresAuth, setRequiresAuth] = useState(false)
-  const isLoading = lessons === null
 
   async function loadLessons() {
-    return listAdminLessons()
-      .then((result) => {
-        setLessons(result)
-        setError(null)
-        setRequiresAuth(false)
-      })
-      .catch((requestError: unknown) => {
-        if (requestError instanceof AdminApiError && requestError.status === 401) {
-          clearAdminBasicAuth()
-          setRequiresAuth(true)
-          setError(requestError.message)
-          setLessons([])
-          return
-        }
+    setIsLoading(true)
 
-        setError(
-          requestError instanceof AdminApiError ? requestError.message : 'Unable to load content admin lessons',
-        )
+    try {
+      const result = await listAdminLessons()
+      setLessons(result)
+      setError(null)
+      setRequiresAuth(false)
+    } catch (requestError: unknown) {
+      if (requestError instanceof AdminApiError && requestError.status === 401) {
+        clearAdminBasicAuth()
+        setRequiresAuth(true)
+        setError(requestError.message)
         setLessons([])
-      })
+        return
+      }
+
+      setError(
+        requestError instanceof AdminApiError ? requestError.message : 'Unable to load content admin lessons',
+      )
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -48,6 +50,7 @@ export function AdminLessonsPage() {
     setRequiresAuth(true)
     setError(null)
     setLessons([])
+    setIsLoading(false)
   }
 
   if (requiresAuth) {
@@ -66,6 +69,7 @@ export function AdminLessonsPage() {
   const totalLessons = lessons?.length ?? 0
   const totalPendingModules = lessons?.reduce((count, lesson) => count + lesson.draftChangedModuleCount, 0) ?? 0
   const readyLessons = lessons?.filter((lesson) => lesson.draftChangedModuleCount === 0).length ?? 0
+  const hasLoadError = error !== null && !requiresAuth && !isLoading
 
   return (
     <main className="page-shell page-shell--wide admin-page-shell">
@@ -96,6 +100,24 @@ export function AdminLessonsPage() {
                 <div className="admin-skeleton admin-skeleton--line" />
               </article>
             ))
+          ) : hasLoadError ? (
+            <>
+              <article className="admin-metric-card admin-metric-card--attention">
+                <span>Lessons</span>
+                <strong>Unavailable</strong>
+                <p>Admin content could not be loaded from the database.</p>
+              </article>
+              <article className="admin-metric-card">
+                <span>Draft state</span>
+                <strong>Unknown</strong>
+                <p>Your lessons were not cleared; the request failed before data could load.</p>
+              </article>
+              <article className="admin-metric-card">
+                <span>Next step</span>
+                <strong>Retry</strong>
+                <p>Try again after the database connection recovers.</p>
+              </article>
+            </>
           ) : (
             <>
               <article className="admin-metric-card">
@@ -136,9 +158,31 @@ export function AdminLessonsPage() {
           ))}
         </section>
       ) : null}
-      {error && !requiresAuth ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : null}
 
-      {!requiresAuth && lessons && lessons.length > 0 ? (
+      {hasLoadError ? (
+        <section className="surface-card lesson-section-card admin-history-card admin-load-error-card" role="alert" aria-live="polite">
+          <div className="admin-section-heading">
+            <div>
+              <p className="eyebrow">Load failed</p>
+              <h2>Unable to load course content</h2>
+              <p className="muted-text">
+                The database connection may be temporarily unavailable. Your lessons were not cleared; the admin request
+                failed before lesson data could load.
+              </p>
+            </div>
+            <span className="badge badge--gold">DB connection</span>
+          </div>
+          <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p>
+          <div className="admin-card-actions">
+            <span className="muted-text">Retry after the MySQL connection recovers.</span>
+            <button type="button" className="primary-button" onClick={() => void loadLessons()} disabled={isLoading}>
+              Retry loading lessons
+            </button>
+          </div>
+        </section>
+      ) : null}
+
+      {!requiresAuth && !hasLoadError && lessons.length > 0 ? (
         <section className="page-grid admin-lessons-grid" data-testid="admin-lessons-grid">
           <div className="section-heading">
             <div>

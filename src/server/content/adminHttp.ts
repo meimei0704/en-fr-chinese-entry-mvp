@@ -128,6 +128,38 @@ function internalServerError(res: ContentAdminApiResponse) {
   return res.status(500).json({ error: 'Unable to process content admin request' })
 }
 
+const transientAdminConnectRetryDelayMs = 120
+
+function diagnosticRecord(error: unknown) {
+  return typeof error === 'object' && error !== null ? error as Record<string, unknown> : {}
+}
+
+function isTransientMysqlConnectTimeout(error: unknown) {
+  const record = diagnosticRecord(error)
+  const message = error instanceof Error ? error.message : String(error)
+
+  return record.code === 'ETIMEDOUT' && record.syscall === 'connect' && /connect ETIMEDOUT/i.test(message)
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
+async function retryTransientAdminConnectTimeout<T>(run: () => Promise<T>) {
+  try {
+    return await run()
+  } catch (error) {
+    if (!isTransientMysqlConnectTimeout(error)) {
+      throw error
+    }
+
+    await wait(transientAdminConnectRetryDelayMs)
+    return run()
+  }
+}
+
 function sanitizeDiagnosticText(value: string) {
   return value
     .replace(/\b(mysql|mariadb|postgres(?:ql)?):\/\/[^@\s]+@/gi, '$1://[redacted]@')
@@ -153,7 +185,7 @@ function stringDiagnosticProperty(error: Record<string, unknown>, property: stri
 }
 
 function buildUnexpectedAdminErrorDiagnostic(error: unknown) {
-  const errorRecord = typeof error === 'object' && error !== null ? error as Record<string, unknown> : {}
+  const errorRecord = diagnosticRecord(error)
   const message = error instanceof Error ? error.message : String(error)
   const stack = stringDiagnosticProperty(errorRecord, 'stack')
 
@@ -223,7 +255,9 @@ export function createAdminHttpHandlers(
       return withAdminErrors(req, res, async () => {
         requireAdminAuthorization(req.headers, env)
         const lessonId = getQueryString(req.query?.lessonId)
-        const body = lessonId ? await repository.getLessonSnapshot(lessonId) : await repository.listLessons()
+        const body = lessonId
+          ? await retryTransientAdminConnectTimeout(() => repository.getLessonSnapshot(lessonId))
+          : await retryTransientAdminConnectTimeout(() => repository.listLessons())
         return res.status(200).json(body)
       })
     },

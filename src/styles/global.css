@@ -2405,6 +2405,10 @@ h2 {
   gap: 0.2rem;
 }
 
+.admin-load-error-card {
+  width: min(100%, 72rem);
+}
+
 
 .admin-voice-page-shell {
   gap: 1rem;
