@@ -31,6 +31,9 @@ type VoiceSampleRecordingState = 'idle' | 'requesting' | 'recording' | 'recorded
 const MIN_RECORDED_SAMPLE_DURATION_MS = 10_000
 const MIN_RECORDED_SAMPLE_BYTES = 1_024
 const RECORDED_SAMPLE_FILENAME = 'recorded-mandarin-sample.wav'
+const PROFILE_ID_STORAGE_KEY = 'adminVoiceGeneration.profileId'
+const CREATE_ADDITIONAL_PROFILE_WARNING =
+  'An existing Profile id is already set. Creating a new voice profile can create a new cloned voice and may trigger an additional voice clone fee. Continue?'
 
 interface WindowWithWebkitAudioContext extends Window {
   webkitAudioContext?: typeof AudioContext
@@ -109,6 +112,35 @@ function readBlobAsBase64(blob: Blob) {
     reader.onerror = () => reject(new Error('Unable to prepare recorded voice sample'))
     reader.readAsDataURL(blob)
   })
+}
+
+function readSavedProfileId() {
+  if (typeof window === 'undefined') {
+    return ''
+  }
+
+  try {
+    return window.localStorage.getItem(PROFILE_ID_STORAGE_KEY) ?? ''
+  } catch {
+    return ''
+  }
+}
+
+function saveProfileId(profileId: string) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    const nextProfileId = profileId.trim()
+    if (nextProfileId) {
+      window.localStorage.setItem(PROFILE_ID_STORAGE_KEY, nextProfileId)
+    } else {
+      window.localStorage.removeItem(PROFILE_ID_STORAGE_KEY)
+    }
+  } catch {
+    // localStorage is a convenience cache only; generation still uses React state.
+  }
 }
 
 function writeAscii(view: DataView, offset: number, value: string) {
@@ -199,7 +231,7 @@ export function AdminVoiceGenerationPage() {
   const [sampleAudioBase64, setSampleAudioBase64] = useState('')
   const [sampleAudioContentType, setSampleAudioContentType] = useState('')
   const [sampleAudioFilename, setSampleAudioFilename] = useState('')
-  const [profileId, setProfileId] = useState('')
+  const [profileId, setProfileId] = useState(readSavedProfileId)
   const [pendingAction, setPendingAction] = useState<'profile' | 'generate' | 'apply' | null>(null)
   const [recordingState, setRecordingState] = useState<VoiceSampleRecordingState>('idle')
   const [recordedSampleUrl, setRecordedSampleUrl] = useState('')
@@ -294,6 +326,12 @@ export function AdminVoiceGenerationPage() {
     setSampleAudioFilename('')
     recordedChunksRef.current = []
     recordingStartedAtMsRef.current = null
+  }
+
+  function updateProfileId(nextProfileId: string) {
+    const normalizedProfileId = nextProfileId.trim()
+    setProfileId(normalizedProfileId)
+    saveProfileId(normalizedProfileId)
   }
 
   async function finalizeRecordedSample(recorder: MediaRecorder) {
@@ -426,7 +464,7 @@ export function AdminVoiceGenerationPage() {
     setRows([])
     setError(null)
     setSuccessMessage(null)
-    setProfileId('')
+    updateProfileId('')
   }
 
   async function handleSampleFileChange(event: ChangeEvent<HTMLInputElement>) {
@@ -458,6 +496,10 @@ export function AdminVoiceGenerationPage() {
       return
     }
 
+    if (profileId.trim() !== '' && !window.confirm(CREATE_ADDITIONAL_PROFILE_WARNING)) {
+      return
+    }
+
     setPendingAction('profile')
     setError(null)
     setSuccessMessage(null)
@@ -471,12 +513,32 @@ export function AdminVoiceGenerationPage() {
         sampleAudioContentType: sampleAudioContentType.trim() || undefined,
         sampleAudioFilename: sampleAudioFilename.trim() || undefined,
       })
-      setProfileId(result.profileId)
+      updateProfileId(result.profileId)
       setSuccessMessage(`Profile id: ${result.profileId}`)
     } catch (requestError) {
       setError(getVoiceErrorMessage(requestError, 'Unable to create voice profile'))
     } finally {
       setPendingAction(null)
+    }
+  }
+
+  async function handleCopyProfileId() {
+    const currentProfileId = profileId.trim()
+    if (!currentProfileId) {
+      return
+    }
+
+    if (!window.navigator.clipboard?.writeText) {
+      setError('Clipboard copy is not available in this browser. Select and copy the Profile id input instead.')
+      return
+    }
+
+    try {
+      await window.navigator.clipboard.writeText(currentProfileId)
+      setError(null)
+      setSuccessMessage(`Copied Profile id: ${currentProfileId}`)
+    } catch {
+      setError('Unable to copy Profile id. Select and copy the Profile id input instead.')
     }
   }
 
@@ -713,6 +775,20 @@ export function AdminVoiceGenerationPage() {
             I confirm this voice sample is mine or explicitly authorized
           </span>
         </label>
+        <div className="admin-field-grid">
+          <label className="admin-field">
+            <span>Use existing Profile id</span>
+            <input
+              placeholder="Paste existing profile id"
+              value={profileId}
+              onChange={(event) => updateProfileId(event.target.value)}
+            />
+            <p className="muted-text">
+              Paste a saved Profile id to reuse the existing cloned voice. Reuse avoids creating another voice clone fee;
+              generating audio still consumes MiniMax TTS characters.
+            </p>
+          </label>
+        </div>
         <article className="surface-card lesson-card admin-lesson-card" aria-label="Browser voice sample recorder">
           <div className="admin-section-heading">
             <div>
@@ -801,11 +877,23 @@ export function AdminVoiceGenerationPage() {
         </div>
         <div className="admin-card-actions">
           <span className="muted-text">
-            {profileId ? `Profile id: ${profileId}` : 'Create a voice profile before generating audio.'}
+            {profileId ? `Current Profile id: ${profileId}` : 'Create a voice profile before generating audio.'}
           </span>
+          <button
+            type="button"
+            className="secondary-link"
+            onClick={() => void handleCopyProfileId()}
+            disabled={!profileId.trim()}
+          >
+            Copy Profile id
+          </button>
           <button type="button" className="secondary-link" onClick={handleCreateProfile} disabled={!canCreateProfile}>
             {pendingAction === 'profile' ? 'Creating voice profile…' : 'Create voice profile'}
           </button>
+          <span className="muted-text">
+            Creating a new voice profile can create a new cloned voice and may add another voice clone fee. Use the
+            existing Profile id for normal runs.
+          </span>
         </div>
       </section>
 

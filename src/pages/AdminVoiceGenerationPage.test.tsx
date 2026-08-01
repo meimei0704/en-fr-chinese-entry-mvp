@@ -7,6 +7,9 @@ import { course } from '../content/course'
 import type { LessonContent } from '../content/types'
 import { renderRoute } from '../test/renderRoute'
 
+const profileIdStorageKey = 'adminVoiceGeneration.profileId'
+const existingProfileIdFixture = 'ChineseEntry_existing_profile_id'
+
 function jsonResponse(body: unknown, init: ResponseInit = {}) {
   return new Response(JSON.stringify(body), {
     status: 200,
@@ -226,6 +229,7 @@ describe('AdminVoiceGenerationPage', () => {
 
   afterEach(() => {
     window.sessionStorage.clear()
+    window.localStorage.clear()
     vi.unstubAllGlobals()
     restoreBrowserRecordingGlobals()
     vi.restoreAllMocks()
@@ -449,6 +453,60 @@ describe('AdminVoiceGenerationPage', () => {
     expect(draftBody.payload.lines[0]!.audioFallback).toBe('/audio/self-intro/line-01.mp3')
     expect(draftBody.payload.lines[1]!.audio).toBe('/audio/self-intro/line-02.mp3')
     expect(await screen.findByText(/applied 1 approved target/i)).toBeVisible()
+  })
+
+  it('loads a saved existing profile id and generates a target without creating another profile', async () => {
+    const user = userEvent.setup()
+    installBatchFetchMock()
+    window.localStorage.setItem(profileIdStorageKey, existingProfileIdFixture)
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    expect(screen.getByLabelText(/use existing profile id/i)).toHaveValue(existingProfileIdFixture)
+
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+
+    const firstTargetId = `dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`
+    const firstRow = screen.getByTestId(`voice-target-row-${firstTargetId}`)
+    await user.click(within(firstRow).getByRole('button', { name: /generate this target/i }))
+
+    await waitFor(() => {
+      expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/generate')).toBe(true)
+    })
+    expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/samples')).toBe(false)
+    const generateCall = vi.mocked(fetch).mock.calls.find((call) => call[0] === '/api/admin/voice/generate')!
+    const generateBody = JSON.parse(String(generateCall[1]!.body)) as { profileId?: string }
+    expect(generateBody.profileId).toBe(existingProfileIdFixture)
+  })
+
+  it('saves a manually entered existing profile id for reuse', async () => {
+    const user = userEvent.setup()
+    installBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.type(screen.getByLabelText(/use existing profile id/i), existingProfileIdFixture)
+
+    expect(window.localStorage.getItem(profileIdStorageKey)).toBe(existingProfileIdFixture)
+  })
+
+  it('does not create a new profile when the existing-profile fee warning is cancelled', async () => {
+    const user = userEvent.setup()
+    const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    installBatchFetchMock()
+    window.localStorage.setItem(profileIdStorageKey, existingProfileIdFixture)
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
+    await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/another-sample.wav')
+    await user.click(screen.getByRole('button', { name: /create voice profile/i }))
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/additional voice clone fee/i))
+    expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/samples')).toBe(false)
   })
 
   it('explains why a row generate button is unavailable before authorization and profile setup', async () => {
