@@ -128,6 +128,47 @@ function internalServerError(res: ContentAdminApiResponse) {
   return res.status(500).json({ error: 'Unable to process content admin request' })
 }
 
+function sanitizeDiagnosticText(value: string) {
+  return value
+    .replace(/\b(mysql|mariadb|postgres(?:ql)?):\/\/[^@\s]+@/gi, '$1://[redacted]@')
+    .replace(/\b(Basic|Bearer)\s+[A-Za-z0-9._~+/=-]+/gi, '$1 [redacted]')
+    .replace(
+      /([?&](?:access[_-]?token|api[_-]?key|auth|password|secret|token)=)[^&\s)]+/gi,
+      '$1[redacted]',
+    )
+    .replace(
+      /\b(authorization|password|passwd|pwd|secret|token|api[_-]?key)(\s*[:=]\s*['"]?)[^'",\s)]+/gi,
+      '$1$2[redacted]',
+    )
+}
+
+function stringDiagnosticProperty(error: Record<string, unknown>, property: string) {
+  const value = error[property]
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    return sanitizeDiagnosticText(String(value))
+  }
+
+  return undefined
+}
+
+function buildUnexpectedAdminErrorDiagnostic(error: unknown) {
+  const errorRecord = typeof error === 'object' && error !== null ? error as Record<string, unknown> : {}
+  const message = error instanceof Error ? error.message : String(error)
+  const stack = stringDiagnosticProperty(errorRecord, 'stack')
+
+  return {
+    code: stringDiagnosticProperty(errorRecord, 'code'),
+    message: sanitizeDiagnosticText(message),
+    name: error instanceof Error ? error.name : typeof error,
+    stack: stack ? stack.split('\n').slice(0, 4).join('\n') : undefined,
+  }
+}
+
+function logUnexpectedAdminError(error: unknown) {
+  console.error('[content-admin] unexpected error', buildUnexpectedAdminErrorDiagnostic(error))
+}
+
 function mapAdminError(error: unknown, req: ContentAdminApiRequest, res: ContentAdminApiResponse) {
   if (error instanceof MissingDatabaseUrlError) {
     return serviceUnavailable(res)
@@ -153,6 +194,7 @@ function mapAdminError(error: unknown, req: ContentAdminApiRequest, res: Content
     return res.status(409).json({ error: error.message })
   }
 
+  logUnexpectedAdminError(error)
   return internalServerError(res)
 }
 

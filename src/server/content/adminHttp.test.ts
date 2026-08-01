@@ -214,6 +214,46 @@ describe('content admin HTTP handlers', () => {
     expect(response.body).toEqual({ error: 'Content admin database is not configured' })
   })
 
+  it('logs sanitized diagnostics for unexpected admin content errors while returning a generic 500', async () => {
+    const unexpectedError = Object.assign(
+      new Error('connect ETIMEDOUT mysql://admin:super-secret@db.example/content_admin?token=abc123'),
+      { code: 'ETIMEDOUT' },
+    )
+    unexpectedError.stack =
+      'Error: connect ETIMEDOUT mysql://admin:super-secret@db.example/content_admin?token=abc123\n' +
+      '    at query (mysql://admin:super-secret@db.example/content_admin?token=abc123)'
+    const repository = {
+      listLessons: vi.fn().mockRejectedValue(unexpectedError),
+      getLessonSnapshot: vi.fn(),
+      saveDraftModule: vi.fn(),
+      publishModule: vi.fn(),
+      rollbackModule: vi.fn(),
+    }
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const handlers = createAdminHttpHandlers(repository, adminAuthEnv)
+    const response = createResponseRecorder()
+
+    await handlers.lessons(
+      { method: 'GET', query: {}, headers: { authorization: 'Basic ZWRpdG9yOnNlY3JldA==' } },
+      response,
+    )
+
+    expect(response.statusCode).toBe(500)
+    expect(response.body).toEqual({ error: 'Unable to process content admin request' })
+    expect(errorSpy).toHaveBeenCalledTimes(1)
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[content-admin] unexpected error',
+      expect.objectContaining({
+        code: 'ETIMEDOUT',
+        message: expect.stringContaining('mysql://[redacted]@db.example/content_admin?token=[redacted]'),
+        name: 'Error',
+        stack: expect.stringContaining('mysql://[redacted]@db.example/content_admin?token=[redacted]'),
+      }),
+    )
+    expect(JSON.stringify(errorSpy.mock.calls[0])).not.toContain('super-secret')
+    expect(JSON.stringify(errorSpy.mock.calls[0])).not.toContain('abc123')
+  })
+
   it('rejects unauthenticated admin requests with a 401 challenge before reaching the repository', async () => {
     const repository = {
       listLessons: vi.fn(),
