@@ -72,7 +72,7 @@ function getSingleTargetGenerateUnavailableReason(
   const hasProfile = profileId.trim() !== ''
 
   if (!consentConfirmed && !hasProfile) {
-    return 'Confirm authorization and create a voice profile before generating this target.'
+    return 'Confirm authorization and enter a Profile id before generating this target.'
   }
 
   if (!consentConfirmed) {
@@ -245,15 +245,6 @@ export function AdminVoiceGenerationPage() {
     () => snapshots.map((snapshot) => snapshot.draftLesson).filter((lesson): lesson is LessonContent => lesson !== null),
     [snapshots],
   )
-  const statusCounts = useMemo(() => {
-    return rows.reduce(
-      (counts, row) => ({
-        ...counts,
-        [row.status]: counts[row.status] + 1,
-      }),
-      { pending: 0, generating: 0, generated: 0, failed: 0, approved: 0 },
-    )
-  }, [rows])
   const hasSampleAudio = sampleAudioUrl.trim() !== '' || sampleAudioBase64.trim() !== ''
   const canCreateProfile = consentConfirmed && hasSampleAudio && pendingAction === null
   const canStartRecording =
@@ -542,6 +533,12 @@ export function AdminVoiceGenerationPage() {
     }
   }
 
+  function handleClearProfileId() {
+    updateProfileId('')
+    setError(null)
+    setSuccessMessage('Saved Profile id cleared.')
+  }
+
   async function generateOne(row: VoiceGenerationRow) {
     setRows((currentRows) => replaceRow(currentRows, row.target.targetId, (currentRow) => ({
       ...currentRow,
@@ -715,185 +712,219 @@ export function AdminVoiceGenerationPage() {
   }
 
   return (
-    <main className="page-shell page-shell--wide admin-page-shell">
-      <section className="hero-card admin-overview-card">
+    <main className="page-shell page-shell--wide admin-page-shell admin-voice-page-shell">
+      <section className="hero-card admin-overview-card admin-voice-hero">
         <div className="admin-overview-card__header">
           <div>
-            <p className="eyebrow">Authorized voice</p>
-            <h1>Batch Voice Generation</h1>
+            <p className="eyebrow">Course pronunciation</p>
+            <h1>Original pronunciation is active</h1>
             <p className="lede">
-              Regenerate the existing Chinese pronunciation audio targets from one authorized voice profile.
+              Current course audio uses original files by default. Cloned voice generation stays available as an optional
+              admin tool and will not change lessons unless you generate, approve, and apply replacements.
             </p>
           </div>
           <div className="admin-badge-column">
-            <span className="badge badge--jade">zh-CN only</span>
-            <span className="badge badge--gold">Draft only</span>
+            <span className="badge badge--jade">Original audio</span>
+            <span className="badge badge--gold">No extra fee</span>
             <Link className="secondary-link" to="/admin">Back to admin</Link>
             <button type="button" className="secondary-link" onClick={handleSignOut}>Sign out</button>
           </div>
         </div>
-        <div className="admin-metric-grid" data-testid="admin-voice-metrics">
-          <article className="admin-metric-card">
+        <div className="admin-voice-status-grid" data-testid="admin-voice-metrics">
+          <article className="admin-voice-status-card admin-voice-status-card--primary">
+            <span>Recommended state</span>
+            <strong>Original</strong>
+            <p>No action needed. Existing `/audio/...` files remain the course pronunciation source.</p>
+          </article>
+          <article className="admin-voice-status-card">
             <span>Audio targets</span>
             <strong>{rows.length}</strong>
-            <p>{rows.length} audio targets collected from existing lesson audio fields.</p>
+            <p>{rows.length} lesson audio fields available if you intentionally run a cloned-voice batch.</p>
           </article>
-          <article className="admin-metric-card">
-            <span>Generated</span>
-            <strong>{statusCounts.generated}</strong>
-            <p>{statusCounts.generated} generated</p>
-          </article>
-          <article className="admin-metric-card admin-metric-card--attention">
-            <span>Failed</span>
-            <strong>{statusCounts.failed}</strong>
-            <p>{statusCounts.failed} failed</p>
-          </article>
-          <article className="admin-metric-card">
-            <span>Approved</span>
-            <strong>{statusCounts.approved}</strong>
-            <p>{statusCounts.approved} approved</p>
+          <article className="admin-voice-status-card">
+            <span>Optional cloned voice tools</span>
+            <strong>{profileId.trim() ? 'Ready' : 'Off'}</strong>
+            <p>{profileId.trim() ? 'A saved Profile id is available for manual generation.' : 'No cloned voice is active.'}</p>
           </article>
         </div>
       </section>
 
-      <section className="surface-card lesson-section-card admin-history-card" aria-label="Batch voice profile setup">
+      <section className="surface-card lesson-section-card admin-history-card admin-voice-tools-card" aria-label="Optional cloned voice tools">
         <div className="admin-section-heading">
           <div>
-            <p className="eyebrow">Step 1</p>
-            <h2>Authorized voice profile</h2>
-            <p className="muted-text">Only use your own voice or a voice you are explicitly authorized to use.</p>
-          </div>
-          <span className="badge badge--sky">Admin only</span>
-        </div>
-        <label className="admin-field admin-consent-field">
-          <span>
-            <input
-              type="checkbox"
-              checked={consentConfirmed}
-              onChange={(event) => setConsentConfirmed(event.target.checked)}
-            />{' '}
-            I confirm this voice sample is mine or explicitly authorized
-          </span>
-        </label>
-        <div className="admin-field-grid">
-          <label className="admin-field">
-            <span>Use existing Profile id</span>
-            <input
-              placeholder="Paste existing profile id"
-              value={profileId}
-              onChange={(event) => updateProfileId(event.target.value)}
-            />
+            <p className="eyebrow">Optional tool</p>
+            <h2>Use cloned voice only when needed</h2>
             <p className="muted-text">
-              Paste a saved Profile id to reuse the existing cloned voice. Reuse avoids creating another voice clone fee;
-              generating audio still consumes MiniMax TTS characters.
+              Keep original pronunciation as the default. If a future run needs cloned audio, paste a Profile id, confirm
+              authorization, then generate and apply selected targets manually.
             </p>
-          </label>
+          </div>
+          <span className="badge badge--sky">Manual only</span>
         </div>
-        <article className="surface-card lesson-card admin-lesson-card" aria-label="Browser voice sample recorder">
-          <div className="admin-section-heading">
-            <div>
-              <p className="eyebrow">Mic capture</p>
-              <h2>Record voice sample</h2>
-              <p className="muted-text">
-                Record a self-authorized Mandarin sample directly in the browser, then use it to create the voice profile.
-              </p>
+
+        <div className="admin-voice-tool-grid">
+          <article className="admin-voice-tool-card admin-voice-tool-card--primary" aria-label="Existing voice profile tool">
+            <div className="admin-section-heading admin-section-heading--compact">
+              <div>
+                <p className="eyebrow">Reuse existing Profile id</p>
+                <h3>Reuse a saved voice</h3>
+                <p className="muted-text">
+                  Paste a saved Profile id only when you intentionally want cloned-voice replacements. Reuse avoids a new
+                  clone fee; generation still consumes MiniMax TTS characters.
+                </p>
+              </div>
+              <span className="badge badge--jade">No new clone</span>
             </div>
-            <span className="badge badge--jade">30–60 sec</span>
-          </div>
-          <div className="admin-field-grid">
-            <div className="admin-field">
-              <span>Recommended Mandarin prompt</span>
-              <p className="muted-text">
-                你好，我正在录制一段普通话声音样本。今天的天气很好，我会用自然的语速清楚地说话。请你帮我确认地址、时间和票价。我们一起练习中文声调：妈、麻、马、骂；也练习常用句子：你好，请问洗手间在哪里？我想买一张车票，谢谢你的帮助。
-              </p>
+            <label className="admin-field">
+              <span>Use existing Profile id</span>
+              <input
+                placeholder="Paste existing profile id"
+                value={profileId}
+                onChange={(event) => updateProfileId(event.target.value)}
+              />
+            </label>
+            <label className="admin-field admin-consent-field admin-voice-consent-field">
+              <span>
+                <input
+                  type="checkbox"
+                  checked={consentConfirmed}
+                  onChange={(event) => setConsentConfirmed(event.target.checked)}
+                />{' '}
+                I confirm this voice sample is mine or explicitly authorized
+              </span>
+            </label>
+            <div className="admin-card-actions admin-card-actions--cluster">
+              <span className="muted-text">
+                {profileId ? `Current Profile id: ${profileId}` : 'Original pronunciation remains active until a Profile id is used.'}
+              </span>
+              <div className="admin-voice-inline-actions">
+                <button
+                  type="button"
+                  className="secondary-link"
+                  onClick={() => void handleCopyProfileId()}
+                  disabled={!profileId.trim()}
+                >
+                  Copy Profile id
+                </button>
+                <button
+                  type="button"
+                  className="secondary-link"
+                  onClick={handleClearProfileId}
+                  disabled={!profileId.trim()}
+                >
+                  Clear saved id
+                </button>
+              </div>
             </div>
-            <div className="admin-field">
-              <span>Recording guidance</span>
-              <p className="muted-text">
-                You may read your own Mandarin content instead; the prompt is only a quality guide. Speak clearly in a quiet room for about 30–60 seconds, use natural pacing, and avoid background music.
-              </p>
+          </article>
+
+          <details className="admin-voice-tool-card admin-voice-create-panel">
+            <summary>
+              <span>
+                <span className="eyebrow">Advanced</span>
+                <strong>Create new profile</strong>
+                <small>Record or upload a new authorized sample. This can create another voice clone fee.</small>
+              </span>
+            </summary>
+            <div className="admin-voice-create-panel__body">
+              <article className="surface-card lesson-card admin-lesson-card admin-voice-recorder-card" aria-label="Browser voice sample recorder">
+                <div className="admin-section-heading">
+                  <div>
+                    <p className="eyebrow">Mic capture</p>
+                    <h3>Record voice sample</h3>
+                    <p className="muted-text">
+                      Record a self-authorized Mandarin sample directly in the browser, then use it to create a new voice profile.
+                    </p>
+                  </div>
+                  <span className="badge badge--jade">30–60 sec</span>
+                </div>
+                <div className="admin-field-grid admin-field-grid--two-column">
+                  <div className="admin-field">
+                    <span>Recommended Mandarin prompt</span>
+                    <p className="muted-text">
+                      你好，我正在录制一段普通话声音样本。今天的天气很好，我会用自然的语速清楚地说话。请你帮我确认地址、时间和票价。我们一起练习中文声调：妈、麻、马、骂；也练习常用句子：你好，请问洗手间在哪里？我想买一张车票，谢谢你的帮助。
+                    </p>
+                  </div>
+                  <div className="admin-field">
+                    <span>Recording guidance</span>
+                    <p className="muted-text">
+                      You may read your own Mandarin content instead; the prompt is only a quality guide. Speak clearly in a quiet room for about 30–60 seconds, use natural pacing, and avoid background music.
+                    </p>
+                  </div>
+                </div>
+                <div className="admin-card-actions">
+                  <button
+                    type="button"
+                    className="secondary-link"
+                    onClick={handleStartRecording}
+                    disabled={!canStartRecording}
+                  >
+                    {recordingState === 'requesting' ? 'Requesting microphone…' : 'Start recording'}
+                  </button>
+                  {recordingState === 'recording' ? (
+                    <button type="button" className="primary-button" onClick={handleStopRecording}>
+                      Stop recording
+                    </button>
+                  ) : null}
+                  {recordedSampleUrl ? (
+                    <button type="button" className="secondary-link" onClick={handleDiscardRecording}>
+                      Re-record
+                    </button>
+                  ) : null}
+                  <span className="muted-text">
+                    {recordingState === 'recording'
+                      ? 'Recording… read the prompt or your own Mandarin text.'
+                      : recordingState === 'requesting'
+                        ? 'Check your browser microphone prompt and allow access to start recording.'
+                        : recordedSampleUrl
+                        ? 'Recorded sample ready. Preview it before creating the profile.'
+                        : consentConfirmed
+                          ? 'Start recording now, or use the URL/file fallback below.'
+                          : 'Confirm authorization to enable recording, or use the URL/file fallback below.'}
+                  </span>
+                </div>
+                {recordedSampleUrl ? (
+                  <audio aria-label="Preview recorded voice sample" controls src={recordedSampleUrl} />
+                ) : null}
+                {recorderError ? (
+                  <p className="admin-inline-feedback admin-inline-feedback--error">{recorderError}</p>
+                ) : null}
+              </article>
+
+              <div className="admin-field-grid admin-field-grid--two-column">
+                <label className="admin-field">
+                  <span>Voice sample name</span>
+                  <input value={sampleName} onChange={(event) => setSampleName(event.target.value)} />
+                </label>
+                <label className="admin-field">
+                  <span>Voice sample URL</span>
+                  <input
+                    placeholder="https://storage.example/authorized-sample.wav"
+                    value={sampleAudioUrl}
+                    onChange={(event) => {
+                      setSampleAudioUrl(event.target.value)
+                      setSampleAudioBase64('')
+                      setSampleAudioContentType('')
+                      setSampleAudioFilename('')
+                    }}
+                  />
+                </label>
+                <label className="admin-field admin-field--full">
+                  <span>Voice sample file</span>
+                  <input type="file" accept=".mp3,.m4a,.wav,audio/mpeg,audio/mp4,audio/wav" onChange={handleSampleFileChange} />
+                </label>
+              </div>
+              <div className="admin-card-actions admin-card-actions--cluster">
+                <span className="muted-text">
+                  Creating a new voice profile can create a new cloned voice and may add another voice clone fee. Use an
+                  existing Profile id for normal cloned-voice runs.
+                </span>
+                <button type="button" className="secondary-link" onClick={handleCreateProfile} disabled={!canCreateProfile}>
+                  {pendingAction === 'profile' ? 'Creating voice profile…' : 'Create voice profile'}
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="admin-card-actions">
-            <button
-              type="button"
-              className="secondary-link"
-              onClick={handleStartRecording}
-              disabled={!canStartRecording}
-            >
-              {recordingState === 'requesting' ? 'Requesting microphone…' : 'Start recording'}
-            </button>
-            {recordingState === 'recording' ? (
-              <button type="button" className="primary-button" onClick={handleStopRecording}>
-                Stop recording
-              </button>
-            ) : null}
-            {recordedSampleUrl ? (
-              <button type="button" className="secondary-link" onClick={handleDiscardRecording}>
-                Re-record
-              </button>
-            ) : null}
-            <span className="muted-text">
-              {recordingState === 'recording'
-                ? 'Recording… read the prompt or your own Mandarin text.'
-                : recordingState === 'requesting'
-                  ? 'Check your browser microphone prompt and allow access to start recording.'
-                  : recordedSampleUrl
-                  ? 'Recorded sample ready. Preview it before creating the profile.'
-                  : consentConfirmed
-                    ? 'Start recording now, or use the URL/file fallback below.'
-                    : 'Confirm authorization to enable recording, or use the URL/file fallback below.'}
-            </span>
-          </div>
-          {recordedSampleUrl ? (
-            <audio aria-label="Preview recorded voice sample" controls src={recordedSampleUrl} />
-          ) : null}
-          {recorderError ? (
-            <p className="admin-inline-feedback admin-inline-feedback--error">{recorderError}</p>
-          ) : null}
-        </article>
-        <div className="admin-field-grid">
-          <label className="admin-field">
-            <span>Voice sample name</span>
-            <input value={sampleName} onChange={(event) => setSampleName(event.target.value)} />
-          </label>
-          <label className="admin-field">
-            <span>Voice sample URL</span>
-            <input
-              placeholder="https://storage.example/authorized-sample.wav"
-              value={sampleAudioUrl}
-              onChange={(event) => {
-                setSampleAudioUrl(event.target.value)
-                setSampleAudioBase64('')
-                setSampleAudioContentType('')
-                setSampleAudioFilename('')
-              }}
-            />
-          </label>
-          <label className="admin-field">
-            <span>Voice sample file</span>
-            <input type="file" accept=".mp3,.m4a,.wav,audio/mpeg,audio/mp4,audio/wav" onChange={handleSampleFileChange} />
-          </label>
-        </div>
-        <div className="admin-card-actions">
-          <span className="muted-text">
-            {profileId ? `Current Profile id: ${profileId}` : 'Create a voice profile before generating audio.'}
-          </span>
-          <button
-            type="button"
-            className="secondary-link"
-            onClick={() => void handleCopyProfileId()}
-            disabled={!profileId.trim()}
-          >
-            Copy Profile id
-          </button>
-          <button type="button" className="secondary-link" onClick={handleCreateProfile} disabled={!canCreateProfile}>
-            {pendingAction === 'profile' ? 'Creating voice profile…' : 'Create voice profile'}
-          </button>
-          <span className="muted-text">
-            Creating a new voice profile can create a new cloned voice and may add another voice clone fee. Use the
-            existing Profile id for normal runs.
-          </span>
+          </details>
         </div>
       </section>
 
@@ -921,77 +952,97 @@ export function AdminVoiceGenerationPage() {
         {error ? <p className="admin-inline-feedback admin-inline-feedback--error">{error}</p> : null}
       </section>
 
-      <section className="page-grid admin-lessons-grid" data-testid="admin-voice-target-grid">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Target manifest</p>
-            <h2>{rows.length} audio targets</h2>
+      {rows.length === 0 ? (
+        <section className="surface-card lesson-section-card admin-history-card admin-voice-empty-state" data-testid="admin-voice-target-grid">
+          <div className="admin-section-heading">
+            <div>
+              <p className="eyebrow">Target manifest</p>
+              <h2>No audio targets loaded</h2>
+              <p className="muted-text">
+                No lesson audio targets were loaded for this page. Refresh this page or check /admin if lessons are
+                missing; this is not a Profile id problem.
+              </p>
+            </div>
+            <span className="badge badge--gold">0 targets</span>
           </div>
-          <p className="muted-text">Existing `/audio/...mp3` paths remain the fallback for generated audio.</p>
-        </div>
-        {rows.map((row) => {
-          const singleTargetGenerateUnavailableReason = getSingleTargetGenerateUnavailableReason(
-            consentConfirmed,
-            profileId,
-            pendingAction,
-          )
-          const singleTargetGenerateHelpId = `voice-target-generate-help-${row.target.targetId}`
+        </section>
+      ) : (
+        <section className="page-grid admin-lessons-grid admin-voice-target-grid" data-testid="admin-voice-target-grid">
+          <div className="section-heading admin-voice-target-grid__heading">
+            <div>
+              <p className="eyebrow">Target manifest</p>
+              <h2>{rows.length} audio targets</h2>
+            </div>
+            <p className="muted-text">Original `/audio/...mp3` paths remain preserved as fallback while you test generated audio.</p>
+          </div>
+          {rows.map((row) => {
+            const singleTargetGenerateUnavailableReason = getSingleTargetGenerateUnavailableReason(
+              consentConfirmed,
+              profileId,
+              pendingAction,
+            )
+            const singleTargetGenerateHelpId = `voice-target-generate-help-${row.target.targetId}`
 
-          return (
-            <article
-              key={`${row.target.lessonId}:${row.target.targetId}`}
-              className="surface-card lesson-card admin-lesson-card"
-              data-testid={`voice-target-row-${row.target.targetId}`}
-            >
-              <div className="admin-lesson-card__topline">
-                <p className="eyebrow">{row.target.lessonId}</p>
-                <span className={`badge ${row.status === 'failed' ? 'badge--gold' : 'badge--jade'}`}>{row.status}</span>
-              </div>
-              <div className="admin-lesson-card__title-row">
-                <h3>{row.target.label}</h3>
-                <p className="muted-text">{row.target.language}</p>
-              </div>
-              <p className="hanzi-display hanzi-display--compact">{row.target.text}</p>
-              <p className="admin-lesson-card__status">{row.target.originalAudio}</p>
-              <p className="muted-text">Storage key: {row.target.storageKey}</p>
-              {row.status === 'pending' || row.status === 'failed' || row.status === 'generating' ? (
-                <div className="admin-card-actions">
-                  <button
-                    type="button"
-                    className="secondary-link"
-                    onClick={() => void handleGenerateSingleTarget(row)}
-                    disabled={singleTargetGenerateUnavailableReason !== null || row.status === 'generating'}
-                    aria-describedby={singleTargetGenerateUnavailableReason ? singleTargetGenerateHelpId : undefined}
-                  >
-                    {row.status === 'generating' ? 'Generating this target…' : 'Generate this target'}
-                  </button>
-                  {singleTargetGenerateUnavailableReason ? (
-                    <span id={singleTargetGenerateHelpId} className="muted-text">
-                      {singleTargetGenerateUnavailableReason}
-                    </span>
-                  ) : null}
+            return (
+              <article
+                key={`${row.target.lessonId}:${row.target.targetId}`}
+                className="surface-card lesson-card admin-lesson-card admin-voice-target-card"
+                data-testid={`voice-target-row-${row.target.targetId}`}
+              >
+                <div className="admin-lesson-card__topline">
+                  <p className="eyebrow">{row.target.lessonId}</p>
+                  <span className={`badge ${row.status === 'failed' ? 'badge--gold' : 'badge--jade'}`}>{row.status}</span>
                 </div>
-              ) : null}
-              {row.generatedAudioUrl ? (
-                <div className="admin-field-grid">
-                  <audio aria-label={`Preview generated audio for ${row.target.label}`} controls src={row.generatedAudioUrl} />
-                  <label className="admin-field admin-consent-field">
-                    <span>
-                      <input
-                        type="checkbox"
-                        checked={row.status === 'approved'}
-                        onChange={(event) => handleApprovalChange(row, event.target.checked)}
-                      />{' '}
-                      Previewed and approve {row.target.label}
-                    </span>
-                  </label>
+                <div className="admin-lesson-card__title-row">
+                  <h3>{row.target.label}</h3>
+                  <p className="muted-text">{row.target.moduleType} · {row.target.language}</p>
                 </div>
-              ) : null}
-              {row.error ? <p className="admin-inline-feedback admin-inline-feedback--error">{row.error}</p> : null}
-            </article>
-          )
-        })}
-      </section>
+                <p className="hanzi-display hanzi-display--compact">{row.target.text}</p>
+                <p className="admin-lesson-card__status">Original audio fallback is preserved.</p>
+                <details className="admin-voice-technical-details">
+                  <summary>Technical details</summary>
+                  <p className="muted-text">Original: {row.target.originalAudio}</p>
+                  <p className="muted-text">Storage key: {row.target.storageKey}</p>
+                </details>
+                {row.status === 'pending' || row.status === 'failed' || row.status === 'generating' ? (
+                  <div className="admin-card-actions">
+                    <button
+                      type="button"
+                      className="secondary-link"
+                      onClick={() => void handleGenerateSingleTarget(row)}
+                      disabled={singleTargetGenerateUnavailableReason !== null || row.status === 'generating'}
+                      aria-describedby={singleTargetGenerateUnavailableReason ? singleTargetGenerateHelpId : undefined}
+                    >
+                      {row.status === 'generating' ? 'Generating this target…' : 'Generate this target'}
+                    </button>
+                    {singleTargetGenerateUnavailableReason ? (
+                      <span id={singleTargetGenerateHelpId} className="muted-text">
+                        {singleTargetGenerateUnavailableReason}
+                      </span>
+                    ) : null}
+                  </div>
+                ) : null}
+                {row.generatedAudioUrl ? (
+                  <div className="admin-field-grid">
+                    <audio aria-label={`Preview generated audio for ${row.target.label}`} controls src={row.generatedAudioUrl} />
+                    <label className="admin-field admin-consent-field">
+                      <span>
+                        <input
+                          type="checkbox"
+                          checked={row.status === 'approved'}
+                          onChange={(event) => handleApprovalChange(row, event.target.checked)}
+                        />{' '}
+                        Previewed and approve {row.target.label}
+                      </span>
+                    </label>
+                  </div>
+                ) : null}
+                {row.error ? <p className="admin-inline-feedback admin-inline-feedback--error">{row.error}</p> : null}
+              </article>
+            )
+          })}
+        </section>
+      )}
     </main>
   )
 }

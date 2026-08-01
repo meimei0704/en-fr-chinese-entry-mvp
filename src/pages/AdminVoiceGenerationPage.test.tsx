@@ -102,6 +102,21 @@ function installBatchFetchMock() {
   })
 }
 
+function installEmptyBatchFetchMock() {
+  vi.mocked(fetch).mockImplementation(async (input: RequestInfo | URL) => {
+    const url = String(input)
+
+    if (url === '/api/admin/content/lessons') {
+      return jsonResponse([])
+    }
+
+    return jsonResponse({ error: `Unexpected request: ${url}` }, { status: 500 })
+  })
+}
+
+async function openCreateProfilePanel(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByText(/create new profile/i))
+}
 
 const originalMediaDevices = window.navigator.mediaDevices
 const originalCreateObjectURL = URL.createObjectURL
@@ -241,12 +256,12 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     expect(screen.getByTestId('admin-voice-loading-shell')).toBeVisible()
-    expect(await screen.findByRole('heading', { level: 1, name: /batch voice generation/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 1, name: /original pronunciation is active/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /179 audio targets/i })).toBeVisible()
-    expect(screen.getByText(/zh-cn only/i)).toBeVisible()
+    expect(screen.getByText(/current course audio uses original files/i)).toBeVisible()
     expect(screen.getByRole('button', { name: /generate all pending/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /apply approved to drafts/i })).toBeDisabled()
-    expect(screen.queryByText(/voice replacement/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/optional cloned voice tools/i)).toBeVisible()
   })
 
   it('shows recorder guidance and gates microphone capture behind consent', async () => {
@@ -256,7 +271,8 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
-    expect(screen.getByRole('heading', { level: 2, name: /record voice sample/i })).toBeVisible()
+    await openCreateProfilePanel(user)
+    expect(screen.getByRole('heading', { level: 3, name: /record voice sample/i })).toBeVisible()
     expect(screen.getByText(/recommended mandarin prompt/i)).toBeVisible()
     expect(screen.getByText(/you may read your own mandarin content/i)).toBeVisible()
     expect(screen.getByText(/speak clearly in a quiet room/i)).toBeVisible()
@@ -277,6 +293,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
 
@@ -297,6 +314,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
 
@@ -340,6 +358,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
 
@@ -356,6 +375,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
     await user.click(screen.getByRole('button', { name: /stop recording/i }))
@@ -376,6 +396,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
 
@@ -421,6 +442,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
     expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
 
@@ -492,6 +514,35 @@ describe('AdminVoiceGenerationPage', () => {
     expect(window.localStorage.getItem(profileIdStorageKey)).toBe(existingProfileIdFixture)
   })
 
+  it('clears a saved existing profile id without creating or generating audio', async () => {
+    const user = userEvent.setup()
+    installBatchFetchMock()
+    window.localStorage.setItem(profileIdStorageKey, existingProfileIdFixture)
+
+    renderRoute('/admin/voice')
+
+    await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    expect(screen.getByLabelText(/use existing profile id/i)).toHaveValue(existingProfileIdFixture)
+
+    await user.click(screen.getByRole('button', { name: /clear saved id/i }))
+
+    expect(screen.getByLabelText(/use existing profile id/i)).toHaveValue('')
+    expect(window.localStorage.getItem(profileIdStorageKey)).toBeNull()
+    expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/samples')).toBe(false)
+    expect(vi.mocked(fetch).mock.calls.some((call) => call[0] === '/api/admin/voice/generate')).toBe(false)
+  })
+
+  it('explains an empty target manifest without blaming the profile id', async () => {
+    installEmptyBatchFetchMock()
+
+    renderRoute('/admin/voice')
+
+    expect(await screen.findByRole('heading', { level: 1, name: /original pronunciation is active/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: /no audio targets loaded/i })).toBeVisible()
+    expect(screen.getByText(/refresh this page or check \/admin/i)).toBeVisible()
+    expect(screen.queryByText(/profile id is invalid/i)).not.toBeInTheDocument()
+  })
+
   it('does not create a new profile when the existing-profile fee warning is cancelled', async () => {
     const user = userEvent.setup()
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
@@ -501,6 +552,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/another-sample.wav')
     await user.click(screen.getByRole('button', { name: /create voice profile/i }))
@@ -523,7 +575,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     expect(generateButton).toBeDisabled()
     expect(
-      within(firstRow).getByText(/confirm authorization and create a voice profile before generating this target/i),
+      within(firstRow).getByText(/confirm authorization and enter a Profile id before generating this target/i),
     ).toBeVisible()
 
     await user.click(generateButton)
@@ -539,6 +591,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /create voice profile/i }))
@@ -581,6 +634,7 @@ describe('AdminVoiceGenerationPage', () => {
     renderRoute('/admin/voice')
 
     await screen.findByRole('heading', { level: 2, name: /179 audio targets/i })
+    await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
     await user.click(screen.getByRole('button', { name: /create voice profile/i }))
@@ -589,7 +643,7 @@ describe('AdminVoiceGenerationPage', () => {
     expect((await screen.findAllByText(/179 failed/i))[0]).toBeVisible()
     const firstRow = screen.getByTestId(`voice-target-row-dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`)
     expect(within(firstRow).getByText(/voice cloning provider is not configured/i)).toBeVisible()
-    expect(within(firstRow).getByText('/audio/self-intro/line-01.mp3')).toBeVisible()
+    expect(within(firstRow).getByText(/original audio fallback is preserved/i)).toBeVisible()
     expect(screen.getByRole('button', { name: /apply approved to drafts/i })).toBeDisabled()
   })
 })
