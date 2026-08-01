@@ -13,7 +13,7 @@ import {
   VoiceProviderRequestError,
   createDisabledVoiceCloneProvider,
   createVoiceCloneProviderFromEnv,
-  isMiniMaxVoiceProviderConfigured,
+  isVoiceProviderConfigured,
   type VoiceProviderEnv,
   type VoiceCloneProvider,
 } from './provider.js'
@@ -227,6 +227,9 @@ export function createAdminVoiceHttpHandlers(
         const profile = await services.provider.createVoiceProfile({
           sampleName: optionalString(body.sampleName),
           sampleUrl: savedSample.sampleUrl,
+          sampleAudioBase64,
+          sampleAudioContentType: optionalString(body.sampleAudioContentType),
+          sampleAudioFilename: optionalString(body.sampleAudioFilename),
         })
 
         return res.status(200).json({ profileId: profile.profileId })
@@ -273,7 +276,7 @@ export function createAdminVoiceHttpHandlers(
 
 export function createLazyAdminVoiceHttpHandlers(env: AdminVoiceEnv = process.env): AdminVoiceHttpHandlers {
   const hasStorage = isVercelBlobVoiceStorageConfigured(env)
-  const hasProvider = isMiniMaxVoiceProviderConfigured(env)
+  const hasProvider = isVoiceProviderConfigured(env)
 
   if (hasStorage && hasProvider) {
     return createAdminVoiceHttpHandlers(

@@ -1,6 +1,9 @@
 export interface CreateVoiceProfileInput {
   sampleUrl: string
   sampleName?: string
+  sampleAudioBase64?: string
+  sampleAudioContentType?: string
+  sampleAudioFilename?: string
 }
 
 export interface CreateVoiceProfileResult {
@@ -42,11 +45,28 @@ export interface VoiceProviderEnv {
   MINIMAX_VOICE_ID_PREFIX?: string
   MINIMAX_NEED_NOISE_REDUCTION?: string
   MINIMAX_NEED_VOLUME_NORMALIZATION?: string
+  VOLCENGINE_API_KEY?: string
+  VOLCENGINE_BASE_URL?: string
+  VOLCENGINE_TTS_RESOURCE_ID?: string
+  VOLCENGINE_TTS_MODEL?: string
+  VOLCENGINE_AUDIO_FORMAT?: string
+  VOLCENGINE_AUDIO_SAMPLE_RATE?: string
+  VOLCENGINE_AUDIO_BITRATE?: string
+  VOLCENGINE_SPEAKER_ID_PREFIX?: string
+  VOLCENGINE_VOICE_STATUS_POLL_ATTEMPTS?: string
+  VOLCENGINE_VOICE_STATUS_POLL_INTERVAL_MS?: string
+  VOLCENGINE_ENABLE_AUDIO_DENOISE?: string
 }
 
 interface MiniMaxProviderDeps {
   fetch?: typeof fetch
   randomId?: () => string
+}
+
+interface VolcengineProviderDeps {
+  fetch?: typeof fetch
+  randomId?: () => string
+  sleep?: (durationMs: number) => Promise<void>
 }
 
 export class VoiceProviderNotConfiguredError extends Error {
@@ -113,6 +133,12 @@ function defaultRandomId() {
   return `${Date.now()}${Math.random().toString(16).slice(2, 10)}`
 }
 
+function defaultSleep(durationMs: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, durationMs)
+  })
+}
+
 function contentTypeFromUrl(url: string) {
   const lower = url.toLowerCase()
 
@@ -157,11 +183,34 @@ function contentTypeForAudioFormat(format: string) {
       return 'audio/wav'
     case 'flac':
       return 'audio/flac'
+    case 'ogg_opus':
     case 'opus':
       return 'audio/ogg'
     default:
       return 'application/octet-stream'
   }
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function safeProviderErrorDetail(message: string, secrets: string[] = []) {
+  let detail = message
+
+  for (const secret of secrets) {
+    if (secret.trim().length >= 4) {
+      detail = detail.replace(new RegExp(escapeRegExp(secret), 'g'), '[redacted]')
+    }
+  }
+
+  return detail
+    .replace(/(MINIMAX_API_KEY|VOLCENGINE_API_KEY)=\S+/g, '$1=[redacted]')
+    .replace(/(Bearer\s+)[^\s"']+/gi, '$1[redacted]')
+    .replace(/(X-Api-Key["':=\s]+)[^\s"',}]+/gi, '$1[redacted]')
+    .replace(/[\r\n]+/g, ' ')
+    .trim()
+    .slice(0, 240)
 }
 
 function getBaseResp(body: unknown) {
@@ -382,6 +431,292 @@ class MiniMaxVoiceCloneProvider implements VoiceCloneProvider {
   }
 }
 
+async function fetchForVolcengine(
+  fetchImpl: typeof fetch,
+  input: Parameters<typeof fetch>[0],
+  init: Parameters<typeof fetch>[1],
+  action: string,
+) {
+  try {
+    return await fetchImpl(input, init)
+  } catch {
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: request failed`)
+  }
+}
+
+async function readVolcengineJson(response: Response, action: string, secrets: string[] = []) {
+  let body: unknown
+
+  try {
+    body = await response.json()
+  } catch {
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: invalid JSON response`)
+  }
+
+  const message = typeof body === 'object' && body !== null && typeof (body as { message?: unknown }).message === 'string'
+    ? safeProviderErrorDetail((body as { message: string }).message, secrets)
+    : ''
+  const code = typeof body === 'object' && body !== null && typeof (body as { code?: unknown }).code === 'number'
+    ? (body as { code: number }).code
+    : 0
+
+  if (!response.ok || code !== 0) {
+    const detail = message || `HTTP ${response.status}`
+    throw new VoiceProviderRequestError(`Volcengine ${action} failed: ${detail}`)
+  }
+
+  return body
+}
+
+function audioFormatFromContentType(contentType: string | undefined, filenameOrUrl?: string) {
+  const extension = extensionForContentType(contentType ?? contentTypeFromUrl(filenameOrUrl ?? ''))
+
+  if (extension === 'mp3' || extension === 'wav' || extension === 'm4a') {
+    return extension
+  }
+
+  if (filenameOrUrl?.toLowerCase().endsWith('.ogg')) {
+    return 'ogg'
+  }
+
+  if (filenameOrUrl?.toLowerCase().endsWith('.aac')) {
+    return 'aac'
+  }
+
+  return 'wav'
+}
+
+function parseInlineSampleAudio(input: CreateVoiceProfileInput) {
+  const raw = input.sampleAudioBase64?.trim()
+
+  if (!raw) {
+    return null
+  }
+
+  const dataUrlMatch = /^data:([^;,]+)(?:;[^,]*)?,(.*)$/s.exec(raw)
+  const contentType = dataUrlMatch?.[1] ?? input.sampleAudioContentType ?? contentTypeFromUrl(input.sampleAudioFilename ?? '')
+  const base64 = (dataUrlMatch?.[2] ?? raw).replace(/\s+/g, '')
+
+  return {
+    base64,
+    format: audioFormatFromContentType(contentType, input.sampleAudioFilename),
+  }
+}
+
+class VolcengineVoiceCloneProvider implements VoiceCloneProvider {
+  private readonly apiKey: string
+  private readonly baseUrl: string
+  private readonly ttsResourceId: string
+  private readonly ttsModel: string
+  private readonly audioFormat: string
+  private readonly sampleRate: number
+  private readonly bitrate: number
+  private readonly speakerIdPrefix: string
+  private readonly voiceStatusPollAttempts: number
+  private readonly voiceStatusPollIntervalMs: number
+  private readonly enableAudioDenoise: boolean
+  private readonly fetch: typeof fetch
+  private readonly randomId: () => string
+  private readonly sleep: (durationMs: number) => Promise<void>
+
+  constructor(env: VoiceProviderEnv, deps: VolcengineProviderDeps = {}) {
+    if (!env.VOLCENGINE_API_KEY) {
+      throw new VoiceProviderNotConfiguredError()
+    }
+
+    this.apiKey = env.VOLCENGINE_API_KEY
+    this.baseUrl = trimTrailingSlash(env.VOLCENGINE_BASE_URL ?? 'https://openspeech.bytedance.com')
+    this.ttsResourceId = env.VOLCENGINE_TTS_RESOURCE_ID ?? 'seed-icl-2.0'
+    this.ttsModel = env.VOLCENGINE_TTS_MODEL ?? 'seed-tts-2.0-standard'
+    this.audioFormat = env.VOLCENGINE_AUDIO_FORMAT ?? 'mp3'
+    this.sampleRate = optionalInteger(env.VOLCENGINE_AUDIO_SAMPLE_RATE, 32000)
+    this.bitrate = optionalInteger(env.VOLCENGINE_AUDIO_BITRATE, 128000)
+    this.speakerIdPrefix = sanitizeVoiceIdPart(env.VOLCENGINE_SPEAKER_ID_PREFIX ?? 'ChineseEntry') || 'ChineseEntry'
+    this.voiceStatusPollAttempts = Math.max(1, optionalInteger(env.VOLCENGINE_VOICE_STATUS_POLL_ATTEMPTS, 3))
+    this.voiceStatusPollIntervalMs = Math.max(0, optionalInteger(env.VOLCENGINE_VOICE_STATUS_POLL_INTERVAL_MS, 1500))
+    this.enableAudioDenoise = optionalBoolean(env.VOLCENGINE_ENABLE_AUDIO_DENOISE, false)
+    this.fetch = deps.fetch ?? fetch
+    this.randomId = deps.randomId ?? defaultRandomId
+    this.sleep = deps.sleep ?? defaultSleep
+  }
+
+  async createVoiceProfile(input: CreateVoiceProfileInput): Promise<CreateVoiceProfileResult> {
+    const speakerId = this.createSpeakerId()
+    const sample = await this.readSample(input)
+    const voiceCloneResponse = await fetchForVolcengine(
+      this.fetch,
+      `${this.baseUrl}/api/v3/tts/voice_clone`,
+      {
+        method: 'POST',
+        headers: this.jsonHeaders(),
+        body: JSON.stringify({
+          speaker_id: 'custom_speaker_id',
+          custom_speaker_id: speakerId,
+          audio: {
+            data: sample.base64,
+            format: sample.format,
+          },
+          language: 0,
+          extra_params: {
+            enable_audio_denoise: this.enableAudioDenoise,
+          },
+        }),
+      },
+      'voice clone',
+    )
+    const voiceCloneBody = await readVolcengineJson(voiceCloneResponse, 'voice clone', [this.apiKey])
+
+    if (this.isVoiceReady(voiceCloneBody)) {
+      return { profileId: speakerId }
+    }
+
+    let lastStatus = this.voiceStatus(voiceCloneBody)
+    for (let attempt = 0; attempt < this.voiceStatusPollAttempts; attempt += 1) {
+      if (attempt > 0 && this.voiceStatusPollIntervalMs > 0) {
+        await this.sleep(this.voiceStatusPollIntervalMs)
+      }
+
+      const statusBody = await this.getVoiceStatus(speakerId)
+      lastStatus = this.voiceStatus(statusBody)
+
+      if (this.isVoiceReady(statusBody)) {
+        return { profileId: speakerId }
+      }
+
+      if (lastStatus === 3) {
+        throw new VoiceProviderRequestError('Volcengine voice clone training failed: status 3')
+      }
+    }
+
+    const status = lastStatus ?? 'unknown'
+    throw new VoiceProviderRequestError(`Volcengine voice clone training is not ready: status ${status}`)
+  }
+
+  async generateReplacementAudio(input: GenerateReplacementAudioInput): Promise<GenerateReplacementAudioResult> {
+    const response = await fetchForVolcengine(
+      this.fetch,
+      `${this.baseUrl}/api/v3/tts/unidirectional`,
+      {
+        method: 'POST',
+        headers: {
+          ...this.jsonHeaders(),
+          'X-Api-Resource-Id': this.ttsResourceId,
+        },
+        body: JSON.stringify({
+          req_params: {
+            text: input.text,
+            speaker: input.profileId,
+            model: this.ttsModel,
+            explicit_language: 'zh-cn',
+            audio_params: {
+              format: this.audioFormat,
+              sample_rate: this.sampleRate,
+              bit_rate: this.bitrate,
+            },
+          },
+        }),
+      },
+      'TTS',
+    )
+    const body = await readVolcengineJson(response, 'TTS', [this.apiKey])
+    const audioBase64 = this.requireAudioBase64(body)
+
+    return {
+      audioBase64,
+      contentType: contentTypeForAudioFormat(this.audioFormat),
+    }
+  }
+
+  private async readSample(input: CreateVoiceProfileInput) {
+    const inlineSample = parseInlineSampleAudio(input)
+    if (inlineSample) {
+      return inlineSample
+    }
+
+    const source = await fetchForVolcengine(this.fetch, input.sampleUrl, undefined, 'sample download')
+    if (!source.ok) {
+      throw new VoiceProviderRequestError(`Volcengine sample download failed: HTTP ${source.status}`)
+    }
+
+    const contentType = source.headers.get('content-type') ?? contentTypeFromUrl(input.sampleUrl)
+    return {
+      base64: Buffer.from(await source.arrayBuffer()).toString('base64'),
+      format: audioFormatFromContentType(contentType, input.sampleUrl),
+    }
+  }
+
+  private async getVoiceStatus(speakerId: string) {
+    const response = await fetchForVolcengine(
+      this.fetch,
+      `${this.baseUrl}/api/v3/tts/get_voice`,
+      {
+        method: 'POST',
+        headers: this.jsonHeaders(),
+        body: JSON.stringify({
+          speaker_id: 'custom_speaker_id',
+          custom_speaker_id: speakerId,
+        }),
+      },
+      'voice status',
+    )
+    return readVolcengineJson(response, 'voice status', [this.apiKey])
+  }
+
+  private createSpeakerId() {
+    const speakerId = `${this.speakerIdPrefix}_${sanitizeVoiceIdPart(this.randomId())}`
+      .replace(/_+$/g, '')
+      .slice(0, 256)
+
+    if (/^[a-zA-Z][a-zA-Z0-9_-]{7,255}$/.test(speakerId)) {
+      return speakerId
+    }
+
+    return `ChineseEntry_${defaultRandomId()}`
+  }
+
+  private jsonHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'X-Api-Key': this.apiKey,
+      'X-Api-Request-Id': defaultRandomId(),
+    }
+  }
+
+  private isVoiceReady(body: unknown) {
+    const status = this.voiceStatus(body)
+    return status === 2 || status === 4
+  }
+
+  private voiceStatus(body: unknown) {
+    if (typeof body !== 'object' || body === null) {
+      return undefined
+    }
+
+    const status = (body as { status?: unknown }).status
+    return typeof status === 'number' ? status : undefined
+  }
+
+  private requireAudioBase64(body: unknown) {
+    if (typeof body !== 'object' || body === null) {
+      throw new VoiceProviderRequestError('Volcengine TTS failed: missing audio payload')
+    }
+
+    const data = (body as { data?: unknown }).data
+    if (typeof data === 'string' && data.trim()) {
+      return data
+    }
+
+    if (typeof data === 'object' && data !== null) {
+      const audio = (data as { audio?: unknown }).audio
+      if (typeof audio === 'string' && audio.trim()) {
+        return audio
+      }
+    }
+
+    throw new VoiceProviderRequestError('Volcengine TTS failed: missing audio payload')
+  }
+}
+
 export function createMiniMaxVoiceCloneProvider(
   env: VoiceProviderEnv = process.env,
   deps: MiniMaxProviderDeps = {},
@@ -389,13 +724,35 @@ export function createMiniMaxVoiceCloneProvider(
   return new MiniMaxVoiceCloneProvider(env, deps)
 }
 
+export function createVolcengineVoiceCloneProvider(
+  env: VoiceProviderEnv = process.env,
+  deps: VolcengineProviderDeps = {},
+): VoiceCloneProvider {
+  return new VolcengineVoiceCloneProvider(env, deps)
+}
+
 export function isMiniMaxVoiceProviderConfigured(env: VoiceProviderEnv = process.env) {
   return env.VOICE_PROVIDER === 'minimax' && Boolean(env.MINIMAX_API_KEY)
 }
 
-export function createVoiceCloneProviderFromEnv(env: VoiceProviderEnv = process.env, deps: MiniMaxProviderDeps = {}) {
+export function isVolcengineVoiceProviderConfigured(env: VoiceProviderEnv = process.env) {
+  return env.VOICE_PROVIDER === 'volcengine' && Boolean(env.VOLCENGINE_API_KEY)
+}
+
+export function isVoiceProviderConfigured(env: VoiceProviderEnv = process.env) {
+  return isMiniMaxVoiceProviderConfigured(env) || isVolcengineVoiceProviderConfigured(env)
+}
+
+export function createVoiceCloneProviderFromEnv(
+  env: VoiceProviderEnv = process.env,
+  deps: MiniMaxProviderDeps & VolcengineProviderDeps = {},
+) {
   if (isMiniMaxVoiceProviderConfigured(env)) {
     return createMiniMaxVoiceCloneProvider(env, deps)
+  }
+
+  if (isVolcengineVoiceProviderConfigured(env)) {
+    return createVolcengineVoiceCloneProvider(env, deps)
   }
 
   return createDisabledVoiceCloneProvider()

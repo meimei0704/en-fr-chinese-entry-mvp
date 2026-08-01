@@ -33,6 +33,12 @@ const fullVoiceEnv = {
   MINIMAX_API_KEY: 'test-minimax-key',
 }
 
+const fullVolcengineVoiceEnv = {
+  ...blobEnv,
+  VOICE_PROVIDER: 'volcengine',
+  VOLCENGINE_API_KEY: 'test-volcengine-key',
+}
+
 const adminAuthHeader = 'Basic ZWRpdG9yOnNlY3JldA=='
 const manifestTarget = collectCourseVoiceAudioTargets(course.lessons).find(
   (target) => target.targetId === 'dialogue:self-intro-line-01',
@@ -325,6 +331,46 @@ describe('admin voice HTTP handlers', () => {
 
     expect(response.statusCode).toBe(502)
     expect(response.body).toEqual({ error: 'Vercel Blob voice sample upload failed' })
+  })
+
+  it('wires the Volcengine provider and forwards inline sample bytes for private-storage compatible cloning', async () => {
+    mockBlobPut.mockResolvedValue({ url: 'https://private-blob.example/voice/samples/authorized.wav' })
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      expect(String(input)).toBe('https://openspeech.bytedance.com/api/v3/tts/voice_clone')
+      expect(init?.headers).toEqual(expect.objectContaining({ 'X-Api-Key': 'test-volcengine-key' }))
+      const body = JSON.parse(String(init?.body ?? '{}')) as {
+        custom_speaker_id?: string
+        audio?: { data?: string; format?: string }
+      }
+      expect(body.custom_speaker_id).toMatch(/^ChineseEntry_/)
+      expect(body.audio).toEqual({ data: Buffer.from('wav sample').toString('base64'), format: 'wav' })
+      return new Response(JSON.stringify({ speaker_id: body.custom_speaker_id, status: 2 }), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }) as unknown as typeof fetch
+    vi.stubGlobal('fetch', fetchMock)
+    const handlers = createLazyAdminVoiceHttpHandlers(fullVolcengineVoiceEnv)
+    const response = createResponseRecorder()
+
+    await handlers.samples(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: {
+          consentConfirmed: true,
+          sampleName: 'Authorized sample',
+          sampleAudioBase64: Buffer.from('wav sample').toString('base64'),
+          sampleAudioContentType: 'audio/wav',
+          sampleAudioFilename: 'authorized.wav',
+        },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({ profileId: expect.stringMatching(/^ChineseEntry_/) })
+    expect(mockBlobPut).toHaveBeenCalled()
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
   it('creates a profile and generated audio URL with injected storage and provider adapters', async () => {
