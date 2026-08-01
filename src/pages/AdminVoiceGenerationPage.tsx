@@ -928,7 +928,7 @@ export function AdminVoiceGenerationPage() {
         </div>
       </section>
 
-      <section className="surface-card lesson-section-card admin-history-card" aria-label="Batch generation controls">
+      <section className="surface-card lesson-section-card admin-history-card admin-voice-batch-card" aria-label="Batch generation controls">
         <div className="admin-section-heading">
           <div>
             <p className="eyebrow">Step 2</p>
@@ -1005,7 +1005,7 @@ export function AdminVoiceGenerationPage() {
                   <p className="muted-text">Storage key: {row.target.storageKey}</p>
                 </details>
                 {row.status === 'pending' || row.status === 'failed' || row.status === 'generating' ? (
-                  <div className="admin-card-actions">
+                  <div className="admin-card-actions admin-voice-target-actions">
                     <button
                       type="button"
                       className="secondary-link"
