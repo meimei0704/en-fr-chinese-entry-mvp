@@ -9,6 +9,7 @@ export interface DatabaseEnv {
   DATABASE_URL?: string
   MYSQL_DATABASE_URL?: string
   MYSQL_URL?: string
+  MYSQL_CONNECT_TIMEOUT_MS?: string
   MYSQL_SSL?: string
   CONTENT_ADMIN_USERNAME?: string
   CONTENT_ADMIN_PASSWORD?: string
@@ -47,11 +48,24 @@ function templateToQuery(strings: TemplateStringsArray, values: unknown[]) {
   )
 }
 
-function createMysqlPoolOptions(connectionString: string, env: DatabaseEnv) {
+const DEFAULT_MYSQL_CONNECT_TIMEOUT_MS = 20_000
+
+function resolveMysqlConnectTimeoutMs(env: DatabaseEnv) {
+  const configuredTimeout = Number(env.MYSQL_CONNECT_TIMEOUT_MS)
+
+  if (!Number.isFinite(configuredTimeout) || configuredTimeout <= 0) {
+    return DEFAULT_MYSQL_CONNECT_TIMEOUT_MS
+  }
+
+  return Math.trunc(configuredTimeout)
+}
+
+export function createMysqlPoolOptions(connectionString: string, env: DatabaseEnv) {
   return {
     uri: connectionString,
     waitForConnections: true,
     connectionLimit: 4,
+    connectTimeout: resolveMysqlConnectTimeoutMs(env),
     ssl: env.MYSQL_SSL === 'required' ? { rejectUnauthorized: true } : undefined,
   }
 }

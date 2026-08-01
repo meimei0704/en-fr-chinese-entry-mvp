@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createContentHttpHandlers } from './http'
-import { ContentMysqlRepository, resolveDatabaseUrl } from './repository'
+import { ContentMysqlRepository, createMysqlPoolOptions, resolveDatabaseUrl } from './repository'
 import { buildCourseFromPublishedModuleRows, buildLessonFromPublishedModuleRows } from './publicContent'
 import type { PublishedModuleRow, PublishedContentRepository } from './types'
 
@@ -210,5 +210,16 @@ describe('ContentMysqlRepository published queries', () => {
     expect(resolveDatabaseUrl({ MYSQL_URL: 'mysql://fallback/db' })).toBe('mysql://fallback/db')
     expect(resolveDatabaseUrl({ DATABASE_URL: 'mysql://generic/db' })).toBe('mysql://generic/db')
     expect(resolveDatabaseUrl({ POSTGRES_URL: 'postgres://wrong/db' })).toBeUndefined()
+  })
+
+  it('uses a longer MySQL connect timeout by default and allows env override', () => {
+    expect(createMysqlPoolOptions('mysql://example/db', {}).connectTimeout).toBe(20_000)
+    expect(
+      createMysqlPoolOptions('mysql://example/db', { MYSQL_CONNECT_TIMEOUT_MS: '30000' }).connectTimeout,
+    ).toBe(30_000)
+    expect(createMysqlPoolOptions('mysql://example/db', { MYSQL_CONNECT_TIMEOUT_MS: '0' }).connectTimeout).toBe(20_000)
+    expect(createMysqlPoolOptions('mysql://example/db', { MYSQL_CONNECT_TIMEOUT_MS: 'not-a-number' }).connectTimeout).toBe(
+      20_000,
+    )
   })
 })

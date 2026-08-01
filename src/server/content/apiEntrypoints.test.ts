@@ -153,9 +153,11 @@ describe('Vercel content API entrypoints', () => {
 
   it('rewrites lesson detail API paths to the lesson API function before the SPA fallback', async () => {
     const vercelConfig = JSON.parse(await readFile('vercel.json', 'utf8')) as {
+      regions?: string[]
       rewrites?: Array<{ destination: string; source: string }>
     }
 
+    expect(vercelConfig.regions).toEqual(['hkg1'])
     expect(vercelConfig.rewrites?.[0]).toEqual({
       source: '/api/content/lessons/:lessonId',
       destination: '/api/content/lessons?lessonId=:lessonId',
