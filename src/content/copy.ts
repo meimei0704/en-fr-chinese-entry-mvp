@@ -29,10 +29,7 @@ export const uiCopy = {
     },
     homePage: {
       heading: '轻松学中文',
-      heroSlogans: [
-        'Learn Mandarin in real life scenarios',
-        'Apprenez le mandarin dans la vie quotidienne',
-      ],
+      heroSlogan: 'Learn Mandarin in real life scenarios',
       journeyEyebrow: 'Journey Map',
       journeyMapLabel: 'Journey Map',
       journeyIntro: 'Arrive in China step by step',
@@ -199,10 +196,7 @@ export const uiCopy = {
     },
     homePage: {
       heading: '轻松学中文',
-      heroSlogans: [
-        'Learn Mandarin in real life scenarios',
-        'Apprenez le mandarin dans la vie quotidienne',
-      ],
+      heroSlogan: 'Apprenez le mandarin dans la vie quotidienne',
       journeyEyebrow: 'Carte du parcours',
       journeyMapLabel: 'Carte du parcours',
       journeyIntro: 'Arriver en Chine étape par étape',

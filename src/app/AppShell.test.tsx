@@ -16,8 +16,8 @@ describe('App shell', () => {
     expect(screen.getByRole('region', { name: /home hero/i })).toHaveClass('home-hero--centered')
     expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
     expect(
-      screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
-    ).toBeVisible()
+      screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
+    ).not.toBeInTheDocument()
     expect(screen.getByRole('group', { name: /explanation language/i })).toBeVisible()
     expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: 'Français' })).toHaveAttribute(

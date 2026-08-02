@@ -11,7 +11,7 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
   await expect(
     page.getByText('Apprenez le mandarin dans la vie quotidienne'),
-  ).toBeVisible()
+  ).toHaveCount(0)
   await expect(page.getByText(/open lesson/i)).toHaveCount(0)
   await expect(page.getByRole('region', { name: /learning preview mockup/i })).toHaveCount(0)
   await expect(page.getByRole('button', { name: /listen|écouter/i })).toHaveCount(0)
@@ -47,18 +47,21 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
 
     const firstCard = journeyNodes.first()
     const secondCard = journeyNodes.nth(1)
+    const heroTitle = page.getByRole('heading', { name: '轻松学中文' })
     const title = firstCard.locator('h2')
     const slot = firstCard.locator('.journey-node__illustration-slot--stamp')
 
-    const [firstCardBox, secondCardBox, titleBox, slotBox] = await Promise.all([
+    const [firstCardBox, secondCardBox, heroTitleBox, titleBox, slotBox] = await Promise.all([
       firstCard.boundingBox(),
       secondCard.boundingBox(),
+      heroTitle.boundingBox(),
       title.boundingBox(),
       slot.boundingBox(),
     ])
 
     expect(firstCardBox).not.toBeNull()
     expect(secondCardBox).not.toBeNull()
+    expect(heroTitleBox).not.toBeNull()
     expect(titleBox).not.toBeNull()
     expect(slotBox).not.toBeNull()
 
@@ -71,6 +74,8 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
       expect(secondCardBox!.y).toBeGreaterThan(firstCardBox!.y + firstCardBox!.height - 2)
     }
 
+    expect(heroTitleBox!.width).toBeLessThan(clientWidth * 0.92)
+    expect(heroTitleBox!.height).toBeLessThan(width >= 1024 ? 116 : 92)
     expect(slotBox!.width).toBeLessThan(firstCardBox!.width * 0.38)
     expect(titleBox!.width).toBeGreaterThanOrEqual(width >= 1024 ? 150 : 140)
   }

@@ -149,6 +149,18 @@ describe('global color accessibility tokens', () => {
     }
   })
 
+  it('keeps the Home hero Chinese title spacious instead of tightly tracked', () => {
+    const titleRule = ruleBlock('.home-hero__title')
+
+    expect(titleRule).toContain('font-weight: 760;')
+    expect(titleRule).toContain('line-height: 1.1;')
+    expect(titleRule).toContain('letter-spacing: 0.02em;')
+    expect(titleRule).not.toContain('letter-spacing: -0.07em;')
+    expect(hasRuleWithDeclaration('.home-hero__title', 'font-size: clamp(2.7rem, 15vw, 3.75rem);'))
+      .toBe(true)
+    expect(hasRuleWithDeclaration('.home-hero__title', 'letter-spacing: 0.01em;')).toBe(true)
+  })
+
   it('shows shared button disabled states instead of preserving hover affordance', () => {
     const sharedButtonDeclarations = [
       ['.option-button:hover:not(:disabled),\n.primary-button:hover:not(:disabled),\n.secondary-link:hover:not(:disabled),\n.chip-button:hover:not(:disabled)', 'transform: translateY(-1px);'],

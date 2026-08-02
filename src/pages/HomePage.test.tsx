@@ -37,14 +37,14 @@ describe('HomePage', () => {
     localStorage.clear()
   })
 
-  it('leads with a Chinese-first hero slogan and keeps English and French as supporting lines', () => {
+  it('shows only the English hero slogan when English is selected', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
     expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
     expect(
-      screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
-    ).toBeVisible()
+      screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
+    ).not.toBeInTheDocument()
     expect(screen.queryByText('Real-life Mandarin')).not.toBeInTheDocument()
     expect(screen.queryByText('Mandarin en situation')).not.toBeInTheDocument()
     expect(screen.queryByText(/A focused ten-lesson path/i)).not.toBeInTheDocument()
@@ -107,7 +107,7 @@ describe('HomePage', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
-    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(screen.queryByText('Learn Mandarin in real life scenarios')).not.toBeInTheDocument()
     expect(
       screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
     ).toBeVisible()
@@ -163,6 +163,8 @@ describe('HomePage', () => {
 
     expect(loadProgress().selectedExplanationLanguage).toBe('fr')
     expect(frenchButton).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.queryByText('Learn Mandarin in real life scenarios')).not.toBeInTheDocument()
+    expect(screen.getByText('Apprenez le mandarin dans la vie quotidienne')).toBeVisible()
     expect(
       screen.getByRole('region', { name: /carte du parcours/i }),
     ).toBeVisible()
@@ -173,6 +175,10 @@ describe('HomePage', () => {
 
     expect(loadProgress().selectedExplanationLanguage).toBe('en')
     expect(englishButton).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(
+      screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
+    ).not.toBeInTheDocument()
     expect(screen.getByRole('region', { name: /journey map/i })).toBeVisible()
     expect(screen.queryByRole('navigation', { name: /quick learning paths/i }))
       .not.toBeInTheDocument()

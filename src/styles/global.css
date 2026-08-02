@@ -434,11 +434,13 @@ h2 {
 }
 
 .home-hero__title {
-  max-width: 8.5em;
+  max-width: 9.5em;
   margin-top: clamp(0.85rem, 2.2vw, 1.15rem);
-  font-size: clamp(3.25rem, 7.5vw, 5.45rem);
-  line-height: 1.04;
-  letter-spacing: -0.07em;
+  font-size: clamp(3.05rem, 6.9vw, 5.1rem);
+  font-weight: 760;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
 }
 
 .home-hero__slogan-stack {
@@ -2563,9 +2565,9 @@ h2 {
   }
 
   .home-hero__title {
-    max-width: 6.5em;
-    font-size: clamp(2.65rem, 17vw, 4rem);
-    letter-spacing: -0.075em;
+    max-width: 7.5em;
+    font-size: clamp(2.7rem, 15vw, 3.75rem);
+    letter-spacing: 0.01em;
   }
 
   .home-language-switcher--floating {

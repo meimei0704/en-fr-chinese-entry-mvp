@@ -43,11 +43,7 @@ export function HomePage() {
         <div className="home-hero__content">
           <h1 className="home-hero__title">{copy.homePage.heading}</h1>
           <div className="home-hero__slogan-stack" aria-label="Mandarin learning slogans">
-            {copy.homePage.heroSlogans.map((slogan, index) => (
-              <p key={slogan} lang={index === 1 ? 'fr' : 'en'}>
-                {slogan}
-              </p>
-            ))}
+            <p lang={language}>{copy.homePage.heroSlogan}</p>
           </div>
         </div>
       </section>

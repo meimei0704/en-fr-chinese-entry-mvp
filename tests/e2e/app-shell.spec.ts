@@ -8,7 +8,7 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
   await expect(
     page.getByText('Apprenez le mandarin dans la vie quotidienne'),
-  ).toBeVisible()
+  ).toHaveCount(0)
   await expect(page.getByRole('group', { name: /explanation language/i })).toBeVisible()
   await expect(page.getByRole('button', { name: 'English' })).toHaveAttribute(
     'aria-pressed',
@@ -31,6 +31,11 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
     'href',
     '/lesson/self-intro',
   )
+  await page.getByRole('button', { name: 'Français' }).click()
+  await expect(page.getByText('Learn Mandarin in real life scenarios')).toHaveCount(0)
+  await expect(
+    page.getByText('Apprenez le mandarin dans la vie quotidienne'),
+  ).toBeVisible()
 
   await page.goto('/home')
 
