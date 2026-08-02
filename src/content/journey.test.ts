@@ -18,7 +18,7 @@ const expectedJourneyNodeIds = [
 ] as const
 
 const expectedEnglishTitles = [
-  'Airport immigration basics',
+  '到达机场 / Arrival at the airport',
   'Taxi to your stay',
   'Hotel / apartment check-in',
   'Phone number & mobile payment',
@@ -31,7 +31,7 @@ const expectedEnglishTitles = [
 ]
 
 const expectedFrenchTitles = [
-  'Bases de l’immigration à l’aéroport',
+  '到达机场 / Arrivée à l’aéroport',
   'Taxi vers son logement',
   'Check-in hôtel / appartement',
   'Téléphone & paiement mobile',
@@ -62,7 +62,7 @@ describe('journey content', () => {
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'en'))).toEqual(expectedEnglishTitles)
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'fr'))).toEqual(expectedFrenchTitles)
     expect(journeyNodeIcons).toEqual({
-      'airport-immigration': '🛂',
+      'airport-immigration': '🧳',
       'taxi-to-stay': '🚕',
       'hotel-check-in': '🏨',
       'phone-and-payment': '📱',

@@ -20,7 +20,7 @@ const expectedLessonHrefs = [
 ]
 
 const expectedJourneyTitles = [
-  /airport immigration basics/i,
+  /到达机场 \/ Arrival at the airport/i,
   /taxi to your stay/i,
   /hotel \/ apartment check-in/i,
   /phone number & mobile payment/i,
@@ -119,7 +119,7 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /bases de l’immigration à l’aéroport/i,
+        name: /到达机场 \/ Arrivée à l’aéroport/i,
       }),
     ).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /commander un repas simple/i })).toBeVisible()
@@ -127,7 +127,7 @@ describe('HomePage', () => {
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
 
-    expect(screen.getByText('Immigration')).toBeVisible()
+    expect(screen.getByText('Arrivée')).toBeVisible()
     expect(screen.getByText('Taxi')).toBeVisible()
     expect(screen.getByText('Installation')).toBeVisible()
     expect(screen.getByText('Supérette')).toBeVisible()
@@ -200,7 +200,7 @@ describe('HomePage', () => {
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(
-      within(journeyMap).getByRole('link', { name: /airport immigration basics/i }),
+      within(journeyMap).getByRole('link', { name: /到达机场 \/ Arrival at the airport/i }),
     ).toHaveAttribute('href', '/lesson/self-intro')
     expect(
       within(journeyMap).getByRole('link', { name: /order a simple meal/i }),

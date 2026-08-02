@@ -11,7 +11,7 @@ function getLesson(lessonId: LessonId): LessonContent {
   return lesson
 }
 
-const airportImmigrationLesson = getLesson('self-intro')
+const arrivalAtAirportLesson = getLesson('self-intro')
 const taxiToStayLesson = getLesson('ask-directions')
 const hotelCheckInLesson = getLesson('order-food')
 const phoneAndPaymentLesson = getLesson('phone-and-payment')
@@ -23,7 +23,7 @@ const askForHelpProblemLesson = getLesson('ask-for-help-problem')
 const trainStationTicketLesson = getLesson('train-station-ticket')
 
 export const journeyNodeIcons: Record<JourneyNodeId, string> = {
-  'airport-immigration': '🛂',
+  'airport-immigration': '🧳',
   'taxi-to-stay': '🚕',
   'hotel-check-in': '🏨',
   'phone-and-payment': '📱',
@@ -43,8 +43,8 @@ export const journeyStages: JourneyStage[] = [
       fr: 'Arriver en Chine',
     },
     summary: {
-      en: 'A compact first-day path from immigration to a first small purchase, then food, transit, pharmacy, help, and train ticket survival tasks.',
-      fr: 'Un parcours compact du premier jour : immigration, premier achat, repas, transports, pharmacie, aide et billet de train.',
+      en: 'A compact first-day path from airport arrival to a first small purchase, then food, transit, pharmacy, help, and train ticket survival tasks.',
+      fr: 'Un parcours compact du premier jour : arrivée à l’aéroport, premier achat, repas, transports, pharmacie, aide et billet de train.',
     },
   },
 ]
@@ -54,16 +54,13 @@ const journeyNodeData: JourneyNode[] = [
     id: 'airport-immigration',
     stageId: 'arrival-in-china',
     kind: 'lesson',
-    lessonId: airportImmigrationLesson.id,
-    title: {
-      en: 'Airport immigration basics',
-      fr: 'Bases de l’immigration à l’aéroport',
-    },
+    lessonId: arrivalAtAirportLesson.id,
+    title: arrivalAtAirportLesson.title,
     eyebrow: {
-      en: 'Immigration',
-      fr: 'Immigration',
+      en: 'Arrival',
+      fr: 'Arrivée',
     },
-    summary: airportImmigrationLesson.scenario,
+    summary: arrivalAtAirportLesson.scenario,
     pathOrder: 1,
   },
   {

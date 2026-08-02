@@ -51,7 +51,7 @@ export const uiCopy = {
       completedLessonCount: (count: number) => `${count} complete`,
       reviewCount: (count: number) => `${count} review`,
       lessonScenarioBadges: {
-        'self-intro': 'Immigration',
+        'self-intro': 'Arrival',
         'ask-directions': 'Taxi',
         'order-food': 'Check-in',
         'phone-and-payment': 'Setup',
@@ -218,7 +218,7 @@ export const uiCopy = {
       completedLessonCount: (count: number) => `${count} terminée${count > 1 ? 's' : ''}`,
       reviewCount: (count: number) => `${count} à réviser`,
       lessonScenarioBadges: {
-        'self-intro': 'Immigration',
+        'self-intro': 'Arrivée',
         'ask-directions': 'Taxi',
         'order-food': 'Check-in',
         'phone-and-payment': 'Installation',

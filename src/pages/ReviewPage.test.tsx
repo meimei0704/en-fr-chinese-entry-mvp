@@ -50,7 +50,7 @@ describe('ReviewPage', () => {
 
     expect(screen.getByText(/1 carte terminée/i)).toHaveClass('success-chip')
     expect(screen.queryByText('护照')).not.toBeInTheDocument()
-    expect(screen.getByRole('region', { name: /recto de la carte/i })).toHaveTextContent('我来旅游')
+    expect(screen.getByRole('region', { name: /recto de la carte/i })).toHaveTextContent('行李提取处')
     expect(loadProgress().reviewQueue).toEqual(['self-intro-review-2', 'self-intro-review-3'])
   })
 

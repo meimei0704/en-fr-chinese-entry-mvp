@@ -27,7 +27,7 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
-  await expect(page.getByRole('link', { name: /airport immigration basics/i })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /到达机场 \/ Arrival at the airport/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
   )

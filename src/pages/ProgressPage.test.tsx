@@ -159,7 +159,7 @@ describe('ProgressPage', () => {
 
     renderRoute('/progress')
 
-    expect(within(getJourneyNodeCard('Airport immigration basics')).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard('到达机场 / Arrival at the airport')).getByText('Complete')).toBeVisible()
     expect(within(getJourneyNodeCard('Taxi to your stay')).getByText('Complete')).toBeVisible()
     expect(within(getJourneyNodeCard('Hotel / apartment check-in')).getByText('Complete')).toBeVisible()
     expect(within(getJourneyNodeCard('Phone number & mobile payment')).getByText('Current')).toBeVisible()

@@ -32,6 +32,24 @@ const expectedKeyChineseByNewLesson = {
   'train-station-ticket': /上海|今天下午|护照|三点出发/,
 } as const
 
+const expectedArrivalChinese = [
+  '您好。',
+  '请问，您能帮我一下吗？',
+  '这是我的护照。',
+  '请问行李提取处在哪里？',
+  '我的行李还没到。',
+  '请问出口在哪里？',
+  '请问问询台在哪里？',
+  '请问出租车在哪里？',
+  '我想去这个地址。',
+  '请到这里。',
+  '大概需要多久？',
+  '大概多少钱？',
+  '请说慢一点。',
+  '我听不懂。',
+  '可以帮我写下来吗？',
+] as const
+
 async function collectAudioPaths() {
   const { course } = await import('./course')
 
@@ -186,6 +204,44 @@ describe('course content', () => {
     }
   })
 
+  it('uses lesson one as the approved airport-arrival sample without immigration or hotel-stay copy', async () => {
+    const { course } = await import('./course')
+    const lesson = course.lessons[0]
+    const arrivalText = [
+      lesson.title.en,
+      lesson.title.fr,
+      lesson.scenario.en,
+      lesson.scenario.fr,
+      lesson.dialogue.title.en,
+      lesson.dialogue.title.fr,
+      ...lesson.dialogue.lines.map((line) => line.hanzi),
+      ...lesson.sentencePatterns.map((pattern) => pattern.example),
+      ...lesson.vocabulary.map((item) => item.hanzi),
+      ...lesson.pronunciation.map((tip) => tip.audioText),
+      ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
+      ...lesson.reviewCards.map((card) => card.front),
+      lesson.shortInput.target,
+    ].join('\n')
+
+    expect(lesson.id).toBe('self-intro')
+    expect(lesson.title).toEqual({
+      en: '到达机场 / Arrival at the airport',
+      fr: '到达机场 / Arrivée à l’aéroport',
+    })
+    expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
+      Array.from({ length: 7 }, (_, index) => `self-intro-line-0${index + 1}`),
+    )
+
+    for (const phrase of expectedArrivalChinese) {
+      expect(arrivalText).toContain(phrase)
+    }
+
+    expect(arrivalText).not.toContain('你好')
+    expect(arrivalText).not.toMatch(/Immigration|immigration|移民/)
+    expect(arrivalText).not.toContain('我住在这个酒店')
+    expect(arrivalText).not.toContain('住在这个酒店')
+  })
+
   it('keeps all learner-facing copy consistently bilingual', async () => {
     const { course } = await import('./course')
 
@@ -261,7 +317,7 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(179)
+    expect(audioPaths).toHaveLength(182)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {

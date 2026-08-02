@@ -94,11 +94,11 @@ describe('admin batch voice audio targets', () => {
     )
   })
 
-  it('locks the course manifest to the 179 existing zh-CN audio targets only', () => {
+  it('locks the course manifest to the 182 existing zh-CN audio targets only', () => {
     const targets = collectCourseVoiceAudioTargets(course.lessons)
     const targetTexts = new Set(targets.map((target) => target.text))
 
-    expect(targets).toHaveLength(179)
+    expect(targets).toHaveLength(182)
     expect(targets.every((target) => target.language === 'zh-CN')).toBe(true)
     expect(targets.every((target) => target.originalAudio.startsWith('/audio/'))).toBe(true)
     expect(targets.every((target) => target.storageKey.startsWith('audio/'))).toBe(true)

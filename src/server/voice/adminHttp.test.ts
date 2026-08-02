@@ -198,7 +198,7 @@ describe('admin voice HTTP handlers', () => {
   })
 
 
-  it('rejects generate requests that do not exactly match the 179-target course manifest', async () => {
+  it('rejects generate requests that do not exactly match the 182-target course manifest', async () => {
     const invalidRequests = [
       {
         name: 'unknown target id',

@@ -292,7 +292,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(page).toHaveURL(/\/admin\/voice$/)
   await expect(page.getByRole('heading', { name: /original pronunciation is active/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /179 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /182 audio targets/i })).toBeVisible()
   await expect(page.getByText(/current course audio uses original files/i)).toBeVisible()
   await expect(page.getByText(/no extra fee/i)).toBeVisible()
   await expect(page.getByRole('heading', { name: /use cloned voice only when needed/i })).toBeVisible()
@@ -316,7 +316,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/179 generated/i).first()).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByText(/182 generated/i).first()).toBeVisible({ timeout: 15_000 })
 
   const applyApprovedButton = page.getByRole('button', { name: /apply approved to drafts/i })
   await expect(applyApprovedButton).toBeDisabled()
