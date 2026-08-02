@@ -1092,6 +1092,17 @@ h2 {
   backdrop-filter: blur(16px);
 }
 
+.button-row.lesson-action-dock {
+  justify-content: center;
+  align-items: center;
+}
+
+.lesson-action-dock .primary-button,
+.lesson-action-dock .secondary-link {
+  width: auto;
+  max-width: 100%;
+}
+
 .review-card {
   max-width: 46rem;
   background:

@@ -173,4 +173,23 @@ describe('global color accessibility tokens', () => {
       expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
     }
   })
+
+  it('keeps the Lesson action dock centered without forcing full-width CTA pills', () => {
+    expect(hasRuleWithDeclaration('.button-row.lesson-action-dock', 'justify-content: center;'))
+      .toBe(true)
+    expect(hasRuleWithDeclaration('.button-row.lesson-action-dock', 'align-items: center;'))
+      .toBe(true)
+    expect(
+      hasRuleWithDeclaration(
+        '.lesson-action-dock .primary-button,\n.lesson-action-dock .secondary-link',
+        'width: auto;',
+      ),
+    ).toBe(true)
+    expect(
+      hasRuleWithDeclaration(
+        '.lesson-action-dock .primary-button,\n.lesson-action-dock .secondary-link',
+        'max-width: 100%;',
+      ),
+    ).toBe(true)
+  })
 })
