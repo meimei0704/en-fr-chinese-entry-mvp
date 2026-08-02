@@ -1,10 +1,16 @@
 import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
-import { beforeEach, describe, expect, it } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { course } from '../content/course'
-import { createDefaultProgress, saveProgress } from '../lib/progress'
+import { speakChinese } from '../lib/speech'
+import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
+
+vi.mock('../lib/speech', () => ({
+  speakChinese: vi.fn(),
+}))
 
 const expectedLessonHrefs = [
   '/lesson/self-intro',
@@ -33,8 +39,11 @@ const expectedJourneyTitles = [
 ]
 
 describe('HomePage', () => {
+  const speakChineseMock = vi.mocked(speakChinese)
+
   beforeEach(() => {
     localStorage.clear()
+    speakChineseMock.mockReset()
   })
 
   it('leads with a Chinese-first hero slogan and keeps English and French as supporting lines', () => {
@@ -134,6 +143,55 @@ describe('HomePage', () => {
     expect(within(journeyMap).queryAllByText(/ouvrir la lecon/i)).toHaveLength(0)
   })
 
+  it('lets learners play the hero mockup dialogue from a real Listen button', async () => {
+    const user = userEvent.setup()
+
+    renderRoute('/home')
+
+    const learningMockup = screen.getByRole('region', { name: /learning preview mockup/i })
+    const listenButton = within(learningMockup).getByRole('button', { name: /listen/i })
+
+    expect(listenButton).toBeVisible()
+    expect(listenButton).not.toBeDisabled()
+
+    await user.click(listenButton)
+
+    expect(speakChineseMock).toHaveBeenCalledWith({
+      text: '你好，请出示护照。',
+      audioSrc: '/audio/self-intro/line-01.mp3',
+      fallbackAudioSrc: undefined,
+    })
+  })
+
+  it('persists a global explanation language choice from the Home hero', async () => {
+    const user = userEvent.setup()
+
+    renderRoute('/')
+
+    const languageSelector = screen.getByRole('group', { name: /explanation language/i })
+    const englishButton = within(languageSelector).getByRole('button', { name: 'English' })
+    const frenchButton = within(languageSelector).getByRole('button', { name: 'Français' })
+
+    expect(englishButton).toHaveAttribute('aria-pressed', 'true')
+    expect(frenchButton).toHaveAttribute('aria-pressed', 'false')
+
+    await user.click(frenchButton)
+
+    expect(loadProgress().selectedExplanationLanguage).toBe('fr')
+    expect(frenchButton).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('link', { name: /continuer la leçon/i })).toBeVisible()
+    expect(screen.getByRole('region', { name: /maquette d’aperçu d’apprentissage/i })).toBeVisible()
+    expect(
+      screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i }),
+    ).toBeVisible()
+
+    await user.click(englishButton)
+
+    expect(loadProgress().selectedExplanationLanguage).toBe('en')
+    expect(englishButton).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
+  })
+
   it('presents a learning mockup and card-based quick entry paths without changing destinations', () => {
     saveProgress({
       ...createDefaultProgress(),
@@ -146,7 +204,7 @@ describe('HomePage', () => {
     const learningMockup = screen.getByRole('region', { name: /learning preview mockup/i })
     expect(learningMockup).toHaveClass('home-learning-mockup')
     expect(within(learningMockup).getByText('护照')).toBeVisible()
-    expect(within(learningMockup).getByText(/listen/i)).toBeVisible()
+    expect(within(learningMockup).getByRole('button', { name: /listen/i })).toBeVisible()
 
     const quickEntries = screen.getByRole('navigation', { name: /quick learning paths/i })
     expect(quickEntries).toHaveClass('home-quick-entry-grid')

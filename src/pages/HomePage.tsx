@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { LanguageToggle } from '../components/LanguageToggle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
-import type { JourneyNodeId } from '../content/types'
-import { getContinueLessonId, loadProgress } from '../lib/progress'
+import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
+import { getContinueLessonId, loadProgress, saveProgress } from '../lib/progress'
+import { speakChinese } from '../lib/speech'
 
 export function HomePage() {
-  const progress = loadProgress()
+  const [progress, setProgress] = useState(() => loadProgress())
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNodeId | null>(null)
@@ -22,11 +24,36 @@ export function HomePage() {
       ? ['Guidage anglais/français', 'Situations réelles', 'Écouter & répéter']
       : ['English/French explanations', 'Real situations', 'Listen & repeat']
 
+  function handleLanguageSelect(nextLanguage: ExplanationLanguage) {
+    setProgress((currentProgress) => {
+      if (currentProgress.selectedExplanationLanguage === nextLanguage) {
+        return currentProgress
+      }
+
+      const nextProgress = {
+        ...loadProgress(),
+        selectedExplanationLanguage: nextLanguage,
+      }
+
+      saveProgress(nextProgress)
+      return nextProgress
+    })
+  }
+
   return (
     <main className="page-shell">
       <section className="hero-card home-hero">
         <div className="home-hero__content">
-          <p className="eyebrow">{copy.homePage.eyebrow}</p>
+          <div className="home-hero__topline">
+            <p className="eyebrow">{copy.homePage.eyebrow}</p>
+            <div className="home-language-switcher">
+              <LanguageToggle
+                selectedLanguage={language}
+                onSelect={handleLanguageSelect}
+                ariaLabel={copy.languageToggleLabel}
+              />
+            </div>
+          </div>
           <h1 className="home-hero__title">{copy.homePage.heading}</h1>
           <div className="home-hero__slogan-stack" aria-label="Mandarin learning slogans">
             {copy.homePage.heroSlogans.map((slogan, index) => (
@@ -80,7 +107,20 @@ export function HomePage() {
             <p className="mock-dialogue-bubble mock-dialogue-bubble--accent">
               {getLocalizedText(mockupLine.translation, language)}
             </p>
-            <p className="mock-dialogue-bubble">{copy.homePage.mockupListenLabel}</p>
+            <button
+              type="button"
+              className="mock-dialogue-bubble mock-dialogue-listen-button"
+              onClick={() => {
+                speakChinese({
+                  text: mockupLine.hanzi,
+                  audioSrc: mockupLine.audio,
+                  fallbackAudioSrc: mockupLine.audioFallback,
+                })
+              }}
+            >
+              <span aria-hidden="true">▶</span>
+              {copy.homePage.mockupListenLabel}
+            </button>
           </div>
           <div
             className="home-hero__stats"

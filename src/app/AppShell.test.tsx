@@ -17,7 +17,12 @@ describe('App shell', () => {
     expect(
       screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
     ).toBeVisible()
-    expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument()
+    expect(screen.getByRole('group', { name: /explanation language/i })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Français' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)
