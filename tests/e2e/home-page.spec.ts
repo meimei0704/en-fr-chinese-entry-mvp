@@ -6,9 +6,6 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/')
 
-  await page.getByRole('button', { name: 'English' }).click()
-  await page.getByRole('button', { name: /start learning/i }).click()
-
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
   await expect(

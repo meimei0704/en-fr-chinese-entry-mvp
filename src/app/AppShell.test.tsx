@@ -1,9 +1,7 @@
 import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { loadProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
 describe('App shell', () => {
@@ -11,37 +9,30 @@ describe('App shell', () => {
     localStorage.clear()
   })
 
-  it('shows the explanation-language entry screen on first load', async () => {
-    const user = userEvent.setup()
-
+  it('shows the Home page on the root route by default', () => {
     renderRoute('/')
 
-    expect(screen.getByRole('heading', { name: /choose your explanation language/i })).toBeVisible()
-    expect(screen.getByText(/learn beginner chinese through practical scenarios/i)).toBeVisible()
-    expect(screen.getByRole('group', { name: /explanation language/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
+    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(
+      screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
+    ).toBeVisible()
+    expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument()
 
-    const languageOptions = screen.getByRole('region', { name: /choose guidance path/i })
-    expect(within(languageOptions).getByRole('button', { name: 'English' })).toBeVisible()
-    expect(within(languageOptions).getByRole('button', { name: 'Français' })).toBeVisible()
-    expect(within(languageOptions).getByText(/switch anytime/i)).toBeVisible()
-    expect(screen.getByRole('button', { name: /start learning/i })).toBeVisible()
-
-    await user.click(screen.getByRole('button', { name: 'Français' }))
-
-    expect(screen.getByRole('heading', { name: /choisissez votre langue d’explication/i })).toBeVisible()
-    expect(screen.getByRole('region', { name: /choisir le parcours d’accompagnement/i })).toBeVisible()
-    expect(screen.getByRole('button', { name: /commencer/i })).toBeVisible()
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)
+    expect(
+      within(journeyMap).getByRole('link', { name: /airport immigration basics/i }),
+    ).toHaveAttribute('href', '/lesson/self-intro')
   })
 
-  it('saves the selected explanation language before routing away from the entry screen', async () => {
-    const user = userEvent.setup()
+  it('keeps the legacy /home route compatible with the same Home page content', () => {
+    renderRoute('/home')
 
-    renderRoute('/')
-
-    await user.click(screen.getByRole('button', { name: 'Français' }))
-    await user.click(screen.getByRole('button', { name: /commencer/i }))
-
-    expect(loadProgress().selectedExplanationLanguage).toBe('fr')
-    expect(screen.queryByRole('button', { name: /commencer/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
+    expect(screen.getByRole('link', { name: /continue learning/i })).toHaveAttribute(
+      'href',
+      '/lesson/self-intro',
+    )
   })
 })
