@@ -151,13 +151,13 @@ describe('Vercel content API entrypoints', () => {
     }
   })
 
-  it('pins Vercel functions to the verified sin1 region and preserves API rewrites before the SPA fallback', async () => {
+  it('does not pin Vercel functions to an unverified region and preserves API rewrites before the SPA fallback', async () => {
     const vercelConfig = JSON.parse(await readFile('vercel.json', 'utf8')) as {
       regions?: string[]
       rewrites?: Array<{ destination: string; source: string }>
     }
 
-    expect(vercelConfig.regions).toEqual(['sin1'])
+    expect(vercelConfig.regions).toBeUndefined()
     expect(vercelConfig.rewrites?.[0]).toEqual({
       source: '/api/content/lessons/:lessonId',
       destination: '/api/content/lessons?lessonId=:lessonId',
