@@ -4,7 +4,8 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
   await page.goto('/')
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
-  await page.getByRole('link', { name: /continue learning/i }).click()
+  await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
+  await page.getByRole('link', { name: /airport immigration basics/i }).click()
   await page.getByRole('link', { name: /go to practice/i }).click()
   await page.getByRole('link', { name: /continue to short input/i }).click()
   await page.getByRole('button', { name: /i finished the short input/i }).click()
@@ -24,7 +25,8 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
   await expect(learningIndicators).toContainText('2 review items waiting')
 
   await page.getByRole('link', { name: /back to home/i }).click()
-  await page.getByRole('link', { name: /continue learning/i }).click()
+  await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
+  await page.getByRole('link', { name: /taxi to your stay/i }).click()
   await expect(page).toHaveURL(/\/lesson\/ask-directions$/)
   await expect(page.getByRole('heading', { name: /taxi to your hotel/i })).toBeVisible()
 })

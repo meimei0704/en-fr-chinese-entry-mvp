@@ -5,15 +5,13 @@ import { LanguageToggle } from '../components/LanguageToggle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
-import { getContinueLessonId, loadProgress, saveProgress } from '../lib/progress'
+import { loadProgress, saveProgress } from '../lib/progress'
 
 export function HomePage() {
   const [progress, setProgress] = useState(() => loadProgress())
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNodeId | null>(null)
-  const continueLessonId = getContinueLessonId(progress)
-  const continueHref = continueLessonId ? `/lesson/${continueLessonId}` : '/'
 
   function handleLanguageSelect(nextLanguage: ExplanationLanguage) {
     setProgress((currentProgress) => {
@@ -43,7 +41,6 @@ export function HomePage() {
         </div>
 
         <div className="home-hero__content">
-          <p className="eyebrow">{copy.homePage.eyebrow}</p>
           <h1 className="home-hero__title">{copy.homePage.heading}</h1>
           <div className="home-hero__slogan-stack" aria-label="Mandarin learning slogans">
             {copy.homePage.heroSlogans.map((slogan, index) => (
@@ -52,25 +49,6 @@ export function HomePage() {
               </p>
             ))}
           </div>
-          <p className="lede home-hero__lede">{copy.homePage.lede}</p>
-
-          <nav
-            className="home-quick-entry-grid home-quick-entry-grid--centered"
-            aria-label={copy.homePage.quickLearningPathsLabel}
-          >
-            <Link className="quick-entry-card quick-entry-card--primary" to={continueHref}>
-              <span>{copy.homePage.quickEntryContinueMeta}</span>
-              <strong>{copy.homePage.continueLearning}</strong>
-            </Link>
-            <Link className="quick-entry-card quick-entry-card--review" to="/review">
-              <span>{copy.homePage.quickEntryReviewMeta}</span>
-              <strong>{copy.homePage.goToReview}</strong>
-            </Link>
-            <Link className="quick-entry-card quick-entry-card--progress" to="/progress">
-              <span>{copy.homePage.quickEntryProgressMeta}</span>
-              <strong>{copy.homePage.viewProgress}</strong>
-            </Link>
-          </nav>
         </div>
       </section>
 

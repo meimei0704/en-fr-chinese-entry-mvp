@@ -26,6 +26,13 @@ describe('App shell', () => {
     )
     expect(screen.queryByRole('region', { name: /learning preview mockup/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /listen|écouter/i })).not.toBeInTheDocument()
+    expect(screen.queryByText('Real-life Mandarin')).not.toBeInTheDocument()
+    expect(screen.queryByText('Mandarin en situation')).not.toBeInTheDocument()
+    expect(screen.queryByText(/A focused ten-lesson path/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)
@@ -38,7 +45,8 @@ describe('App shell', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
-    expect(screen.getByRole('link', { name: /continue learning/i })).toHaveAttribute(
+    expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /airport immigration basics/i })).toHaveAttribute(
       'href',
       '/lesson/self-intro',
     )

@@ -15,6 +15,13 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByText(/open lesson/i)).toHaveCount(0)
   await expect(page.getByRole('region', { name: /learning preview mockup/i })).toHaveCount(0)
   await expect(page.getByRole('button', { name: /listen|écouter/i })).toHaveCount(0)
+  await expect(page.getByText('Real-life Mandarin')).toHaveCount(0)
+  await expect(page.getByText('Mandarin en situation')).toHaveCount(0)
+  await expect(page.getByText(/A focused ten-lesson path/i)).toHaveCount(0)
+  await expect(page.getByRole('navigation', { name: /quick learning paths/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
   await expect(journeyNodes).toHaveCount(10)

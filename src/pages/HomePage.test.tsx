@@ -45,13 +45,22 @@ describe('HomePage', () => {
     expect(
       screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
     ).toBeVisible()
+    expect(screen.queryByText('Real-life Mandarin')).not.toBeInTheDocument()
+    expect(screen.queryByText('Mandarin en situation')).not.toBeInTheDocument()
+    expect(screen.queryByText(/A focused ten-lesson path/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Un parcours ciblé de dix leçons/i)).not.toBeInTheDocument()
   })
 
-  it('shows all ten arrival lesson cards and a review shortcut on the home page', () => {
+  it('shows all ten arrival lesson cards without progress or review shortcuts on the home page', () => {
     renderRoute('/home')
 
-    expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
-    expect(screen.getByRole('link', { name: /go to review/i })).toBeVisible()
+    expect(screen.queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/next lesson/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/review queue/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/course map/i)).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     const journeyLessonLinks = within(journeyMap)
@@ -84,6 +93,9 @@ describe('HomePage', () => {
     expect(within(journeyMap).queryByRole('button', { name: /buy a metro ticket/i }))
       .not.toBeInTheDocument()
     expect(within(journeyMap).getByText(/arrive in china step by step/i)).toBeVisible()
+    expect(within(hero).queryByText(/Real-life Mandarin|Mandarin en situation/i)).not.toBeInTheDocument()
+    expect(within(hero).queryByText(/focused ten-lesson|parcours ciblé/i)).not.toBeInTheDocument()
+    expect(within(hero).queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
   })
 
   it('renders page-level French copy when the learner chooses French mode', () => {
@@ -99,8 +111,11 @@ describe('HomePage', () => {
     expect(
       screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
     ).toBeVisible()
-    expect(screen.getByRole('link', { name: /continuer la leçon/i })).toBeVisible()
-    expect(screen.getByRole('link', { name: /réviser/i })).toBeVisible()
+    expect(screen.queryByRole('link', { name: /continuer la leçon/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /réviser/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/prochaine leçon/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/file de révision/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/carte du cours/i)).not.toBeInTheDocument()
     expect(
       screen.getByRole('heading', {
         level: 2,
@@ -109,7 +124,8 @@ describe('HomePage', () => {
     ).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /commander un repas simple/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /acheter un billet en gare/i })).toBeVisible()
-    expect(screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i })).toBeVisible()
+    expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
+      .not.toBeInTheDocument()
 
     expect(screen.getByText('Immigration')).toBeVisible()
     expect(screen.getByText('Taxi')).toBeVisible()
@@ -120,6 +136,8 @@ describe('HomePage', () => {
     expect(screen.queryAllByText(/bientôt/i)).toHaveLength(0)
     expect(screen.queryByText('10 lessons')).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
+    expect(screen.queryByText('Mandarin en situation')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Un parcours ciblé de dix leçons/i)).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/carte du parcours/i)
     expect(within(journeyMap).queryAllByText(/ouvrir la leçon/i)).toHaveLength(0)
@@ -145,19 +163,22 @@ describe('HomePage', () => {
 
     expect(loadProgress().selectedExplanationLanguage).toBe('fr')
     expect(frenchButton).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('link', { name: /continuer la leçon/i })).toBeVisible()
     expect(
-      screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i }),
+      screen.getByRole('region', { name: /carte du parcours/i }),
     ).toBeVisible()
+    expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
+      .not.toBeInTheDocument()
 
     await user.click(englishButton)
 
     expect(loadProgress().selectedExplanationLanguage).toBe('en')
     expect(englishButton).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
+    expect(screen.getByRole('region', { name: /journey map/i })).toBeVisible()
+    expect(screen.queryByRole('navigation', { name: /quick learning paths/i }))
+      .not.toBeInTheDocument()
   })
 
-  it('presents centered card-based quick entry paths without changing destinations', () => {
+  it('removes hero quick entry cards without changing lesson card destinations', () => {
     saveProgress({
       ...createDefaultProgress(),
       lastVisitedLesson: 'order-food',
@@ -166,21 +187,21 @@ describe('HomePage', () => {
 
     renderRoute('/home')
 
-    const quickEntries = screen.getByRole('navigation', { name: /quick learning paths/i })
-    expect(quickEntries).toHaveClass('home-quick-entry-grid')
-    expect(quickEntries).toHaveClass('home-quick-entry-grid--centered')
+    expect(screen.queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
+
+    const journeyMap = screen.getByLabelText(/journey map/i)
     expect(
-      within(quickEntries).getByRole('link', { name: /continue learning/i }),
-    ).toHaveAttribute('href', '/lesson/order-food')
+      within(journeyMap).getByRole('link', { name: /airport immigration basics/i }),
+    ).toHaveAttribute('href', '/lesson/self-intro')
     expect(
-      within(quickEntries).getByRole('link', { name: /go to review/i }),
-    ).toHaveClass('quick-entry-card')
-    expect(
-      within(quickEntries).getByRole('link', { name: /view progress/i }),
-    ).toHaveAttribute('href', '/progress')
+      within(journeyMap).getByRole('link', { name: /order a simple meal/i }),
+    ).toHaveAttribute('href', '/lesson/restaurant-order')
   })
 
-  it('continues from lesson five into lesson six after the store run is complete', () => {
+  it('does not expose next-lesson state on the home page even after lessons are complete', () => {
     saveProgress({
       ...createDefaultProgress(),
       completedLessons: [
@@ -195,10 +216,13 @@ describe('HomePage', () => {
 
     renderRoute('/home')
 
-    expect(screen.getByRole('link', { name: /continue learning/i })).toHaveAttribute(
-      'href',
-      '/lesson/restaurant-order',
-    )
+    expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/next lesson/i)).not.toBeInTheDocument()
+
+    const journeyMap = screen.getByLabelText(/journey map/i)
+    expect(
+      within(journeyMap).getByRole('link', { name: /order a simple meal/i }),
+    ).toHaveAttribute('href', '/lesson/restaurant-order')
   })
 
   it('makes each lesson journey node a whole-card link to its real lesson route', () => {

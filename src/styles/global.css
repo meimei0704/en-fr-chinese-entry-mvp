@@ -464,96 +464,6 @@ h2 {
   font-weight: 700;
 }
 
-.home-hero__lede {
-  max-width: 40rem;
-  margin-top: clamp(1rem, 2.4vw, 1.35rem);
-}
-
-.home-quick-entry-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.8rem;
-  margin-top: clamp(1.75rem, 4vw, 2.35rem);
-}
-
-.home-quick-entry-grid--centered {
-  width: min(100%, 46rem);
-}
-
-.quick-entry-card {
-  min-height: 6.35rem;
-  display: grid;
-  align-content: space-between;
-  gap: 0.85rem;
-  padding: 1rem;
-  border: 1px solid rgba(214, 181, 150, 0.28);
-  border-radius: 1.4rem;
-  color: var(--color-ink);
-  background:
-    radial-gradient(circle at top right, rgba(255, 214, 148, 0.18), transparent 7rem),
-    rgba(255, 255, 255, 0.78);
-  text-align: left;
-  text-decoration: none;
-  box-shadow: 0 22px 48px -36px rgba(8, 9, 13, 0.62);
-  transition:
-    transform 150ms ease,
-    box-shadow 150ms ease,
-    border-color 150ms ease,
-    background 150ms ease;
-}
-
-.quick-entry-card:hover,
-.quick-entry-card:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(47, 143, 107, 0.35);
-  background: #ffffff;
-  box-shadow: 0 26px 56px -34px rgba(8, 9, 13, 0.68);
-}
-
-.quick-entry-card span {
-  color: var(--color-muted);
-  font-size: 0.74rem;
-  font-weight: 850;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.quick-entry-card strong {
-  font-size: 1rem;
-  line-height: 1.14;
-}
-
-.quick-entry-card--primary {
-  color: #ffffff;
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 7rem),
-    var(--color-ink);
-  border-color: rgba(8, 9, 13, 0.18);
-}
-
-.quick-entry-card--primary:hover,
-.quick-entry-card--primary:focus-visible {
-  background:
-    radial-gradient(circle at top right, rgba(255, 255, 255, 0.24), transparent 7rem),
-    #22252d;
-}
-
-.quick-entry-card--primary span {
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.quick-entry-card--review {
-  background:
-    radial-gradient(circle at top right, rgba(255, 138, 61, 0.14), transparent 7rem),
-    rgba(255, 255, 255, 0.78);
-}
-
-.quick-entry-card--progress {
-  background:
-    radial-gradient(circle at top right, rgba(49, 163, 109, 0.14), transparent 7rem),
-    rgba(255, 255, 255, 0.78);
-}
-
 .journey-map {
   gap: 1.2rem;
 }
@@ -2622,7 +2532,6 @@ h2 {
 }
 
 @media (max-width: 760px) {
-  .home-quick-entry-grid,
   .selection-hero,
   .lesson-grid,
   .card-grid,
@@ -2665,10 +2574,6 @@ h2 {
     right: auto;
     justify-self: center;
     margin-bottom: 0.95rem;
-  }
-
-  .home-quick-entry-grid--centered {
-    width: min(100%, 26rem);
   }
 
   .section-heading {
@@ -2760,7 +2665,6 @@ h2 {
   .primary-button,
   .secondary-link,
   .chip-button,
-  .quick-entry-card,
   .journey-node {
     transition: none;
   }

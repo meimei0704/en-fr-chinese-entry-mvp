@@ -20,6 +20,13 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
   )
   await expect(page.getByRole('region', { name: /learning preview mockup/i })).toHaveCount(0)
   await expect(page.getByRole('button', { name: /listen|écouter/i })).toHaveCount(0)
+  await expect(page.getByText('Real-life Mandarin')).toHaveCount(0)
+  await expect(page.getByText('Mandarin en situation')).toHaveCount(0)
+  await expect(page.getByText(/A focused ten-lesson path/i)).toHaveCount(0)
+  await expect(page.getByRole('navigation', { name: /quick learning paths/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /airport immigration basics/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
