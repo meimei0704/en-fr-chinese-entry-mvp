@@ -9,6 +9,13 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await page.getByRole('button', { name: 'English' }).click()
   await page.getByRole('button', { name: /start learning/i }).click()
 
+  await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
+  await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+  await expect(
+    page.getByText('Apprenez le mandarin dans la vie quotidienne'),
+  ).toBeVisible()
+  await expect(page.getByText(/open lesson/i)).toHaveCount(0)
+
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
   await expect(journeyNodes).toHaveCount(10)
   await expect(page.getByRole('link', { name: /airport immigration basics/i })).toHaveAttribute(

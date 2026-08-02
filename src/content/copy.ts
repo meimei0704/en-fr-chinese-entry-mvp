@@ -28,9 +28,13 @@ export const uiCopy = {
       startLearning: 'Start learning',
     },
     homePage: {
-      eyebrow: 'Core path',
-      heading: 'Home',
-      lede: 'Choose one of the ten practical lessons, continue where you left off, or jump straight into review.',
+      eyebrow: 'Real-life Mandarin',
+      heading: '轻松学中文',
+      heroSlogans: [
+        'Learn Mandarin in real life scenarios',
+        'Apprenez le mandarin dans la vie quotidienne',
+      ],
+      lede: 'A focused ten-lesson path for everyday arrival, food, transit, and help scenarios.',
       journeyEyebrow: 'Journey Map',
       journeyMapLabel: 'Journey Map',
       journeyIntro: 'Arrive in China step by step',
@@ -203,9 +207,13 @@ export const uiCopy = {
       startLearning: 'Commencer',
     },
     homePage: {
-      eyebrow: 'Parcours principal',
-      heading: 'Accueil',
-      lede: 'Choisissez l’une des dix leçons pratiques, reprenez où vous vous êtes arrêté ou passez directement à la révision.',
+      eyebrow: 'Mandarin en situation',
+      heading: '轻松学中文',
+      heroSlogans: [
+        'Learn Mandarin in real life scenarios',
+        'Apprenez le mandarin dans la vie quotidienne',
+      ],
+      lede: 'Un parcours ciblé de dix leçons pour l’arrivée, les repas, les transports et les demandes d’aide.',
       journeyEyebrow: 'Carte du parcours',
       journeyMapLabel: 'Carte du parcours',
       journeyIntro: 'Arriver en Chine étape par étape',

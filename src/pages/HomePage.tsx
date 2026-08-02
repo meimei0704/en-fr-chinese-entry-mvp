@@ -27,8 +27,15 @@ export function HomePage() {
       <section className="hero-card home-hero">
         <div className="home-hero__content">
           <p className="eyebrow">{copy.homePage.eyebrow}</p>
-          <h1>{copy.homePage.heading}</h1>
-          <p className="lede">{copy.homePage.lede}</p>
+          <h1 className="home-hero__title">{copy.homePage.heading}</h1>
+          <div className="home-hero__slogan-stack" aria-label="Mandarin learning slogans">
+            {copy.homePage.heroSlogans.map((slogan, index) => (
+              <p key={slogan} lang={index === 1 ? 'fr' : 'en'}>
+                {slogan}
+              </p>
+            ))}
+          </div>
+          <p className="lede home-hero__lede">{copy.homePage.lede}</p>
 
           <div className="learning-chip-row" aria-label={copy.homePage.learningHighlightsLabel}>
             {learningChips.map((chip) => (
@@ -112,14 +119,10 @@ export function HomePage() {
                   <div className="journey-node__body">
                     <div className="journey-node__header">
                       <span className="badge badge--jade">{nodeEyebrow}</span>
-                      <span className="journey-node__stamp journey-node__stamp--lesson">
-                        {copy.homePage.openLesson}
-                      </span>
                     </div>
 
                     <h2>{nodeTitle}</h2>
                     <p className="muted-text">{nodeSummary}</p>
-                    <span className="journey-node__cta">{copy.homePage.openLesson} →</span>
                   </div>
 
                   <span

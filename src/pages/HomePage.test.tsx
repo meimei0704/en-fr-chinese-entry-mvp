@@ -37,6 +37,16 @@ describe('HomePage', () => {
     localStorage.clear()
   })
 
+  it('leads with a Chinese-first hero slogan and keeps English and French as supporting lines', () => {
+    renderRoute('/home')
+
+    expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
+    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(
+      screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
+    ).toBeVisible()
+  })
+
   it('shows all ten arrival lesson cards and a review shortcut on the home page', () => {
     renderRoute('/home')
 
@@ -82,7 +92,11 @@ describe('HomePage', () => {
 
     renderRoute('/home')
 
-    expect(screen.getByRole('heading', { name: /accueil/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
+    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(
+      screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
+    ).toBeVisible()
     expect(screen.getByRole('link', { name: /continuer la leçon/i })).toBeVisible()
     expect(screen.getByRole('link', { name: /réviser/i })).toBeVisible()
     expect(
@@ -114,6 +128,10 @@ describe('HomePage', () => {
     expect(screen.queryAllByText(/bientôt/i)).toHaveLength(0)
     expect(screen.queryByText('10 lessons')).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
+
+    const journeyMap = screen.getByLabelText(/carte du parcours/i)
+    expect(within(journeyMap).queryAllByText(/ouvrir la leçon/i)).toHaveLength(0)
+    expect(within(journeyMap).queryAllByText(/ouvrir la lecon/i)).toHaveLength(0)
   })
 
   it('presents a learning mockup and card-based quick entry paths without changing destinations', () => {
@@ -172,8 +190,12 @@ describe('HomePage', () => {
     for (const [index, title] of expectedJourneyTitles.entries()) {
       const card = within(journeyMap).getByRole('link', { name: title })
       expect(card).toHaveAttribute('href', expectedLessonHrefs[index])
+      expect(card).toHaveClass('journey-node--card-link')
+      expect(card).not.toHaveTextContent(/open lesson/i)
+      expect(card.querySelector('.journey-node__cta')).not.toBeInTheDocument()
     }
 
+    expect(within(journeyMap).queryAllByText(/open lesson/i)).toHaveLength(0)
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
   })
 
