@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom'
 
 import { LanguageToggle } from '../components/LanguageToggle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
 import { getContinueLessonId, loadProgress, saveProgress } from '../lib/progress'
-import { speakChinese } from '../lib/speech'
 
 export function HomePage() {
   const [progress, setProgress] = useState(() => loadProgress())
@@ -16,13 +14,6 @@ export function HomePage() {
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNodeId | null>(null)
   const continueLessonId = getContinueLessonId(progress)
   const continueHref = continueLessonId ? `/lesson/${continueLessonId}` : '/'
-  const mockupLesson = course.lessons[0]
-  const mockupPhrase = mockupLesson.vocabulary[0]
-  const mockupLine = mockupLesson.dialogue.lines[0]
-  const learningChips =
-    language === 'fr'
-      ? ['Guidage anglais/français', 'Situations réelles', 'Écouter & répéter']
-      : ['English/French explanations', 'Real situations', 'Listen & repeat']
 
   function handleLanguageSelect(nextLanguage: ExplanationLanguage) {
     setProgress((currentProgress) => {
@@ -42,18 +33,17 @@ export function HomePage() {
 
   return (
     <main className="page-shell">
-      <section className="hero-card home-hero">
+      <section className="hero-card home-hero home-hero--centered" aria-label="Home hero">
+        <div className="home-language-switcher home-language-switcher--floating">
+          <LanguageToggle
+            selectedLanguage={language}
+            onSelect={handleLanguageSelect}
+            ariaLabel={copy.languageToggleLabel}
+          />
+        </div>
+
         <div className="home-hero__content">
-          <div className="home-hero__topline">
-            <p className="eyebrow">{copy.homePage.eyebrow}</p>
-            <div className="home-language-switcher">
-              <LanguageToggle
-                selectedLanguage={language}
-                onSelect={handleLanguageSelect}
-                ariaLabel={copy.languageToggleLabel}
-              />
-            </div>
-          </div>
+          <p className="eyebrow">{copy.homePage.eyebrow}</p>
           <h1 className="home-hero__title">{copy.homePage.heading}</h1>
           <div className="home-hero__slogan-stack" aria-label="Mandarin learning slogans">
             {copy.homePage.heroSlogans.map((slogan, index) => (
@@ -64,15 +54,10 @@ export function HomePage() {
           </div>
           <p className="lede home-hero__lede">{copy.homePage.lede}</p>
 
-          <div className="learning-chip-row" aria-label={copy.homePage.learningHighlightsLabel}>
-            {learningChips.map((chip) => (
-              <span key={chip} className="badge badge--gold">
-                {chip}
-              </span>
-            ))}
-          </div>
-
-          <nav className="home-quick-entry-grid" aria-label={copy.homePage.quickLearningPathsLabel}>
+          <nav
+            className="home-quick-entry-grid home-quick-entry-grid--centered"
+            aria-label={copy.homePage.quickLearningPathsLabel}
+          >
             <Link className="quick-entry-card quick-entry-card--primary" to={continueHref}>
               <span>{copy.homePage.quickEntryContinueMeta}</span>
               <strong>{copy.homePage.continueLearning}</strong>
@@ -87,50 +72,6 @@ export function HomePage() {
             </Link>
           </nav>
         </div>
-
-        <section className="home-learning-mockup" aria-label={copy.homePage.learningMockupLabel}>
-          <div className="mockup-window-bar" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
-          <div
-            className="home-hero__phrase"
-            role="group"
-            aria-label={copy.homePage.heroPhraseLabel}
-          >
-            <span className="badge badge--jade">{copy.homePage.lessonEyebrow}</span>
-            <p className="hanzi-display">{mockupPhrase.hanzi}</p>
-            <p className="pinyin-line">{mockupPhrase.pinyin}</p>
-          </div>
-          <div className="mock-dialogue-stack">
-            <p className="mock-dialogue-bubble mock-dialogue-bubble--accent">
-              {getLocalizedText(mockupLine.translation, language)}
-            </p>
-            <button
-              type="button"
-              className="mock-dialogue-bubble mock-dialogue-listen-button"
-              onClick={() => {
-                speakChinese({
-                  text: mockupLine.hanzi,
-                  audioSrc: mockupLine.audio,
-                  fallbackAudioSrc: mockupLine.audioFallback,
-                })
-              }}
-            >
-              <span aria-hidden="true">▶</span>
-              {copy.homePage.mockupListenLabel}
-            </button>
-          </div>
-          <div
-            className="home-hero__stats"
-            aria-label={copy.homePage.courseProgressSummaryLabel}
-          >
-            <span>{copy.homePage.lessonCount(course.lessons.length)}</span>
-            <span>{copy.homePage.completedLessonCount(progress.completedLessons.length)}</span>
-            <span>{copy.homePage.reviewCount(progress.reviewQueue.length)}</span>
-          </div>
-        </section>
       </section>
 
       <section aria-label={copy.homePage.journeyMapLabel} className="page-grid journey-map">

@@ -1,16 +1,10 @@
 import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
-import { course } from '../content/course'
-import { speakChinese } from '../lib/speech'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
-
-vi.mock('../lib/speech', () => ({
-  speakChinese: vi.fn(),
-}))
 
 const expectedLessonHrefs = [
   '/lesson/self-intro',
@@ -39,11 +33,8 @@ const expectedJourneyTitles = [
 ]
 
 describe('HomePage', () => {
-  const speakChineseMock = vi.mocked(speakChinese)
-
   beforeEach(() => {
     localStorage.clear()
-    speakChineseMock.mockReset()
   })
 
   it('leads with a Chinese-first hero slogan and keeps English and French as supporting lines', () => {
@@ -76,15 +67,17 @@ describe('HomePage', () => {
     }
   })
 
-  it('shows the refreshed hero phrase, ten-lesson progress cues, and no preview status copy', () => {
+  it('centers the hero theme and removes the old right-side learning mockup', () => {
     renderRoute('/home')
 
-    const heroPhrase = screen.getByRole('group', { name: /hero phrase/i })
-    expect(heroPhrase).toHaveTextContent('护照')
-    expect(heroPhrase).toHaveTextContent('hùzhào')
-    expect(screen.getByText('10 lessons')).toBeVisible()
-    expect(screen.getByText(`${course.lessons.length} lessons`)).toBeVisible()
-    expect(screen.getByText(/listen & repeat/i)).toBeVisible()
+    const hero = screen.getByRole('region', { name: /home hero/i })
+
+    expect(hero).toHaveClass('home-hero--centered')
+    expect(within(hero).getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
+    expect(screen.queryByRole('region', { name: /learning preview mockup/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('group', { name: /hero phrase/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /listen|écouter/i })).not.toBeInTheDocument()
+    expect(screen.queryByText('护照')).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
@@ -116,17 +109,7 @@ describe('HomePage', () => {
     ).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /commander un repas simple/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /acheter un billet en gare/i })).toBeVisible()
-    expect(screen.getByLabelText(/points clés de l’apprentissage/i)).toHaveTextContent(
-      'Guidage anglais/français',
-    )
-    expect(screen.getByRole('region', { name: /maquette d’aperçu d’apprentissage/i })).toBeVisible()
     expect(screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i })).toBeVisible()
-    expect(screen.getByLabelText(/phrase modèle/i)).toHaveTextContent('护照')
-
-    const progressSummary = screen.getByLabelText(/résumé des progrès du cours/i)
-    expect(progressSummary).toHaveTextContent('10 leçons')
-    expect(progressSummary).toHaveTextContent('0 terminée')
-    expect(progressSummary).toHaveTextContent('0 à réviser')
 
     expect(screen.getByText('Immigration')).toBeVisible()
     expect(screen.getByText('Taxi')).toBeVisible()
@@ -141,26 +124,9 @@ describe('HomePage', () => {
     const journeyMap = screen.getByLabelText(/carte du parcours/i)
     expect(within(journeyMap).queryAllByText(/ouvrir la leçon/i)).toHaveLength(0)
     expect(within(journeyMap).queryAllByText(/ouvrir la lecon/i)).toHaveLength(0)
-  })
-
-  it('lets learners play the hero mockup dialogue from a real Listen button', async () => {
-    const user = userEvent.setup()
-
-    renderRoute('/home')
-
-    const learningMockup = screen.getByRole('region', { name: /learning preview mockup/i })
-    const listenButton = within(learningMockup).getByRole('button', { name: /listen/i })
-
-    expect(listenButton).toBeVisible()
-    expect(listenButton).not.toBeDisabled()
-
-    await user.click(listenButton)
-
-    expect(speakChineseMock).toHaveBeenCalledWith({
-      text: '你好，请出示护照。',
-      audioSrc: '/audio/self-intro/line-01.mp3',
-      fallbackAudioSrc: undefined,
-    })
+    expect(screen.queryByRole('region', { name: /maquette d’aperçu d’apprentissage/i }))
+      .not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /écouter/i })).not.toBeInTheDocument()
   })
 
   it('persists a global explanation language choice from the Home hero', async () => {
@@ -180,7 +146,6 @@ describe('HomePage', () => {
     expect(loadProgress().selectedExplanationLanguage).toBe('fr')
     expect(frenchButton).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('link', { name: /continuer la leçon/i })).toBeVisible()
-    expect(screen.getByRole('region', { name: /maquette d’aperçu d’apprentissage/i })).toBeVisible()
     expect(
       screen.getByRole('navigation', { name: /accès rapides d’apprentissage/i }),
     ).toBeVisible()
@@ -192,7 +157,7 @@ describe('HomePage', () => {
     expect(screen.getByRole('link', { name: /continue learning/i })).toBeVisible()
   })
 
-  it('presents a learning mockup and card-based quick entry paths without changing destinations', () => {
+  it('presents centered card-based quick entry paths without changing destinations', () => {
     saveProgress({
       ...createDefaultProgress(),
       lastVisitedLesson: 'order-food',
@@ -201,13 +166,9 @@ describe('HomePage', () => {
 
     renderRoute('/home')
 
-    const learningMockup = screen.getByRole('region', { name: /learning preview mockup/i })
-    expect(learningMockup).toHaveClass('home-learning-mockup')
-    expect(within(learningMockup).getByText('护照')).toBeVisible()
-    expect(within(learningMockup).getByRole('button', { name: /listen/i })).toBeVisible()
-
     const quickEntries = screen.getByRole('navigation', { name: /quick learning paths/i })
     expect(quickEntries).toHaveClass('home-quick-entry-grid')
+    expect(quickEntries).toHaveClass('home-quick-entry-grid--centered')
     expect(
       within(quickEntries).getByRole('link', { name: /continue learning/i }),
     ).toHaveAttribute('href', '/lesson/order-food')

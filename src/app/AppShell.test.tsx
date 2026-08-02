@@ -13,6 +13,7 @@ describe('App shell', () => {
     renderRoute('/')
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
+    expect(screen.getByRole('region', { name: /home hero/i })).toHaveClass('home-hero--centered')
     expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
     expect(
       screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
@@ -23,6 +24,8 @@ describe('App shell', () => {
       'aria-pressed',
       'false',
     )
+    expect(screen.queryByRole('region', { name: /learning preview mockup/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /listen|écouter/i })).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)

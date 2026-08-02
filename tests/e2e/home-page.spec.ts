@@ -7,11 +7,14 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await page.goto('/')
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
+  await expect(page.getByRole('region', { name: /home hero/i })).toHaveClass(/home-hero--centered/)
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
   await expect(
     page.getByText('Apprenez le mandarin dans la vie quotidienne'),
   ).toBeVisible()
   await expect(page.getByText(/open lesson/i)).toHaveCount(0)
+  await expect(page.getByRole('region', { name: /learning preview mockup/i })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /listen|écouter/i })).toHaveCount(0)
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
   await expect(journeyNodes).toHaveCount(10)
@@ -51,6 +54,10 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
     expect(secondCardBox).not.toBeNull()
     expect(titleBox).not.toBeNull()
     expect(slotBox).not.toBeNull()
+
+    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+    const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
+    expect(scrollWidth).toBe(clientWidth)
 
     if (width <= 390) {
       expect(Math.abs(firstCardBox!.x - secondCardBox!.x)).toBeLessThan(2)
