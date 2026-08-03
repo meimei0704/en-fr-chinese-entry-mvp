@@ -20,6 +20,7 @@ import {
 import { SpeechButton } from '../SpeechButton'
 
 type RecordingStatus = 'idle' | 'starting' | 'recording'
+type RecordingErrorCode = ShadowingRecorderErrorCode | 'empty-recording'
 
 export interface ShadowingPracticeCopy {
   lessonEyebrow: string
@@ -34,7 +35,7 @@ export interface ShadowingPracticeCopy {
   localOnlyNotice: string
   localPlaybackLabel: string
   completedMessage: string
-  recordingErrors: Record<ShadowingRecorderErrorCode, string>
+  recordingErrors: Record<RecordingErrorCode, string>
 }
 
 interface ShadowingPracticeSectionProps {
@@ -54,7 +55,7 @@ export function ShadowingPracticeSection({
 }: ShadowingPracticeSectionProps) {
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0)
   const [recordingStatus, setRecordingStatus] = useState<RecordingStatus>('idle')
-  const [errorCode, setErrorCode] = useState<ShadowingRecorderErrorCode | null>(null)
+  const [errorCode, setErrorCode] = useState<RecordingErrorCode | null>(null)
   const [recordingUrl, setRecordingUrl] = useState<string | null>(null)
   const recorderRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -129,8 +130,16 @@ export function ShadowingPracticeSection({
       return
     }
 
-    const recordingBlob = new Blob(chunksRef.current, {
-      type: chunksRef.current[0]?.type ?? 'audio/webm',
+    const validRecordingChunks = chunksRef.current.filter((chunk) => chunk.size > 0)
+    const totalRecordingBytes = validRecordingChunks.reduce((total, chunk) => total + chunk.size, 0)
+
+    if (totalRecordingBytes === 0) {
+      showRecorderError('empty-recording', sessionId)
+      return
+    }
+
+    const recordingBlob = new Blob(validRecordingChunks, {
+      type: validRecordingChunks[0]?.type ?? 'audio/webm',
     })
     const nextRecordingUrl = URL.createObjectURL(recordingBlob)
 
@@ -143,7 +152,7 @@ export function ShadowingPracticeSection({
     markCurrentPromptComplete()
   }
 
-  function showRecorderError(code: ShadowingRecorderErrorCode, sessionId?: number) {
+  function showRecorderError(code: RecordingErrorCode, sessionId?: number) {
     if (sessionId !== undefined) {
       if (!isActiveRecordingSession(sessionId)) {
         return

@@ -27,10 +27,13 @@ function createDeferred<T>() {
   return { promise, resolve, reject }
 }
 
-function mockRecorderSupport() {
+function mockRecorderSupport(
+  dataEvents: Blob[] = [new Blob(['shadowing audio'], { type: 'audio/webm' })],
+) {
   const getUserMedia = vi.fn().mockResolvedValue({
     getTracks: () => [{ stop: vi.fn() }],
   })
+  const createObjectURL = vi.fn(() => 'blob:shadowing-recording')
 
   class FakeMediaRecorder {
     ondataavailable: ((event: BlobEvent) => void) | null = null
@@ -40,9 +43,11 @@ function mockRecorderSupport() {
     start() {}
 
     stop() {
-      this.ondataavailable?.({
-        data: new Blob(['shadowing audio'], { type: 'audio/webm' }),
-      } as BlobEvent)
+      for (const data of dataEvents) {
+        this.ondataavailable?.({
+          data,
+        } as BlobEvent)
+      }
       this.onstop?.()
     }
   }
@@ -50,13 +55,15 @@ function mockRecorderSupport() {
   vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
   Object.defineProperty(URL, 'createObjectURL', {
     configurable: true,
-    value: vi.fn(() => 'blob:shadowing-recording'),
+    value: createObjectURL,
   })
   Object.defineProperty(URL, 'revokeObjectURL', {
     configurable: true,
     value: vi.fn(),
   })
   setMediaDevices(getUserMedia)
+
+  return { createObjectURL }
 }
 
 describe('PinyinPage', () => {
@@ -156,6 +163,36 @@ describe('PinyinPage', () => {
     expect(screen.getByLabelText('Your recording')).toBeVisible()
     expect(screen.getByRole('button', { name: /record again/i })).toBeVisible()
     expect(loadPinyinProgress().shadowingCompletedPromptIds.length).toBeGreaterThan(0)
+  })
+
+  it('does not replay or complete shadowing when recorder stops without audio data', async () => {
+    const user = userEvent.setup()
+
+    const { createObjectURL } = mockRecorderSupport([])
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+    await user.click(screen.getByRole('button', { name: /stop recording/i }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent(/no audio was captured/i)
+    expect(screen.queryByLabelText('Your recording')).not.toBeInTheDocument()
+    expect(createObjectURL).not.toHaveBeenCalled()
+    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
+  })
+
+  it('does not replay or complete shadowing when recorder only emits empty audio data', async () => {
+    const user = userEvent.setup()
+
+    const { createObjectURL } = mockRecorderSupport([new Blob([], { type: 'audio/webm' })])
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+    await user.click(screen.getByRole('button', { name: /stop recording/i }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent(/no audio was captured/i)
+    expect(screen.queryByLabelText('Your recording')).not.toBeInTheDocument()
+    expect(createObjectURL).not.toHaveBeenCalled()
+    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
   })
 
   it('does not replay or complete shadowing when recorder error is followed by stop data', async () => {

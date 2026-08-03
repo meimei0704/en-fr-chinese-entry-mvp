@@ -214,6 +214,7 @@ export const uiCopy = {
       recordingPermissionDeniedMessage:
         'Microphone permission was denied. Please allow microphone access and try again.',
       recordingInitFailedMessage: 'Recording could not start. Please try again.',
+      recordingEmptyMessage: 'No audio was captured. Please try again.',
     },
     common: {
       explanation: 'Explanation',
@@ -423,6 +424,7 @@ export const uiCopy = {
       recordingPermissionDeniedMessage:
         'L’accès au micro a été refusé. Autorisez le micro puis réessayez.',
       recordingInitFailedMessage: 'L’enregistrement n’a pas pu démarrer. Réessayez.',
+      recordingEmptyMessage: 'Aucun son n’a été capté. Réessayez.',
     },
     common: {
       explanation: 'Explication',

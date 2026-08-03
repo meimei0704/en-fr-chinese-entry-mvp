@@ -80,6 +80,7 @@ export function PinyinPage() {
               unsupported: pinyinCopy.recordingUnsupportedMessage,
               'permission-denied': pinyinCopy.recordingPermissionDeniedMessage,
               'init-failed': pinyinCopy.recordingInitFailedMessage,
+              'empty-recording': pinyinCopy.recordingEmptyMessage,
             },
           }}
           onProgressChange={setProgress}
