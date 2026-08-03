@@ -891,6 +891,10 @@ h2 {
   gap: clamp(1.25rem, 3vw, 1.75rem);
 }
 
+.lesson-header-card {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .lesson-header-card__title {
   display: grid;
   gap: 0.25rem;
