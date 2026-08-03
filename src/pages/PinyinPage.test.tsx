@@ -7,7 +7,14 @@ import { getLocalizedText } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
+import { speakChinese } from '../lib/speech'
 import { renderRoute } from '../test/renderRoute'
+
+vi.mock('../lib/speech', () => ({
+  speakChinese: vi.fn(),
+}))
+
+const courseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 
 function setMediaDevices(getUserMedia: ReturnType<typeof vi.fn>) {
   Object.defineProperty(navigator, 'mediaDevices', {
@@ -69,6 +76,7 @@ function mockRecorderSupport(
 describe('PinyinPage', () => {
   beforeEach(() => {
     localStorage.clear()
+    vi.mocked(speakChinese).mockReset()
   })
 
   afterEach(() => {
@@ -105,6 +113,32 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('heading', { level: 3, name: 'Initials' })).toBeVisible()
     expect(screen.getByText('bo')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play bo' })).toBeVisible()
+  })
+
+  it('marks the reference section complete after the learner plays a reference audio sample', async () => {
+    const user = userEvent.setup()
+    const existingCourseProgress = JSON.stringify({
+      selectedExplanationLanguage: 'en',
+      completedLessons: ['self-intro'],
+      reviewQueue: [],
+      lastVisitedLesson: 'self-intro',
+      lessonStepProgress: {},
+    })
+
+    localStorage.setItem(courseProgressStorageKey, existingCourseProgress)
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: 'Play bo' }))
+
+    expect(vi.mocked(speakChinese)).toHaveBeenCalledWith({
+      text: 'bo',
+      audioSrc: '/audio/pinyin/lesson-1/reference-initial-b.mp3',
+    })
+    expect(screen.getByText('1 of 3 sections complete')).toBeVisible()
+    expect(loadPinyinProgress()).toMatchObject({
+      completedSections: ['reference'],
+    })
+    expect(localStorage.getItem(courseProgressStorageKey)).toBe(existingCourseProgress)
   })
 
   it('finishes the fixed eight-question tone game and records the score', async () => {

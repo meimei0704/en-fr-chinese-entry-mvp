@@ -6,7 +6,11 @@ import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
 import { ShadowingPracticeSection } from '../components/pinyin/ShadowingPracticeSection'
 import { ToneGameSection } from '../components/pinyin/ToneGameSection'
-import { loadPinyinProgress } from '../lib/pinyinProgress'
+import {
+  loadPinyinProgress,
+  recordPinyinReferenceComplete,
+  savePinyinProgress,
+} from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
 
 export function PinyinPage() {
@@ -20,6 +24,13 @@ export function PinyinPage() {
     { href: '#pinyin-tone-game', label: pinyinCopy.toneGameNav },
     { href: '#pinyin-shadowing', label: pinyinCopy.shadowingNav },
   ] as const
+
+  function handleReferenceAudioPlay() {
+    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress())
+
+    savePinyinProgress(nextProgress)
+    setProgress(nextProgress)
+  }
 
   return (
     <main className="page-shell page-shell--wide pinyin-page">
@@ -40,6 +51,7 @@ export function PinyinPage() {
           heading={pinyinCopy.referenceHeading}
           summary={pinyinCopy.referenceSummary}
           playAudioLabel={pinyinCopy.playReferenceAudio}
+          onReferenceAudioPlay={handleReferenceAudioPlay}
         />
 
         <ToneGameSection

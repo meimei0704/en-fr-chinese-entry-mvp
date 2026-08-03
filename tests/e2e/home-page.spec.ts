@@ -37,7 +37,7 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
-  await expect(journeyNodes).toHaveCount(10)
+  await expect(journeyNodes).toHaveCount(11)
   await expect(page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
@@ -60,6 +60,10 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByRole('link', { name: /buy a train station ticket/i })).toHaveAttribute(
     'href',
     '/lesson/train-station-ticket',
+  )
+  await expect(page.getByRole('link', { name: /Pinyin Foundations 1/i })).toHaveAttribute(
+    'href',
+    '/pinyin',
   )
   await expect(page.locator('.journey-map')).not.toContainText(' / ')
 

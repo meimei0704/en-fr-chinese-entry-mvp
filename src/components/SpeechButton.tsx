@@ -6,9 +6,17 @@ interface SpeechButtonProps {
   audioSrc?: string
   fallbackAudioSrc?: string
   disabled?: boolean
+  onActivate?: () => void
 }
 
-export function SpeechButton({ label, text, audioSrc, fallbackAudioSrc, disabled = false }: SpeechButtonProps) {
+export function SpeechButton({
+  label,
+  text,
+  audioSrc,
+  fallbackAudioSrc,
+  disabled = false,
+  onActivate,
+}: SpeechButtonProps) {
   return (
     <button
       type="button"
@@ -17,6 +25,7 @@ export function SpeechButton({ label, text, audioSrc, fallbackAudioSrc, disabled
       title={label}
       disabled={disabled}
       onClick={() => {
+        onActivate?.()
         speakChinese({ text, audioSrc, fallbackAudioSrc })
       }}
     >

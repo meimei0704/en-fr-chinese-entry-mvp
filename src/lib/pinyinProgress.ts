@@ -64,6 +64,24 @@ export function savePinyinProgress(progress: PinyinProgress) {
   saveJsonToStorage(pinyinProgressStorageKey, progress)
 }
 
+function recordPinyinSectionComplete(
+  progress: PinyinProgress,
+  sectionId: PinyinModuleId,
+): PinyinProgress {
+  if (progress.completedSections.includes(sectionId)) {
+    return progress
+  }
+
+  return {
+    ...progress,
+    completedSections: [...progress.completedSections, sectionId],
+  }
+}
+
+export function recordPinyinReferenceComplete(progress: PinyinProgress): PinyinProgress {
+  return recordPinyinSectionComplete(progress, 'reference')
+}
+
 export function recordPinyinToneGameScore(
   progress: PinyinProgress,
   score: number,

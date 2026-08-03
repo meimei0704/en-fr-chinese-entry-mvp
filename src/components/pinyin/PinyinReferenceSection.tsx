@@ -9,6 +9,7 @@ interface PinyinReferenceSectionProps {
   heading: string
   summary: string
   playAudioLabel: (label: string) => string
+  onReferenceAudioPlay: () => void
 }
 
 export function PinyinReferenceSection({
@@ -18,6 +19,7 @@ export function PinyinReferenceSection({
   heading,
   summary,
   playAudioLabel,
+  onReferenceAudioPlay,
 }: PinyinReferenceSectionProps) {
   return (
     <section id="pinyin-reference" className="surface-card pinyin-reference-section">
@@ -46,6 +48,7 @@ export function PinyinReferenceSection({
                     label={playAudioLabel(item.pinyin)}
                     text={item.pinyin}
                     audioSrc={item.audio}
+                    onActivate={onReferenceAudioPlay}
                   />
                   <p className="muted-text">{getLocalizedText(item.description, language)}</p>
                 </article>
