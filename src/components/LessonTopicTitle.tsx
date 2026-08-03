@@ -1,15 +1,23 @@
-import type { LocalizedField } from '../content/types'
 import { getLocalizedText } from '../content/copy'
-import type { ExplanationLanguage } from '../content/types'
+import { getLessonTopicDisplay } from '../content/lessonTopics'
+import type { ExplanationLanguage, LessonId, LocalizedField } from '../content/types'
 
-type HeadingTag = 'h1' | 'h2' | 'h3'
+type TopicTitleTag = 'h1' | 'h2' | 'h3' | 'p'
 
-interface LessonTopicTitleProps {
-  as: HeadingTag
-  title: LocalizedField
+type LessonTopicTitleProps = {
+  as: TopicTitleTag
   language: ExplanationLanguage
   className?: string
-}
+} & (
+  | {
+      lessonId: LessonId
+      title?: LocalizedField
+    }
+  | {
+      lessonId?: undefined
+      title: LocalizedField
+    }
+)
 
 function containsChinese(text: string) {
   return /[\u3400-\u9fff]/.test(text)
@@ -28,9 +36,16 @@ function splitLocalizedTopicTitle(title: string) {
   }
 }
 
-export function LessonTopicTitle({ as: Tag, title, language, className }: LessonTopicTitleProps) {
-  const localizedTitle = getLocalizedText(title, language)
-  const { primary, secondary } = splitLocalizedTopicTitle(localizedTitle)
+export function LessonTopicTitle({
+  as: Tag,
+  title,
+  lessonId,
+  language,
+  className,
+}: LessonTopicTitleProps) {
+  const { primary, secondary } = lessonId
+    ? getLessonTopicDisplay(lessonId, language)
+    : splitLocalizedTopicTitle(getLocalizedText(title, language))
   const classes = ['lesson-topic-title', className].filter(Boolean).join(' ')
 
   if (!secondary) {

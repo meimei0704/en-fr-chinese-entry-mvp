@@ -18,7 +18,7 @@ export function LessonCard({ lesson, language }: LessonCardProps) {
       <span className="badge badge--sky">
         {copy.homePage.lessonScenarioBadges[lesson.id]}
       </span>
-      <LessonTopicTitle as="h2" title={lesson.title} language={language} />
+      <LessonTopicTitle as="h2" lessonId={lesson.id} language={language} />
       <p className="lede">{getLocalizedText(lesson.scenario, language)}</p>
 
       {miniPhrase ? (

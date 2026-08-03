@@ -1,5 +1,18 @@
 import { expect, test } from 'playwright/test'
 
+const expectedTopics = [
+  ['到达机场', 'Arrival at the airport'],
+  ['打车去酒店', 'Take a taxi to your hotel'],
+  ['酒店或公寓入住', 'Hotel or apartment check-in'],
+  ['手机号码和移动支付', 'Phone number & mobile payment setup'],
+  ['第一次便利店购物', 'First convenience store run'],
+  ['点一份简单的饭', 'Order a simple meal'],
+  ['买地铁票', 'Buy a metro ticket'],
+  ['去药店求助', 'Ask for help at a pharmacy'],
+  ['遇到问题时求助', 'Ask for help with a problem'],
+  ['在火车站买票', 'Buy a train station ticket'],
+] as const
+
 test('keeps the Home journey stamp slot decorative while preserving readable text widths', async ({
   page,
 }) => {
@@ -48,6 +61,16 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
     'href',
     '/lesson/train-station-ticket',
   )
+  await expect(page.locator('.journey-map')).not.toContainText(' / ')
+
+  for (const [index, [hanzi, explanation]] of expectedTopics.entries()) {
+    const heading = page.locator('.journey-map .lesson-topic-title').nth(index)
+
+    await expect(heading).toContainText(hanzi)
+    await expect(heading).toContainText(explanation)
+    await expect(heading.locator('.lesson-topic-title__primary')).toHaveText(hanzi)
+    await expect(heading.locator('.lesson-topic-title__secondary')).toHaveText(explanation)
+  }
 
   for (const width of [320, 390, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 })

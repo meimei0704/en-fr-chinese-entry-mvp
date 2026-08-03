@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { ExplanationBlock } from '../components/ExplanationBlock'
+import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { PracticeChecklist } from '../components/PracticeChecklist'
 import { SpeechButton } from '../components/SpeechButton'
 import { course } from '../content/course'
@@ -96,7 +97,7 @@ export function PracticePage() {
       <section className="hero-card" style={{ display: 'grid', gap: '1.5rem' }}>
         <header>
           <p className="eyebrow">{copy.practicePage.eyebrow}</p>
-          <h1>{getLocalizedText(lesson.title, selectedLanguage)}</h1>
+          <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
           <p className="lede">{copy.practicePage.lede}</p>
         </header>
 

@@ -76,7 +76,7 @@ export function HomePage() {
                       <span className="badge badge--jade">{nodeEyebrow}</span>
                     </div>
 
-                    <LessonTopicTitle as="h2" title={node.title} language={language} />
+                    <LessonTopicTitle as="h2" lessonId={node.lessonId} language={language} />
                     <p className="muted-text">{nodeSummary}</p>
                   </div>
 

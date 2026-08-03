@@ -4,33 +4,13 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
+import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
 import { renderRoute } from '../test/renderRoute'
 
-const expectedLessonHrefs = [
-  '/lesson/self-intro',
-  '/lesson/ask-directions',
-  '/lesson/order-food',
-  '/lesson/phone-and-payment',
-  '/lesson/convenience-store-run',
-  '/lesson/restaurant-order',
-  '/lesson/metro-ticket',
-  '/lesson/pharmacy-help',
-  '/lesson/ask-for-help-problem',
-  '/lesson/train-station-ticket',
-]
-
-const expectedJourneyTitles = [
-  /到达机场\s+Arrival at the airport/i,
-  /taxi to your stay/i,
-  /hotel \/ apartment check-in/i,
-  /phone number & mobile payment/i,
-  /first convenience store run/i,
-  /order a simple meal/i,
-  /buy a metro ticket/i,
-  /ask for help at a pharmacy/i,
-  /ask for help with a problem/i,
-  /buy a train station ticket/i,
-]
+const expectedLessonHrefs = expectedLessonTopicOrder.map((topic) => `/lesson/${topic.id}`)
+const expectedJourneyTitles = expectedLessonTopicOrder.map((topic) =>
+  expectedLessonTopicPattern(topic, 'en'),
+)
 
 describe('HomePage', () => {
   beforeEach(() => {
@@ -70,14 +50,15 @@ describe('HomePage', () => {
     expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
-    expect(within(journeyMap).queryByText(/到达机场 \/ Arrival at the airport/i)).not.toBeInTheDocument()
-    expect(within(journeyMap).getByText('到达机场')).toHaveClass('lesson-topic-title__primary')
-    expect(within(journeyMap).getByText('Arrival at the airport')).toHaveClass(
-      'lesson-topic-title__secondary',
-    )
+    expect(journeyMap).not.toHaveTextContent(' / ')
 
-    for (const title of expectedJourneyTitles) {
-      expect(within(journeyMap).getByRole('heading', { level: 2, name: title })).toBeVisible()
+    for (const [index, title] of expectedJourneyTitles.entries()) {
+      const topic = expectedLessonTopicOrder[index]
+      const heading = within(journeyMap).getByRole('heading', { level: 2, name: title })
+
+      expect(heading).toBeVisible()
+      expect(within(heading).getByText(topic.hanzi)).toHaveClass('lesson-topic-title__primary')
+      expect(within(heading).getByText(topic.en)).toHaveClass('lesson-topic-title__secondary')
     }
   })
 
@@ -124,12 +105,18 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /到达机场\s+Arrivée à l’aéroport/i,
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'fr'),
       }),
     ).toBeVisible()
-    expect(screen.queryByText(/到达机场 \/ Arrivée à l’aéroport/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 2, name: /commander un repas simple/i })).toBeVisible()
-    expect(screen.getByRole('heading', { level: 2, name: /acheter un billet en gare/i })).toBeVisible()
+    expect(screen.getByRole('heading', {
+      level: 2,
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'fr'),
+    })).toBeVisible()
+    expect(screen.getByRole('heading', {
+      level: 2,
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[9], 'fr'),
+    })).toBeVisible()
+    expect(screen.getByLabelText(/carte du parcours/i)).not.toHaveTextContent(' / ')
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
 
@@ -206,10 +193,14 @@ describe('HomePage', () => {
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(
-      within(journeyMap).getByRole('link', { name: /到达机场\s+Arrival at the airport/i }),
+      within(journeyMap).getByRole('link', {
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
+      }),
     ).toHaveAttribute('href', '/lesson/self-intro')
     expect(
-      within(journeyMap).getByRole('link', { name: /order a simple meal/i }),
+      within(journeyMap).getByRole('link', {
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'en'),
+      }),
     ).toHaveAttribute('href', '/lesson/restaurant-order')
   })
 
@@ -233,7 +224,9 @@ describe('HomePage', () => {
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(
-      within(journeyMap).getByRole('link', { name: /order a simple meal/i }),
+      within(journeyMap).getByRole('link', {
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'en'),
+      }),
     ).toHaveAttribute('href', '/lesson/restaurant-order')
   })
 
@@ -261,8 +254,12 @@ describe('HomePage', () => {
     expect(screen.queryByRole('region', { name: /lesson list/i })).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    const restaurantCard = within(journeyMap).getByRole('link', { name: /order a simple meal/i })
-    const trainCard = within(journeyMap).getByRole('link', { name: /buy a train station ticket/i })
+    const restaurantCard = within(journeyMap).getByRole('link', {
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'en'),
+    })
+    const trainCard = within(journeyMap).getByRole('link', {
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[9], 'en'),
+    })
 
     expect(
       restaurantCard.querySelector(

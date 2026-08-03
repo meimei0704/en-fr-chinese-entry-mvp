@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest'
 import { screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
 import { renderRoute } from '../test/renderRoute'
 
 describe('App shell', () => {
@@ -37,9 +38,11 @@ describe('App shell', () => {
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)
     expect(
-      within(journeyMap).getByRole('link', { name: /到达机场\s+Arrival at the airport/i }),
+      within(journeyMap).getByRole('link', {
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
+      }),
     ).toHaveAttribute('href', '/lesson/self-intro')
-    expect(within(journeyMap).queryByText(/到达机场 \/ Arrival at the airport/i)).not.toBeInTheDocument()
+    expect(journeyMap).not.toHaveTextContent(' / ')
   })
 
   it('keeps the legacy /home route compatible with the same Home page content', () => {
@@ -47,9 +50,8 @@ describe('App shell', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
     expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
-      'href',
-      '/lesson/self-intro',
-    )
+    expect(screen.getByRole('link', {
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
+    })).toHaveAttribute('href', '/lesson/self-intro')
   })
 })

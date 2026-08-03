@@ -74,7 +74,7 @@ export function LessonPage() {
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.lessonPage.eyebrow}</p>
-          <LessonTopicTitle as="h1" title={lesson.title} language={selectedLanguage} />
+          <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
           <p className="lede">{getLocalizedText(lesson.dialogue.title, selectedLanguage)}</p>
         </header>
 

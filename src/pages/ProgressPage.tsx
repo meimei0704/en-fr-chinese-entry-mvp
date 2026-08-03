@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
+import { getLessonTopicText } from '../content/lessonTopics'
 import type { JourneyNode, LessonId } from '../content/types'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
@@ -34,10 +36,6 @@ export function ProgressPage() {
   const completionPercent = totalLessons === 0
     ? 0
     : Math.round((completedLessonsCount / totalLessons) * 100)
-  const currentLessonTitle = currentLesson
-    ? getLocalizedText(currentLesson.title, language)
-    : copy.progressPage.notStartedYet
-
   function getJourneyNodeStatus(node: JourneyNode): JourneyNodeStatus {
     if (!isLessonJourneyNode(node)) {
       return 'preview'
@@ -90,7 +88,16 @@ export function ProgressPage() {
           <div>
             <p className="eyebrow">{copy.progressPage.nextStepEyebrow}</p>
             <h2>{copy.progressPage.currentLesson}</h2>
-            <p className="progress-current-lesson">{currentLessonTitle}</p>
+            {currentLesson ? (
+              <LessonTopicTitle
+                as="p"
+                lessonId={currentLesson.id}
+                language={language}
+                className="progress-current-lesson"
+              />
+            ) : (
+              <p className="progress-current-lesson">{copy.progressPage.notStartedYet}</p>
+            )}
             <p className="muted-text">
               {copy.progressPage.reviewItemsWaiting(progress.reviewQueue.length)}
             </p>
@@ -161,7 +168,9 @@ export function ProgressPage() {
             {orderedJourneyNodes.map((node) => {
               const status = getJourneyNodeStatus(node)
               const statusLabel = getStatusLabel(status)
-              const nodeTitle = getLocalizedText(node.title, language)
+              const nodeTitle = isLessonJourneyNode(node)
+                ? getLessonTopicText(node.lessonId, language)
+                : getLocalizedText(node.title, language)
               const nodeSummary = getLocalizedText(node.summary, language)
               const nodeEyebrow = getLocalizedText(node.eyebrow, language)
               const nodeIcon = journeyNodeIcons[node.id]
@@ -190,7 +199,7 @@ export function ProgressPage() {
                       <span className={`progress-status-seal progress-status-seal--${status}`}>
                         {statusLabel}
                       </span>
-                      <h3>{nodeTitle}</h3>
+                      <LessonTopicTitle as="h3" lessonId={node.lessonId} language={language} />
                       <p className="muted-text">{nodeSummary}</p>
                     </div>
 

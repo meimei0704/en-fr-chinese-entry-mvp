@@ -31,9 +31,11 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
 
   await page.getByRole('link', { name: /back to home/i }).click()
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
-  await page.getByRole('link', { name: /taxi to your stay/i }).click()
+  await page.getByRole('link', { name: /打车去酒店\s+Take a taxi to your hotel/i }).click()
   await expect(page).toHaveURL(/\/lesson\/ask-directions$/)
-  await expect(page.getByRole('heading', { name: /taxi to your hotel/i })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: /打车去酒店\s+Take a taxi to your hotel/i }),
+  ).toBeVisible()
 })
 
 test('keeps the French arrival lesson header within a 320px viewport', async ({ page }) => {

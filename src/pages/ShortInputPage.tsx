@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { ExplanationBlock } from '../components/ExplanationBlock'
+import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { SpeechButton } from '../components/SpeechButton'
 import { course } from '../content/course'
 import type { LessonContent } from '../content/types'
@@ -68,7 +69,7 @@ export function ShortInputPage() {
       <section className="hero-card" style={{ display: 'grid', gap: '1.5rem' }}>
         <header>
           <p className="eyebrow">{copy.shortInputPage.eyebrow}</p>
-          <h1>{getLocalizedText(currentLesson.title, language)}</h1>
+          <LessonTopicTitle as="h1" lessonId={currentLesson.id} language={language} />
           <p className="lede">{copy.shortInputPage.lede}</p>
         </header>
 
