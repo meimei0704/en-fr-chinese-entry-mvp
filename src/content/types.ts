@@ -181,7 +181,7 @@ export type PinyinReferenceGroupId = 'initials' | 'finals' | 'tones'
 
 export interface PinyinReferenceItem {
   id: string
-  label: string
+  label: LocalizedField
   pinyin: string
   description: LocalizedField
   audio: string

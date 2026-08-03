@@ -1,29 +1,30 @@
 interface PinyinHeroProps {
+  eyebrow: string
+  heading: string
   summary: string
-  completedSectionCount: number
-  totalSectionCount: number
+  sectionProgress: string
+  sectionsNavLabel: string
+  navItems: readonly {
+    href: string
+    label: string
+  }[]
 }
 
-const navItems = [
-  { href: '#pinyin-reference', label: 'Reference' },
-  { href: '#pinyin-tone-game', label: 'Tone game' },
-  { href: '#pinyin-shadowing', label: 'Shadowing' },
-] as const
-
 export function PinyinHero({
+  eyebrow,
+  heading,
   summary,
-  completedSectionCount,
-  totalSectionCount,
+  sectionProgress,
+  sectionsNavLabel,
+  navItems,
 }: PinyinHeroProps) {
   return (
     <section className="hero-card pinyin-hero">
-      <p className="eyebrow">Pinyin</p>
-      <h1>Pinyin（零基础第一课）</h1>
+      <p className="eyebrow">{eyebrow}</p>
+      <h1>{heading}</h1>
       <p className="lede">{summary}</p>
-      <p className="pinyin-hero__progress">
-        {completedSectionCount} of {totalSectionCount} sections complete
-      </p>
-      <nav className="button-row pinyin-hero__nav" aria-label="Pinyin lesson sections">
+      <p className="pinyin-hero__progress">{sectionProgress}</p>
+      <nav className="button-row pinyin-hero__nav" aria-label={sectionsNavLabel}>
         {navItems.map((item) => (
           <a key={item.href} className="secondary-link" href={item.href}>
             {item.label}

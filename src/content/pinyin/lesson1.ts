@@ -160,7 +160,10 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'tone-first',
-          label: 'First tone',
+          label: {
+            en: 'First tone',
+            fr: 'Premier ton',
+          },
           pinyin: 'mā',
           description: {
             en: 'High and level.',
@@ -170,7 +173,10 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'tone-second',
-          label: 'Second tone',
+          label: {
+            en: 'Second tone',
+            fr: 'Deuxième ton',
+          },
           pinyin: 'má',
           description: {
             en: 'Rising, like asking a short question.',
@@ -180,7 +186,10 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'tone-third',
-          label: 'Third tone',
+          label: {
+            en: 'Third tone',
+            fr: 'Troisième ton',
+          },
           pinyin: 'mǎ',
           description: {
             en: 'Low dipping tone.',
@@ -190,7 +199,10 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'tone-fourth',
-          label: 'Fourth tone',
+          label: {
+            en: 'Fourth tone',
+            fr: 'Quatrième ton',
+          },
           pinyin: 'mà',
           description: {
             en: 'Falling, short, and decisive.',

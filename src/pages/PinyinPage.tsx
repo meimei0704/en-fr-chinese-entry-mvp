@@ -1,4 +1,4 @@
-import { getLocalizedText } from '../content/copy'
+import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
@@ -7,28 +7,45 @@ import { loadProgress } from '../lib/progress'
 
 export function PinyinPage() {
   const language = loadProgress().selectedExplanationLanguage
+  const copy = getUiCopy(language)
+  const pinyinCopy = copy.pinyinPage
   const progress = loadPinyinProgress()
   const lesson = pinyinCourse.lesson
+  const navItems = [
+    { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
+    { href: '#pinyin-tone-game', label: pinyinCopy.toneGameNav },
+    { href: '#pinyin-shadowing', label: pinyinCopy.shadowingNav },
+  ] as const
 
   return (
     <main className="page-shell page-shell--wide pinyin-page">
       <div className="pinyin-page__content">
         <PinyinHero
+          eyebrow={pinyinCopy.eyebrow}
+          heading={pinyinCopy.heading}
           summary={getLocalizedText(lesson.summary, language)}
-          completedSectionCount={progress.completedSections.length}
-          totalSectionCount={3}
+          sectionProgress={pinyinCopy.sectionProgress(progress.completedSections.length, 3)}
+          sectionsNavLabel={pinyinCopy.sectionsNavLabel}
+          navItems={navItems}
         />
 
-        <PinyinReferenceSection groups={lesson.reference} language={language} />
+        <PinyinReferenceSection
+          groups={lesson.reference}
+          language={language}
+          eyebrow={pinyinCopy.lessonEyebrow}
+          heading={pinyinCopy.referenceHeading}
+          summary={pinyinCopy.referenceSummary}
+          playAudioLabel={pinyinCopy.playReferenceAudio}
+        />
 
         <section id="pinyin-tone-game" className="surface-card pinyin-placeholder-section">
-          <p className="eyebrow">Coming next</p>
+          <p className="eyebrow">{pinyinCopy.comingNext}</p>
           <h2>{getLocalizedText(lesson.toneGame.title, language)}</h2>
           <p className="muted-text">{getLocalizedText(lesson.toneGame.instructions, language)}</p>
         </section>
 
         <section id="pinyin-shadowing" className="surface-card pinyin-placeholder-section">
-          <p className="eyebrow">Coming next</p>
+          <p className="eyebrow">{pinyinCopy.comingNext}</p>
           <h2>{getLocalizedText(lesson.shadowing.title, language)}</h2>
           <p className="muted-text">{getLocalizedText(lesson.shadowing.instructions, language)}</p>
         </section>

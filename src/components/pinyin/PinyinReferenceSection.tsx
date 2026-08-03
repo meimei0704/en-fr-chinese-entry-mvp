@@ -5,17 +5,26 @@ import type { ExplanationLanguage, PinyinReferenceGroup } from '../../content/ty
 interface PinyinReferenceSectionProps {
   groups: PinyinReferenceGroup[]
   language: ExplanationLanguage
+  eyebrow: string
+  heading: string
+  summary: string
+  playAudioLabel: (label: string) => string
 }
 
-export function PinyinReferenceSection({ groups, language }: PinyinReferenceSectionProps) {
+export function PinyinReferenceSection({
+  groups,
+  language,
+  eyebrow,
+  heading,
+  summary,
+  playAudioLabel,
+}: PinyinReferenceSectionProps) {
   return (
     <section id="pinyin-reference" className="surface-card pinyin-reference-section">
       <div className="pinyin-section-heading">
-        <p className="eyebrow">Lesson 1</p>
-        <h2>Reference</h2>
-        <p className="muted-text">
-          Build a first sound map from initials, finals, and Mandarin tones.
-        </p>
+        <p className="eyebrow">{eyebrow}</p>
+        <h2>{heading}</h2>
+        <p className="muted-text">{summary}</p>
       </div>
 
       <div className="pinyin-reference-section__groups">
@@ -30,11 +39,11 @@ export function PinyinReferenceSection({ groups, language }: PinyinReferenceSect
               {group.items.map((item) => (
                 <article key={item.id} className="study-item pinyin-reference-card">
                   <div>
-                    <p className="pinyin-reference-card__label">{item.label}</p>
+                    <p className="pinyin-reference-card__label">{getLocalizedText(item.label, language)}</p>
                     <p className="pinyin-line">{item.pinyin}</p>
                   </div>
                   <SpeechButton
-                    label="Play Chinese"
+                    label={playAudioLabel(item.pinyin)}
                     text={item.pinyin}
                     audioSrc={item.audio}
                   />

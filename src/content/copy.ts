@@ -176,6 +176,21 @@ export const uiCopy = {
       backToHome: 'Back to home',
       goToReview: 'Go to review',
     },
+    pinyinPage: {
+      eyebrow: 'Pinyin',
+      heading: 'Pinyin（零基础第一课）',
+      sectionsNavLabel: 'Pinyin lesson sections',
+      referenceNav: 'Reference',
+      toneGameNav: 'Tone game',
+      shadowingNav: 'Shadowing',
+      sectionProgress: (done: number, total: number) =>
+        `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
+      lessonEyebrow: 'Lesson 1',
+      referenceHeading: 'Reference',
+      referenceSummary: 'Build a first sound map from initials, finals, and Mandarin tones.',
+      playReferenceAudio: (label: string) => `Play ${label}`,
+      comingNext: 'Coming next',
+    },
     common: {
       explanation: 'Explanation',
     },
@@ -342,6 +357,21 @@ export const uiCopy = {
       openJourneyLesson: (title: string) => `Ouvrir ${title}`,
       backToHome: 'Retour à l’accueil',
       goToReview: 'Aller à la révision',
+    },
+    pinyinPage: {
+      eyebrow: 'Pinyin',
+      heading: 'Pinyin（零基础第一课）',
+      sectionsNavLabel: 'Sections de la leçon de pinyin',
+      referenceNav: 'Référence',
+      toneGameNav: 'Jeu des tons',
+      shadowingNav: 'Répétition',
+      sectionProgress: (done: number, total: number) =>
+        `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
+      lessonEyebrow: 'Leçon 1',
+      referenceHeading: 'Référence',
+      referenceSummary: 'Construisez une première carte sonore à partir des initiales, finales et tons du mandarin.',
+      playReferenceAudio: (label: string) => `Écouter ${label}`,
+      comingNext: 'Bientôt',
     },
     common: {
       explanation: 'Explication',
