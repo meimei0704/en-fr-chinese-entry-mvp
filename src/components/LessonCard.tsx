@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 
+import { LessonTopicTitle } from './LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import type { ExplanationLanguage, LessonContent } from '../content/types'
 
@@ -17,7 +18,7 @@ export function LessonCard({ lesson, language }: LessonCardProps) {
       <span className="badge badge--sky">
         {copy.homePage.lessonScenarioBadges[lesson.id]}
       </span>
-      <h2>{getLocalizedText(lesson.title, language)}</h2>
+      <LessonTopicTitle as="h2" title={lesson.title} language={language} />
       <p className="lede">{getLocalizedText(lesson.scenario, language)}</p>
 
       {miniPhrase ? (

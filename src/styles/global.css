@@ -166,6 +166,32 @@ h2 {
   letter-spacing: -0.02em;
 }
 
+.lesson-topic-title {
+  display: grid;
+  gap: 0.18em;
+  max-width: 100%;
+}
+
+.lesson-topic-title__primary,
+.lesson-topic-title__secondary {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lesson-topic-title__secondary {
+  color: var(--color-ink-soft);
+  font-size: 0.72em;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.journey-node .lesson-topic-title__secondary,
+.lesson-card .lesson-topic-title__secondary {
+  font-size: 0.88em;
+  line-height: 1.12;
+}
+
 .lede {
   margin: 1rem 0 0;
   color: var(--color-muted);

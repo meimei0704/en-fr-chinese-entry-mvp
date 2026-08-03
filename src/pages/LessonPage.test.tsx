@@ -71,8 +71,11 @@ describe('LessonPage', () => {
     renderRoute('/lesson/self-intro')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: /到达机场 \/ Arrivée à l’aéroport/i }),
+      screen.getByRole('heading', { level: 1, name: /到达机场\s+Arrivée à l’aéroport/i }),
     ).toBeVisible()
+    expect(screen.queryByText(/到达机场 \/ Arrivée à l’aéroport/i)).not.toBeInTheDocument()
+    expect(screen.getByText('到达机场')).toHaveClass('lesson-topic-title__primary')
+    expect(screen.getByText('Arrivée à l’aéroport')).toHaveClass('lesson-topic-title__secondary')
     expect(screen.getByRole('region', { name: /aperçu de la leçon/i })).toBeVisible()
     expect(
       screen.getByRole('heading', { level: 2, name: /objectif de la scène/i }),

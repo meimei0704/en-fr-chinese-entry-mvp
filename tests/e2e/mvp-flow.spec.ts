@@ -5,7 +5,12 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
-  await page.getByRole('link', { name: /到达机场 \/ Arrival at the airport/i }).click()
+  await page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i }).click()
+  await expect(page.getByText(/到达机场 \/ Arrival at the airport/i)).toHaveCount(0)
+  await expect(page.locator('.lesson-header-card .lesson-topic-title__primary')).toHaveText('到达机场')
+  await expect(page.locator('.lesson-header-card .lesson-topic-title__secondary')).toHaveText(
+    'Arrival at the airport',
+  )
   await page.getByRole('link', { name: /go to practice/i }).click()
   await page.getByRole('link', { name: /continue to short input/i }).click()
   await page.getByRole('button', { name: /i finished the short input/i }).click()

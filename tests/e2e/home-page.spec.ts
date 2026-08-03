@@ -25,9 +25,16 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
   await expect(journeyNodes).toHaveCount(10)
-  await expect(page.getByRole('link', { name: /到达机场 \/ Arrival at the airport/i })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
+  )
+  await expect(page.getByText(/到达机场 \/ Arrival at the airport/i)).toHaveCount(0)
+  await expect(page.locator('.journey-map .lesson-topic-title__primary').first()).toHaveText(
+    '到达机场',
+  )
+  await expect(page.locator('.journey-map .lesson-topic-title__secondary').first()).toHaveText(
+    'Arrival at the airport',
   )
   await expect(page.getByRole('link', { name: /phone number & mobile payment/i })).toHaveAttribute(
     'href',

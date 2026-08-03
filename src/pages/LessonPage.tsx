@@ -5,6 +5,7 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { DialoguePlayer } from '../components/DialoguePlayer'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import { LanguageToggle } from '../components/LanguageToggle'
+import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { SpeechButton } from '../components/SpeechButton'
 import { course } from '../content/course'
 import type { ExplanationLanguage, LessonContent } from '../content/types'
@@ -73,7 +74,7 @@ export function LessonPage() {
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.lessonPage.eyebrow}</p>
-          <h1>{getLocalizedText(lesson.title, selectedLanguage)}</h1>
+          <LessonTopicTitle as="h1" title={lesson.title} language={selectedLanguage} />
           <p className="lede">{getLocalizedText(lesson.dialogue.title, selectedLanguage)}</p>
         </header>
 

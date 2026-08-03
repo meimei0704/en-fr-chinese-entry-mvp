@@ -27,10 +27,11 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
-  await expect(page.getByRole('link', { name: /到达机场 \/ Arrival at the airport/i })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
   )
+  await expect(page.getByText(/到达机场 \/ Arrival at the airport/i)).toHaveCount(0)
   await page.getByRole('button', { name: 'Français' }).click()
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toHaveCount(0)
   await expect(

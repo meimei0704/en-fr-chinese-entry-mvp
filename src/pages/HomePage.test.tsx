@@ -20,7 +20,7 @@ const expectedLessonHrefs = [
 ]
 
 const expectedJourneyTitles = [
-  /到达机场 \/ Arrival at the airport/i,
+  /到达机场\s+Arrival at the airport/i,
   /taxi to your stay/i,
   /hotel \/ apartment check-in/i,
   /phone number & mobile payment/i,
@@ -70,6 +70,11 @@ describe('HomePage', () => {
     expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
+    expect(within(journeyMap).queryByText(/到达机场 \/ Arrival at the airport/i)).not.toBeInTheDocument()
+    expect(within(journeyMap).getByText('到达机场')).toHaveClass('lesson-topic-title__primary')
+    expect(within(journeyMap).getByText('Arrival at the airport')).toHaveClass(
+      'lesson-topic-title__secondary',
+    )
 
     for (const title of expectedJourneyTitles) {
       expect(within(journeyMap).getByRole('heading', { level: 2, name: title })).toBeVisible()
@@ -119,9 +124,10 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /到达机场 \/ Arrivée à l’aéroport/i,
+        name: /到达机场\s+Arrivée à l’aéroport/i,
       }),
     ).toBeVisible()
+    expect(screen.queryByText(/到达机场 \/ Arrivée à l’aéroport/i)).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: /commander un repas simple/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: /acheter un billet en gare/i })).toBeVisible()
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
@@ -200,7 +206,7 @@ describe('HomePage', () => {
 
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(
-      within(journeyMap).getByRole('link', { name: /到达机场 \/ Arrival at the airport/i }),
+      within(journeyMap).getByRole('link', { name: /到达机场\s+Arrival at the airport/i }),
     ).toHaveAttribute('href', '/lesson/self-intro')
     expect(
       within(journeyMap).getByRole('link', { name: /order a simple meal/i }),

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { LanguageToggle } from '../components/LanguageToggle'
+import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
@@ -59,7 +60,6 @@ export function HomePage() {
 
         <div className="journey-map__path">
           {journeyNodes.map((node) => {
-            const nodeTitle = getLocalizedText(node.title, language)
             const nodeSummary = getLocalizedText(node.summary, language)
             const nodeEyebrow = getLocalizedText(node.eyebrow, language)
             const nodeIcon = journeyNodeIcons[node.id]
@@ -76,7 +76,7 @@ export function HomePage() {
                       <span className="badge badge--jade">{nodeEyebrow}</span>
                     </div>
 
-                    <h2>{nodeTitle}</h2>
+                    <LessonTopicTitle as="h2" title={node.title} language={language} />
                     <p className="muted-text">{nodeSummary}</p>
                   </div>
 
@@ -117,7 +117,7 @@ export function HomePage() {
                       <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
                     </div>
 
-                    <h2>{nodeTitle}</h2>
+                    <LessonTopicTitle as="h2" title={node.title} language={language} />
                     <p className="muted-text">{nodeSummary}</p>
                     <span className="journey-node__cta">
                       {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}

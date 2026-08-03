@@ -37,8 +37,9 @@ describe('App shell', () => {
     const journeyMap = screen.getByLabelText(/journey map/i)
     expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)
     expect(
-      within(journeyMap).getByRole('link', { name: /到达机场 \/ Arrival at the airport/i }),
+      within(journeyMap).getByRole('link', { name: /到达机场\s+Arrival at the airport/i }),
     ).toHaveAttribute('href', '/lesson/self-intro')
+    expect(within(journeyMap).queryByText(/到达机场 \/ Arrival at the airport/i)).not.toBeInTheDocument()
   })
 
   it('keeps the legacy /home route compatible with the same Home page content', () => {
@@ -46,7 +47,7 @@ describe('App shell', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
     expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /到达机场 \/ Arrival at the airport/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
       'href',
       '/lesson/self-intro',
     )
