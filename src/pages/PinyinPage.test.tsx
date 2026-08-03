@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -16,6 +16,17 @@ function setMediaDevices(getUserMedia: ReturnType<typeof vi.fn>) {
   })
 }
 
+function createDeferred<T>() {
+  let resolve!: (value: T) => void
+  let reject!: (error: unknown) => void
+  const promise = new Promise<T>((promiseResolve, promiseReject) => {
+    resolve = promiseResolve
+    reject = promiseReject
+  })
+
+  return { promise, resolve, reject }
+}
+
 function mockRecorderSupport() {
   const getUserMedia = vi.fn().mockResolvedValue({
     getTracks: () => [{ stop: vi.fn() }],
@@ -24,6 +35,7 @@ function mockRecorderSupport() {
   class FakeMediaRecorder {
     ondataavailable: ((event: BlobEvent) => void) | null = null
     onstop: (() => void) | null = null
+    onerror: (() => void) | null = null
 
     start() {}
 
@@ -144,6 +156,106 @@ describe('PinyinPage', () => {
     expect(screen.getByLabelText('Your recording')).toBeVisible()
     expect(screen.getByRole('button', { name: /record again/i })).toBeVisible()
     expect(loadPinyinProgress().shadowingCompletedPromptIds.length).toBeGreaterThan(0)
+  })
+
+  it('does not replay or complete shadowing when recorder error is followed by stop data', async () => {
+    const user = userEvent.setup()
+    const createObjectURL = vi.fn(() => 'blob:shadowing-recording')
+    const streamStop = vi.fn()
+    const recorders: FakeMediaRecorder[] = []
+
+    class FakeMediaRecorder {
+      ondataavailable: ((event: BlobEvent) => void) | null = null
+      onstop: (() => void) | null = null
+      onerror: (() => void) | null = null
+
+      constructor() {
+        recorders.push(this)
+      }
+
+      start() {}
+      stop() {}
+    }
+
+    vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
+    Object.defineProperty(URL, 'createObjectURL', {
+      configurable: true,
+      value: createObjectURL,
+    })
+    Object.defineProperty(URL, 'revokeObjectURL', {
+      configurable: true,
+      value: vi.fn(),
+    })
+    setMediaDevices(
+      vi.fn().mockResolvedValue({
+        getTracks: () => [{ stop: streamStop }],
+      }),
+    )
+
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+
+    expect(recorders).toHaveLength(1)
+    const [recorder] = recorders
+
+    await act(async () => {
+      recorder.onerror?.()
+      recorder.ondataavailable?.({
+        data: new Blob(['discarded audio'], { type: 'audio/webm' }),
+      } as BlobEvent)
+      recorder.onstop?.()
+    })
+
+    expect(screen.getByText(/recording could not start/i)).toBeVisible()
+    expect(screen.queryByLabelText('Your recording')).not.toBeInTheDocument()
+    expect(createObjectURL).not.toHaveBeenCalled()
+    expect(streamStop).toHaveBeenCalledTimes(1)
+    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
+  })
+
+  it('stops a late microphone stream and does not start recording after unmount', async () => {
+    const user = userEvent.setup()
+    const streamStop = vi.fn()
+    const recorderStart = vi.fn()
+    const getUserMediaResult = createDeferred<MediaStream>()
+
+    class FakeMediaRecorder {
+      ondataavailable: ((event: BlobEvent) => void) | null = null
+      onstop: (() => void) | null = null
+      onerror: (() => void) | null = null
+
+      start = recorderStart
+      stop() {}
+    }
+
+    vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
+    Object.defineProperty(URL, 'createObjectURL', {
+      configurable: true,
+      value: vi.fn(() => 'blob:shadowing-recording'),
+    })
+    Object.defineProperty(URL, 'revokeObjectURL', {
+      configurable: true,
+      value: vi.fn(),
+    })
+    setMediaDevices(vi.fn(() => getUserMediaResult.promise))
+
+    const { unmount } = renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+    unmount()
+
+    await act(async () => {
+      getUserMediaResult.resolve({
+        getTracks: () => [{ stop: streamStop }],
+      } as unknown as MediaStream)
+      await getUserMediaResult.promise
+      await Promise.resolve()
+    })
+
+    expect(streamStop).toHaveBeenCalledTimes(1)
+    expect(recorderStart).not.toHaveBeenCalled()
+    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
   })
 
   it('localizes Pinyin page chrome and audio labels for French learners', () => {

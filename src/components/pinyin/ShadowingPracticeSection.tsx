@@ -60,6 +60,8 @@ export function ShadowingPracticeSection({
   const streamRef = useRef<MediaStream | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const recordingUrlRef = useRef<string | null>(null)
+  const mountedRef = useRef(false)
+  const activeRecordingSessionIdRef = useRef(0)
 
   const prompts = shadowing.prompts
   const currentPrompt = prompts[currentPromptIndex]
@@ -91,11 +93,25 @@ export function ShadowingPracticeSection({
   }
 
   useEffect(() => {
+    mountedRef.current = true
+
     return () => {
+      mountedRef.current = false
+      activeRecordingSessionIdRef.current += 1
       revokeCurrentRecordingUrl()
       releaseRecorderSession()
     }
   }, [])
+
+  function isActiveRecordingSession(sessionId: number) {
+    return mountedRef.current && activeRecordingSessionIdRef.current === sessionId
+  }
+
+  function invalidateActiveRecordingSession(sessionId: number) {
+    if (activeRecordingSessionIdRef.current === sessionId) {
+      activeRecordingSessionIdRef.current += 1
+    }
+  }
 
   function markCurrentPromptComplete() {
     const nextProgress = recordPinyinShadowingPromptComplete(
@@ -108,12 +124,17 @@ export function ShadowingPracticeSection({
     onProgressChange(nextProgress)
   }
 
-  function handleRecorderStop() {
+  function handleRecorderStop(sessionId: number) {
+    if (!isActiveRecordingSession(sessionId)) {
+      return
+    }
+
     const recordingBlob = new Blob(chunksRef.current, {
       type: chunksRef.current[0]?.type ?? 'audio/webm',
     })
     const nextRecordingUrl = URL.createObjectURL(recordingBlob)
 
+    invalidateActiveRecordingSession(sessionId)
     releaseRecorderSession()
     revokeCurrentRecordingUrl()
     recordingUrlRef.current = nextRecordingUrl
@@ -122,13 +143,30 @@ export function ShadowingPracticeSection({
     markCurrentPromptComplete()
   }
 
-  function showRecorderError(code: ShadowingRecorderErrorCode) {
+  function showRecorderError(code: ShadowingRecorderErrorCode, sessionId?: number) {
+    if (sessionId !== undefined) {
+      if (!isActiveRecordingSession(sessionId)) {
+        return
+      }
+
+      invalidateActiveRecordingSession(sessionId)
+    }
+
+    chunksRef.current = []
     releaseRecorderSession()
+
+    if (!mountedRef.current) {
+      return
+    }
+
     setErrorCode(code)
     setRecordingStatus('idle')
   }
 
   async function handleStartRecording() {
+    const sessionId = activeRecordingSessionIdRef.current + 1
+    activeRecordingSessionIdRef.current = sessionId
+
     setErrorCode(null)
     clearLocalRecording()
     setRecordingStatus('starting')
@@ -137,21 +175,35 @@ export function ShadowingPracticeSection({
     try {
       const { recorder, stream } = await createShadowingRecorder()
 
+      if (!isActiveRecordingSession(sessionId)) {
+        stopShadowingStream(stream)
+        return
+      }
+
       recorderRef.current = recorder
       streamRef.current = stream
       recorder.ondataavailable = (event) => {
+        if (!isActiveRecordingSession(sessionId)) {
+          return
+        }
+
         if (event.data.size > 0) {
           chunksRef.current.push(event.data)
         }
       }
-      recorder.onstop = handleRecorderStop
+      recorder.onstop = () => {
+        handleRecorderStop(sessionId)
+      }
       recorder.onerror = () => {
-        showRecorderError('init-failed')
+        showRecorderError('init-failed', sessionId)
       }
       recorder.start()
-      setRecordingStatus('recording')
+
+      if (isActiveRecordingSession(sessionId)) {
+        setRecordingStatus('recording')
+      }
     } catch (error) {
-      showRecorderError(error instanceof ShadowingRecorderError ? error.code : 'init-failed')
+      showRecorderError(error instanceof ShadowingRecorderError ? error.code : 'init-failed', sessionId)
     }
   }
 
@@ -163,7 +215,7 @@ export function ShadowingPracticeSection({
     try {
       recorderRef.current.stop()
     } catch {
-      showRecorderError('init-failed')
+      showRecorderError('init-failed', activeRecordingSessionIdRef.current)
     }
   }
 
