@@ -197,7 +197,7 @@ export interface PinyinReferenceGroup {
 export interface ToneGameChoice {
   id: string
   label: string
-  toneLabel: string
+  toneLabel: LocalizedField
 }
 
 export interface ToneGameQuestion {

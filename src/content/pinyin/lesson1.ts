@@ -7,10 +7,38 @@ import type {
 const lessonAudioBase = '/audio/pinyin/lesson-1'
 
 const toneChoices: ToneGameChoice[] = [
-  { id: 'tone-1', label: 'mā', toneLabel: 'First tone: high and level' },
-  { id: 'tone-2', label: 'má', toneLabel: 'Second tone: rising' },
-  { id: 'tone-3', label: 'mǎ', toneLabel: 'Third tone: low dipping' },
-  { id: 'tone-4', label: 'mà', toneLabel: 'Fourth tone: sharp falling' },
+  {
+    id: 'tone-1',
+    label: 'mā',
+    toneLabel: {
+      en: 'First tone: high and level',
+      fr: 'Premier ton : haut et plat',
+    },
+  },
+  {
+    id: 'tone-2',
+    label: 'má',
+    toneLabel: {
+      en: 'Second tone: rising',
+      fr: 'Deuxième ton : montant',
+    },
+  },
+  {
+    id: 'tone-3',
+    label: 'mǎ',
+    toneLabel: {
+      en: 'Third tone: low dipping',
+      fr: 'Troisième ton : bas avec un creux',
+    },
+  },
+  {
+    id: 'tone-4',
+    label: 'mà',
+    toneLabel: {
+      en: 'Fourth tone: sharp falling',
+      fr: 'Quatrième ton : descendant net',
+    },
+  },
 ]
 
 function toneQuestion(

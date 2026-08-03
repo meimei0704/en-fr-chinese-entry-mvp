@@ -120,7 +120,7 @@ export function ToneGameSection({
                     }}
                   />
                   <span className="pinyin-line">{choice.label}</span>
-                  <span>{choice.toneLabel}</span>
+                  <span>{getLocalizedText(choice.toneLabel, language)}</span>
                 </label>
               ))}
             </div>

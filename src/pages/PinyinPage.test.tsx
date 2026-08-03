@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { getLocalizedText } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
@@ -57,7 +58,9 @@ describe('PinyinPage', () => {
       expect(correctChoice).toBeDefined()
       expect(screen.getByText(`Question ${index + 1} of ${questions.length}`)).toBeVisible()
 
-      await user.click(screen.getByRole('radio', { name: new RegExp(correctChoice?.toneLabel ?? '') }))
+      const correctToneLabel = correctChoice ? getLocalizedText(correctChoice.toneLabel, 'en') : ''
+
+      await user.click(screen.getByRole('radio', { name: new RegExp(correctToneLabel) }))
       await user.click(screen.getByRole('button', { name: 'Submit answer' }))
     }
 
@@ -101,11 +104,13 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('button', { name: 'Écouter bo' })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: 'Écoute des tons' })).toBeVisible()
     expect(screen.getByText('Question 1 sur 8')).toBeVisible()
+    expect(screen.getByText('Premier ton : haut et plat')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter l’extrait de ton 1' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Valider la réponse' })).toBeVisible()
     expect(screen.getAllByText('Bientôt')).toHaveLength(1)
 
     expect(screen.queryByText('Reference')).not.toBeInTheDocument()
+    expect(screen.queryByText('First tone: high and level')).not.toBeInTheDocument()
     expect(screen.queryByText('Coming next')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Play Chinese' })).not.toBeInTheDocument()
   })
