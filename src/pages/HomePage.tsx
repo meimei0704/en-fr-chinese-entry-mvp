@@ -92,6 +92,34 @@ export function HomePage() {
               )
             }
 
+            if (node.kind === 'route' && node.routeDetails) {
+              return (
+                <Link
+                  key={node.id}
+                  className="journey-node journey-node--route journey-node--card-link"
+                  to={node.routeDetails.href}
+                >
+                  <div className="journey-node__body">
+                    <div className="journey-node__header">
+                      <span className="badge badge--sky">{nodeEyebrow}</span>
+                    </div>
+
+                    <LessonTopicTitle as="h2" title={node.title} language={language} />
+                    <p className="muted-text">{nodeSummary}</p>
+                  </div>
+
+                  <span
+                    className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
+                    aria-hidden="true"
+                  >
+                    <span className="journey-node__doodle journey-node__doodle--stamp">
+                      {nodeIcon}
+                    </span>
+                  </span>
+                </Link>
+              )
+            }
+
             const isExpanded = expandedPreviewNodeId === node.id
             const previewPanelId = `journey-preview-${node.id}`
 

@@ -46,9 +46,11 @@ describe('HomePage', () => {
     const journeyLessonLinks = within(journeyMap)
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
+    const pinyinEntry = within(journeyMap).getByRole('link', { name: /pinyin/i })
 
     expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
+    expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
     expect(journeyMap).not.toHaveTextContent(' / ')
 
