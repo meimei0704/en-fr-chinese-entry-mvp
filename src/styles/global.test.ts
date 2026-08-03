@@ -175,6 +175,10 @@ describe('global color accessibility tokens', () => {
   })
 
   it('keeps the Lesson action dock centered without forcing full-width CTA pills', () => {
+    expect(hasRuleWithDeclaration('.lesson-action-dock', 'width: fit-content;')).toBe(true)
+    expect(hasRuleWithDeclaration('.lesson-action-dock', 'max-width: 100%;')).toBe(true)
+    expect(hasRuleWithDeclaration('.lesson-action-dock', 'margin-inline: auto;')).toBe(true)
+    expect(hasRuleWithDeclaration('.lesson-action-dock', 'box-sizing: border-box;')).toBe(true)
     expect(hasRuleWithDeclaration('.button-row.lesson-action-dock', 'justify-content: center;'))
       .toBe(true)
     expect(hasRuleWithDeclaration('.button-row.lesson-action-dock', 'align-items: center;'))

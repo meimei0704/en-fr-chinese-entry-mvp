@@ -38,9 +38,11 @@ test('centers the Lesson CTA group in its action dock across responsive widths',
       homeBox!.x + homeBox!.width,
     )
     const buttonGroupCenter = (buttonLeft + buttonRight) / 2
+    const buttonGroupWidth = buttonRight - buttonLeft
     const dockCenter = dockBox!.x + dockBox!.width / 2
 
     expect(Math.abs(buttonGroupCenter - dockCenter)).toBeLessThanOrEqual(2)
+    expect(dockBox!.width - buttonGroupWidth).toBeLessThanOrEqual(64)
 
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
     const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
