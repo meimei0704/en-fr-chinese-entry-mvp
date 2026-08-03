@@ -4,6 +4,7 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
+import { ShadowingPracticeSection } from '../components/pinyin/ShadowingPracticeSection'
 import { ToneGameSection } from '../components/pinyin/ToneGameSection'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
@@ -58,11 +59,31 @@ export function PinyinPage() {
           onProgressChange={setProgress}
         />
 
-        <section id="pinyin-shadowing" className="surface-card pinyin-placeholder-section">
-          <p className="eyebrow">{pinyinCopy.comingNext}</p>
-          <h2>{getLocalizedText(lesson.shadowing.title, language)}</h2>
-          <p className="muted-text">{getLocalizedText(lesson.shadowing.instructions, language)}</p>
-        </section>
+        <ShadowingPracticeSection
+          shadowing={lesson.shadowing}
+          language={language}
+          progress={progress}
+          copy={{
+            lessonEyebrow: pinyinCopy.lessonEyebrow,
+            promptProgress: pinyinCopy.shadowingPromptProgress,
+            promptCompletionProgress: pinyinCopy.shadowingPromptCompletionProgress,
+            playPromptAudio: pinyinCopy.playShadowingPromptAudio,
+            startRecording: pinyinCopy.startRecording,
+            stopRecording: pinyinCopy.stopRecording,
+            recordAgain: pinyinCopy.recordAgain,
+            nextPrompt: pinyinCopy.nextShadowingPrompt,
+            recordingInProgress: pinyinCopy.recordingInProgress,
+            localOnlyNotice: pinyinCopy.localOnlyRecordingNotice,
+            localPlaybackLabel: pinyinCopy.localPlaybackLabel,
+            completedMessage: pinyinCopy.shadowingCompletedMessage,
+            recordingErrors: {
+              unsupported: pinyinCopy.recordingUnsupportedMessage,
+              'permission-denied': pinyinCopy.recordingPermissionDeniedMessage,
+              'init-failed': pinyinCopy.recordingInitFailedMessage,
+            },
+          }}
+          onProgressChange={setProgress}
+        />
       </div>
     </main>
   )

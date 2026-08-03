@@ -81,3 +81,26 @@ export function recordPinyinToneGameScore(
       progress.toneGameBestScore === null ? score : Math.max(progress.toneGameBestScore, score),
   }
 }
+
+export function recordPinyinShadowingPromptComplete(
+  progress: PinyinProgress,
+  promptId: string,
+  promptIds: readonly string[],
+): PinyinProgress {
+  const shadowingCompletedPromptIds = progress.shadowingCompletedPromptIds.includes(promptId)
+    ? progress.shadowingCompletedPromptIds
+    : [...progress.shadowingCompletedPromptIds, promptId]
+  const completedEveryPrompt =
+    promptIds.length > 0 && promptIds.every((id) => shadowingCompletedPromptIds.includes(id))
+  const completedSections: PinyinProgress['completedSections'] =
+    completedEveryPrompt && !progress.completedSections.includes('shadowing')
+      ? [...progress.completedSections, 'shadowing']
+      : progress.completedSections
+
+  return {
+    ...progress,
+    completedSections,
+    shadowingCompletedPromptIds,
+    lastVisitedPromptId: promptId,
+  }
+}

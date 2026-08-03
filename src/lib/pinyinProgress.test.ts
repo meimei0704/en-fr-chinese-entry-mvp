@@ -87,6 +87,44 @@ describe('pinyin progress storage', () => {
     expect(loadPinyinProgress()).toEqual(progressAfterLowerRetake)
   })
 
+  it('records shadowing prompt completion without duplicates and completes the section', async () => {
+    const { createDefaultPinyinProgress, recordPinyinShadowingPromptComplete } =
+      await importPinyinProgressModule()
+    const promptIds = ['shadow-ni-hao', 'shadow-xie-xie']
+
+    const progressAfterFirstPrompt = recordPinyinShadowingPromptComplete(
+      createDefaultPinyinProgress(),
+      'shadow-ni-hao',
+      promptIds,
+    )
+
+    expect(progressAfterFirstPrompt).toMatchObject({
+      completedSections: [],
+      shadowingCompletedPromptIds: ['shadow-ni-hao'],
+      lastVisitedPromptId: 'shadow-ni-hao',
+    })
+
+    const progressAfterRepeat = recordPinyinShadowingPromptComplete(
+      progressAfterFirstPrompt,
+      'shadow-ni-hao',
+      promptIds,
+    )
+
+    expect(progressAfterRepeat.shadowingCompletedPromptIds).toEqual(['shadow-ni-hao'])
+
+    const progressAfterAllPrompts = recordPinyinShadowingPromptComplete(
+      progressAfterRepeat,
+      'shadow-xie-xie',
+      promptIds,
+    )
+
+    expect(progressAfterAllPrompts).toMatchObject({
+      completedSections: ['shadowing'],
+      shadowingCompletedPromptIds: ['shadow-ni-hao', 'shadow-xie-xie'],
+      lastVisitedPromptId: 'shadow-xie-xie',
+    })
+  })
+
   it('falls back to default pinyin progress for invalid stored data', async () => {
     const { loadPinyinProgress } = await importPinyinProgressModule()
 

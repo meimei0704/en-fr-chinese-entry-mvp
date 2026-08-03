@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
@@ -9,9 +9,53 @@ import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
+function setMediaDevices(getUserMedia: ReturnType<typeof vi.fn>) {
+  Object.defineProperty(navigator, 'mediaDevices', {
+    configurable: true,
+    value: { getUserMedia },
+  })
+}
+
+function mockRecorderSupport() {
+  const getUserMedia = vi.fn().mockResolvedValue({
+    getTracks: () => [{ stop: vi.fn() }],
+  })
+
+  class FakeMediaRecorder {
+    ondataavailable: ((event: BlobEvent) => void) | null = null
+    onstop: (() => void) | null = null
+
+    start() {}
+
+    stop() {
+      this.ondataavailable?.({
+        data: new Blob(['shadowing audio'], { type: 'audio/webm' }),
+      } as BlobEvent)
+      this.onstop?.()
+    }
+  }
+
+  vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
+  Object.defineProperty(URL, 'createObjectURL', {
+    configurable: true,
+    value: vi.fn(() => 'blob:shadowing-recording'),
+  })
+  Object.defineProperty(URL, 'revokeObjectURL', {
+    configurable: true,
+    value: vi.fn(),
+  })
+  setMediaDevices(getUserMedia)
+}
+
 describe('PinyinPage', () => {
   beforeEach(() => {
     localStorage.clear()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    Reflect.deleteProperty(URL, 'createObjectURL')
+    Reflect.deleteProperty(URL, 'revokeObjectURL')
   })
 
   it('renders the Pinyin lesson hero with stable section navigation', () => {
@@ -75,6 +119,33 @@ describe('PinyinPage', () => {
     })
   })
 
+  it('shows a visible failure state when MediaRecorder is unsupported', async () => {
+    const user = userEvent.setup()
+
+    vi.stubGlobal('MediaRecorder', undefined)
+    setMediaDevices(vi.fn())
+
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+
+    expect(screen.getByText(/recording is not supported/i)).toBeVisible()
+  })
+
+  it('records, replays, and marks one shadowing prompt complete', async () => {
+    const user = userEvent.setup()
+
+    mockRecorderSupport()
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('button', { name: /start recording/i }))
+    await user.click(screen.getByRole('button', { name: /stop recording/i }))
+
+    expect(screen.getByLabelText('Your recording')).toBeVisible()
+    expect(screen.getByRole('button', { name: /record again/i })).toBeVisible()
+    expect(loadPinyinProgress().shadowingCompletedPromptIds.length).toBeGreaterThan(0)
+  })
+
   it('localizes Pinyin page chrome and audio labels for French learners', () => {
     saveProgress({
       ...createDefaultProgress(),
@@ -97,7 +168,7 @@ describe('PinyinPage', () => {
     )
 
     expect(screen.getByText('0 section sur 3 terminée')).toBeVisible()
-    expect(screen.getAllByText('Leçon 1')).toHaveLength(2)
+    expect(screen.getAllByText('Leçon 1')).toHaveLength(3)
     expect(screen.getByRole('heading', { level: 2, name: 'Référence' })).toBeVisible()
     expect(screen.getByText(/Construisez une première carte sonore/i)).toBeVisible()
     expect(screen.getByText('Premier ton')).toBeVisible()
@@ -107,7 +178,9 @@ describe('PinyinPage', () => {
     expect(screen.getByText('Premier ton : haut et plat')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter l’extrait de ton 1' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Valider la réponse' })).toBeVisible()
-    expect(screen.getAllByText('Bientôt')).toHaveLength(1)
+    expect(screen.getByRole('heading', { level: 2, name: 'Répéter de courtes phrases' })).toBeVisible()
+    expect(screen.getByText('Phrase 1 sur 4')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Commencer l’enregistrement' })).toBeVisible()
 
     expect(screen.queryByText('Reference')).not.toBeInTheDocument()
     expect(screen.queryByText('First tone: high and level')).not.toBeInTheDocument()
