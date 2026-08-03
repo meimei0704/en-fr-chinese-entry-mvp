@@ -2,6 +2,7 @@ import type { PinyinModuleId, PinyinProgress } from '../content/types'
 import { loadJsonFromStorage, saveJsonToStorage } from './storage'
 
 const pinyinProgressStorageKey = 'en-fr-chinese-entry-mvp.pinyin-progress.v1'
+const toneGameCompletionThreshold = 6
 
 export function createDefaultPinyinProgress(): PinyinProgress {
   return {
@@ -61,4 +62,22 @@ export function loadPinyinProgress(): PinyinProgress {
 
 export function savePinyinProgress(progress: PinyinProgress) {
   saveJsonToStorage(pinyinProgressStorageKey, progress)
+}
+
+export function recordPinyinToneGameScore(
+  progress: PinyinProgress,
+  score: number,
+): PinyinProgress {
+  const completedSections: PinyinProgress['completedSections'] =
+    score >= toneGameCompletionThreshold && !progress.completedSections.includes('tone-game')
+      ? [...progress.completedSections, 'tone-game']
+      : progress.completedSections
+
+  return {
+    ...progress,
+    completedSections,
+    toneGameLastScore: score,
+    toneGameBestScore:
+      progress.toneGameBestScore === null ? score : Math.max(progress.toneGameBestScore, score),
+  }
 }

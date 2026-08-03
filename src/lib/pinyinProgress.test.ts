@@ -51,6 +51,42 @@ describe('pinyin progress storage', () => {
     expect(loadPinyinProgress()).toEqual(updatedProgress)
   })
 
+  it('records tone game scores, best score, and completion threshold', async () => {
+    const {
+      createDefaultPinyinProgress,
+      loadPinyinProgress,
+      recordPinyinToneGameScore,
+      savePinyinProgress,
+    } = await importPinyinProgressModule()
+
+    const progressAfterPractice = recordPinyinToneGameScore(createDefaultPinyinProgress(), 5)
+
+    expect(progressAfterPractice).toMatchObject({
+      completedSections: [],
+      toneGameLastScore: 5,
+      toneGameBestScore: 5,
+    })
+
+    const progressAfterPassingScore = recordPinyinToneGameScore(progressAfterPractice, 6)
+
+    expect(progressAfterPassingScore).toMatchObject({
+      completedSections: ['tone-game'],
+      toneGameLastScore: 6,
+      toneGameBestScore: 6,
+    })
+
+    const progressAfterLowerRetake = recordPinyinToneGameScore(progressAfterPassingScore, 4)
+
+    expect(progressAfterLowerRetake).toMatchObject({
+      completedSections: ['tone-game'],
+      toneGameLastScore: 4,
+      toneGameBestScore: 6,
+    })
+
+    savePinyinProgress(progressAfterLowerRetake)
+    expect(loadPinyinProgress()).toEqual(progressAfterLowerRetake)
+  })
+
   it('falls back to default pinyin progress for invalid stored data', async () => {
     const { loadPinyinProgress } = await importPinyinProgressModule()
 

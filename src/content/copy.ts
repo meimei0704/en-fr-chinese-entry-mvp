@@ -189,6 +189,15 @@ export const uiCopy = {
       referenceHeading: 'Reference',
       referenceSummary: 'Build a first sound map from initials, finals, and Mandarin tones.',
       playReferenceAudio: (label: string) => `Play ${label}`,
+      toneGameQuestionProgress: (current: number, total: number) =>
+        `Question ${current} of ${total}`,
+      playTonePromptAudio: (current: number) => `Play tone prompt ${current}`,
+      toneGameChoicesLegend: 'Choose the tone you hear',
+      submitToneAnswer: 'Submit answer',
+      toneGameResultHeading: 'Tone game result',
+      toneGameCorrectRate: 'Correct rate',
+      toneGameCompletedMessage: 'Tone game complete.',
+      toneGameKeepPracticingMessage: 'Score 6/8 or higher to complete this section.',
       comingNext: 'Coming next',
     },
     common: {
@@ -371,6 +380,15 @@ export const uiCopy = {
       referenceHeading: 'Référence',
       referenceSummary: 'Construisez une première carte sonore à partir des initiales, finales et tons du mandarin.',
       playReferenceAudio: (label: string) => `Écouter ${label}`,
+      toneGameQuestionProgress: (current: number, total: number) =>
+        `Question ${current} sur ${total}`,
+      playTonePromptAudio: (current: number) => `Écouter l’extrait de ton ${current}`,
+      toneGameChoicesLegend: 'Choisissez le ton entendu',
+      submitToneAnswer: 'Valider la réponse',
+      toneGameResultHeading: 'Résultat du jeu des tons',
+      toneGameCorrectRate: 'Taux de réussite',
+      toneGameCompletedMessage: 'Jeu des tons terminé.',
+      toneGameKeepPracticingMessage: 'Obtenez 6/8 ou plus pour terminer cette section.',
       comingNext: 'Bientôt',
     },
     common: {

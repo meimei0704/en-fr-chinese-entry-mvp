@@ -1,7 +1,10 @@
+import { useState } from 'react'
+
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
+import { ToneGameSection } from '../components/pinyin/ToneGameSection'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
 
@@ -9,7 +12,7 @@ export function PinyinPage() {
   const language = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(language)
   const pinyinCopy = copy.pinyinPage
-  const progress = loadPinyinProgress()
+  const [progress, setProgress] = useState(() => loadPinyinProgress())
   const lesson = pinyinCourse.lesson
   const navItems = [
     { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
@@ -38,11 +41,22 @@ export function PinyinPage() {
           playAudioLabel={pinyinCopy.playReferenceAudio}
         />
 
-        <section id="pinyin-tone-game" className="surface-card pinyin-placeholder-section">
-          <p className="eyebrow">{pinyinCopy.comingNext}</p>
-          <h2>{getLocalizedText(lesson.toneGame.title, language)}</h2>
-          <p className="muted-text">{getLocalizedText(lesson.toneGame.instructions, language)}</p>
-        </section>
+        <ToneGameSection
+          toneGame={lesson.toneGame}
+          language={language}
+          copy={{
+            lessonEyebrow: pinyinCopy.lessonEyebrow,
+            questionProgress: pinyinCopy.toneGameQuestionProgress,
+            playPromptAudio: pinyinCopy.playTonePromptAudio,
+            choicesLegend: pinyinCopy.toneGameChoicesLegend,
+            submitAnswer: pinyinCopy.submitToneAnswer,
+            resultHeading: pinyinCopy.toneGameResultHeading,
+            correctRate: pinyinCopy.toneGameCorrectRate,
+            completedMessage: pinyinCopy.toneGameCompletedMessage,
+            keepPracticingMessage: pinyinCopy.toneGameKeepPracticingMessage,
+          }}
+          onProgressChange={setProgress}
+        />
 
         <section id="pinyin-shadowing" className="surface-card pinyin-placeholder-section">
           <p className="eyebrow">{pinyinCopy.comingNext}</p>
