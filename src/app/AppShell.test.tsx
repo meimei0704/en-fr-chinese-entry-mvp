@@ -36,7 +36,15 @@ describe('App shell', () => {
     expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
 
     const journeyMap = screen.getByLabelText(/journey map/i)
-    expect(within(journeyMap).getAllByRole('link')).toHaveLength(10)
+    const lessonLinks = within(journeyMap)
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
+
+    expect(lessonLinks).toHaveLength(10)
+    expect(within(journeyMap).getByRole('link', { name: /pinyin/i })).toHaveAttribute(
+      'href',
+      '/pinyin',
+    )
     expect(
       within(journeyMap).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),

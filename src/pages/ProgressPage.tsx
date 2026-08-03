@@ -10,6 +10,7 @@ import type { JourneyNode, LessonId } from '../content/types'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
 type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
+type RouteJourneyNode = JourneyNode & { kind: 'route'; routeDetails: { href: string } }
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
@@ -18,6 +19,10 @@ const lessonJourneyLessonIds = new Set(lessonJourneyNodes.map((node) => node.les
 
 function isLessonJourneyNode(node: JourneyNode): node is LessonJourneyNode {
   return node.kind === 'lesson' && node.lessonId !== undefined
+}
+
+function isRouteJourneyNode(node: JourneyNode): node is RouteJourneyNode {
+  return node.kind === 'route' && node.routeDetails !== undefined
 }
 
 export function ProgressPage() {
@@ -166,8 +171,6 @@ export function ProgressPage() {
 
           <div className="progress-journey-map__path">
             {orderedJourneyNodes.map((node) => {
-              const status = getJourneyNodeStatus(node)
-              const statusLabel = getStatusLabel(status)
               const nodeTitle = isLessonJourneyNode(node)
                 ? getLessonTopicText(node.lessonId, language)
                 : getLocalizedText(node.title, language)
@@ -176,6 +179,9 @@ export function ProgressPage() {
               const nodeIcon = journeyNodeIcons[node.id]
 
               if (isLessonJourneyNode(node)) {
+                const status = getJourneyNodeStatus(node)
+                const statusLabel = getStatusLabel(status)
+
                 return (
                   <Link
                     key={node.id}
@@ -208,6 +214,33 @@ export function ProgressPage() {
                 )
               }
 
+              if (isRouteJourneyNode(node)) {
+                return (
+                  <Link
+                    key={node.id}
+                    className="journey-node progress-journey-node journey-node--route journey-node--card-link progress-journey-node--route"
+                    data-journey-node-id={node.id}
+                    to={node.routeDetails.href}
+                    aria-label={nodeTitle}
+                  >
+                    <div className="journey-node__header">
+                      <span className="badge badge--sky">{nodeEyebrow}</span>
+                    </div>
+
+                    <span className="journey-node__doodle" aria-hidden="true">
+                      {nodeIcon}
+                    </span>
+
+                    <div>
+                      <h3>{nodeTitle}</h3>
+                      <p className="muted-text">{nodeSummary}</p>
+                    </div>
+                  </Link>
+                )
+              }
+
+              const status = getJourneyNodeStatus(node)
+              const statusLabel = getStatusLabel(status)
               const isExpanded = expandedPreviewNodeId === node.id
               const previewPanelId = `progress-journey-preview-${node.id}`
 
