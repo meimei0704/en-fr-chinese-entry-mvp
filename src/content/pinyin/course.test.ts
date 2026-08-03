@@ -1,3 +1,6 @@
+import { statSync } from 'node:fs'
+import { join } from 'node:path'
+
 import { describe, expect, it } from 'vitest'
 
 import { pinyinCourse } from './course'
@@ -27,4 +30,22 @@ describe('pinyin course content', () => {
       expect(prompt.audio).toMatch(/^\/audio\/pinyin\/lesson-1\//)
     }
   })
+
+  it('ships real static MP3 assets for every lesson audio path', () => {
+    const lesson = pinyinCourse.lesson
+    const audioPaths = [
+      ...lesson.reference.flatMap((group) => group.items.map((item) => item.audio)),
+      ...lesson.toneGame.questions.map((question) => question.promptAudio),
+      ...lesson.shadowing.prompts.map((prompt) => prompt.audio),
+    ]
+
+    expect(audioPaths).toHaveLength(24)
+
+    for (const audioPath of audioPaths) {
+      expect(audioPath).toMatch(/^\/audio\/pinyin\/lesson-1\/.+\.mp3$/)
+      const publicFilePath = join(process.cwd(), 'public', audioPath.replace(/^\//, ''))
+      expect(statSync(publicFilePath).size).toBeGreaterThan(0)
+    }
+  })
+
 })

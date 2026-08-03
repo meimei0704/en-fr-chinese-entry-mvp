@@ -2722,3 +2722,122 @@ h2 {
     transition: none;
   }
 }
+
+.pinyin-page {
+  align-content: start;
+}
+
+.pinyin-page__content {
+  width: min(100%, 72rem);
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.pinyin-hero {
+  width: min(100%, 72rem);
+  display: grid;
+  gap: 0.95rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top right, rgba(95, 143, 247, 0.16), transparent 18rem),
+    radial-gradient(circle at bottom left, rgba(255, 138, 61, 0.16), transparent 16rem),
+    rgba(255, 255, 255, 0.94);
+}
+
+.pinyin-hero .lede {
+  max-width: 46rem;
+  margin-top: 0;
+}
+
+.pinyin-hero__progress {
+  width: fit-content;
+  margin: 0;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid rgba(47, 143, 107, 0.2);
+  border-radius: 999px;
+  color: var(--color-jade-ink);
+  background: #ebf6f1;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.pinyin-hero__nav {
+  margin-top: 0.25rem;
+}
+
+.pinyin-section-heading {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.pinyin-section-heading .eyebrow,
+.pinyin-section-heading h2,
+.pinyin-section-heading .muted-text {
+  margin: 0;
+}
+
+.pinyin-reference-section {
+  width: min(100%, 72rem);
+}
+
+.pinyin-reference-section__groups {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.pinyin-reference-group {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.pinyin-reference-group h3 {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.2vw, 1.28rem);
+  letter-spacing: -0.018em;
+}
+
+.pinyin-reference-group__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.85rem;
+}
+
+.pinyin-reference-card {
+  position: relative;
+  gap: 0.75rem;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top right, rgba(243, 165, 63, 0.1), transparent 8rem),
+    rgba(255, 255, 255, 0.94);
+}
+
+.pinyin-reference-card .speech-button {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+}
+
+.pinyin-reference-card__label {
+  margin: 0;
+  padding-right: 3rem;
+  color: var(--color-ink);
+  font-size: clamp(1.8rem, 4vw, 2.55rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.pinyin-placeholder-section {
+  width: min(100%, 72rem);
+  display: grid;
+  gap: 0.25rem;
+  border-style: dashed;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.pinyin-placeholder-section .eyebrow,
+.pinyin-placeholder-section h2,
+.pinyin-placeholder-section .muted-text {
+  margin: 0;
+}
