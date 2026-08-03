@@ -166,3 +166,82 @@ export interface JourneyNode {
   lessonId?: LessonId
   previewDetails?: JourneyNodePreviewDetails
 }
+
+export type PinyinLessonId = 'pinyin-foundations-1'
+
+export type PinyinModuleId = 'reference' | 'tone-game' | 'shadowing'
+
+export type PinyinReferenceGroupId = 'initials' | 'finals' | 'tones'
+
+export interface PinyinReferenceItem {
+  id: string
+  label: string
+  pinyin: string
+  description: LocalizedField
+  audio: string
+}
+
+export interface PinyinReferenceGroup {
+  id: PinyinReferenceGroupId
+  title: LocalizedField
+  summary: LocalizedField
+  items: PinyinReferenceItem[]
+}
+
+export interface ToneGameChoice {
+  id: string
+  label: string
+  toneLabel: string
+}
+
+export interface ToneGameQuestion {
+  id: string
+  promptAudio: string
+  promptText: string
+  choices: ToneGameChoice[]
+  correctChoiceId: string
+  explanation?: string
+}
+
+export interface PinyinToneGame {
+  title: LocalizedField
+  instructions: LocalizedField
+  questions: ToneGameQuestion[]
+}
+
+export interface PinyinShadowingPrompt {
+  id: string
+  promptText: string
+  pinyin: string
+  meaning: LocalizedField
+  audio: string
+}
+
+export interface PinyinShadowing {
+  title: LocalizedField
+  instructions: LocalizedField
+  prompts: PinyinShadowingPrompt[]
+}
+
+export interface PinyinLessonContent {
+  id: PinyinLessonId
+  title: LocalizedField
+  summary: LocalizedField
+  reference: PinyinReferenceGroup[]
+  toneGame: PinyinToneGame
+  shadowing: PinyinShadowing
+}
+
+export interface PinyinCourseContent {
+  lesson: PinyinLessonContent
+}
+
+export interface PinyinProgress {
+  schemaVersion: 1
+  visited: boolean
+  completedSections: PinyinModuleId[]
+  toneGameLastScore: number | null
+  toneGameBestScore: number | null
+  shadowingCompletedPromptIds: string[]
+  lastVisitedPromptId: string | null
+}
