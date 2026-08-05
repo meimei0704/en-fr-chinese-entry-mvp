@@ -101,6 +101,30 @@ describe('HomePage', () => {
     expect(within(hero).queryByText(/Great Wall|Oriental Pearl|panda/i)).not.toBeInTheDocument()
   })
 
+  it('builds the long-scroll scene from detailed, recognizable cultural anchors', () => {
+    const { container } = renderRoute('/home')
+    const scene = container.querySelector('.home-hero__scroll-scene')
+    const culturalAnchors = [
+      'great-wall',
+      'palace',
+      'panda',
+      'oriental-pearl',
+      'lantern',
+      'fan',
+      'bamboo',
+    ]
+
+    for (const anchor of culturalAnchors) {
+      const motif = scene?.querySelector(`[data-home-hero-motif="${anchor}"]`)
+
+      expect(motif, `${anchor} motif`).toBeInTheDocument()
+      expect(
+        motif?.querySelectorAll('path, circle, ellipse, line, rect, polyline, polygon').length,
+        `${anchor} motif vector detail`,
+      ).toBeGreaterThanOrEqual(3)
+    }
+  })
+
   it('renders page-level French copy when the learner chooses French mode', () => {
     saveProgress({
       ...createDefaultProgress(),

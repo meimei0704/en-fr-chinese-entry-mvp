@@ -446,32 +446,58 @@ h2 {
 }
 
 .home-hero__scroll-motifs {
-  stroke: rgba(125, 98, 81, 0.38);
-  stroke-width: 2;
+  stroke: rgba(105, 82, 68, 0.52);
+  stroke-width: 2.15;
 }
 
-.home-hero__scroll-motif--wall,
-.home-hero__scroll-motif--roof,
+.home-hero__scroll-motif path,
+.home-hero__scroll-motif circle,
+.home-hero__scroll-motif ellipse,
+.home-hero__scroll-motif line,
+.home-hero__scroll-motif rect {
+  vector-effect: non-scaling-stroke;
+}
+
+.home-hero__scroll-motif--great-wall,
+.home-hero__scroll-motif--palace,
 .home-hero__scroll-motif--lantern,
-.home-hero__scroll-motif--brush,
-.home-hero__scroll-motif--knot {
-  stroke: rgba(184, 109, 85, 0.42);
+.home-hero__scroll-motif--fan {
+  stroke: rgba(168, 93, 70, 0.58);
 }
 
 .home-hero__scroll-motif--panda,
 .home-hero__scroll-motif--bamboo {
-  stroke: rgba(90, 141, 121, 0.38);
+  stroke: rgba(68, 119, 98, 0.58);
 }
 
-.home-hero__scroll-motif--tower {
-  stroke: rgba(95, 143, 247, 0.36);
+.home-hero__scroll-motif--oriental-pearl {
+  stroke: rgba(73, 115, 194, 0.54);
 }
 
-.home-hero__scroll-motif--tea,
-.home-hero__scroll-motif--fan,
-.home-hero__scroll-motif--music,
-.home-hero__scroll-motif--dumpling {
-  stroke: rgba(197, 155, 83, 0.34);
+.home-hero__scroll-wash--paper {
+  fill: rgba(255, 252, 246, 0.82);
+}
+
+.home-hero__scroll-wash--clay {
+  fill: rgba(184, 109, 85, 0.12);
+}
+
+.home-hero__scroll-wash--sky {
+  fill: rgba(95, 143, 247, 0.12);
+}
+
+.home-hero__scroll-wash--gold {
+  fill: rgba(197, 155, 83, 0.12);
+}
+
+.home-hero__scroll-ink-fill {
+  fill: rgba(66, 59, 55, 0.62);
+  stroke: none;
+}
+
+.home-hero__scroll-paper-dot {
+  fill: rgba(255, 252, 246, 0.92);
+  stroke: none;
 }
 
 .home-hero__scroll-center-veil {
@@ -2692,17 +2718,15 @@ h2 {
   }
 
   .home-hero__scroll-svg {
-    min-width: 42rem;
-    opacity: 0.72;
-    bottom: -0.35rem;
+    min-width: 36rem;
+    opacity: 0.78;
+    bottom: -0.2rem;
   }
 
-  .home-hero__scroll-motif--fan,
-  .home-hero__scroll-motif--brush,
-  .home-hero__scroll-motif--knot,
-  .home-hero__scroll-motif--dumpling,
-  .home-hero__scroll-motif--tea {
-    display: none;
+  .home-hero__scroll-motif--palace,
+  .home-hero__scroll-motif--lantern,
+  .home-hero__scroll-motif--fan {
+    opacity: 0.66;
   }
 
   .home-hero__title {
