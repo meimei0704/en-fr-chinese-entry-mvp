@@ -388,21 +388,18 @@ h2 {
 
 .home-hero::before {
   inset: 1.15rem;
+  z-index: 1;
   border: 1px solid rgba(214, 181, 150, 0.22);
   border-radius: 2rem;
   content: '';
 }
 
 .home-hero::after {
-  right: 50%;
-  bottom: -1.4rem;
-  content: '中文';
-  color: rgba(95, 143, 247, 0.055);
-  font-size: clamp(5.5rem, 14vw, 10rem);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  transform: translateX(50%);
-  white-space: nowrap;
+  inset: 18% 24% 22%;
+  z-index: 1;
+  content: '';
+  border-radius: 2.2rem;
+  background: radial-gradient(circle, rgba(255, 252, 247, 0.66), rgba(255, 252, 247, 0));
 }
 
 .home-hero--centered {
@@ -411,9 +408,79 @@ h2 {
   text-align: center;
 }
 
+.home-hero__scroll-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.home-hero__scroll-svg {
+  position: absolute;
+  inset: auto 50% 0;
+  width: min(100%, 76rem);
+  min-width: 58rem;
+  height: auto;
+  transform: translateX(-50%);
+  opacity: 0.92;
+}
+
+.home-hero__scroll-track,
+.home-hero__scroll-clouds,
+.home-hero__scroll-motifs {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.home-hero__scroll-track {
+  stroke: rgba(210, 190, 169, 0.78);
+  stroke-width: 2;
+}
+
+.home-hero__scroll-clouds {
+  stroke: rgba(214, 195, 173, 0.72);
+  stroke-width: 1.8;
+}
+
+.home-hero__scroll-motifs {
+  stroke: rgba(125, 98, 81, 0.38);
+  stroke-width: 2;
+}
+
+.home-hero__scroll-motif--wall,
+.home-hero__scroll-motif--roof,
+.home-hero__scroll-motif--lantern,
+.home-hero__scroll-motif--brush,
+.home-hero__scroll-motif--knot {
+  stroke: rgba(184, 109, 85, 0.42);
+}
+
+.home-hero__scroll-motif--panda,
+.home-hero__scroll-motif--bamboo {
+  stroke: rgba(90, 141, 121, 0.38);
+}
+
+.home-hero__scroll-motif--tower {
+  stroke: rgba(95, 143, 247, 0.36);
+}
+
+.home-hero__scroll-motif--tea,
+.home-hero__scroll-motif--fan,
+.home-hero__scroll-motif--music,
+.home-hero__scroll-motif--dumpling {
+  stroke: rgba(197, 155, 83, 0.34);
+}
+
+.home-hero__scroll-center-veil {
+  fill: rgba(255, 250, 245, 0.52);
+}
+
 .home-hero__content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: min(100%, 56rem);
   display: grid;
   justify-items: center;
@@ -2578,6 +2645,17 @@ h2 {
   font-size: 0.82rem;
 }
 
+@media (max-width: 1023px) {
+  .home-hero__scroll-svg {
+    min-width: 50rem;
+    opacity: 0.82;
+  }
+
+  .home-hero__scroll-center-veil {
+    fill: rgba(255, 250, 245, 0.62);
+  }
+}
+
 @media (max-width: 760px) {
   .selection-hero,
   .lesson-grid,
@@ -2607,6 +2685,24 @@ h2 {
   .home-hero::before {
     inset: 0.65rem;
     border-radius: 1.25rem;
+  }
+
+  .home-hero::after {
+    inset: 22% 12% 22%;
+  }
+
+  .home-hero__scroll-svg {
+    min-width: 42rem;
+    opacity: 0.72;
+    bottom: -0.35rem;
+  }
+
+  .home-hero__scroll-motif--fan,
+  .home-hero__scroll-motif--brush,
+  .home-hero__scroll-motif--knot,
+  .home-hero__scroll-motif--dumpling,
+  .home-hero__scroll-motif--tea {
+    display: none;
   }
 
   .home-hero__title {
