@@ -20,7 +20,11 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await page.goto('/')
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
-  await expect(page.getByRole('region', { name: /home hero/i })).toHaveClass(/home-hero--centered/)
+  const hero = page.getByRole('region', { name: /home hero/i })
+  const scrollScene = hero.locator('.home-hero__scroll-scene')
+  const scrollSvg = scrollScene.locator('svg.home-hero__scroll-svg')
+
+  await expect(hero).toHaveClass(/home-hero--centered/)
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
   await expect(
     page.getByText('Apprenez le mandarin dans la vie quotidienne'),
@@ -35,6 +39,8 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
+  await expect(scrollScene).toHaveAttribute('aria-hidden', 'true')
+  await expect(scrollSvg).toBeVisible()
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
   await expect(journeyNodes).toHaveCount(11)
@@ -101,7 +107,11 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
 
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
     const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
+    const sceneBox = await scrollScene.boundingBox()
+
     expect(scrollWidth).toBe(clientWidth)
+    expect(sceneBox).not.toBeNull()
+    expect(sceneBox!.width).toBeGreaterThan(clientWidth * 0.82)
 
     if (width <= 390) {
       expect(Math.abs(firstCardBox!.x - secondCardBox!.x)).toBeLessThan(2)
