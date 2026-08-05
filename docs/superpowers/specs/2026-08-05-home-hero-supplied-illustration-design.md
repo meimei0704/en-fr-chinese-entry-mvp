@@ -1,7 +1,7 @@
 # Home Hero Supplied Illustration Design
 
 **Date:** 2026-08-05
-**Status:** User-approved design, pending written-spec review
+**Status:** User-approved design, pending written-spec re-review
 **Loop task:** #t46
 
 ## Summary
@@ -16,7 +16,7 @@ This is an independent Home hero change. It does not include the separate #t45 c
 - Source filename: `中国元素 2.png`
 - Format: PNG
 - Dimensions: `1318 × 1226`
-- Alpha channel: present
+- Pixel format: RGBA container, but the alpha plane is uniformly `255` (the image is fully opaque)
 - Source size: `2,169,130` bytes
 - SHA-256: `0082532b0ebc44c4e1805dd36411e4f96b5c6d5d8cd12922c1c74a1ee1dcf8ff`
 - Visual content: panda, Great Wall, bamboo, mountains, clouds, sun, birds, and decorative seals in a jade/gold/paper palette
@@ -36,7 +36,7 @@ The current solution is accessible and lightweight, but it no longer matches the
 2. Preserve the current centered hero title, slogan, language switcher, height, and interaction.
 3. Keep `轻松学中文` and its localized slogan more visually prominent than the illustration.
 4. Preserve recognizable panda, Great Wall, and sun anchors across desktop, tablet, 390 px, and 320 px layouts.
-5. Ship a substantially smaller transparent runtime asset rather than the 2.17 MB source PNG.
+5. Ship a substantially smaller opaque runtime asset rather than the 2.17 MB source PNG.
 6. Remove the obsolete inline SVG markup, motif CSS, and motif-specific tests.
 
 ## Non-goals
@@ -57,7 +57,7 @@ The selected direction is **A · centered background wash**.
 - Keep the existing centered text composition.
 - Center the illustration within the hero and size it to approximately `135–145%` of the hero height.
 - Use `object-fit: contain` so the complete circular composition is preserved before the hero's own rounded clipping.
-- Allow only light clipping of outer bamboo, blank transparent space, and decorative edges.
+- Allow only light clipping of outer bamboo, off-white paper margins, and decorative edges.
 - Keep panda, main Great Wall path, watchtowers, and sun visible.
 - Apply an image opacity between `0.30` and `0.36`.
 - Place an elliptical paper-colored veil above the image and below the content. The veil is strongest behind the title and fades before the major side motifs.
@@ -72,7 +72,7 @@ The selected direction is **A · centered background wash**.
 ### Mobile at 390 px and 320 px
 
 - Keep the image centered; do not switch to a different DOM or illustration.
-- Permit clipping of the farthest bamboo leaves, transparent margins, and minor decorative seals.
+- Permit clipping of the farthest bamboo leaves, off-white paper margins, and minor decorative seals.
 - Preserve the panda face, main Great Wall curve, and sun.
 - Keep image opacity at or below the tablet value and strengthen the center veil.
 - Clip the image inside the hero; the page must not gain horizontal overflow.
@@ -102,13 +102,15 @@ The component does not contain cultural labels, captions, or copy because the il
 
 ## Asset Pipeline
 
-Create one transparent WebP runtime derivative:
+Create one opaque WebP runtime derivative:
 
 - Output: `public/images/home-hero-chinese-elements.webp`
 - Maximum output dimensions: the supplied `1318 × 1226`; do not upscale
-- Alpha channel: retained
+- Alpha behavior: the source PNG's RGBA container has no translucent pixels, so the derivative intentionally carries no alpha payload; do not add a background-removal or masking transform
 - Target file size: `≤ 350 KB`
 - Quality: visually preserve panda facial features, wall edges, bamboo leaves, and gold linework at the hero's rendered size
+
+A fresh direct `cwebp -q 82` conversion of the approved attachment produced a `109,028` byte WebP in the planning environment, and `webpinfo` reported `VP8 Alpha: 0`. This is reference evidence that the size target and opaque output are feasible, not a requirement to reproduce that exact byte count across encoder versions.
 
 Do not place the 2.17 MB source PNG in `public/` or otherwise include it in the production bundle. Record the attachment ID and checksum in this spec so the approved source remains identifiable.
 
@@ -124,6 +126,8 @@ The runtime image is local, immutable repository content. No new dependency or r
 4. Existing language switcher and hero content
 
 The illustration wrapper is absolute, fills the hero, clips to the hero boundary, and uses `pointer-events: none`. The content and language switcher retain a higher stacking context.
+
+The asset retains its off-white rectangular paper canvas. Reduced opacity is applied to the complete image layer, allowing that paper tone to blend with the existing hero paper/gradient background; the center veil then restores local contrast behind the title. The implementation must not attempt to infer transparency, remove the background, or mask white panda/cloud details.
 
 ### Replacement cleanup
 
@@ -197,13 +201,14 @@ At `1440`, `1024`, `390`, and `320` px widths:
 
 ### Build and asset checks
 
-- Confirm the WebP exists and is `≤ 350 KB`.
+- Confirm the WebP exists, is `≤ 350 KB`, is no larger than `1318 × 1226`, and carries no alpha payload (`VP8 Alpha: 0` or equivalent encoder metadata).
+- Confirm the source PNG is not shipped in `public/` and no background-removal transform or runtime service is introduced.
 - Run Home unit tests, full Vitest, lint, production build, Home Playwright, and `git diff --check`.
 
 ## Implementation Outline
 
 1. Add failing Home DOM tests for the new single-image decorative contract.
-2. Produce and verify the optimized transparent WebP asset.
+2. Produce and verify the optimized opaque WebP asset directly from the approved PNG, without background removal.
 3. Add `HomeHeroIllustration`, mount it, and delete `HomeHeroScrollScene`.
 4. Replace old SVG CSS with centered-image and veil CSS.
 5. Update responsive CSS and browser assertions for all four viewport widths.
@@ -216,6 +221,6 @@ At `1440`, `1024`, `390`, and `320` px widths:
 3. Desktop and tablet retain the centered title with a recognizable full illustration behind it.
 4. At 390 px and 320 px, panda face, main Great Wall curve, and sun remain visible while outer decorative edges may crop.
 5. Title, slogan, and language switcher remain more prominent than the illustration and keep their current behavior.
-6. The runtime asset is local, transparent WebP, not upscaled, and `≤ 350 KB`; the original 2.17 MB PNG is not shipped.
+6. The runtime asset is a local opaque WebP, not upscaled, and `≤ 350 KB`; it retains the source's off-white paper canvas, carries no alpha payload, and the original 2.17 MB PNG is not shipped.
 7. The image layer is decorative, non-interactive, and accessibility-safe.
 8. No tested viewport gains horizontal overflow, and Home unit, full Vitest, lint, build, Home Playwright, and `git diff --check` all pass.
