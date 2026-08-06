@@ -31,8 +31,8 @@ describe('HomePage', () => {
     expect(screen.queryByText(/Un parcours ciblé de dix leçons/i)).not.toBeInTheDocument()
   })
 
-  it('shows all ten arrival lesson cards without progress or review shortcuts on the home page', () => {
-    renderRoute('/home')
+  it('renders Pinyin and the ten-card Journey as sibling course-series sections', () => {
+    const { container } = renderRoute('/home')
 
     expect(screen.queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
@@ -42,21 +42,45 @@ describe('HomePage', () => {
     expect(screen.queryByText(/review queue/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/course map/i)).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
-    const journeyLessonLinks = within(journeyMap)
+    const courseSeries = container.querySelector('.course-series')
+    const pinyinHeading = screen.getByRole('heading', { level: 2, name: 'Pinyin Foundations 1' })
+    const journeyHeading = screen.getByRole('heading', { level: 2, name: 'Journey Map' })
+    const pinyinSection = pinyinHeading.closest('section')
+    const journeySection = journeyHeading.closest('section')
+
+    expect(courseSeries).toBeInTheDocument()
+    expect(pinyinSection).toHaveClass('course-series__panel', 'course-series__panel--pinyin')
+    expect(journeySection).toHaveClass('course-series__panel', 'course-series__panel--journey')
+    expect(pinyinSection?.parentElement).toBe(journeySection?.parentElement)
+    expect(pinyinSection?.parentElement).toHaveClass('course-series__list')
+
+    const pinyinEntry = within(pinyinSection as HTMLElement).getByRole('link', {
+      name: 'Pinyin Foundations 1',
+    })
+    const journeyLessonLinks = within(journeySection as HTMLElement)
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
-    const pinyinEntry = within(journeyMap).getByRole('link', { name: /pinyin/i })
 
+    expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
+    expect(pinyinEntry).toHaveClass('course-series__pinyin-link')
+    expect(pinyinEntry.querySelector('.course-series__pinyin-mark')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(within(journeySection as HTMLElement).queryByRole('link', { name: /pinyin/i }))
+      .not.toBeInTheDocument()
+    expect(within(pinyinSection as HTMLElement).queryAllByRole('link')).toHaveLength(1)
     expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
-    expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
-    expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
-    expect(journeyMap).not.toHaveTextContent(' / ')
+    expect(within(journeySection as HTMLElement).queryAllByText(/coming soon/i)).toHaveLength(0)
+    expect(journeySection).not.toHaveTextContent(' / ')
 
     for (const [index, title] of expectedJourneyTitles.entries()) {
       const topic = expectedLessonTopicOrder[index]
-      const heading = within(journeyMap).getByRole('heading', { level: 2, name: title })
+      const heading = within(journeySection as HTMLElement).getByRole('heading', {
+        level: 3,
+        name: title,
+      })
 
       expect(heading).toBeVisible()
       expect(within(heading).getByText(topic.hanzi)).toHaveClass('lesson-topic-title__primary')
@@ -130,18 +154,22 @@ describe('HomePage', () => {
     expect(screen.queryByText(/carte du cours/i)).not.toBeInTheDocument()
     expect(
       screen.getByRole('heading', {
-        level: 2,
+        level: 3,
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'fr'),
       }),
     ).toBeVisible()
-    expect(screen.getByRole('heading', {
-      level: 2,
-      name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'fr'),
-    })).toBeVisible()
-    expect(screen.getByRole('heading', {
-      level: 2,
-      name: expectedLessonTopicPattern(expectedLessonTopicOrder[9], 'fr'),
-    })).toBeVisible()
+    expect(
+      screen.getByRole('heading', {
+        level: 3,
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'fr'),
+      }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('heading', {
+        level: 3,
+        name: expectedLessonTopicPattern(expectedLessonTopicOrder[9], 'fr'),
+      }),
+    ).toBeVisible()
     expect(screen.getByLabelText(/carte du parcours/i)).not.toHaveTextContent(' / ')
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()

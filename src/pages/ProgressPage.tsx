@@ -6,6 +6,7 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import { getLessonTopicText } from '../content/lessonTopics'
+import { pinyinCourse } from '../content/pinyin/course'
 import type { JourneyNode, LessonId } from '../content/types'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
@@ -14,6 +15,7 @@ type RouteJourneyNode = JourneyNode & { kind: 'route'; routeDetails: { href: str
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
+const visibleJourneyNodes = orderedJourneyNodes.filter((node) => node.kind !== 'route')
 const lessonJourneyNodes = orderedJourneyNodes.filter(isLessonJourneyNode)
 const lessonJourneyLessonIds = new Set(lessonJourneyNodes.map((node) => node.lessonId))
 
@@ -29,6 +31,7 @@ export function ProgressPage() {
   const progress = loadProgress()
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
+  const pinyinSeriesTitle = getLocalizedText(pinyinCourse.lesson.title, language)
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
   const currentLessonId =
     progress.lastVisitedLesson === null ? null : getContinueLessonId(progress)
@@ -155,22 +158,45 @@ export function ProgressPage() {
           </article>
         </section>
 
-        <section
-          className="surface-card progress-journey-card"
-          aria-label={copy.progressPage.progressJourneyMapLabel}
-        >
-          <div className="progress-list-card__header">
-            <div>
-              <p className="eyebrow">{copy.progressPage.lessonProgressEyebrow}</p>
-              <h2>{copy.progressPage.lessonProgressLabel}</h2>
-            </div>
-            <span className="badge badge--sky">
-              {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
-            </span>
-          </div>
+        <section className="course-series progress-course-series">
+          <p className="eyebrow course-series__label">
+            {copy.progressPage.lessonProgressEyebrow}
+          </p>
 
-          <div className="progress-journey-map__path">
-            {orderedJourneyNodes.map((node) => {
+          <div className="course-series__list">
+            <section
+              className="course-series__panel course-series__panel--pinyin"
+              aria-labelledby="progress-pinyin-series-title"
+            >
+              <Link
+                className="course-series__pinyin-link"
+                to="/pinyin"
+                aria-labelledby="progress-pinyin-series-title"
+              >
+                <span className="course-series__pinyin-mark" aria-hidden="true">
+                  拼
+                </span>
+                <h2 id="progress-pinyin-series-title" className="course-series__title">
+                  {pinyinSeriesTitle}
+                </h2>
+              </Link>
+            </section>
+
+            <section
+              className="surface-card progress-journey-card course-series__panel course-series__panel--journey"
+              aria-label={copy.progressPage.progressJourneyMapLabel}
+            >
+              <div className="progress-list-card__header course-series__panel-header">
+                <div>
+                  <h2>{copy.progressPage.lessonProgressLabel}</h2>
+                </div>
+                <span className="badge badge--sky">
+                  {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
+                </span>
+              </div>
+
+              <div className="progress-journey-map__path">
+                {visibleJourneyNodes.map((node) => {
               const nodeTitle = isLessonJourneyNode(node)
                 ? getLessonTopicText(node.lessonId, language)
                 : getLocalizedText(node.title, language)
@@ -310,7 +336,9 @@ export function ProgressPage() {
                   ) : null}
                 </article>
               )
-            })}
+                })}
+              </div>
+            </section>
           </div>
         </section>
       </section>
