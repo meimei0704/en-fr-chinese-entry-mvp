@@ -4,7 +4,7 @@
 
 **Goal:** Replace the Home hero’s hand-authored inline SVG with the approved clean supplied Chinese-elements illustration while preserving the existing title, localized slogan, language controls, hero layout, and behavior.
 
-**Architecture:** Convert the already-approved local PNG source into one repository-owned, opaque WebP and render it through a focused `HomeHeroIllustration` decorative component mounted before the existing hero controls and content. Keep the wrapper absolute and clipped, apply opacity only to the image, place a paper-colored elliptical veil above it, and use the existing `1023px` and `760px` media-query branches to keep the panda face, main Great Wall curve, and sun visible without page overflow.
+**Architecture:** Convert the already-approved local PNG source into one repository-owned, opaque WebP and render it through a focused `HomeHeroIllustration` decorative component mounted before the existing hero controls and content. Keep the wrapper absolute and clipped, apply opacity only to the image, place a paper-colored elliptical veil above it, extend the current tablet media query through the required `1024px` viewport, and use a pre-verified mobile scale/focus offset in the `760px` branch so the panda face, main Great Wall curve, and sun remain visible without page overflow.
 
 **Tech Stack:** React 19, TypeScript, Vite static assets, CSS, Vitest with Testing Library, Playwright, `cwebp`, `webpinfo`
 
@@ -27,7 +27,7 @@
 - Use `.superpowers/brainstorm/7077-1785914601/content/chinese-elements-clean.png` only as the local conversion input. It is the approved Loop attachment `att_mvafm7v0u5q8w9`, is ignored by Git, and must never be copied into `public/`, `src/`, or `dist/`.
 - Preserve the source’s off-white rectangular paper canvas. The source is an RGBA container whose alpha plane is uniformly opaque; do not infer transparency, remove the background, mask white details, or introduce any background-removal tool or service.
 - The production asset is exactly `/images/home-hero-chinese-elements.webp`, loaded locally. Do not use a CDN, data URL, remote request, runtime conversion, animation, parallax, drag, or zoom.
-- Keep the existing `.home-hero`, `.home-hero::before`, `.home-hero::after`, `.home-hero__content`, `.home-language-switcher`, `.home-hero__title`, and `.home-hero__slogan-stack` structures and behavior except for the explicitly listed scene-selector replacement.
+- Keep the existing `.home-hero`, `.home-hero::before`, `.home-hero::after`, `.home-hero__content`, `.home-language-switcher`, `.home-hero__title`, and `.home-hero__slogan-stack` structures and behavior except for the explicitly listed scene-selector replacement and the mobile-only narrowing of the existing `.home-hero::after` veil so it does not flatten the panda and sun.
 - Do not replace the centered composition with split copy/image columns or a second mobile illustration.
 
 ### Task 1: Create and prove the opaque runtime asset
@@ -261,14 +261,42 @@ Add this constant immediately after `expectedTopics` in `tests/e2e/home-page.spe
 
 ```ts
 const heroViewports = [
-  { name: 'desktop', width: 1440, height: 900, maximumOpacity: 0.36 },
-  { name: 'tablet', width: 1024, height: 900, maximumOpacity: 0.32 },
-  { name: 'mobile-390', width: 390, height: 844, maximumOpacity: 0.30 },
-  { name: 'mobile-320', width: 320, height: 720, maximumOpacity: 0.30 },
+  {
+    name: 'desktop',
+    width: 1440,
+    height: 900,
+    expectedOpacity: 0.32,
+    expectedImageHeightRatio: 1.42,
+    expectedImageTopRatio: 0.5,
+  },
+  {
+    name: 'tablet',
+    width: 1024,
+    height: 900,
+    expectedOpacity: 0.3,
+    expectedImageHeightRatio: 1.36,
+    expectedImageTopRatio: 0.5,
+  },
+  {
+    name: 'mobile-390',
+    width: 390,
+    height: 844,
+    expectedOpacity: 0.3,
+    expectedImageHeightRatio: 1.16,
+    expectedImageTopRatio: 0.8,
+  },
+  {
+    name: 'mobile-320',
+    width: 320,
+    height: 720,
+    expectedOpacity: 0.3,
+    expectedImageHeightRatio: 1.16,
+    expectedImageTopRatio: 0.8,
+  },
 ] as const
 ```
 
-This retains the current desktop, tablet, and two mobile widths while making each visual-evidence attachment and failure report unambiguous.
+This retains the current desktop, tablet, and two mobile widths while making each visual-evidence attachment and failure report unambiguous. Exact opacity, scale, and focus-position values prevent the desktop `142% / 0.32 / 50%` treatment from satisfying the `1024px` tablet case.
 
 - [ ] **Step 2: Replace the old browser selectors with the new single-image contract**
 
@@ -345,29 +373,33 @@ for (const viewport of heroViewports) {
   expect(titleBox).not.toBeNull()
   expect(slotBox).not.toBeNull()
 
-  const [scrollWidth, clientWidth, layerStyle, imageFacts] = await Promise.all([
-    page.evaluate(() => document.documentElement.scrollWidth),
-    page.evaluate(() => document.documentElement.clientWidth),
-    illustration.evaluate((element) => {
-      const style = window.getComputedStyle(element)
-      return {
-        overflow: style.overflow,
-        pointerEvents: style.pointerEvents,
-        position: style.position,
-      }
-    }),
-    illustrationImage.evaluate((element) => {
-      const image = element as HTMLImageElement
-      const style = window.getComputedStyle(image)
-      return {
-        complete: image.complete,
-        naturalWidth: image.naturalWidth,
-        naturalHeight: image.naturalHeight,
-        objectFit: style.objectFit,
-        opacity: Number.parseFloat(style.opacity),
-      }
-    }),
-  ])
+  const [scrollWidth, clientWidth, heroClientHeight, layerStyle, imageFacts] =
+    await Promise.all([
+      page.evaluate(() => document.documentElement.scrollWidth),
+      page.evaluate(() => document.documentElement.clientWidth),
+      hero.evaluate((element) => element.clientHeight),
+      illustration.evaluate((element) => {
+        const style = window.getComputedStyle(element)
+        return {
+          overflow: style.overflow,
+          pointerEvents: style.pointerEvents,
+          position: style.position,
+        }
+      }),
+      illustrationImage.evaluate((element) => {
+        const image = element as HTMLImageElement
+        const style = window.getComputedStyle(image)
+        return {
+          complete: image.complete,
+          naturalWidth: image.naturalWidth,
+          naturalHeight: image.naturalHeight,
+          objectFit: style.objectFit,
+          opacity: Number.parseFloat(style.opacity),
+          cssHeight: Number.parseFloat(style.height),
+          cssTop: Number.parseFloat(style.top),
+        }
+      }),
+    ])
 
   expect(scrollWidth).toBe(clientWidth)
   expect(layerStyle).toEqual({
@@ -379,8 +411,15 @@ for (const viewport of heroViewports) {
   expect(imageFacts.naturalWidth).toBe(1318)
   expect(imageFacts.naturalHeight).toBe(1226)
   expect(imageFacts.objectFit).toBe('contain')
-  expect(imageFacts.opacity).toBeGreaterThanOrEqual(0.28)
-  expect(imageFacts.opacity).toBeLessThanOrEqual(viewport.maximumOpacity)
+  expect(imageFacts.opacity).toBeCloseTo(viewport.expectedOpacity, 2)
+  expect(imageFacts.cssHeight / heroClientHeight).toBeCloseTo(
+    viewport.expectedImageHeightRatio,
+    2,
+  )
+  expect(imageFacts.cssTop / heroClientHeight).toBeCloseTo(
+    viewport.expectedImageTopRatio,
+    2,
+  )
   expect(Math.abs(illustrationBox!.x - heroBox!.x)).toBeLessThanOrEqual(2)
   expect(Math.abs(illustrationBox!.y - heroBox!.y)).toBeLessThanOrEqual(2)
   expect(
@@ -469,12 +508,12 @@ In `src/styles/global.css`, delete the entire block from `.home-hero__scroll-sce
 
 This keeps the source’s complete rectangular paper canvas, applies reduced opacity to that whole canvas, and creates an independent veil above the image. Do not apply opacity to the wrapper, because that would also weaken the veil.
 
-- [ ] **Step 6: Replace the old `1023px` responsive branch**
+- [ ] **Step 6: Extend the old tablet branch through the required `1024px` viewport**
 
-Inside the current `@media (max-width: 1023px)` block, delete the rules for `.home-hero__scroll-svg` and `.home-hero__scroll-center-veil` and use:
+Change the current tablet query from `@media (max-width: 1023px)` to `@media (max-width: 1024px)`, delete the rules for `.home-hero__scroll-svg` and `.home-hero__scroll-center-veil`, and use:
 
 ```css
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .home-hero__illustration-image {
     height: 136%;
     opacity: 0.3;
@@ -493,20 +532,25 @@ Inside the current `@media (max-width: 1023px)` block, delete the rules for `.ho
 }
 ```
 
-The tablet image is slightly smaller and lighter than desktop while retaining the same center anchor and one DOM/image source.
+The `1024px` tablet image is now observably smaller and lighter than desktop while retaining the same center anchor and one DOM/image source. The exact browser assertions from Step 3 require `136% / 0.30 / 50%`, so leaving the query at `1023px` would fail instead of silently accepting desktop values.
 
 - [ ] **Step 7: Replace the old `760px` scene and motif rules**
 
-Inside the existing `@media (max-width: 760px)` block, delete `.home-hero__scroll-svg` and the grouped palace/lantern/fan opacity rule. Leave the existing mobile hero sizing, title, and language-switcher rules unchanged, and insert:
+Inside the existing `@media (max-width: 760px)` block, delete `.home-hero__scroll-svg` and the grouped palace/lantern/fan opacity rule. Keep the existing mobile hero sizing, title, language-switcher, and `.home-hero::after` selector, but narrow that legacy veil and insert the image/illustration-veil rules exactly as follows:
 
 ```css
+.home-hero::after {
+  inset: 22% 42% 22%;
+}
+
 .home-hero__illustration-image {
-  height: 152%;
-  opacity: 0.28;
+  top: 80%;
+  height: 116%;
+  opacity: 0.3;
 }
 
 .home-hero__illustration-veil {
-  inset: 17% 6% 14%;
+  inset: 18% 38% 14%;
   background: radial-gradient(
     ellipse at center,
     rgba(255, 250, 245, 0.9) 0%,
@@ -517,7 +561,9 @@ Inside the existing `@media (max-width: 760px)` block, delete `.home-hero__scrol
 }
 ```
 
-The larger mobile height intentionally crops only the far paper margins, outer bamboo, and minor seals through the already-clipped wrapper. Center anchoring keeps the panda face on the left-center, the main Great Wall curve through the middle/right, and the sun in the upper-right portion of the visible image. Image opacity remains below the tablet value, while the stronger veil preserves title and slogan priority.
+The mobile image remains horizontally center-anchored (`left: 50%` plus the base transform) but uses an optical vertical focus at `top: 80%`. Combined with the smaller `116%` scale, this puts the panda eyes and muzzle in the gap around/below the title, keeps the sun above the title on the right, and retains the main Great Wall curve through the middle/right. The image opacity stays equal to (and therefore not above) tablet, while the two narrow center veils strengthen contrast directly behind the copy and fade before the panda and sun rather than bleaching them.
+
+These values were pre-verified in Chromium against the exact planned component/CSS at `390 × 844` and `320 × 720`: both captures show an identifiable panda face, the main wall curve, and the sun; title, slogan, and language controls remain dominant; and `document.documentElement.scrollWidth === clientWidth`. The implementation still repeats the screenshots and human review in Step 8.
 
 - [ ] **Step 8: Re-run browser coverage and review all four attached hero images**
 
@@ -677,8 +723,8 @@ Expected: both diff checks print nothing; the worktree is clean after the planne
 
 - **Only supplied cultural background:** Tasks 1-3 create and mount exactly one approved local image and delete the only hand-authored hero scene.
 - **Primary content unchanged:** Task 2 preserves the existing language switcher, heading, slogan JSX, state, handler, copy, and reading order; unit and browser tests assert all three remain visible.
-- **Required visual anchors:** Task 3 uses centered `contain` sizing at explicit desktop/tablet/mobile scales and requires human review of four attached hero screenshots for panda face, main Great Wall curve/watchtowers, and sun.
-- **Desktop/tablet/mobile treatment:** CSS values are explicit for the base, existing `1023px`, and existing `760px` branches; image opacity is `0.32`, `0.30`, and `0.28`, and the center veil strengthens as width decreases.
+- **Required visual anchors:** Task 3 uses `contain` sizing at explicit desktop/tablet/mobile scales, retains the horizontal center anchor, adds the pre-verified mobile optical vertical focus, and requires human review of four attached hero screenshots for panda face, main Great Wall curve/watchtowers, and sun.
+- **Desktop/tablet/mobile treatment:** CSS values are explicit for the base, revised `1024px`, and existing `760px` branches; image opacity is `0.32`, `0.30`, and `0.30`, tablet scale is smaller than desktop, and mobile uses the pre-verified `116% / top: 80%` optical focus with a stronger but narrower center veil.
 - **Opaque optimized local asset:** Task 1 checks the approved source hash/size/dimensions, converts without resize or masking, and proves maximum size, dimensions, and `Alpha: 0`; Task 4 repeats the checks against production output.
 - **Source exclusion:** Tasks 1 and 4 stage only the WebP and use both tracked-file and checksum checks to prove the `2,169,130`-byte PNG is absent from production trees.
 - **Old implementation cleanup:** Task 2 deletes `HomeHeroScrollScene` and both old unit contracts; Task 3 deletes every `.home-hero__scroll-*` rule and e2e selector; Tasks 3 and 4 run a stale-symbol scan.
@@ -695,7 +741,7 @@ Expected: both diff checks print nothing; the worktree is clean after the planne
 - Component and selector names are consistent throughout: `HomeHeroIllustration`, `.home-hero__illustration`, `.home-hero__illustration-image`, and `.home-hero__illustration-veil`.
 - The runtime URL is consistently `/images/home-hero-chinese-elements.webp`; the tracked path is consistently `public/images/home-hero-chinese-elements.webp`.
 - Asset limits are consistently `1318 × 1226`, at most `350,000` bytes, and no alpha payload; no step describes transparency or background separation.
-- Browser widths are consistently `1440`, `1024`, `390`, and `320`; CSS breakpoints remain the repository’s current `1023px` and `760px` branches.
+- Browser widths are consistently `1440`, `1024`, `390`, and `320`; the tablet breakpoint is deliberately extended from `1023px` to `1024px`, while the mobile breakpoint remains `760px`.
 - Red/green expectations are causal: the unit test fails before the component swap, and browser CSS assertions fail before the new illustration rules.
 
 ## Execution handoff
