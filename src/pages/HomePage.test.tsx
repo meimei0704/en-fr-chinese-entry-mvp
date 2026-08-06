@@ -12,6 +12,31 @@ const expectedJourneyTitles = expectedLessonTopicOrder.map((topic) =>
   expectedLessonTopicPattern(topic, 'en'),
 )
 
+const expectedSeriesCopy = {
+  en: {
+    label: 'Course series',
+    pinyin: 'Mandarin tones and pinyin',
+    journey: 'Basic Chinese expressions for a stress-free journey',
+  },
+  fr: {
+    label: 'Séries de cours',
+    pinyin: 'Tons et pinyin du mandarin',
+    journey: 'Expressions chinoises essentielles pour voyager sereinement',
+  },
+} as const
+
+function getHomeCourseSeries(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].label })
+}
+
+function getHomePinyinSeries(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].pinyin })
+}
+
+function getHomeJourneySeries(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].journey })
+}
+
 describe('HomePage', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -31,56 +56,48 @@ describe('HomePage', () => {
     expect(screen.queryByText(/Un parcours ciblé de dix leçons/i)).not.toBeInTheDocument()
   })
 
-  it('renders Pinyin and the ten-card Journey as sibling course-series sections', () => {
-    const { container } = renderRoute('/home')
+  it('renders the approved Pinyin and ten-card Journey series as labeled siblings', () => {
+    renderRoute('/home')
 
-    expect(screen.queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
-    expect(screen.queryByText(/next lesson/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/review queue/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/course map/i)).not.toBeInTheDocument()
-
-    const courseSeries = container.querySelector('.course-series')
-    const pinyinHeading = screen.getByRole('heading', { level: 2, name: 'Pinyin Foundations 1' })
-    const journeyHeading = screen.getByRole('heading', { level: 2, name: 'Journey Map' })
-    const pinyinSection = pinyinHeading.closest('section')
-    const journeySection = journeyHeading.closest('section')
-
-    expect(courseSeries).toBeInTheDocument()
-    expect(pinyinSection).toHaveClass('course-series__panel', 'course-series__panel--pinyin')
-    expect(journeySection).toHaveClass('course-series__panel', 'course-series__panel--journey')
-    expect(pinyinSection?.parentElement).toBe(journeySection?.parentElement)
-    expect(pinyinSection?.parentElement).toHaveClass('course-series__list')
-
-    const pinyinEntry = within(pinyinSection as HTMLElement).getByRole('link', {
-      name: 'Pinyin Foundations 1',
+    const courseSeries = getHomeCourseSeries()
+    const pinyinSection = getHomePinyinSeries()
+    const journeySection = getHomeJourneySeries()
+    const pinyinEntry = within(pinyinSection).getByRole('link', {
+      name: expectedSeriesCopy.en.pinyin,
     })
-    const journeyLessonLinks = within(journeySection as HTMLElement)
+    const journeyLessonLinks = within(journeySection)
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
+    expect(within(courseSeries).getByText(expectedSeriesCopy.en.label)).toBeVisible()
+    expect(within(pinyinSection).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.en.pinyin,
+    })).toBeVisible()
+    expect(within(journeySection).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.en.journey,
+    })).toBeVisible()
+    expect(pinyinSection.parentElement).toBe(journeySection.parentElement)
+    expect(pinyinSection.parentElement).toHaveClass('course-series__list')
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(pinyinEntry).toHaveClass('course-series__pinyin-link')
     expect(pinyinEntry.querySelector('.course-series__pinyin-mark')).toHaveAttribute(
       'aria-hidden',
       'true',
     )
-    expect(within(journeySection as HTMLElement).queryByRole('link', { name: /pinyin/i }))
+    expect(within(journeySection).queryByRole('link', { name: /pinyin/i }))
       .not.toBeInTheDocument()
-    expect(within(pinyinSection as HTMLElement).queryAllByRole('link')).toHaveLength(1)
     expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
-    expect(within(journeySection as HTMLElement).queryAllByText(/coming soon/i)).toHaveLength(0)
+    expect(within(journeySection).queryAllByText(/coming soon/i)).toHaveLength(0)
     expect(journeySection).not.toHaveTextContent(' / ')
+    expect(screen.queryByText('Journey Map')).not.toBeInTheDocument()
+    expect(screen.queryByText('Arrive in China step by step')).not.toBeInTheDocument()
 
     for (const [index, title] of expectedJourneyTitles.entries()) {
       const topic = expectedLessonTopicOrder[index]
-      const heading = within(journeySection as HTMLElement).getByRole('heading', {
-        level: 3,
-        name: title,
-      })
+      const heading = within(journeySection).getByRole('heading', { level: 3, name: title })
 
       expect(heading).toBeVisible()
       expect(within(heading).getByText(topic.hanzi)).toHaveClass('lesson-topic-title__primary')
@@ -100,11 +117,16 @@ describe('HomePage', () => {
     expect(screen.queryByRole('button', { name: /listen|écouter/i })).not.toBeInTheDocument()
     expect(screen.queryByText('护照')).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
-    expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
-    expect(within(journeyMap).queryByRole('button', { name: /buy a metro ticket/i }))
+    const journeySeries = getHomeJourneySeries()
+    expect(within(journeySeries).queryAllByText(/coming soon/i)).toHaveLength(0)
+    expect(within(journeySeries).queryByRole('button', { name: /buy a metro ticket/i }))
       .not.toBeInTheDocument()
-    expect(within(journeyMap).getByText(/arrive in china step by step/i)).toBeVisible()
+    expect(within(journeySeries).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.en.journey,
+    })).toBeVisible()
+    expect(screen.queryByText('Journey Map')).not.toBeInTheDocument()
+    expect(screen.queryByText('Arrive in China step by step')).not.toBeInTheDocument()
     expect(within(hero).queryByText(/Real-life Mandarin|Mandarin en situation/i)).not.toBeInTheDocument()
     expect(within(hero).queryByText(/focused ten-lesson|parcours ciblé/i)).not.toBeInTheDocument()
     expect(within(hero).queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
@@ -142,6 +164,27 @@ describe('HomePage', () => {
 
     renderRoute('/home')
 
+    const courseSeries = getHomeCourseSeries('fr')
+    const pinyinSeries = getHomePinyinSeries('fr')
+    const journeySeries = getHomeJourneySeries('fr')
+
+    expect(within(courseSeries).getByText(expectedSeriesCopy.fr.label)).toBeVisible()
+    expect(within(pinyinSeries).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.fr.pinyin,
+    })).toBeVisible()
+    expect(within(journeySeries).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.fr.journey,
+    })).toBeVisible()
+    expect(within(pinyinSeries).getByRole('link', {
+      name: expectedSeriesCopy.fr.pinyin,
+    })).toHaveAttribute('href', '/pinyin')
+    expect(screen.queryByText(expectedSeriesCopy.en.label)).not.toBeInTheDocument()
+    expect(screen.queryByText(expectedSeriesCopy.en.pinyin)).not.toBeInTheDocument()
+    expect(screen.queryByText(expectedSeriesCopy.en.journey)).not.toBeInTheDocument()
+    expect(screen.queryByText('Carte du parcours')).not.toBeInTheDocument()
+    expect(screen.queryByText('Arriver en Chine étape par étape')).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
     expect(screen.queryByText('Learn Mandarin in real life scenarios')).not.toBeInTheDocument()
     expect(
@@ -170,7 +213,7 @@ describe('HomePage', () => {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[9], 'fr'),
       }),
     ).toBeVisible()
-    expect(screen.getByLabelText(/carte du parcours/i)).not.toHaveTextContent(' / ')
+    expect(getHomeJourneySeries('fr')).not.toHaveTextContent(' / ')
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
 
@@ -186,7 +229,7 @@ describe('HomePage', () => {
     expect(screen.queryByText('Mandarin en situation')).not.toBeInTheDocument()
     expect(screen.queryByText(/Un parcours ciblé de dix leçons/i)).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/carte du parcours/i)
+    const journeyMap = getHomeJourneySeries('fr')
     expect(within(journeyMap).queryAllByText(/ouvrir la leçon/i)).toHaveLength(0)
     expect(within(journeyMap).queryAllByText(/ouvrir la lecon/i)).toHaveLength(0)
     expect(screen.queryByRole('region', { name: /maquette d’aperçu d’apprentissage/i }))
@@ -212,9 +255,7 @@ describe('HomePage', () => {
     expect(frenchButton).toHaveAttribute('aria-pressed', 'true')
     expect(screen.queryByText('Learn Mandarin in real life scenarios')).not.toBeInTheDocument()
     expect(screen.getByText('Apprenez le mandarin dans la vie quotidienne')).toBeVisible()
-    expect(
-      screen.getByRole('region', { name: /carte du parcours/i }),
-    ).toBeVisible()
+    expect(getHomeJourneySeries('fr')).toBeVisible()
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
 
@@ -226,7 +267,7 @@ describe('HomePage', () => {
     expect(
       screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
     ).not.toBeInTheDocument()
-    expect(screen.getByRole('region', { name: /journey map/i })).toBeVisible()
+    expect(getHomeJourneySeries()).toBeVisible()
     expect(screen.queryByRole('navigation', { name: /quick learning paths/i }))
       .not.toBeInTheDocument()
   })
@@ -245,7 +286,7 @@ describe('HomePage', () => {
     expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
+    const journeyMap = getHomeJourneySeries()
     expect(
       within(journeyMap).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
@@ -276,7 +317,7 @@ describe('HomePage', () => {
     expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
     expect(screen.queryByText(/next lesson/i)).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
+    const journeyMap = getHomeJourneySeries()
     expect(
       within(journeyMap).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'en'),
@@ -287,7 +328,7 @@ describe('HomePage', () => {
   it('makes each lesson journey node a whole-card link to its real lesson route', () => {
     renderRoute('/home')
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
+    const journeyMap = getHomeJourneySeries()
 
     for (const [index, title] of expectedJourneyTitles.entries()) {
       const card = within(journeyMap).getByRole('link', { name: title })
@@ -307,7 +348,7 @@ describe('HomePage', () => {
     expect(screen.queryByRole('heading', { level: 2, name: /lesson list/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('region', { name: /lesson list/i })).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
+    const journeyMap = getHomeJourneySeries()
     const restaurantCard = within(journeyMap).getByRole('link', {
       name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'en'),
     })
@@ -330,7 +371,7 @@ describe('HomePage', () => {
   it('keeps all formal lesson nodes out of preview affordances', () => {
     renderRoute('/home')
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
+    const journeyMap = getHomeJourneySeries()
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
     expect(within(journeyMap).queryByRole('button', { name: /phone number & mobile payment/i }))
       .not.toBeInTheDocument()

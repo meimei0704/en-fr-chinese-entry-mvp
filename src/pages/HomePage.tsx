@@ -6,7 +6,6 @@ import { LanguageToggle } from '../components/LanguageToggle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
-import { pinyinCourse } from '../content/pinyin/course'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
 
@@ -14,7 +13,6 @@ export function HomePage() {
   const [progress, setProgress] = useState(() => loadProgress())
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
-  const pinyinSeriesTitle = getLocalizedText(pinyinCourse.lesson.title, language)
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNodeId | null>(null)
 
   function handleLanguageSelect(nextLanguage: ExplanationLanguage) {
@@ -54,8 +52,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="page-grid course-series">
-        <p className="eyebrow course-series__label">{copy.homePage.journeyEyebrow}</p>
+      <section
+        className="page-grid course-series"
+        aria-label={copy.courseSeries.label}
+      >
+        <p className="eyebrow course-series__label">{copy.courseSeries.label}</p>
 
         <div className="course-series__list">
           <section
@@ -71,19 +72,20 @@ export function HomePage() {
                 拼
               </span>
               <h2 id="home-pinyin-series-title" className="course-series__title">
-                {pinyinSeriesTitle}
+                {copy.courseSeries.pinyinTitle}
               </h2>
             </Link>
           </section>
 
           <section
-            aria-label={copy.homePage.journeyMapLabel}
+            aria-labelledby="home-journey-series-title"
             className="course-series__panel course-series__panel--journey journey-map"
           >
             <div className="section-heading journey-map__intro course-series__panel-header">
               <div>
-                <h2>{copy.homePage.journeyMapLabel}</h2>
-                <p className="lede">{copy.homePage.journeyIntro}</p>
+                <h2 id="home-journey-series-title" className="course-series__title">
+                  {copy.courseSeries.basicExpressionsTitle}
+                </h2>
               </div>
             </div>
 

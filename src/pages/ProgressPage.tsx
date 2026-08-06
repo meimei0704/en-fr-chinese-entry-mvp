@@ -6,7 +6,6 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import { getLessonTopicText } from '../content/lessonTopics'
-import { pinyinCourse } from '../content/pinyin/course'
 import type { JourneyNode, LessonId } from '../content/types'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
@@ -27,7 +26,6 @@ export function ProgressPage() {
   const pinyinProgress = loadPinyinProgress()
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
-  const pinyinSeriesTitle = getLocalizedText(pinyinCourse.lesson.title, language)
   const completedPinyinSectionsCount = pinyinProgress.completedSections.length
   const totalPinyinSections = 3
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
@@ -156,10 +154,11 @@ export function ProgressPage() {
           </article>
         </section>
 
-        <section className="course-series progress-course-series">
-          <p className="eyebrow course-series__label">
-            {copy.progressPage.lessonProgressEyebrow}
-          </p>
+        <section
+          className="course-series progress-course-series"
+          aria-label={copy.courseSeries.label}
+        >
+          <p className="eyebrow course-series__label">{copy.courseSeries.label}</p>
 
           <div className="course-series__list">
             <section
@@ -175,7 +174,7 @@ export function ProgressPage() {
                   拼
                 </span>
                 <h2 id="progress-pinyin-series-title" className="course-series__title">
-                  {pinyinSeriesTitle}
+                  {copy.courseSeries.pinyinTitle}
                 </h2>
                 <p className="course-series__progress">
                   {copy.pinyinPage.sectionProgress(completedPinyinSectionsCount, totalPinyinSections)}
@@ -185,11 +184,13 @@ export function ProgressPage() {
 
             <section
               className="surface-card progress-journey-card course-series__panel course-series__panel--journey"
-              aria-label={copy.progressPage.progressJourneyMapLabel}
+              aria-labelledby="progress-journey-series-title"
             >
               <div className="progress-list-card__header course-series__panel-header">
                 <div>
-                  <h2>{copy.progressPage.lessonProgressLabel}</h2>
+                  <h2 id="progress-journey-series-title" className="course-series__title">
+                    {copy.courseSeries.basicExpressionsTitle}
+                  </h2>
                 </div>
                 <span className="badge badge--sky">
                   {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
