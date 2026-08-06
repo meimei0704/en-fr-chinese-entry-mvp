@@ -8,14 +8,13 @@ import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import { getLessonTopicText } from '../content/lessonTopics'
 import { pinyinCourse } from '../content/pinyin/course'
 import type { JourneyNode, LessonId } from '../content/types'
+import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
 type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
-type RouteJourneyNode = JourneyNode & { kind: 'route'; routeDetails: { href: string } }
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
-const visibleJourneyNodes = orderedJourneyNodes.filter((node) => node.kind !== 'route')
 const lessonJourneyNodes = orderedJourneyNodes.filter(isLessonJourneyNode)
 const lessonJourneyLessonIds = new Set(lessonJourneyNodes.map((node) => node.lessonId))
 
@@ -23,15 +22,14 @@ function isLessonJourneyNode(node: JourneyNode): node is LessonJourneyNode {
   return node.kind === 'lesson' && node.lessonId !== undefined
 }
 
-function isRouteJourneyNode(node: JourneyNode): node is RouteJourneyNode {
-  return node.kind === 'route' && node.routeDetails !== undefined
-}
-
 export function ProgressPage() {
   const progress = loadProgress()
+  const pinyinProgress = loadPinyinProgress()
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const pinyinSeriesTitle = getLocalizedText(pinyinCourse.lesson.title, language)
+  const completedPinyinSectionsCount = pinyinProgress.completedSections.length
+  const totalPinyinSections = 3
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
   const currentLessonId =
     progress.lastVisitedLesson === null ? null : getContinueLessonId(progress)
@@ -179,6 +177,9 @@ export function ProgressPage() {
                 <h2 id="progress-pinyin-series-title" className="course-series__title">
                   {pinyinSeriesTitle}
                 </h2>
+                <p className="course-series__progress">
+                  {copy.pinyinPage.sectionProgress(completedPinyinSectionsCount, totalPinyinSections)}
+                </p>
               </Link>
             </section>
 
@@ -196,7 +197,7 @@ export function ProgressPage() {
               </div>
 
               <div className="progress-journey-map__path">
-                {visibleJourneyNodes.map((node) => {
+                {orderedJourneyNodes.map((node) => {
               const nodeTitle = isLessonJourneyNode(node)
                 ? getLessonTopicText(node.lessonId, language)
                 : getLocalizedText(node.title, language)
@@ -236,31 +237,6 @@ export function ProgressPage() {
                     </div>
 
                     <span className="journey-node__cta">{copy.progressPage.openLesson} →</span>
-                  </Link>
-                )
-              }
-
-              if (isRouteJourneyNode(node)) {
-                return (
-                  <Link
-                    key={node.id}
-                    className="journey-node progress-journey-node journey-node--route journey-node--card-link progress-journey-node--route"
-                    data-journey-node-id={node.id}
-                    to={node.routeDetails.href}
-                    aria-label={nodeTitle}
-                  >
-                    <div className="journey-node__header">
-                      <span className="badge badge--sky">{nodeEyebrow}</span>
-                    </div>
-
-                    <span className="journey-node__doodle" aria-hidden="true">
-                      {nodeIcon}
-                    </span>
-
-                    <div>
-                      <h3>{nodeTitle}</h3>
-                      <p className="muted-text">{nodeSummary}</p>
-                    </div>
                   </Link>
                 )
               }

@@ -23,7 +23,6 @@ export type LessonId =
 export type JourneyStageId = 'arrival-in-china'
 
 export type JourneyNodeId =
-  | 'pinyin-foundations'
   | 'airport-immigration'
   | 'taxi-to-stay'
   | 'hotel-check-in'
@@ -35,7 +34,7 @@ export type JourneyNodeId =
   | 'ask-for-help-problem'
   | 'train-station-ticket'
 
-export type JourneyNodeKind = 'lesson' | 'preview' | 'route'
+export type JourneyNodeKind = 'lesson' | 'preview'
 
 export interface DialogueLine {
   id: string
@@ -155,10 +154,6 @@ export interface JourneyNodePreviewDetails {
   goal: LocalizedField
 }
 
-export interface JourneyNodeRouteDetails {
-  href: string
-}
-
 export interface JourneyNode {
   /** Stable shared journey node key for downstream progress/review consumers. */
   id: JourneyNodeId
@@ -170,7 +165,6 @@ export interface JourneyNode {
   pathOrder: number
   lessonId?: LessonId
   previewDetails?: JourneyNodePreviewDetails
-  routeDetails?: JourneyNodeRouteDetails
 }
 
 export type PinyinLessonId = 'pinyin-foundations-1'

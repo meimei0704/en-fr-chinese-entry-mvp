@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
 import { journeyNodes } from '../content/journey'
+import { createDefaultPinyinProgress, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import {
   expectedLessonTopic,
@@ -13,7 +14,6 @@ import {
 import { renderRoute } from '../test/renderRoute'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
-const renderedJourneyNodes = orderedJourneyNodes.filter((node) => node.kind !== 'route')
 const expectedJourneyLessonHrefs = [
   '/lesson/self-intro',
   '/lesson/ask-directions',
@@ -108,7 +108,7 @@ describe('ProgressPage', () => {
     expect(within(stats).getByText('10%')).toBeVisible()
 
     const journeyMap = screen.getByRole('region', { name: /carte de progression du parcours/i })
-    for (const node of renderedJourneyNodes) {
+    for (const node of orderedJourneyNodes) {
       expect(
         within(journeyMap).getByRole('heading', {
           level: 3,
@@ -145,13 +145,13 @@ describe('ProgressPage', () => {
     expect(within(journeyMap).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
 
     expect(cards).toHaveLength(10)
-    expect(cards).toHaveLength(renderedJourneyNodes.length)
+    expect(cards).toHaveLength(orderedJourneyNodes.length)
     expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(
-      renderedJourneyNodes.map((node) => node.id),
+      orderedJourneyNodes.map((node) => node.id),
     )
     expect(
       cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent),
-    ).toEqual(renderedJourneyNodes.map((node) => journeyTitle(node)))
+    ).toEqual(orderedJourneyNodes.map((node) => journeyTitle(node)))
     expect(journeyMap).not.toHaveTextContent(' / ')
     expect(within(journeyMap).queryAllByText('Preview')).toHaveLength(0)
     expect(within(journeyMap).getAllByText('Upcoming')).toHaveLength(10)
@@ -199,6 +199,34 @@ describe('ProgressPage', () => {
     expect(screen.getAllByText(/1 of 10 lessons completed/i)[0]).toBeVisible()
     expect(screen.queryByText(/1 of 11/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
+  })
+
+  it('reports Pinyin sections out of three independently from Journey lessons out of ten', () => {
+    savePinyinProgress({
+      ...createDefaultPinyinProgress(),
+      visited: true,
+      completedSections: ['reference', 'tone-game'],
+    })
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro'],
+      lastVisitedLesson: 'self-intro',
+    })
+
+    renderRoute('/progress')
+
+    const pinyinHeading = screen.getByRole('heading', { level: 2, name: 'Pinyin Foundations 1' })
+    const pinyinSection = pinyinHeading.closest('section')
+    const stats = screen.getByRole('region', { name: /learning indicators/i })
+
+    expect(within(pinyinSection as HTMLElement).getByText('2 of 3 sections complete')).toBeVisible()
+    expect(within(pinyinSection as HTMLElement).getByRole('link', {
+      name: 'Pinyin Foundations 1',
+    })).toHaveAttribute('href', '/pinyin')
+    expect(within(stats).getByText('1/10')).toBeVisible()
+    expect(within(stats).getByText('10%')).toBeVisible()
+    expect(screen.getAllByText('1 of 10 lessons completed')[0]).toBeVisible()
+    expect(within(getJourneyMap()).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
   })
 
   it('keeps the peer Pinyin entry outside Journey mastery totals', () => {
@@ -290,7 +318,7 @@ describe('ProgressPage', () => {
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(within(journeyMap).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
 
-    for (const node of renderedJourneyNodes) {
+    for (const node of orderedJourneyNodes) {
       const card = getJourneyNodeCard(journeyTitlePattern(node))
       expect(card).toHaveRole('link')
       expect(card).toHaveClass('journey-node--card-link')
