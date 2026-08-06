@@ -290,8 +290,18 @@ Strengthen the existing generate/apply flow:
 - after “Generate all pending,” collect all `/api/admin/voice/generate` calls and assert there are 172;
 - assert every request target module type is in the five-type allowlist;
 - assert no request target ID starts with `pronunciation:` and no request module type is `pronunciation` or `hanziRecognition`;
-- retain the visible Dialogue approval and fallback assertions;
-- assert every `/api/admin/content/draft` call made by the voice apply action has a visible module type and none is `pronunciation`.
+- in the same integration flow, select and approve one representative generated row for each visible module type:
+  - `dialogue:self-intro-line-01`;
+  - `sentencePatterns:self-intro-pattern-1`;
+  - `vocabulary:self-intro-vocab-1`;
+  - `practice:listening:self-intro-listening-1`;
+  - `shortInput:self-intro-short-input-01`;
+- click “Apply approved to drafts,” collect all `/api/admin/content/draft` calls, and assert their `moduleType` sequence is exactly `dialogue`, `sentencePatterns`, `vocabulary`, `practice`, `shortInput`;
+- for Dialogue, Sentence Patterns, Vocabulary, and Practice, assert the representative item's `audio` is its generated URL, `audioFallback` is its original `/audio/` URL, and at least one unselected sibling remains deeply equal to the original fixture;
+- for Short Input, assert `audio` and `audioFallback` change as above while every non-audio field remains equal to the original fixture;
+- assert no draft request has `moduleType: 'pronunciation'` or `moduleType: 'hanziRecognition'`.
+
+This five-module page integration contract is required because `applyVoiceGenerationBatchToLesson()` has a separate switch branch for each module. Card presence and valid generate-all requests alone do not prove approval-to-draft behavior for all five visible branches.
 
 Do not use `queryByText(/pronunciation/i)` as an absence assertion because approved generic copy intentionally contains that word.
 
@@ -333,6 +343,8 @@ Keep its API route mocks based on the complete collector so the mock is capable 
 - no draft request produced by the voice action has `moduleType: 'pronunciation'`.
 
 The existing complete snapshots in this E2E test continue to contain Pronunciation and Hanzi Recognition metadata/history. That demonstrates UI exclusion rather than fixture deletion.
+
+Browser smoke may continue to approve/apply only the representative Dialogue row. The all-five approval-to-draft contract belongs to `AdminVoiceGenerationPage.test.tsx`, where payloads and unchanged siblings can be checked precisely without multiplying browser-smoke state.
 
 #### `tests/e2e/admin-voice-layout.spec.ts`
 
@@ -419,7 +431,7 @@ Record the production deployment ID and require GitHub deployment status `succes
 5. `/admin/voice` exposes no Pronunciation target IDs, module labels, module metadata, cards, preview/approval rows, or count contribution.
 6. Single generation and generate-all from `/admin/voice` emit no Pronunciation or Hanzi Recognition payload; current full-batch generated/failed totals use 172.
 7. Applying approved rows from `/admin/voice` emits no Pronunciation draft patch.
-8. Representative generation, preview approval, and fallback-preserving draft apply continue to work for all approved visible module types, with existing grouped module behavior.
+8. One representative row from each of Dialogue, Sentence Patterns, Vocabulary, Practice, and Short Input completes generation, preview approval, and fallback-preserving draft apply in the same page integration flow; the five draft module types are exact, selected payloads are correct, and unselected siblings/non-audio fields remain unchanged.
 9. Hanzi Recognition still has no voice target and is not added to IDs, collectors, UI, requests, or patches.
 10. The complete collectors, target/types, server 182-target manifest, direct generation API, and replacement/apply helpers retain Pronunciation compatibility.
 11. Full lesson snapshots, schemas, seeds, repositories, public reconstruction, old data, and all ten Pronunciation MP3 files remain intact.
@@ -441,7 +453,7 @@ Record the production deployment ID and require GitHub deployment status `succes
 | File | Current sensitive contract | Required coverage |
 | --- | --- | --- |
 | `src/admin/voiceTargets.test.ts` | Complete lesson collection includes Pronunciation; complete course count is 182; apply fallback/grouping tests | Keep complete assertions; add 172 visible policy/category/order assertions and explicit Pronunciation apply compatibility. |
-| `src/pages/AdminVoiceGenerationPage.test.tsx` | Multiple waits/headings use 182; batch success/failure uses 182; complete snapshots include Pronunciation | Change page-visible expectations to 172; assert no module-specific Pronunciation surface/request/patch; keep generic copy and complete fixtures. |
+| `src/pages/AdminVoiceGenerationPage.test.tsx` | Multiple waits/headings use 182; batch success/failure uses 182; complete snapshots include Pronunciation; existing integration approves/applies only Dialogue | Change page-visible expectations to 172; assert no module-specific Pronunciation surface/request/patch; keep generic copy and complete fixtures; strengthen one integration flow to approve/apply representatives from all five visible module types and verify every payload plus unchanged siblings. |
 | `src/server/voice/adminHttp.test.ts` | Complete collector builds test target; manifest mismatch test names 182 | Keep 182 contract; add valid direct Pronunciation generation compatibility test. Production server file stays untouched. |
 | `tests/e2e/admin-smoke.spec.ts` | Route mocks use complete collector; heading/generated totals are 182; representative Dialogue apply is covered | Keep complete mock manifest; assert 172 page requests and no Pronunciation UI/request/draft action; add optional deployed-origin navigation for production route-mock smoke. |
 | `tests/e2e/admin-voice-layout.spec.ts` | Desktop/mobile heading expectation is 182 | Change visible heading to 172; retain layout geometry checks. |
