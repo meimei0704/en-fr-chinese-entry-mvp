@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
 import { journeyNodes } from '../content/journey'
+import { createDefaultPinyinProgress, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import {
   expectedLessonTopic,
@@ -25,6 +26,19 @@ const expectedJourneyLessonHrefs = [
   '/lesson/ask-for-help-problem',
   '/lesson/train-station-ticket',
 ]
+
+const expectedSeriesCopy = {
+  en: {
+    label: 'Course series',
+    pinyin: 'Mandarin tones and pinyin',
+    journey: 'Basic Chinese expressions for a stress-free journey',
+  },
+  fr: {
+    label: 'Séries de cours',
+    pinyin: 'Tons et pinyin du mandarin',
+    journey: 'Expressions chinoises essentielles pour voyager sereinement',
+  },
+} as const
 
 function journeyTitle(node: (typeof journeyNodes)[number], language: 'en' | 'fr' = 'en') {
   if (node.kind === 'lesson' && node.lessonId) {
@@ -54,8 +68,16 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function getJourneyMap() {
-  return screen.getByRole('region', { name: /progress journey map/i })
+function getProgressCourseSeries(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].label })
+}
+
+function getPinyinProgressSeries(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].pinyin })
+}
+
+function getJourneyMap(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].journey })
 }
 
 function getProgressSummary() {
@@ -106,7 +128,20 @@ describe('ProgressPage', () => {
     expect(within(stats).getByText(/maîtrise du parcours/i)).toBeVisible()
     expect(within(stats).getByText('10%')).toBeVisible()
 
-    const journeyMap = screen.getByRole('region', { name: /carte de progression du parcours/i })
+    const courseSeries = getProgressCourseSeries('fr')
+    const pinyinSeries = getPinyinProgressSeries('fr')
+    const journeyMap = getJourneyMap('fr')
+
+    expect(within(courseSeries).getByText(expectedSeriesCopy.fr.label)).toBeVisible()
+    expect(within(pinyinSeries).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.fr.pinyin,
+    })).toBeVisible()
+    expect(within(journeyMap).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.fr.journey,
+    })).toBeVisible()
+
     for (const node of orderedJourneyNodes) {
       expect(
         within(journeyMap).getByRole('heading', {
@@ -121,13 +156,31 @@ describe('ProgressPage', () => {
     expect(within(journeyMap).queryAllByText('Aperçu')).toHaveLength(0)
   })
 
-  it('renders the shared arrival journey map in path order with ten lesson nodes, one bonus route, and zero previews', () => {
+  it('renders ten Journey cards in path order while the approved Pinyin series is a peer', () => {
     renderRoute('/progress')
 
+    const courseSeries = getProgressCourseSeries()
+    const pinyinSection = getPinyinProgressSeries()
     const journeyMap = getJourneyMap()
     const cards = Array.from(journeyMap.querySelectorAll<HTMLElement>('.journey-node'))
 
-    expect(cards).toHaveLength(11)
+    expect(within(courseSeries).getByText(expectedSeriesCopy.en.label)).toBeVisible()
+    expect(within(pinyinSection).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.en.pinyin,
+    })).toBeVisible()
+    expect(within(journeyMap).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.en.journey,
+    })).toBeVisible()
+    expect(pinyinSection.parentElement).toBe(journeyMap.parentElement)
+    expect(pinyinSection.parentElement).toHaveClass('course-series__list')
+    expect(within(pinyinSection).getByRole('link', {
+      name: expectedSeriesCopy.en.pinyin,
+    })).toHaveAttribute('href', '/pinyin')
+    expect(within(journeyMap).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
+
+    expect(cards).toHaveLength(10)
     expect(cards).toHaveLength(orderedJourneyNodes.length)
     expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(
       orderedJourneyNodes.map((node) => node.id),
@@ -147,7 +200,7 @@ describe('ProgressPage', () => {
     const taxiCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[1]))
     const restaurantCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[5]))
 
-    expect(journeyMap.querySelectorAll('.journey-node')).toHaveLength(11)
+    expect(journeyMap.querySelectorAll('.journey-node')).toHaveLength(10)
     expect(taxiCard).toHaveClass(
       'journey-node',
       'journey-node--lesson',
@@ -184,7 +237,12 @@ describe('ProgressPage', () => {
     expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
   })
 
-  it('shows the pinyin bonus route without adding it to lesson mastery totals', () => {
+  it('reports Pinyin sections out of three independently from Journey lessons out of ten', () => {
+    savePinyinProgress({
+      ...createDefaultPinyinProgress(),
+      visited: true,
+      completedSections: ['reference', 'tone-game'],
+    })
     saveProgress({
       ...createDefaultProgress(),
       completedLessons: ['self-intro'],
@@ -193,9 +251,32 @@ describe('ProgressPage', () => {
 
     renderRoute('/progress')
 
-    const pinyinEntry = within(getJourneyMap()).getByRole('link', { name: /pinyin/i })
+    const pinyinSection = getPinyinProgressSeries()
+    const stats = screen.getByRole('region', { name: /learning indicators/i })
+
+    expect(within(pinyinSection).getByText('2 of 3 sections complete')).toBeVisible()
+    expect(within(pinyinSection).getByRole('link', {
+      name: expectedSeriesCopy.en.pinyin,
+    })).toHaveAttribute('href', '/pinyin')
+    expect(within(stats).getByText('1/10')).toBeVisible()
+    expect(within(stats).getByText('10%')).toBeVisible()
+    expect(screen.getAllByText('1 of 10 lessons completed')[0]).toBeVisible()
+    expect(within(getJourneyMap()).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
+  })
+
+  it('keeps the peer Pinyin entry outside Journey mastery totals', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro'],
+      lastVisitedLesson: 'self-intro',
+    })
+
+    renderRoute('/progress')
+
+    const pinyinEntry = screen.getByRole('link', { name: expectedSeriesCopy.en.pinyin })
 
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
+    expect(within(getJourneyMap()).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
     expect(screen.getAllByText(/1 of 10 lessons completed/i)[0]).toBeVisible()
     expect(screen.queryByText(/1 of 11/i)).not.toBeInTheDocument()
   })
@@ -258,18 +339,19 @@ describe('ProgressPage', () => {
     )
   })
 
-  it('makes all ten lesson journey nodes and the pinyin bonus node whole-card links', () => {
+  it('makes all ten Journey cards and the peer Pinyin entry whole-card links', () => {
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
     const lessonLinks = within(journeyMap)
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
-    const pinyinEntry = within(journeyMap).getByRole('link', { name: /pinyin/i })
+    const pinyinEntry = screen.getByRole('link', { name: expectedSeriesCopy.en.pinyin })
 
     expect(lessonLinks).toHaveLength(10)
     expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedJourneyLessonHrefs)
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
+    expect(within(journeyMap).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
 
     for (const node of orderedJourneyNodes) {
       const card = getJourneyNodeCard(journeyTitlePattern(node))

@@ -7,10 +7,10 @@ import { course } from '../content/course'
 import { journeyNodeIcons, journeyNodes } from '../content/journey'
 import { getLessonTopicText } from '../content/lessonTopics'
 import type { JourneyNode, LessonId } from '../content/types'
+import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
 
 type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
-type RouteJourneyNode = JourneyNode & { kind: 'route'; routeDetails: { href: string } }
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
@@ -21,14 +21,13 @@ function isLessonJourneyNode(node: JourneyNode): node is LessonJourneyNode {
   return node.kind === 'lesson' && node.lessonId !== undefined
 }
 
-function isRouteJourneyNode(node: JourneyNode): node is RouteJourneyNode {
-  return node.kind === 'route' && node.routeDetails !== undefined
-}
-
 export function ProgressPage() {
   const progress = loadProgress()
+  const pinyinProgress = loadPinyinProgress()
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
+  const completedPinyinSectionsCount = pinyinProgress.completedSections.length
+  const totalPinyinSections = 3
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
   const currentLessonId =
     progress.lastVisitedLesson === null ? null : getContinueLessonId(progress)
@@ -156,21 +155,50 @@ export function ProgressPage() {
         </section>
 
         <section
-          className="surface-card progress-journey-card"
-          aria-label={copy.progressPage.progressJourneyMapLabel}
+          className="course-series progress-course-series"
+          aria-label={copy.courseSeries.label}
         >
-          <div className="progress-list-card__header">
-            <div>
-              <p className="eyebrow">{copy.progressPage.lessonProgressEyebrow}</p>
-              <h2>{copy.progressPage.lessonProgressLabel}</h2>
-            </div>
-            <span className="badge badge--sky">
-              {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
-            </span>
-          </div>
+          <p className="eyebrow course-series__label">{copy.courseSeries.label}</p>
 
-          <div className="progress-journey-map__path">
-            {orderedJourneyNodes.map((node) => {
+          <div className="course-series__list">
+            <section
+              className="course-series__panel course-series__panel--pinyin"
+              aria-labelledby="progress-pinyin-series-title"
+            >
+              <Link
+                className="course-series__pinyin-link"
+                to="/pinyin"
+                aria-labelledby="progress-pinyin-series-title"
+              >
+                <span className="course-series__pinyin-mark" aria-hidden="true">
+                  拼
+                </span>
+                <h2 id="progress-pinyin-series-title" className="course-series__title">
+                  {copy.courseSeries.pinyinTitle}
+                </h2>
+                <p className="course-series__progress">
+                  {copy.pinyinPage.sectionProgress(completedPinyinSectionsCount, totalPinyinSections)}
+                </p>
+              </Link>
+            </section>
+
+            <section
+              className="surface-card progress-journey-card course-series__panel course-series__panel--journey"
+              aria-labelledby="progress-journey-series-title"
+            >
+              <div className="progress-list-card__header course-series__panel-header">
+                <div>
+                  <h2 id="progress-journey-series-title" className="course-series__title">
+                    {copy.courseSeries.basicExpressionsTitle}
+                  </h2>
+                </div>
+                <span className="badge badge--sky">
+                  {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
+                </span>
+              </div>
+
+              <div className="progress-journey-map__path">
+                {orderedJourneyNodes.map((node) => {
               const nodeTitle = isLessonJourneyNode(node)
                 ? getLessonTopicText(node.lessonId, language)
                 : getLocalizedText(node.title, language)
@@ -210,31 +238,6 @@ export function ProgressPage() {
                     </div>
 
                     <span className="journey-node__cta">{copy.progressPage.openLesson} →</span>
-                  </Link>
-                )
-              }
-
-              if (isRouteJourneyNode(node)) {
-                return (
-                  <Link
-                    key={node.id}
-                    className="journey-node progress-journey-node journey-node--route journey-node--card-link progress-journey-node--route"
-                    data-journey-node-id={node.id}
-                    to={node.routeDetails.href}
-                    aria-label={nodeTitle}
-                  >
-                    <div className="journey-node__header">
-                      <span className="badge badge--sky">{nodeEyebrow}</span>
-                    </div>
-
-                    <span className="journey-node__doodle" aria-hidden="true">
-                      {nodeIcon}
-                    </span>
-
-                    <div>
-                      <h3>{nodeTitle}</h3>
-                      <p className="muted-text">{nodeSummary}</p>
-                    </div>
                   </Link>
                 )
               }
@@ -310,7 +313,9 @@ export function ProgressPage() {
                   ) : null}
                 </article>
               )
-            })}
+                })}
+              </div>
+            </section>
           </div>
         </section>
       </section>
