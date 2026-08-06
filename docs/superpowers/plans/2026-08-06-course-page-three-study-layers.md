@@ -12,7 +12,7 @@
 
 ## Baseline and file map
 
-Inspected baseline: approved spec commit `1ed8cdc7d1ac24d7e1c2a8c29d84ef9c1bb1f185`; its `origin/main` ref is `c7a87c6`. Before coding, fetch and create a fresh isolated worktree from current `origin/main`; re-check symbols and do not implement on the design branch.
+Inspected baseline: approved spec commit `1ed8cdc7d1ac24d7e1c2a8c29d84ef9c1bb1f185`; its `origin/main` ref is `c7a87c6`. The approved spec and plan remain read-only inputs on `origin/design/t47-course-page-three-layers`; they must not be cherry-picked or rebased into the implementation branch. Before coding, fetch and create a fresh isolated worktree directly from current `origin/main`, re-check symbols, and keep the implementation diff limited to the seven application/test paths below.
 
 ### Files to modify
 
@@ -65,21 +65,37 @@ Inspected baseline: approved spec commit `1ed8cdc7d1ac24d7e1c2a8c29d84ef9c1bb1f1
 git fetch origin main design/t47-course-page-three-layers
 ```
 
-- [ ] Create the implementation branch in an isolated worktree from the committed design/plan branch, then replay its documentation-only commits onto current `origin/main` if main advanced:
+- [ ] Materialize the approved spec/plan as read-only files outside the repository worktree:
+
+```bash
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+INPUT_DIR="${TMPDIR:-/tmp}/t47-course-page-three-layers-input"
+mkdir -p "$INPUT_DIR"
+git show origin/design/t47-course-page-three-layers:docs/superpowers/specs/2026-08-05-course-page-three-study-layers-design.md \
+  > "$INPUT_DIR/spec.md"
+git show origin/design/t47-course-page-three-layers:docs/superpowers/plans/2026-08-06-course-page-three-study-layers.md \
+  > "$INPUT_DIR/plan.md"
+test -s "$INPUT_DIR/spec.md"
+test -s "$INPUT_DIR/plan.md"
+```
+
+Expected: both input files are non-empty and live outside the implementation worktree.
+
+- [ ] Create the implementation branch in an isolated worktree directly from current `origin/main`:
 
 ```bash
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 WORKTREE_DIR="$(dirname "$REPO_ROOT")/en-fr-chinese-entry-mvp-t47-course-page-three-layers"
 git worktree add "$WORKTREE_DIR" \
   -b feature/t47-course-page-three-layers \
-  origin/design/t47-course-page-three-layers
+  origin/main
 cd "$WORKTREE_DIR"
-git rebase origin/main
 git rev-parse --short HEAD
 git merge-base --is-ancestor origin/main HEAD
+test -z "$(git diff --name-only origin/main...HEAD)"
 ```
 
-Expected: the feature branch contains the approved spec and this plan, `git merge-base` exits 0, and no application source differs from `origin/main` yet.
+Expected: `HEAD` equals the fetched `origin/main`, `git merge-base` exits 0, and the implementation branch initially has no paths different from main. The spec/plan remain only in `INPUT_DIR` and on the design branch.
 
 - [ ] Install the lockfile-resolved dependencies and confirm a clean worktree:
 
@@ -590,7 +606,7 @@ The coding owner must not merge or deploy this branch.
 
 ## Caveats
 
-1. Rebase this map onto fetched `origin/main`; line numbers are exact for spec commit `1ed8cdc`/main baseline `c7a87c6`, but symbols/selectors are the durable anchors if main moved.
+1. Create the implementation branch from fetched `origin/main`; line numbers are exact for spec commit `1ed8cdc`/main baseline `c7a87c6`, but symbols/selectors are the durable anchors if main moved. If main advances before review, rebase only the implementation branch onto the new `origin/main`; never bring the design-branch documents into its diff.
 2. Compact values are concrete and content-driven. Visual adjustment must stay in the scoped selectors and update the CSS test; never tune shared rules.
 3. The naked mobile rail has lower specificity than the scoped desktop rule; the scoped media rule is mandatory.
 4. Keep both the dock’s negative entry assertion and the positive direct-route regression.
