@@ -26,8 +26,6 @@ export function LessonPage() {
     copy.lessonPage.dialogue,
     copy.lessonPage.sentencePatterns,
     copy.lessonPage.vocabulary,
-    copy.lessonPage.pronunciation,
-    copy.lessonPage.hanziRecognition,
   ]
 
   useEffect(() => {
@@ -70,12 +68,11 @@ export function LessonPage() {
   }
 
   return (
-    <main className="page-shell page-shell--wide">
+    <main className="page-shell page-shell--wide lesson-page">
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.lessonPage.eyebrow}</p>
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
-          <p className="lede">{getLocalizedText(lesson.dialogue.title, selectedLanguage)}</p>
         </header>
 
         <section
@@ -165,40 +162,6 @@ export function LessonPage() {
             </div>
           </section>
 
-          <section className="surface-card lesson-section-card">
-            <h2>{copy.lessonPage.pronunciation}</h2>
-            <div className="card-grid">
-              {lesson.pronunciation.map((tip) => (
-                <article key={tip.id} className="study-item">
-                  <p className="study-item__title">{getLocalizedText(tip.focus, selectedLanguage)}</p>
-                  <p className="muted-text">{getLocalizedText(tip.tip, selectedLanguage)}</p>
-                  <p className="pinyin-line">{tip.audioText}</p>
-                  <SpeechButton
-                    label={copy.lessonPage.listenChinese}
-                    text={tip.audioText}
-                    audioSrc={tip.audio}
-                    fallbackAudioSrc={tip.audioFallback}
-                  />
-                  <ExplanationBlock explanation={tip.explanation} language={selectedLanguage} />
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="surface-card lesson-section-card">
-            <h2>{copy.lessonPage.hanziRecognition}</h2>
-            <div className="card-grid card-grid--compact">
-              {lesson.hanziRecognition.map((item) => (
-                <article key={item.id} className="study-item">
-                  <p className="study-item__title">
-                    {item.hanzi} <span>{item.pinyin}</span>
-                  </p>
-                  <p className="muted-text">{getLocalizedText(item.meaning, selectedLanguage)}</p>
-                  <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
-                </article>
-              ))}
-            </div>
-          </section>
         </div>
 
         <nav
@@ -207,9 +170,6 @@ export function LessonPage() {
         >
           <Link className="primary-button" to={`/lesson/${lesson.id}/practice`}>
             {copy.lessonPage.goToPractice}
-          </Link>
-          <Link className="secondary-link" to={`/lesson/${lesson.id}/short-input`}>
-            {copy.lessonPage.finishWithShortInput}
           </Link>
           <Link className="secondary-link" to="/home">
             {copy.lessonPage.backToHome}
