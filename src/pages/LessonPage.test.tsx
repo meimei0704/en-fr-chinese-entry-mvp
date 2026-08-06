@@ -62,6 +62,46 @@ describe('LessonPage', () => {
     expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent('Nín hǎo')
   })
 
+  it.each([
+    ['en', 'We couldn’t find that lesson.', 'Back to home'],
+    ['fr', 'Impossible de trouver cette leçon.', 'Retour à l’accueil'],
+  ] as const)(
+    'keeps progress unchanged for a missing lesson in %s',
+    (language, heading, backLabel) => {
+      const before = createDefaultProgress()
+      before.selectedExplanationLanguage = language
+      before.completedLessons = ['self-intro']
+      before.reviewQueue = ['self-intro-review-1']
+      before.lastVisitedLesson = 'self-intro'
+      before.lessonStepProgress = {
+        'self-intro': { completedSections: ['dialogue'], shortInputComplete: true },
+      }
+      saveProgress(before)
+
+      renderRoute('/lesson/not-a-lesson')
+
+      expect(screen.getByRole('heading', { level: 1, name: heading })).toBeVisible()
+      expect(screen.getByRole('link', { name: backLabel })).toHaveAttribute('href', '/home')
+      expect(loadProgress()).toEqual(before)
+    },
+  )
+
+  it('updates only lastVisitedLesson when a valid lesson opens', () => {
+    const before = createDefaultProgress()
+    before.selectedExplanationLanguage = 'fr'
+    before.completedLessons = ['self-intro']
+    before.reviewQueue = ['self-intro-review-1']
+    before.lastVisitedLesson = 'self-intro'
+    before.lessonStepProgress = {
+      'self-intro': { completedSections: ['dialogue'], shortInputComplete: true },
+    }
+    saveProgress(before)
+
+    renderRoute('/lesson/ask-directions')
+
+    expect(loadProgress()).toEqual({ ...before, lastVisitedLesson: 'ask-directions' })
+  })
+
   it('renders the full lesson template and lets the user switch explanations without changing progress', async () => {
     const user = userEvent.setup()
     saveProgress({
