@@ -1021,6 +1021,36 @@ h2 {
     linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(247, 248, 251, 0.92));
 }
 
+.lesson-page .lesson-header-card {
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.lesson-page .lesson-header-card__title {
+  gap: 0.1rem;
+}
+
+.lesson-page .lesson-header-card__title .eyebrow {
+  margin-bottom: 0.25rem;
+}
+
+.lesson-page .lesson-progress-preview {
+  gap: 0.75rem;
+  padding: 0.85rem;
+}
+
+.lesson-page .lesson-progress-preview__summary {
+  gap: 0.5rem;
+}
+
+.lesson-page .lesson-progress-preview__rail {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lesson-page .lesson-overview-card {
+  gap: 0.75rem;
+}
+
 .section-stack {
   display: grid;
   gap: 1rem;
@@ -2742,6 +2772,10 @@ h2 {
   .lesson-progress-preview__summary > span:last-child {
     width: 100%;
     margin-left: 0;
+  }
+
+  .lesson-page .lesson-progress-preview__rail {
+    grid-template-columns: 1fr;
   }
 
   .lesson-action-dock {

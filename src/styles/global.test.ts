@@ -196,4 +196,41 @@ describe('global color accessibility tokens', () => {
       ),
     ).toBe(true)
   })
+
+  it('scopes compact three-layer lesson layout away from shared and admin cards', () => {
+    const scoped = [
+      ['.lesson-page .lesson-header-card', 'gap: clamp(0.9rem, 2vw, 1.25rem);'],
+      ['.lesson-page .lesson-header-card', 'padding: clamp(1.25rem, 3vw, 2rem);'],
+      ['.lesson-page .lesson-header-card__title', 'gap: 0.1rem;'],
+      ['.lesson-page .lesson-header-card__title .eyebrow', 'margin-bottom: 0.25rem;'],
+      ['.lesson-page .lesson-progress-preview', 'gap: 0.75rem;'],
+      ['.lesson-page .lesson-progress-preview', 'padding: 0.85rem;'],
+      ['.lesson-page .lesson-progress-preview__summary', 'gap: 0.5rem;'],
+      [
+        '.lesson-page .lesson-progress-preview__rail',
+        'grid-template-columns: repeat(3, minmax(0, 1fr));',
+      ],
+      ['.lesson-page .lesson-overview-card', 'gap: 0.75rem;'],
+    ] as const
+    for (const [selector, declaration] of scoped) {
+      expect(ruleBlock(selector)).toContain(declaration)
+    }
+
+    expect(ruleBlock('.lesson-progress-preview__rail')).toContain(
+      'grid-template-columns: repeat(5, minmax(0, 1fr));',
+    )
+    expect(ruleBlock('.lesson-progress-preview__rail')).not.toContain('repeat(3')
+    expect(ruleBlock('.lesson-header-card,\n.review-card')).not.toContain(
+      'gap: clamp(0.9rem, 2vw, 1.25rem);',
+    )
+    expect(ruleBlock('.lesson-header-card')).not.toContain(
+      'padding: clamp(1.25rem, 3vw, 2rem);',
+    )
+    expect(css).not.toMatch(
+      /\.admin-[^{]*\{[^}]*(?:gap: clamp\(0\.9rem, 2vw, 1\.25rem\)|padding: clamp\(1\.25rem, 3vw, 2rem\))/,
+    )
+    expect(css).toMatch(
+      /@media \(max-width: 760px\)[\s\S]*?\.lesson-page \.lesson-progress-preview__rail\s*\{[^}]*grid-template-columns:\s*1fr;/,
+    )
+  })
 })
