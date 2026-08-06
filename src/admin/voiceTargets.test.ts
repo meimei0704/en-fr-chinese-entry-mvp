@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { course } from '../content/course'
 import {
   applyVoiceGenerationBatchToLesson,
+  collectAdminVoiceVisibleTargets,
   collectCourseVoiceAudioTargets,
   collectLessonVoiceAudioTargets,
   deriveVoiceTargetStorageKey,
@@ -108,6 +109,79 @@ describe('admin batch voice audio targets', () => {
     expect(targetTexts).not.toContain(String(lesson.dialogue.lines[0]!.translation.en))
     expect(targetTexts).not.toContain(lesson.dialogue.lines[0]!.explanation.en)
     expect(targets.some((target) => target.moduleType === 'reviewCards')).toBe(false)
+  })
+
+  it('derives the 172 Admin Voice targets from the unchanged 182-target manifest', () => {
+    const completeTargets = collectCourseVoiceAudioTargets(course.lessons)
+    const visibleTargets = collectAdminVoiceVisibleTargets(course.lessons)
+    const visibleModuleTypes = new Set([
+      'dialogue',
+      'sentencePatterns',
+      'vocabulary',
+      'practice',
+      'shortInput',
+    ])
+    const visibleCounts = Object.fromEntries(
+      [...visibleModuleTypes].map((moduleType) => [
+        moduleType,
+        visibleTargets.filter((target) => target.moduleType === moduleType).length,
+      ]),
+    )
+
+    expect(completeTargets).toHaveLength(182)
+    expect(completeTargets.filter((target) => target.moduleType === 'pronunciation')).toHaveLength(10)
+    expect(visibleTargets).toHaveLength(172)
+    expect(visibleCounts).toEqual({
+      dialogue: 52,
+      sentencePatterns: 30,
+      vocabulary: 50,
+      practice: 30,
+      shortInput: 10,
+    })
+    expect(visibleTargets.every((target) => visibleModuleTypes.has(target.moduleType))).toBe(true)
+    expect(visibleTargets.some((target) => target.moduleType === 'pronunciation')).toBe(false)
+    expect(visibleTargets.some((target) => target.targetId.startsWith('pronunciation:'))).toBe(false)
+    expect(visibleTargets.some((target) => /· Pronunciation \d+$/i.test(target.label))).toBe(false)
+    expect(visibleTargets.map((target) => target.targetId)).toEqual(
+      completeTargets
+        .filter((target) => visibleModuleTypes.has(target.moduleType))
+        .map((target) => target.targetId),
+    )
+  })
+
+  it('retains Pronunciation replacement compatibility outside the Admin Voice surface', () => {
+    const targetTip = lesson.pronunciation[0]!
+    const siblingTip = {
+      ...targetTip,
+      id: 'self-intro-pronunciation-sibling',
+      audio: '/audio/self-intro/pronunciation-sibling.mp3',
+    }
+    const lessonWithSibling = {
+      ...lesson,
+      pronunciation: [targetTip, siblingTip],
+    }
+
+    const patches = applyVoiceGenerationBatchToLesson(lessonWithSibling, [
+      {
+        lessonId: lesson.id,
+        targetId: `pronunciation:${targetTip.id}`,
+        generatedAudioUrl: '/voice/generated/audio/self-intro/pronunciation-01.mp3',
+      },
+    ])
+
+    expect(patches).toEqual([
+      {
+        moduleType: 'pronunciation',
+        payload: [
+          {
+            ...targetTip,
+            audio: '/voice/generated/audio/self-intro/pronunciation-01.mp3',
+            audioFallback: targetTip.audio,
+          },
+          siblingTip,
+        ],
+      },
+    ])
   })
 
   it('derives stable object-storage keys from existing /audio mp3 paths', () => {

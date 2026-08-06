@@ -192,6 +192,22 @@ export function collectCourseVoiceAudioTargets(lessons: readonly LessonContent[]
   return lessons.flatMap((lesson) => collectLessonVoiceAudioTargets(lesson))
 }
 
+const adminVoiceVisibleModuleTypes = new Set<VoiceAudioModuleType>([
+  'dialogue',
+  'sentencePatterns',
+  'vocabulary',
+  'practice',
+  'shortInput',
+])
+
+export function collectAdminVoiceVisibleTargets(
+  lessons: readonly LessonContent[],
+): VoiceAudioTarget[] {
+  return collectCourseVoiceAudioTargets(lessons).filter((target) =>
+    adminVoiceVisibleModuleTypes.has(target.moduleType),
+  )
+}
+
 function parseTargetId(target: string) {
   const [moduleType, maybeSection, maybeItemId] = target.split(':')
 

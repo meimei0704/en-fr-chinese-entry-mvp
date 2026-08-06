@@ -235,6 +235,49 @@ describe('admin voice HTTP handlers', () => {
     }
   })
 
+  it('keeps valid Pronunciation targets in the complete authenticated API manifest', async () => {
+    const pronunciationTarget = collectCourseVoiceAudioTargets(course.lessons).find(
+      (target) => target.moduleType === 'pronunciation',
+    )!
+    const target = {
+      lessonId: pronunciationTarget.lessonId,
+      targetId: pronunciationTarget.targetId,
+      moduleType: pronunciationTarget.moduleType,
+      originalAudio: pronunciationTarget.originalAudio,
+      storageKey: pronunciationTarget.storageKey,
+      language: pronunciationTarget.language,
+    }
+    const { provider, storage } = createFakeServices()
+    const handlers = createAdminVoiceHttpHandlers({ provider, storage }, adminAuthEnv)
+    const response = createResponseRecorder()
+
+    await handlers.generate(
+      {
+        method: 'POST',
+        headers: { authorization: adminAuthHeader },
+        body: {
+          consentConfirmed: true,
+          profileId: 'profile_self_intro',
+          text: pronunciationTarget.text,
+          target,
+        },
+      },
+      response,
+    )
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({ audioUrl: '/voice/generated/self-intro-line-01.mp3' })
+    expect(provider.generateReplacementAudio).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: pronunciationTarget.text,
+        target,
+      }),
+    )
+    expect(storage.saveGeneratedAudio).toHaveBeenCalledWith(
+      expect.objectContaining({ target }),
+    )
+  })
+
   it('returns clear 503 responses when runtime voice provider or storage is not configured', async () => {
     const handlers = createLazyAdminVoiceHttpHandlers(adminAuthEnv)
 

@@ -14,7 +14,7 @@ import {
 import type { AdminLessonSnapshot } from '../admin/types.js'
 import {
   applyVoiceGenerationBatchToLesson,
-  collectCourseVoiceAudioTargets,
+  collectAdminVoiceVisibleTargets,
 } from '../admin/voiceTargets.js'
 import type { VoiceAudioTarget, VoiceGenerationApprovedResult } from '../admin/voiceTypes.js'
 import type { LessonContent } from '../content/types.js'
@@ -48,7 +48,7 @@ function getRecordingNowMs() {
 }
 
 function buildRows(lessons: readonly LessonContent[]): VoiceGenerationRow[] {
-  return collectCourseVoiceAudioTargets(lessons).map((target) => ({
+  return collectAdminVoiceVisibleTargets(lessons).map((target) => ({
     target,
     status: 'pending',
     generatedAudioUrl: '',
