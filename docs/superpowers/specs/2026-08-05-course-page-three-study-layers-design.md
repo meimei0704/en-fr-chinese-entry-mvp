@@ -26,6 +26,8 @@
 
 ## 当前基线
 
+设计分支已刷新到 `origin/main` 的 `c7a87c6`；实现者开始编码前仍需再次获取并确认最新 `origin/main`，再从该基线建立隔离 worktree。
+
 `src/pages/LessonPage.tsx` 当前包含：
 
 - 课程 eyebrow、课程主题标题和 dialogue 标题；
@@ -46,7 +48,7 @@
 
 删除 `lesson.dialogue.title` 对应的 `.lede`。该文本仍保留在课程数据中，只是不在学习者课程页渲染。
 
-收紧 `.lesson-header-card`、`.lesson-header-card__title`、进度摘要及相邻区块之间的垂直间距，使课程标题、三层进度和场景简介更靠近页面顶部。不得通过负 margin、固定高度或裁切内容实现压缩。
+通过学习者页专属选择器收紧 `.lesson-page .lesson-header-card`、`.lesson-page .lesson-header-card__title`、进度摘要及相邻区块之间的垂直间距，使课程标题、三层进度和场景简介更靠近页面顶部。不得通过负 margin、固定高度或裁切内容实现压缩。
 
 ### 2. 三层进度预览
 
@@ -58,7 +60,7 @@
 
 计数继续由 `studyLayers.length` 生成，因此英语页面显示 `3 study layers`，法语页面使用现有本地化计数文案。
 
-步骤轨道继续使用既有有序列表和当前层样式，不新增 sticky、横向滚动或新的交互状态。移动端允许三个步骤按现有响应式规则自然换行。
+步骤轨道继续使用既有有序列表和当前层样式，不新增 sticky、横向滚动或新的交互状态。桌面端轨道明确改为 `repeat(3, minmax(0, 1fr))`，让三个步骤等宽占满可用空间，不保留原五列布局造成的 40% 空白；`760px` 及以下明确切换为单列，且在 320px 宽度下不得横向溢出。
 
 ### 3. 三个正文区块
 
@@ -68,7 +70,9 @@
 2. Sentence patterns
 3. Vocabulary
 
-删除 LessonPage 中 Pronunciation 与 Hanzi recognition 的两个渲染区块。对应课程数据、audio、copy、类型、后台编辑配置和数据库 seed 不修改。
+删除 LessonPage 中 Pronunciation 与 Hanzi recognition 的两个渲染区块。对应课程数据、audio、类型、后台编辑配置和数据库 seed 不修改；`pronunciation`、`hanziRecognition` 等未展示标签 key 也保留，供后台和后续清理任务使用。
+
+`LessonPage` 的场景摘要始终渲染 `copy.lessonPage.sectionSummary`，因此本轮必须同步更新 `src/content/copy.ts` 中英语和法语的 `sectionSummary`，只描述 Dialogue、Sentence patterns、Vocabulary 三层，不得继续出现 pronunciation 或 hanzi recognition。该两条学习者页面摘要文案是本轮唯一需要修改的现有 copy 内容。
 
 ### 4. 底部操作
 
@@ -90,20 +94,23 @@
 
 ## 样式与响应式约束
 
-样式修改限定在课程页相关选择器，预计集中于 `src/styles/global.css`：
+为学习者课程页的 `<main>` 新增专属 hook，例如 `.lesson-page`。样式修改集中于 `src/styles/global.css`，所有新增的紧凑间距和三列轨道覆盖均必须以该 hook 为祖先，例如：
 
-- `.lesson-header-card`
-- `.lesson-header-card__title`
-- `.lesson-progress-preview`
-- `.lesson-progress-preview__summary`
-- `.lesson-progress-preview__rail`
-- `.lesson-overview-card`
+- `.lesson-page .lesson-header-card`
+- `.lesson-page .lesson-header-card__title`
+- `.lesson-page .lesson-progress-preview`
+- `.lesson-page .lesson-progress-preview__summary`
+- `.lesson-page .lesson-progress-preview__rail`
+- `.lesson-page .lesson-overview-card`
 
 约束：
 
+- 不直接收紧共享的 `.lesson-header-card, .review-card` 基线规则，也不对裸 `.lesson-header-card` 添加新的紧凑声明；该 class 同时被后台编辑页复用。
+- Admin 编辑页继续使用现有 `.lesson-header-card`，但不带 `.lesson-page` 祖先；Review 页和其他非课程页也不得命中本轮新增覆盖。
 - 不修改共享 spacing token，避免影响首页、Progress、Review 或后台页面。
 - 不使用固定 viewport 高度来追求“首屏放下更多内容”。
 - 320px 宽度下不得出现横向溢出。
+- `.lesson-page .lesson-progress-preview__rail` 在桌面端为 3 等列，并在 `760px` 及以下由同等或更高特异性的课程页专属媒体规则变为单列，避免桌面专属选择器覆盖现有移动端规则。
 - 三步轨道保持语义化 `<ol>` / `<li>`，当前步骤提示仍可辨认。
 - 键盘焦点、文本对比度与操作按钮可访问名称不得回归。
 
@@ -126,25 +133,30 @@
 
 1. 进度预览显示 3 层，并包含 Dialogue、Sentence patterns、Vocabulary。
 2. 进度预览和正文均不出现 Pronunciation、Hanzi recognition。
-3. 不再渲染 `lesson.dialogue.title`，包含英语与法语样例。
-4. 不再出现 `Finish with short input` 链接。
-5. `Go to practice`、`Back to home` 与语言切换仍可用。
-6. 音频播放数量与断言只覆盖仍展示的 Dialogue、Sentence patterns、Vocabulary。
+3. 英语与法语的 `sectionSummary` 分别正向包含三层含义，并负向断言不包含 pronunciation / prononciation、hanzi recognition / reconnaissance des hanzi。
+4. 不再渲染 `lesson.dialogue.title`，包含英语与法语样例。
+5. 不再出现 `Finish with short input` 链接。
+6. `Go to practice`、`Back to home` 与语言切换仍可用。
+7. 音频播放数量与断言只覆盖仍展示的 Dialogue、Sentence patterns、Vocabulary。
+8. 访问不存在的 `/lesson/:lessonId` 显示本地化兜底内容与 `Back to home`，且不写入课程访问进度。
+9. 访问有效课程只把 `lastVisitedLesson` 更新为当前 lesson；`completedLessons`、`reviewQueue`、`lessonStepProgress` 及 `selectedExplanationLanguage` 等其他既有进度字段保持原值。
 
 ### 路由与流程回归
 
 - 保留 `src/pages/LessonRoutes.test.tsx` 对 Practice → short input 流程的既有断言。
 - 保留 `tests/e2e/mvp-flow.spec.ts` 对 short-input 后续流程的覆盖。
 - 更新 `tests/e2e/lesson-action-dock.spec.ts`，断言课程页操作区只有保留的入口且布局正常。
+- 无效 lesson 路由兜底和 `lastVisitedLesson` 持久化边界由上述 `LessonPage` 聚焦测试直接覆盖，不只依赖人工 smoke。
 
 ### 样式与可访问性
 
-- 在 `src/styles/global.test.ts` 中为新增或调整的课程页间距契约添加聚焦断言，避免依赖脆弱的像素快照。
-- 桌面和移动端进行人工/浏览器 smoke，检查顶部压缩、三步骤换行、按钮布局、可见焦点和无横向溢出。
+- 在 `src/styles/global.test.ts` 中断言新增紧凑声明只存在于 `.lesson-page ...` 选择器下，桌面轨道为 3 等列、移动端课程页专属规则为单列；同时负向断言未向裸 `.lesson-header-card`、`.review-card` 或后台选择器泄漏本轮声明，避免依赖脆弱的像素快照。
+- 在 `src/pages/AdminLessonEditorPage.test.tsx` 增加/保留回归断言：后台 hero 可继续使用 `.lesson-header-card`，但其祖先不含 `.lesson-page`，从结构上不会命中学习者页紧凑覆盖。
+- 桌面和移动端进行人工/浏览器 smoke，检查顶部压缩、三步骤布局、按钮布局、可见焦点和无横向溢出；至少验证一个大于 760px 的桌面宽度为 3 等列，以及 320px 宽度为单列且 `document.documentElement.scrollWidth <= clientWidth`。
 
 ### 验证命令
 
-- `npm run test -- --run src/pages/LessonPage.test.tsx src/pages/LessonRoutes.test.tsx src/styles/global.test.ts`
+- `npm run test -- --run src/pages/LessonPage.test.tsx src/pages/LessonRoutes.test.tsx src/pages/AdminLessonEditorPage.test.tsx src/styles/global.test.ts`
 - `npm run test -- --run`
 - `npm run lint`
 - `npm run build`
@@ -158,8 +170,9 @@
 - 删除重复 dialogue 标题展示；
 - 5 层精简为 3 层；
 - 停止渲染 Pronunciation、Hanzi recognition；
+- 将英语、法语课程页 `sectionSummary` 更新为只描述三层；
 - 删除课程页 `Finish with short input` 入口；
-- 对应测试和响应式回归。
+- 以学习者页专属 hook 收紧间距、设置桌面三等列/移动端单列，并完成对应测试和响应式回归。
 
 ### 本轮范围外
 
