@@ -23,28 +23,25 @@ import {
   StructuredListModuleEditor,
 } from '../components/admin/StructuredContentEditors.js'
 import {
-  hanziRecognitionFields,
-  pronunciationFields,
   reviewCardFields,
   sentencePatternFields,
   vocabularyFields,
 } from '../components/admin/structuredEditorConfigs.js'
 import { LessonPreviewPanel } from '../components/admin/LessonPreviewPanel.js'
 
-const moduleOrder: ContentModuleType[] = [
+const editableModuleOrder = [
   'lessonMeta',
   'dialogue',
   'sentencePatterns',
   'vocabulary',
-  'pronunciation',
-  'hanziRecognition',
   'practice',
   'reviewCards',
   'shortInput',
-]
+] as const satisfies readonly ContentModuleType[]
 
+type EditableModuleType = (typeof editableModuleOrder)[number]
 
-const moduleConfig: Record<ContentModuleType, { label: string; description: string }> = {
+const moduleConfig: Record<EditableModuleType, { label: string; description: string }> = {
   lessonMeta: {
     label: 'Lesson Meta',
     description: 'Titles, scenario framing, and top-level lesson copy.',
@@ -60,14 +57,6 @@ const moduleConfig: Record<ContentModuleType, { label: string; description: stri
   vocabulary: {
     label: 'Vocabulary',
     description: 'Core words and support phrases for this lesson.',
-  },
-  pronunciation: {
-    label: 'Pronunciation',
-    description: 'Pronunciation coaching notes and drills.',
-  },
-  hanziRecognition: {
-    label: 'Hanzi Recognition',
-    description: 'Reading prompts and recognition checkpoints.',
   },
   practice: {
     label: 'Practice',
@@ -85,7 +74,7 @@ const moduleConfig: Record<ContentModuleType, { label: string; description: stri
 
 const structuredModuleCopy: Partial<
   Record<
-    ContentModuleType,
+    EditableModuleType,
     {
       itemLabel: string
       badgeLabel: string
@@ -103,16 +92,6 @@ const structuredModuleCopy: Partial<
     badgeLabel: 'Vocabulary cards',
     description: 'Edit each vocabulary item as readable content fields instead of a raw JSON blob.',
   },
-  pronunciation: {
-    itemLabel: 'Pronunciation tip',
-    badgeLabel: 'Tip cards',
-    description: 'Keep pronunciation guidance structured by focus, audio text, tip, and explanation.',
-  },
-  hanziRecognition: {
-    itemLabel: 'Recognition item',
-    badgeLabel: 'Recognition cards',
-    description: 'Edit each hanzi recognition block with clear fields for hanzi, pinyin, meaning, and explanation.',
-  },
   reviewCards: {
     itemLabel: 'Review card',
     badgeLabel: 'Flashcard stack',
@@ -121,18 +100,18 @@ const structuredModuleCopy: Partial<
 }
 
 function getPendingModuleCopy(pendingModuleCount: number) {
-  if (pendingModuleCount === 0) {
-    return 'All modules published'
-  }
-
-  if (pendingModuleCount === 1) {
-    return '1 module pending publish'
-  }
-
-  return `${pendingModuleCount} modules pending publish`
+  if (pendingModuleCount === 0) return 'All editable modules published'
+  if (pendingModuleCount === 1) return '1 editable module pending publish'
+  return `${pendingModuleCount} editable modules pending publish`
 }
 
-function getModuleSummary(snapshot: AdminLessonSnapshot, moduleType: ContentModuleType) {
+function getPendingModuleBadgeCopy(pendingModuleCount: number) {
+  if (pendingModuleCount === 0) return 'Editable modules in sync'
+  if (pendingModuleCount === 1) return '1 editable module pending'
+  return `${pendingModuleCount} editable modules pending`
+}
+
+function getModuleSummary(snapshot: AdminLessonSnapshot, moduleType: EditableModuleType) {
   const draftLesson = snapshot.draftLesson
 
   if (!draftLesson) {
@@ -162,7 +141,7 @@ function getModuleSummary(snapshot: AdminLessonSnapshot, moduleType: ContentModu
 }
 
 function getModuleLabel(moduleType: string) {
-  return moduleConfig[moduleType as ContentModuleType]?.label ?? moduleType
+  return moduleConfig[moduleType as EditableModuleType]?.label ?? moduleType
 }
 
 export function AdminLessonEditorPage() {
@@ -180,7 +159,7 @@ export function AdminLessonEditorPage() {
     message: string
   } | null>(null)
   const [requiresAuth, setRequiresAuth] = useState(false)
-  const [selectedModuleType, setSelectedModuleType] = useState<ContentModuleType | null>(null)
+  const [selectedModuleType, setSelectedModuleType] = useState<EditableModuleType | null>(null)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
   const loadSnapshot = useCallback(async () => {
@@ -222,16 +201,28 @@ export function AdminLessonEditorPage() {
     void loadSnapshot().catch(() => undefined)
   }, [loadSnapshot])
 
+  const editableModuleSnapshots = useMemo(() => {
+    const modulesByType = new Map(snapshot?.modules.map((module) => [module.moduleType, module]) ?? [])
+    return editableModuleOrder.flatMap((moduleType) => {
+      const module = modulesByType.get(moduleType)
+      return module ? [module] : []
+    })
+  }, [snapshot])
+
   const pendingModuleCount = useMemo(
-    () => snapshot?.modules.filter((module) => module.hasUnpublishedChanges).length ?? 0,
-    [snapshot],
+    () => editableModuleSnapshots.filter((module) => module.hasUnpublishedChanges).length,
+    [editableModuleSnapshots],
   )
 
-  const selectedModule = useMemo(() => (selectedModuleType ? moduleConfig[selectedModuleType] : null), [selectedModuleType])
+  const selectedModule = useMemo(
+    () => (selectedModuleType ? moduleConfig[selectedModuleType] : null),
+    [selectedModuleType],
+  )
 
-  const moduleSnapshots = useMemo(() => {
-    return new Map(snapshot?.modules.map((module) => [module.moduleType, module]) ?? [])
-  }, [snapshot])
+  const moduleSnapshots = useMemo(
+    () => new Map(editableModuleSnapshots.map((module) => [module.moduleType, module])),
+    [editableModuleSnapshots],
+  )
 
   useBeforeUnload(
     useCallback(
@@ -364,7 +355,7 @@ export function AdminLessonEditorPage() {
     return window.confirm('You have unsaved changes in the current admin editor. Discard them and continue?')
   }
 
-  function handleSelectModule(moduleType: ContentModuleType) {
+  function handleSelectModule(moduleType: EditableModuleType) {
     if (moduleType === selectedModuleType) {
       return
     }
@@ -409,7 +400,7 @@ export function AdminLessonEditorPage() {
     setHasUnsavedChanges(false)
   }
 
-  function renderModuleEditor(moduleType: ContentModuleType) {
+  function renderModuleEditor(moduleType: EditableModuleType) {
     if (!snapshot?.draftLesson) {
       return null
     }
@@ -460,36 +451,6 @@ export function AdminLessonEditorPage() {
             items={draftLesson.vocabulary}
             fields={vocabularyFields}
             onSave={(payload) => handleSaveModule('vocabulary', payload, 'Save vocabulary draft')}
-            onDirtyChange={setHasUnsavedChanges}
-          />
-        )
-      case 'pronunciation':
-        return (
-          <StructuredListModuleEditor
-            moduleKey="pronunciation"
-            label="Pronunciation"
-            description={structuredModuleCopy.pronunciation?.description ?? ''}
-            itemLabel={structuredModuleCopy.pronunciation?.itemLabel ?? 'Item'}
-            badgeLabel={structuredModuleCopy.pronunciation?.badgeLabel ?? 'Structured content'}
-            saveLabel="Save pronunciation draft"
-            items={draftLesson.pronunciation}
-            fields={pronunciationFields}
-            onSave={(payload) => handleSaveModule('pronunciation', payload, 'Save pronunciation draft')}
-            onDirtyChange={setHasUnsavedChanges}
-          />
-        )
-      case 'hanziRecognition':
-        return (
-          <StructuredListModuleEditor
-            moduleKey="hanziRecognition"
-            label="Hanzi Recognition"
-            description={structuredModuleCopy.hanziRecognition?.description ?? ''}
-            itemLabel={structuredModuleCopy.hanziRecognition?.itemLabel ?? 'Item'}
-            badgeLabel={structuredModuleCopy.hanziRecognition?.badgeLabel ?? 'Structured content'}
-            saveLabel="Save hanzi recognition draft"
-            items={draftLesson.hanziRecognition}
-            fields={hanziRecognitionFields}
-            onSave={(payload) => handleSaveModule('hanziRecognition', payload, 'Save hanzi recognition draft')}
             onDirtyChange={setHasUnsavedChanges}
           />
         )
@@ -640,7 +601,7 @@ export function AdminLessonEditorPage() {
           <div className="admin-badge-column">
             <span className="badge badge--sky">Lesson {snapshot.displayOrder}</span>
             <span className={`badge ${pendingModuleCount > 0 ? 'badge--gold' : 'badge--jade'}`}>
-              {pendingModuleCount > 0 ? `${pendingModuleCount} pending` : 'Published in sync'}
+              {getPendingModuleBadgeCopy(pendingModuleCount)}
             </span>
           </div>
         </div>
@@ -713,7 +674,7 @@ export function AdminLessonEditorPage() {
               </span>
             </div>
             <div className="admin-module-directory-grid">
-              {moduleOrder.map((moduleType) => {
+              {editableModuleOrder.map((moduleType) => {
                 const module = moduleSnapshots.get(moduleType)
                 const config = moduleConfig[moduleType]
                 const isSelected = selectedModuleType === moduleType
@@ -810,6 +771,7 @@ export function AdminLessonEditorPage() {
           <LessonPreviewPanel lesson={draftLesson} />
           <ModuleHistoryList
             snapshot={snapshot}
+            modules={editableModuleSnapshots}
             pendingAction={pendingHistoryAction}
             onPublish={handlePublishModule}
             onRollback={handleRollbackModule}

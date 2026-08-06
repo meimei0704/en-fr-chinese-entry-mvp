@@ -2,6 +2,7 @@ import type { AdminLessonSnapshot } from '../../admin/types.js'
 
 interface ModuleHistoryListProps {
   snapshot: AdminLessonSnapshot
+  modules: AdminLessonSnapshot['modules']
   pendingAction:
     | {
         moduleType: string
@@ -19,8 +20,6 @@ function moduleLabel(moduleType: string) {
       return 'Lesson Meta'
     case 'sentencePatterns':
       return 'Sentence Patterns'
-    case 'hanziRecognition':
-      return 'Hanzi Recognition'
     case 'reviewCards':
       return 'Review Cards'
     case 'shortInput':
@@ -30,7 +29,13 @@ function moduleLabel(moduleType: string) {
   }
 }
 
-export function ModuleHistoryList({ snapshot, pendingAction, onPublish, onRollback }: ModuleHistoryListProps) {
+export function ModuleHistoryList({
+  snapshot,
+  modules,
+  pendingAction,
+  onPublish,
+  onRollback,
+}: ModuleHistoryListProps) {
   return (
     <section className="surface-card lesson-section-card admin-history-card" aria-label="Module history">
       <div className="admin-section-heading">
@@ -41,7 +46,7 @@ export function ModuleHistoryList({ snapshot, pendingAction, onPublish, onRollba
         </div>
         <span className="badge badge--gold">Review carefully</span>
       </div>
-      {snapshot.modules.map((module) => {
+      {modules.map((module) => {
         const label = moduleLabel(module.moduleType)
         const history = snapshot.publishedHistory[module.moduleType] ?? []
         const moduleActionPending = pendingAction?.moduleType === module.moduleType
