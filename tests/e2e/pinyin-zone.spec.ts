@@ -126,7 +126,7 @@ test('completes Pinyin Zone from the course entry with reference audio, tone gam
   await installPinyinBrowserMocks(page)
   await page.goto('/')
 
-  const pinyinEntry = page.getByRole('link', { name: /Pinyin Foundations 1/i })
+  const pinyinEntry = page.getByRole('link', { name: 'Mandarin tones and pinyin' })
 
   await expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
   await pinyinEntry.click()
