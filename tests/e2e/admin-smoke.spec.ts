@@ -10,6 +10,7 @@ const firstDialogueLine = lesson.dialogue.lines[0]!
 const encodedAdminAuth = 'Basic ZWRpdG9yOnNlY3JldA=='
 const voiceTargets = collectCourseVoiceAudioTargets(course.lessons)
 const voiceTargetById = new Map(voiceTargets.map((target) => [target.targetId, target]))
+const adminSmokeBaseUrl = process.env.ADMIN_SMOKE_BASE_URL
 const editableModuleLabels = [
   'Lesson Meta',
   'Dialogue',
@@ -84,6 +85,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   let dialogCount = 0
   const draftLessonsById = new Map(course.lessons.map((item) => [item.id, item]))
   const draftRequests: Array<{ lessonId: string; moduleType: string; payload: unknown }> = []
+  const generatedTargets: Array<{ targetId: string; moduleType: string }> = []
 
   page.on('dialog', async (dialog) => {
     dialogCount += 1
@@ -187,6 +189,10 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
     }
     const target = body.target?.targetId ? voiceTargetById.get(body.target.targetId) : undefined
 
+    generatedTargets.push({
+      targetId: body.target?.targetId ?? '',
+      moduleType: body.target?.moduleType ?? '',
+    })
     expect(body.consentConfirmed).toBe(true)
     expect(body.profileId).toBe('profile_batch_authorized')
     expect(target).toBeDefined()
@@ -245,7 +251,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
     })
   })
 
-  await page.goto('/admin')
+  await page.goto(adminSmokeBaseUrl ? new URL('/admin', adminSmokeBaseUrl).href : '/admin')
 
   const unauthVoiceStatus = await page.evaluate(async () => {
     const response = await fetch('/api/admin/voice/generate', {
@@ -315,7 +321,18 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(page).toHaveURL(/\/admin\/voice$/)
   await expect(page.getByRole('heading', { name: /original pronunciation is active/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /182 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /172 audio targets/i })).toBeVisible()
+  await expect(page.locator('[data-testid^="voice-target-row-pronunciation:"]')).toHaveCount(0)
+  await expect(page.getByText(/^pronunciation · zh-CN$/i)).toHaveCount(0)
+  for (const targetId of [
+    'dialogue:self-intro-line-01',
+    'sentencePatterns:self-intro-pattern-1',
+    'vocabulary:self-intro-vocab-1',
+    'practice:listening:self-intro-listening-1',
+    'shortInput:self-intro-short-input-01',
+  ]) {
+    await expect(page.getByTestId(`voice-target-row-${targetId}`)).toBeVisible()
+  }
   await expect(page.getByText(/current course audio uses original files/i)).toBeVisible()
   await expect(page.getByText(/no extra fee/i)).toBeVisible()
   await expect(page.getByRole('heading', { name: /use cloned voice only when needed/i })).toBeVisible()
@@ -339,7 +356,13 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/182 generated/i).first()).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByText(/172 generated/i).first()).toBeVisible({ timeout: 15_000 })
+  expect(generatedTargets).toHaveLength(172)
+  expect(new Set(generatedTargets.map((target) => target.moduleType))).toEqual(
+    new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice', 'shortInput']),
+  )
+  expect(generatedTargets.some((target) => target.targetId.startsWith('pronunciation:'))).toBe(false)
+  expect(generatedTargets.some((target) => ['pronunciation', 'hanziRecognition'].includes(target.moduleType))).toBe(false)
 
   const applyApprovedButton = page.getByRole('button', { name: /apply approved to drafts/i })
   await expect(applyApprovedButton).toBeDisabled()
@@ -360,6 +383,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   expect(dialoguePayload.lines[0]!.audio).toBe(generatedFirstAudio)
   expect(dialoguePayload.lines[0]!.audioFallback).toBe('/audio/self-intro/line-01.mp3')
   expect(dialoguePayload.lines[1]!.audio).toBe('/audio/self-intro/line-02.mp3')
+  expect(draftRequests.some((request) => ['pronunciation', 'hanziRecognition'].includes(request.moduleType))).toBe(false)
 
   expect(dialogCount).toBe(0)
 })
