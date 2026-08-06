@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { HomeHeroScrollScene } from '../components/HomeHeroScrollScene'
+import { HomeHeroIllustration } from '../components/HomeHeroIllustration'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
@@ -34,7 +34,7 @@ export function HomePage() {
   return (
     <main className="page-shell">
       <section className="hero-card home-hero home-hero--centered" aria-label="Home hero">
-        <HomeHeroScrollScene />
+        <HomeHeroIllustration />
 
         <div className="home-language-switcher home-language-switcher--floating">
           <LanguageToggle

@@ -86,43 +86,28 @@ describe('HomePage', () => {
     expect(within(hero).queryByRole('navigation', { name: /quick learning paths/i })).not.toBeInTheDocument()
   })
 
-  it('renders one aria-hidden long-scroll scene behind the home hero content', () => {
+  it('renders one aria-hidden supplied illustration behind unchanged home hero content', () => {
     const { container } = renderRoute('/home')
 
     const hero = screen.getByRole('region', { name: /home hero/i })
-    const scene = container.querySelector('.home-hero__scroll-scene')
-    const sceneSvg = scene?.querySelector('svg.home-hero__scroll-svg')
+    const illustration = hero.querySelector('.home-hero__illustration')
+    const image = illustration?.querySelector('img.home-hero__illustration-image')
+    const veil = illustration?.querySelector('.home-hero__illustration-veil')
 
-    expect(hero.querySelectorAll('.home-hero__scroll-scene')).toHaveLength(1)
-    expect(scene).toHaveAttribute('aria-hidden', 'true')
-    expect(sceneSvg).toBeInTheDocument()
+    expect(hero.querySelectorAll('.home-hero__illustration')).toHaveLength(1)
+    expect(illustration).toHaveAttribute('aria-hidden', 'true')
+    expect(illustration?.querySelectorAll('img.home-hero__illustration-image')).toHaveLength(1)
+    expect(image).toHaveAttribute('src', '/images/home-hero-chinese-elements.webp')
+    expect(image).toHaveAttribute('alt', '')
+    expect(image).toHaveAttribute('decoding', 'async')
+    expect(illustration?.querySelectorAll('.home-hero__illustration-veil')).toHaveLength(1)
+    expect(veil).toBeInTheDocument()
+    expect(illustration?.querySelectorAll('a, button, [tabindex]')).toHaveLength(0)
+    expect(hero.querySelectorAll('.home-hero__scroll-scene, svg.home-hero__scroll-svg')).toHaveLength(0)
+    expect(container.querySelectorAll('[data-home-hero-motif]')).toHaveLength(0)
+    expect(within(hero).getByRole('group', { name: 'Explanation language' })).toBeVisible()
     expect(within(hero).getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
     expect(within(hero).getByText('Learn Mandarin in real life scenarios')).toBeVisible()
-    expect(within(hero).queryByText(/Great Wall|Oriental Pearl|panda/i)).not.toBeInTheDocument()
-  })
-
-  it('builds the long-scroll scene from detailed, recognizable cultural anchors', () => {
-    const { container } = renderRoute('/home')
-    const scene = container.querySelector('.home-hero__scroll-scene')
-    const culturalAnchors = [
-      'great-wall',
-      'palace',
-      'panda',
-      'oriental-pearl',
-      'lantern',
-      'fan',
-      'bamboo',
-    ]
-
-    for (const anchor of culturalAnchors) {
-      const motif = scene?.querySelector(`[data-home-hero-motif="${anchor}"]`)
-
-      expect(motif, `${anchor} motif`).toBeInTheDocument()
-      expect(
-        motif?.querySelectorAll('path, circle, ellipse, line, rect, polyline, polygon').length,
-        `${anchor} motif vector detail`,
-      ).toBeGreaterThanOrEqual(3)
-    }
   })
 
   it('renders page-level French copy when the learner chooses French mode', () => {
