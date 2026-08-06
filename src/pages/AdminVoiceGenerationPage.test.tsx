@@ -519,57 +519,61 @@ describe('AdminVoiceGenerationPage', () => {
         moduleType: string
         payload: unknown
       })
-    expect(draftBodies.map((body) => body.moduleType)).toEqual([
-      'dialogue',
-      'sentencePatterns',
-      'vocabulary',
-      'practice',
-      'shortInput',
-    ])
-    expect(draftBodies.some((body) => ['pronunciation', 'hanziRecognition'].includes(body.moduleType))).toBe(false)
 
     const originalLesson = course.lessons[0]!
-    const draftByModule = new Map(draftBodies.map((body) => [body.moduleType, body.payload]))
     const generatedAudioFor = (audio: string) => `/voice/generated${audio}`
-
-    const dialoguePayload = draftByModule.get('dialogue') as LessonContent['dialogue']
-    expect(dialoguePayload.lines[0]).toEqual({
-      ...originalLesson.dialogue.lines[0]!,
-      audio: generatedAudioFor(originalLesson.dialogue.lines[0]!.audio),
-      audioFallback: originalLesson.dialogue.lines[0]!.audio,
+    const withGeneratedAudio = <Item extends { audio: string }>(item: Item) => ({
+      ...item,
+      audio: generatedAudioFor(item.audio),
+      audioFallback: item.audio,
     })
-    expect(dialoguePayload.lines[1]).toEqual(originalLesson.dialogue.lines[1])
 
-    const sentencePayload = draftByModule.get('sentencePatterns') as LessonContent['sentencePatterns']
-    expect(sentencePayload[0]).toEqual({
-      ...originalLesson.sentencePatterns[0]!,
-      audio: generatedAudioFor(originalLesson.sentencePatterns[0]!.audio),
-      audioFallback: originalLesson.sentencePatterns[0]!.audio,
-    })
-    expect(sentencePayload[1]).toEqual(originalLesson.sentencePatterns[1])
-
-    const vocabularyPayload = draftByModule.get('vocabulary') as LessonContent['vocabulary']
-    expect(vocabularyPayload[0]).toEqual({
-      ...originalLesson.vocabulary[0]!,
-      audio: generatedAudioFor(originalLesson.vocabulary[0]!.audio),
-      audioFallback: originalLesson.vocabulary[0]!.audio,
-    })
-    expect(vocabularyPayload[1]).toEqual(originalLesson.vocabulary[1])
-
-    const practicePayload = draftByModule.get('practice') as LessonContent['practice']
-    expect(practicePayload.listening[0]).toEqual({
-      ...originalLesson.practice.listening[0]!,
-      audio: generatedAudioFor(originalLesson.practice.listening[0]!.audio),
-      audioFallback: originalLesson.practice.listening[0]!.audio,
-    })
-    expect(practicePayload.speaking[0]).toEqual(originalLesson.practice.speaking[0])
-
-    const shortInputPayload = draftByModule.get('shortInput') as LessonContent['shortInput']
-    expect(shortInputPayload).toEqual({
-      ...originalLesson.shortInput,
-      audio: generatedAudioFor(originalLesson.shortInput.audio),
-      audioFallback: originalLesson.shortInput.audio,
-    })
+    expect(draftBodies).toEqual([
+      {
+        lessonId: originalLesson.id,
+        moduleType: 'dialogue',
+        note: 'Apply approved batch voice generation for dialogue',
+        payload: {
+          ...originalLesson.dialogue,
+          lines: originalLesson.dialogue.lines.map((line) =>
+            line.id === 'self-intro-line-01' ? withGeneratedAudio(line) : line,
+          ),
+        },
+      },
+      {
+        lessonId: originalLesson.id,
+        moduleType: 'sentencePatterns',
+        note: 'Apply approved batch voice generation for sentencePatterns',
+        payload: originalLesson.sentencePatterns.map((pattern) =>
+          pattern.id === 'self-intro-pattern-1' ? withGeneratedAudio(pattern) : pattern,
+        ),
+      },
+      {
+        lessonId: originalLesson.id,
+        moduleType: 'vocabulary',
+        note: 'Apply approved batch voice generation for vocabulary',
+        payload: originalLesson.vocabulary.map((item) =>
+          item.id === 'self-intro-vocab-1' ? withGeneratedAudio(item) : item,
+        ),
+      },
+      {
+        lessonId: originalLesson.id,
+        moduleType: 'practice',
+        note: 'Apply approved batch voice generation for practice',
+        payload: {
+          ...originalLesson.practice,
+          listening: originalLesson.practice.listening.map((prompt) =>
+            prompt.id === 'self-intro-listening-1' ? withGeneratedAudio(prompt) : prompt,
+          ),
+        },
+      },
+      {
+        lessonId: originalLesson.id,
+        moduleType: 'shortInput',
+        note: 'Apply approved batch voice generation for shortInput',
+        payload: withGeneratedAudio(originalLesson.shortInput),
+      },
+    ])
     expect(await screen.findByText(/applied 5 approved targets/i)).toBeVisible()
   })
 
