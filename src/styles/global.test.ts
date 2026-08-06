@@ -48,9 +48,40 @@ function hasRuleWithDeclaration(selector: string, declaration: string) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const escapedDeclaration = declaration.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   return new RegExp(
-    `(^|\\n)\\s*${escapedSelector}\\s*{[\\s\\S]*?${escapedDeclaration}`,
+    `(^|\\n)\\s*${escapedSelector}\\s*{[^}]*${escapedDeclaration}`,
     'm',
   ).test(css)
+}
+
+function mediaBlock(query: string) {
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const match = new RegExp(`@media\\s*${escapedQuery}\\s*{`).exec(css)
+  if (!match) {
+    throw new Error(`Missing CSS media query ${query}`)
+  }
+
+  const openingBrace = match.index + match[0].lastIndexOf('{')
+  let depth = 1
+  for (let index = openingBrace + 1; index < css.length; index += 1) {
+    if (css[index] === '{') depth += 1
+    if (css[index] === '}') depth -= 1
+    if (depth === 0) return css.slice(openingBrace + 1, index)
+  }
+
+  throw new Error(`Unclosed CSS media query ${query}`)
+}
+
+function hasMediaRuleWithDeclaration(query: string, selector: string, declaration: string) {
+  const rules = mediaBlock(query).matchAll(/([^{}]+)\{([^{}]*)}/g)
+
+  for (const rule of rules) {
+    const selectors = rule[1].split(',').map((candidate) => candidate.trim())
+    if (selectors.includes(selector) && rule[2].includes(declaration)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 function backgroundVariableFor(selector: string) {
@@ -129,6 +160,51 @@ describe('global color accessibility tokens', () => {
       expect(hasRule(selector)).toBe(true)
       expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
     }
+  })
+
+  it('defines a shared peer-series panel baseline with a compact focusable Pinyin entry', () => {
+    const declarations = [
+      ['.course-series', 'width: min(100%, 72rem);'],
+      ['.course-series__list', 'grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);'],
+      ['.course-series__panel', 'min-width: 0;'],
+      ['.course-series__panel', 'border-radius: var(--radius-lg);'],
+      ['.course-series__title', 'overflow-wrap: anywhere;'],
+      ['.course-series__pinyin-link', 'min-width: 0;'],
+      ['.course-series__pinyin-link', 'min-height: 10rem;'],
+      ['.course-series__pinyin-link', 'text-decoration: none;'],
+      ['.course-series__pinyin-link:focus-visible', 'outline: 3px solid rgba(47, 111, 186, 0.5);'],
+      ['.course-series__pinyin-mark', 'border-radius: 999px;'],
+      ['.course-series__progress', 'overflow-wrap: anywhere;'],
+    ]
+
+    for (const [selector, declaration] of declarations) {
+      expect(hasRule(selector)).toBe(true)
+      expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
+    }
+
+    expect(hasRuleWithDeclaration('.course-series__panel--journey', 'overflow: hidden;')).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 760px)',
+        '.course-series__list',
+        'grid-template-columns: 1fr;',
+      ),
+    ).toBe(true)
+  })
+
+  it('stacks the Progress series heading and badge at the narrow breakpoint', () => {
+    const query = '(max-width: 760px)'
+    const headerSelector = '.progress-course-series .progress-list-card__header'
+
+    expect(hasMediaRuleWithDeclaration(query, headerSelector, 'display: grid;')).toBe(true)
+    expect(hasMediaRuleWithDeclaration(query, headerSelector, 'align-items: start;')).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        query,
+        `${headerSelector} > .badge`,
+        'justify-self: start;',
+      ),
+    ).toBe(true)
   })
 
   it('keeps the shared speech button as a small circular icon control with interaction states', () => {

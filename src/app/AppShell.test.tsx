@@ -5,6 +5,12 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
 import { renderRoute } from '../test/renderRoute'
 
+const homeSeriesCopy = {
+  label: 'Course series',
+  pinyin: 'Mandarin tones and pinyin',
+  journey: 'Basic Chinese expressions for a stress-free journey',
+} as const
+
 describe('App shell', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -35,22 +41,24 @@ describe('App shell', () => {
     expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
 
-    const journeyMap = screen.getByLabelText(/journey map/i)
-    const lessonLinks = within(journeyMap)
+    const courseSeries = screen.getByRole('region', { name: homeSeriesCopy.label })
+    const pinyinSeries = within(courseSeries).getByRole('region', { name: homeSeriesCopy.pinyin })
+    const journeySeries = within(courseSeries).getByRole('region', { name: homeSeriesCopy.journey })
+    const lessonLinks = within(journeySeries)
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
     expect(lessonLinks).toHaveLength(10)
-    expect(within(journeyMap).getByRole('link', { name: /pinyin/i })).toHaveAttribute(
+    expect(within(pinyinSeries).getByRole('link', { name: homeSeriesCopy.pinyin })).toHaveAttribute(
       'href',
       '/pinyin',
     )
     expect(
-      within(journeyMap).getByRole('link', {
+      within(journeySeries).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
       }),
     ).toHaveAttribute('href', '/lesson/self-intro')
-    expect(journeyMap).not.toHaveTextContent(' / ')
+    expect(journeySeries).not.toHaveTextContent(' / ')
   })
 
   it('keeps the legacy /home route compatible with the same Home page content', () => {

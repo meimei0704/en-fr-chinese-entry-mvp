@@ -1,5 +1,4 @@
 import { course } from './course'
-import { pinyinCourse } from './pinyin/course'
 import type { JourneyNode, JourneyNodeId, JourneyStage, LessonContent, LessonId } from './types'
 
 function getLesson(lessonId: LessonId): LessonContent {
@@ -24,7 +23,6 @@ const askForHelpProblemLesson = getLesson('ask-for-help-problem')
 const trainStationTicketLesson = getLesson('train-station-ticket')
 
 export const journeyNodeIcons: Record<JourneyNodeId, string> = {
-  'pinyin-foundations': '拼',
   'airport-immigration': '🧳',
   'taxi-to-stay': '🚕',
   'hotel-check-in': '🏨',
@@ -208,21 +206,6 @@ const journeyNodeData: JourneyNode[] = [
     },
     summary: trainStationTicketLesson.scenario,
     pathOrder: 10,
-  },
-  {
-    id: 'pinyin-foundations',
-    stageId: 'arrival-in-china',
-    kind: 'route',
-    title: pinyinCourse.lesson.title,
-    eyebrow: {
-      en: 'Pinyin',
-      fr: 'Pinyin',
-    },
-    summary: pinyinCourse.lesson.summary,
-    pathOrder: 11,
-    routeDetails: {
-      href: '/pinyin',
-    },
   },
 ]
 

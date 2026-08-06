@@ -52,17 +52,45 @@ export function HomePage() {
         </div>
       </section>
 
-      <section aria-label={copy.homePage.journeyMapLabel} className="page-grid journey-map">
-        <div className="section-heading journey-map__intro">
-          <div>
-            <p className="eyebrow">{copy.homePage.journeyEyebrow}</p>
-            <h2>{copy.homePage.journeyMapLabel}</h2>
-            <p className="lede">{copy.homePage.journeyIntro}</p>
-          </div>
-        </div>
+      <section
+        className="page-grid course-series"
+        aria-label={copy.courseSeries.label}
+      >
+        <p className="eyebrow course-series__label">{copy.courseSeries.label}</p>
 
-        <div className="journey-map__path">
-          {journeyNodes.map((node) => {
+        <div className="course-series__list">
+          <section
+            className="course-series__panel course-series__panel--pinyin"
+            aria-labelledby="home-pinyin-series-title"
+          >
+            <Link
+              className="course-series__pinyin-link"
+              to="/pinyin"
+              aria-labelledby="home-pinyin-series-title"
+            >
+              <span className="course-series__pinyin-mark" aria-hidden="true">
+                拼
+              </span>
+              <h2 id="home-pinyin-series-title" className="course-series__title">
+                {copy.courseSeries.pinyinTitle}
+              </h2>
+            </Link>
+          </section>
+
+          <section
+            aria-labelledby="home-journey-series-title"
+            className="course-series__panel course-series__panel--journey journey-map"
+          >
+            <div className="section-heading journey-map__intro course-series__panel-header">
+              <div>
+                <h2 id="home-journey-series-title" className="course-series__title">
+                  {copy.courseSeries.basicExpressionsTitle}
+                </h2>
+              </div>
+            </div>
+
+            <div className="journey-map__path">
+              {journeyNodes.map((node) => {
             const nodeSummary = getLocalizedText(node.summary, language)
             const nodeEyebrow = getLocalizedText(node.eyebrow, language)
             const nodeIcon = journeyNodeIcons[node.id]
@@ -79,35 +107,7 @@ export function HomePage() {
                       <span className="badge badge--jade">{nodeEyebrow}</span>
                     </div>
 
-                    <LessonTopicTitle as="h2" lessonId={node.lessonId} language={language} />
-                    <p className="muted-text">{nodeSummary}</p>
-                  </div>
-
-                  <span
-                    className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
-                    aria-hidden="true"
-                  >
-                    <span className="journey-node__doodle journey-node__doodle--stamp">
-                      {nodeIcon}
-                    </span>
-                  </span>
-                </Link>
-              )
-            }
-
-            if (node.kind === 'route' && node.routeDetails) {
-              return (
-                <Link
-                  key={node.id}
-                  className="journey-node journey-node--route journey-node--card-link"
-                  to={node.routeDetails.href}
-                >
-                  <div className="journey-node__body">
-                    <div className="journey-node__header">
-                      <span className="badge badge--sky">{nodeEyebrow}</span>
-                    </div>
-
-                    <LessonTopicTitle as="h2" title={node.title} language={language} />
+                    <LessonTopicTitle as="h3" lessonId={node.lessonId} language={language} />
                     <p className="muted-text">{nodeSummary}</p>
                   </div>
 
@@ -148,7 +148,7 @@ export function HomePage() {
                       <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
                     </div>
 
-                    <LessonTopicTitle as="h2" title={node.title} language={language} />
+                    <LessonTopicTitle as="h3" title={node.title} language={language} />
                     <p className="muted-text">{nodeSummary}</p>
                     <span className="journey-node__cta">
                       {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
@@ -189,7 +189,9 @@ export function HomePage() {
                 ) : null}
               </article>
             )
-          })}
+              })}
+            </div>
+          </section>
         </div>
       </section>
     </main>

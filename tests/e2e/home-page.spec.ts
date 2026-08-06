@@ -86,17 +86,34 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(illustrationVeil).toHaveCount(1)
   await expect(hero.locator('.home-hero__scroll-scene, svg.home-hero__scroll-svg')).toHaveCount(0)
 
-  const journeyNodes = page.locator('.journey-map__path > .journey-node')
-  await expect(journeyNodes).toHaveCount(11)
+  const courseSeries = page.getByRole('region', { name: 'Course series' })
+  const pinyinSeries = courseSeries.getByRole('region', { name: 'Mandarin tones and pinyin' })
+  const journeySeries = courseSeries.getByRole('region', {
+    name: 'Basic Chinese expressions for a stress-free journey',
+  })
+  const pinyinEntry = pinyinSeries.getByRole('link', { name: 'Mandarin tones and pinyin' })
+  const journeyNodes = journeySeries.locator('.journey-map__path > .journey-node')
+  await expect(courseSeries.getByText('Course series', { exact: true })).toBeVisible()
+  await expect(pinyinSeries.getByRole('heading', {
+    level: 2,
+    name: 'Mandarin tones and pinyin',
+  })).toBeVisible()
+  await expect(journeySeries.getByRole('heading', {
+    level: 2,
+    name: 'Basic Chinese expressions for a stress-free journey',
+  })).toBeVisible()
+  await expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
+  await expect(journeySeries.getByRole('link', { name: /pinyin/i })).toHaveCount(0)
+  await expect(journeyNodes).toHaveCount(10)
+  await expect(page.getByText('Journey Map', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('Arrive in China step by step', { exact: true })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
     'href',
     '/lesson/self-intro',
   )
   await expect(page.getByText(/到达机场 \/ Arrival at the airport/i)).toHaveCount(0)
-  await expect(page.locator('.journey-map .lesson-topic-title__primary').first()).toHaveText(
-    '到达机场',
-  )
-  await expect(page.locator('.journey-map .lesson-topic-title__secondary').first()).toHaveText(
+  await expect(journeySeries.locator('.lesson-topic-title__primary').first()).toHaveText('到达机场')
+  await expect(journeySeries.locator('.lesson-topic-title__secondary').first()).toHaveText(
     'Arrival at the airport',
   )
   await expect(page.getByRole('link', { name: /phone number & mobile payment/i })).toHaveAttribute(
@@ -111,14 +128,10 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
     'href',
     '/lesson/train-station-ticket',
   )
-  await expect(page.getByRole('link', { name: /Pinyin Foundations 1/i })).toHaveAttribute(
-    'href',
-    '/pinyin',
-  )
-  await expect(page.locator('.journey-map')).not.toContainText(' / ')
+  await expect(journeySeries).not.toContainText(' / ')
 
   for (const [index, [hanzi, explanation]] of expectedTopics.entries()) {
-    const heading = page.locator('.journey-map .lesson-topic-title').nth(index)
+    const heading = journeySeries.locator('.lesson-topic-title').nth(index)
 
     await expect(heading).toContainText(hanzi)
     await expect(heading).toContainText(explanation)
@@ -134,7 +147,7 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
     const heroTitle = page.getByRole('heading', { name: '轻松学中文' })
     const heroSlogan = page.getByText('Learn Mandarin in real life scenarios')
     const languageControls = page.getByRole('group', { name: 'Explanation language' })
-    const title = firstCard.locator('h2')
+    const title = firstCard.locator('h3')
     const slot = firstCard.locator('.journey-node__illustration-slot--stamp')
 
     await expect(illustrationImage).toBeVisible()
