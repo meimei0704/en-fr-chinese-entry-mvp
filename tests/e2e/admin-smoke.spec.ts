@@ -10,6 +10,15 @@ const firstDialogueLine = lesson.dialogue.lines[0]!
 const encodedAdminAuth = 'Basic ZWRpdG9yOnNlY3JldA=='
 const voiceTargets = collectCourseVoiceAudioTargets(course.lessons)
 const voiceTargetById = new Map(voiceTargets.map((target) => [target.targetId, target]))
+const editableModuleLabels = [
+  'Lesson Meta',
+  'Dialogue',
+  'Sentence Patterns',
+  'Vocabulary',
+  'Practice',
+  'Review Cards',
+  'Short Input',
+]
 
 function buildLessonSummary(lessons: readonly LessonContent[]): AdminLessonSummary[] {
   return lessons.map((item, index) => ({
@@ -30,15 +39,15 @@ function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
     draftLesson,
     publishedLesson: course.lessons.find((item) => item.id === draftLesson.id) ?? draftLesson,
     modules: [
-      { moduleType: 'lessonMeta', draftRevisionId: 102, publishedRevisionId: 101, hasUnpublishedChanges: true },
       { moduleType: 'dialogue', draftRevisionId: 104, publishedRevisionId: 103, hasUnpublishedChanges: false },
-      { moduleType: 'sentencePatterns', draftRevisionId: 106, publishedRevisionId: 105, hasUnpublishedChanges: false },
-      { moduleType: 'vocabulary', draftRevisionId: 108, publishedRevisionId: 107, hasUnpublishedChanges: false },
-      { moduleType: 'pronunciation', draftRevisionId: 110, publishedRevisionId: 109, hasUnpublishedChanges: false },
-      { moduleType: 'hanziRecognition', draftRevisionId: 112, publishedRevisionId: 111, hasUnpublishedChanges: false },
+      { moduleType: 'hanziRecognition', draftRevisionId: 112, publishedRevisionId: 111, hasUnpublishedChanges: true },
+      { moduleType: 'lessonMeta', draftRevisionId: 102, publishedRevisionId: 101, hasUnpublishedChanges: true },
       { moduleType: 'practice', draftRevisionId: 114, publishedRevisionId: 113, hasUnpublishedChanges: false },
+      { moduleType: 'pronunciation', draftRevisionId: 110, publishedRevisionId: 109, hasUnpublishedChanges: true },
       { moduleType: 'reviewCards', draftRevisionId: 116, publishedRevisionId: 115, hasUnpublishedChanges: false },
+      { moduleType: 'sentencePatterns', draftRevisionId: 106, publishedRevisionId: 105, hasUnpublishedChanges: false },
       { moduleType: 'shortInput', draftRevisionId: 118, publishedRevisionId: 117, hasUnpublishedChanges: false },
+      { moduleType: 'vocabulary', draftRevisionId: 108, publishedRevisionId: 107, hasUnpublishedChanges: false },
     ],
     publishedHistory: {
       lessonMeta: [
@@ -277,6 +286,20 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   await page.getByRole('link', { name: /open self-intro editor/i }).click()
   await expect(page).toHaveURL(/\/admin\/lesson\/self-intro$/)
   await expect(page.getByRole('heading', { name: /edit self-intro/i })).toBeVisible()
+
+  const editor = page.getByRole('main')
+  const directory = page.getByTestId('admin-module-directory')
+  const history = page.getByRole('region', { name: /module history/i })
+  await expect(directory.getByRole('button', { name: /^Edit / })).toHaveCount(7)
+  expect(await directory.getByRole('heading', { level: 3 }).allTextContents()).toEqual(editableModuleLabels)
+  expect(await history.getByRole('heading', { level: 3 }).allTextContents()).toEqual(editableModuleLabels)
+  await expect(directory.getByRole('button', { name: /edit short input/i })).toBeVisible()
+  await expect(editor.getByText('1 editable module pending publish')).toBeVisible()
+  await expect(editor.getByText('1 editable module pending', { exact: true })).toBeVisible()
+  await expect(editor.getByText(/^Pronunciation$/)).toHaveCount(0)
+  await expect(editor.getByText(/^Hanzi Recognition$/)).toHaveCount(0)
+  await expect(editor.getByRole('button', { name: /(edit|publish|rollback).*pronunciation/i })).toHaveCount(0)
+  await expect(editor.getByRole('button', { name: /(edit|publish|rollback).*hanzi recognition/i })).toHaveCount(0)
 
   await page.getByRole('button', { name: /edit lesson meta/i }).click()
 
