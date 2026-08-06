@@ -408,7 +408,7 @@ h2 {
   text-align: center;
 }
 
-.home-hero__scroll-scene {
+.home-hero__illustration {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -417,91 +417,33 @@ h2 {
   pointer-events: none;
 }
 
-.home-hero__scroll-svg {
+.home-hero__illustration-image {
   position: absolute;
-  inset: auto 50% 0;
-  width: min(100%, 76rem);
-  min-width: 58rem;
-  height: auto;
-  transform: translateX(-50%);
-  opacity: 0.92;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  display: block;
+  width: auto;
+  max-width: none;
+  height: 142%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  opacity: 0.32;
+  user-select: none;
 }
 
-.home-hero__scroll-track,
-.home-hero__scroll-clouds,
-.home-hero__scroll-motifs {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.home-hero__scroll-track {
-  stroke: rgba(210, 190, 169, 0.78);
-  stroke-width: 2;
-}
-
-.home-hero__scroll-clouds {
-  stroke: rgba(214, 195, 173, 0.72);
-  stroke-width: 1.8;
-}
-
-.home-hero__scroll-motifs {
-  stroke: rgba(105, 82, 68, 0.52);
-  stroke-width: 2.15;
-}
-
-.home-hero__scroll-motif path,
-.home-hero__scroll-motif circle,
-.home-hero__scroll-motif ellipse,
-.home-hero__scroll-motif line,
-.home-hero__scroll-motif rect {
-  vector-effect: non-scaling-stroke;
-}
-
-.home-hero__scroll-motif--great-wall,
-.home-hero__scroll-motif--palace,
-.home-hero__scroll-motif--lantern,
-.home-hero__scroll-motif--fan {
-  stroke: rgba(168, 93, 70, 0.58);
-}
-
-.home-hero__scroll-motif--panda,
-.home-hero__scroll-motif--bamboo {
-  stroke: rgba(68, 119, 98, 0.58);
-}
-
-.home-hero__scroll-motif--oriental-pearl {
-  stroke: rgba(73, 115, 194, 0.54);
-}
-
-.home-hero__scroll-wash--paper {
-  fill: rgba(255, 252, 246, 0.82);
-}
-
-.home-hero__scroll-wash--clay {
-  fill: rgba(184, 109, 85, 0.12);
-}
-
-.home-hero__scroll-wash--sky {
-  fill: rgba(95, 143, 247, 0.12);
-}
-
-.home-hero__scroll-wash--gold {
-  fill: rgba(197, 155, 83, 0.12);
-}
-
-.home-hero__scroll-ink-fill {
-  fill: rgba(66, 59, 55, 0.62);
-  stroke: none;
-}
-
-.home-hero__scroll-paper-dot {
-  fill: rgba(255, 252, 246, 0.92);
-  stroke: none;
-}
-
-.home-hero__scroll-center-veil {
-  fill: rgba(255, 250, 245, 0.52);
+.home-hero__illustration-veil {
+  position: absolute;
+  inset: 20% 20% 18%;
+  z-index: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 250, 245, 0.86) 0%,
+    rgba(255, 250, 245, 0.7) 38%,
+    rgba(255, 250, 245, 0.28) 62%,
+    rgba(255, 250, 245, 0) 78%
+  );
 }
 
 .home-hero__content {
@@ -2671,14 +2613,21 @@ h2 {
   font-size: 0.82rem;
 }
 
-@media (max-width: 1023px) {
-  .home-hero__scroll-svg {
-    min-width: 50rem;
-    opacity: 0.82;
+@media (max-width: 1024px) {
+  .home-hero__illustration-image {
+    height: 136%;
+    opacity: 0.3;
   }
 
-  .home-hero__scroll-center-veil {
-    fill: rgba(255, 250, 245, 0.62);
+  .home-hero__illustration-veil {
+    inset: 19% 16% 17%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 250, 245, 0.88) 0%,
+      rgba(255, 250, 245, 0.76) 40%,
+      rgba(255, 250, 245, 0.3) 64%,
+      rgba(255, 250, 245, 0) 80%
+    );
   }
 }
 
@@ -2714,19 +2663,24 @@ h2 {
   }
 
   .home-hero::after {
-    inset: 22% 12% 22%;
+    inset: 22% 42% 22%;
   }
 
-  .home-hero__scroll-svg {
-    min-width: 36rem;
-    opacity: 0.78;
-    bottom: -0.2rem;
+  .home-hero__illustration-image {
+    top: 80%;
+    height: 116%;
+    opacity: 0.3;
   }
 
-  .home-hero__scroll-motif--palace,
-  .home-hero__scroll-motif--lantern,
-  .home-hero__scroll-motif--fan {
-    opacity: 0.66;
+  .home-hero__illustration-veil {
+    inset: 18% 38% 14%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 250, 245, 0.9) 0%,
+      rgba(255, 250, 245, 0.8) 42%,
+      rgba(255, 250, 245, 0.34) 66%,
+      rgba(255, 250, 245, 0) 82%
+    );
   }
 
   .home-hero__title {

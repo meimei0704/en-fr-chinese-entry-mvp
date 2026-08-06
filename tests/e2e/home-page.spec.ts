@@ -13,6 +13,41 @@ const expectedTopics = [
   ['在火车站买票', 'Buy a train station ticket'],
 ] as const
 
+const heroViewports = [
+  {
+    name: 'desktop',
+    width: 1440,
+    height: 900,
+    expectedOpacity: 0.32,
+    expectedImageHeightRatio: 1.42,
+    expectedImageTopRatio: 0.5,
+  },
+  {
+    name: 'tablet',
+    width: 1024,
+    height: 900,
+    expectedOpacity: 0.3,
+    expectedImageHeightRatio: 1.36,
+    expectedImageTopRatio: 0.5,
+  },
+  {
+    name: 'mobile-390',
+    width: 390,
+    height: 844,
+    expectedOpacity: 0.3,
+    expectedImageHeightRatio: 1.16,
+    expectedImageTopRatio: 0.8,
+  },
+  {
+    name: 'mobile-320',
+    width: 320,
+    height: 720,
+    expectedOpacity: 0.3,
+    expectedImageHeightRatio: 1.16,
+    expectedImageTopRatio: 0.8,
+  },
+] as const
+
 test('keeps the Home journey stamp slot decorative while preserving readable text widths', async ({
   page,
 }) => {
@@ -21,8 +56,9 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
   const hero = page.getByRole('region', { name: /home hero/i })
-  const scrollScene = hero.locator('.home-hero__scroll-scene')
-  const scrollSvg = scrollScene.locator('svg.home-hero__scroll-svg')
+  const illustration = hero.locator('.home-hero__illustration')
+  const illustrationImage = illustration.locator('img.home-hero__illustration-image')
+  const illustrationVeil = illustration.locator('.home-hero__illustration-veil')
 
   await expect(hero).toHaveClass(/home-hero--centered/)
   await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
@@ -39,8 +75,16 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
-  await expect(scrollScene).toHaveAttribute('aria-hidden', 'true')
-  await expect(scrollSvg).toBeVisible()
+  await expect(illustration).toHaveCount(1)
+  await expect(illustration).toHaveAttribute('aria-hidden', 'true')
+  await expect(illustrationImage).toHaveCount(1)
+  await expect(illustrationImage).toHaveAttribute('alt', '')
+  await expect(illustrationImage).toHaveAttribute(
+    'src',
+    '/images/home-hero-chinese-elements.webp',
+  )
+  await expect(illustrationVeil).toHaveCount(1)
+  await expect(hero.locator('.home-hero__scroll-scene, svg.home-hero__scroll-svg')).toHaveCount(0)
 
   const journeyNodes = page.locator('.journey-map__path > .journey-node')
   await expect(journeyNodes).toHaveCount(11)
@@ -82,18 +126,36 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
     await expect(heading.locator('.lesson-topic-title__secondary')).toHaveText(explanation)
   }
 
-  for (const width of [320, 390, 1024, 1440]) {
-    await page.setViewportSize({ width, height: 900 })
+  for (const viewport of heroViewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height })
 
     const firstCard = journeyNodes.first()
     const secondCard = journeyNodes.nth(1)
     const heroTitle = page.getByRole('heading', { name: '轻松学中文' })
+    const heroSlogan = page.getByText('Learn Mandarin in real life scenarios')
+    const languageControls = page.getByRole('group', { name: 'Explanation language' })
     const title = firstCard.locator('h2')
     const slot = firstCard.locator('.journey-node__illustration-slot--stamp')
 
-    const [firstCardBox, secondCardBox, heroTitleBox, titleBox, slotBox] = await Promise.all([
+    await expect(illustrationImage).toBeVisible()
+    await expect(illustrationVeil).toBeVisible()
+    await expect(heroTitle).toBeVisible()
+    await expect(heroSlogan).toBeVisible()
+    await expect(languageControls).toBeVisible()
+
+    const [
+      firstCardBox,
+      secondCardBox,
+      heroBox,
+      illustrationBox,
+      heroTitleBox,
+      titleBox,
+      slotBox,
+    ] = await Promise.all([
       firstCard.boundingBox(),
       secondCard.boundingBox(),
+      hero.boundingBox(),
+      illustration.boundingBox(),
       heroTitle.boundingBox(),
       title.boundingBox(),
       slot.boundingBox(),
@@ -101,26 +163,85 @@ test('keeps the Home journey stamp slot decorative while preserving readable tex
 
     expect(firstCardBox).not.toBeNull()
     expect(secondCardBox).not.toBeNull()
+    expect(heroBox).not.toBeNull()
+    expect(illustrationBox).not.toBeNull()
     expect(heroTitleBox).not.toBeNull()
     expect(titleBox).not.toBeNull()
     expect(slotBox).not.toBeNull()
 
-    const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
-    const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
-    const sceneBox = await scrollScene.boundingBox()
+    const [scrollWidth, clientWidth, heroClientHeight, layerStyle, imageFacts] =
+      await Promise.all([
+        page.evaluate(() => document.documentElement.scrollWidth),
+        page.evaluate(() => document.documentElement.clientWidth),
+        hero.evaluate((element) => element.clientHeight),
+        illustration.evaluate((element) => {
+          const style = window.getComputedStyle(element)
+          return {
+            overflow: style.overflow,
+            pointerEvents: style.pointerEvents,
+            position: style.position,
+          }
+        }),
+        illustrationImage.evaluate((element) => {
+          const image = element as HTMLImageElement
+          const style = window.getComputedStyle(image)
+          return {
+            complete: image.complete,
+            naturalWidth: image.naturalWidth,
+            naturalHeight: image.naturalHeight,
+            objectFit: style.objectFit,
+            opacity: Number.parseFloat(style.opacity),
+            cssHeight: Number.parseFloat(style.height),
+            cssTop: Number.parseFloat(style.top),
+          }
+        }),
+      ])
 
     expect(scrollWidth).toBe(clientWidth)
-    expect(sceneBox).not.toBeNull()
-    expect(sceneBox!.width).toBeGreaterThan(clientWidth * 0.82)
+    expect(layerStyle).toEqual({
+      overflow: 'hidden',
+      pointerEvents: 'none',
+      position: 'absolute',
+    })
+    expect(imageFacts.complete).toBe(true)
+    expect(imageFacts.naturalWidth).toBe(1318)
+    expect(imageFacts.naturalHeight).toBe(1226)
+    expect(imageFacts.objectFit).toBe('contain')
+    expect(imageFacts.opacity).toBeCloseTo(viewport.expectedOpacity, 2)
+    expect(imageFacts.cssHeight / heroClientHeight).toBeCloseTo(
+      viewport.expectedImageHeightRatio,
+      2,
+    )
+    expect(imageFacts.cssTop / heroClientHeight).toBeCloseTo(
+      viewport.expectedImageTopRatio,
+      2,
+    )
+    expect(Math.abs(illustrationBox!.x - heroBox!.x)).toBeLessThanOrEqual(2)
+    expect(Math.abs(illustrationBox!.y - heroBox!.y)).toBeLessThanOrEqual(2)
+    expect(
+      Math.abs(
+        illustrationBox!.x + illustrationBox!.width - (heroBox!.x + heroBox!.width),
+      ),
+    ).toBeLessThanOrEqual(2)
+    expect(
+      Math.abs(
+        illustrationBox!.y + illustrationBox!.height - (heroBox!.y + heroBox!.height),
+      ),
+    ).toBeLessThanOrEqual(2)
 
-    if (width <= 390) {
+    if (viewport.width <= 390) {
       expect(Math.abs(firstCardBox!.x - secondCardBox!.x)).toBeLessThan(2)
       expect(secondCardBox!.y).toBeGreaterThan(firstCardBox!.y + firstCardBox!.height - 2)
     }
 
     expect(heroTitleBox!.width).toBeLessThan(clientWidth * 0.92)
-    expect(heroTitleBox!.height).toBeLessThan(width >= 1024 ? 116 : 92)
+    expect(heroTitleBox!.height).toBeLessThan(viewport.width >= 1024 ? 116 : 92)
     expect(slotBox!.width).toBeLessThan(firstCardBox!.width * 0.38)
-    expect(titleBox!.width).toBeGreaterThanOrEqual(width >= 1024 ? 150 : 140)
+    expect(titleBox!.width).toBeGreaterThanOrEqual(viewport.width >= 1024 ? 150 : 140)
+
+    await test.info().attach(`home-hero-${viewport.name}-${viewport.width}`, {
+      body: await hero.screenshot(),
+      contentType: 'image/png',
+    })
   }
 })
