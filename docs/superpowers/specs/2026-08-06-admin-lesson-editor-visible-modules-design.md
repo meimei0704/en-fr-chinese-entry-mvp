@@ -17,6 +17,7 @@
 5. Practice → short-input 流程继续保留。
 6. Pronunciation / Hanzi recognition 的旧数据、revision/history、schema、seed 与 API 继续保留。
 7. Admin 课程列表、Voice 管理及其他后台页面本轮不修改。
+8. 编辑器的 pending 文案必须明确只描述“可编辑模块”，不能在隐藏模块仍 pending 时声称全部模块已发布。
 
 ## 当前基线
 
@@ -84,6 +85,16 @@ Pronunciation 与 Hanzi recognition 不得出现在：
 
 加载 skeleton、空状态和错误页面不新增这两个名称。
 
+### Pending 状态文案
+
+顶部 Draft state 只描述本页面 7 个可编辑模块：
+
+- 可见 pending 为 0：说明显示 `All editable modules published`，badge 显示 `Editable modules in sync`。
+- 可见 pending 为 1：显示 `1 editable module pending publish`。
+- 可见 pending 大于 1：显示 `${count} editable modules pending publish`。
+
+如果只有隐藏模块 pending，计数显示 0 并使用上述 scoped wording。Admin 课程列表继续按完整服务端模块统计，二者不矛盾：列表描述完整数据状态，编辑器只声明可编辑模块状态。
+
 ### 明确保留
 
 Short Input 必须继续出现在：
@@ -137,6 +148,8 @@ type EditableModuleType = (typeof editableModuleOrder)[number]
 
 字段定义文件本身不删除，底层类型和旧数据仍可由其他能力读取。
 
+`getPendingModuleCopy` 和顶部 badge copy 同步改为 `editable module(s)` 范围；不得继续输出 `All modules published` 或 `Published in sync` 这种完整模块语义。
+
 ### 3. 统一派生可见 snapshot 模块
 
 页面先从完整 `snapshot.modules` 建立按 module type 查询的 map，再严格按 `editableModuleOrder` 逐项读取并派生 `editableModuleSnapshots`。不得直接对服务端数组做 `filter` 后沿用其顺序，因为生产 MySQL snapshot 当前按 `lm.module_type asc` 返回，不等于页面确认顺序。
@@ -175,6 +188,7 @@ type EditableModuleType = (typeof editableModuleOrder)[number]
 - 7 个可见模块继续使用现有保存、发布和回滚 API。
 - 隐藏模块没有 UI 入口，因此不会从本页面发起保存、发布或回滚。
 - 如果隐藏模块已有 unpublished changes，本页面 pending 数量有意忽略它们。
+- 发布最后一个可见 pending 后，即使响应 snapshot 仍含隐藏 pending，页面回到 0 并显示 `All editable modules published` / `Editable modules in sync`。
 - 服务端接口仍接受 Pronunciation / Hanzi recognition module type；旧 revision/history 不删除。
 
 ### 其他能力
@@ -208,9 +222,11 @@ type EditableModuleType = (typeof editableModuleOrder)[number]
 2. 使用刻意打乱/按字母排序的 9 模块 response，Module directory 仍只有 7 个模块和 7 个 Edit 入口，Module directory 与 Module History 都严格按确认的 7 模块顺序显示。
 3. 页面范围内不存在 Pronunciation / Hanzi recognition 卡片、按钮、history heading、publish 或 rollback 控制。
 4. Short Input 卡片、Edit 入口和 Inline editor 仍可用；编辑 `Prompt (en)` 并保存，断言 draft 请求的 `moduleType` 为 `shortInput` 且 payload 保持完整结构。
-5. 构造 Short Input、Pronunciation、Hanzi recognition 都 pending 的 snapshot，顶部只显示 `1 module pending publish`，并只出现 `Publish short input`；点击后断言 publish 请求使用 `moduleType: shortInput`。
-6. 为 Short Input、Pronunciation、Hanzi recognition 都提供 published history；确认隐藏模块 history 不渲染，Short Input history 可见；点击旧 Short Input revision 的 rollback，断言 rollback 请求包含 `moduleType: shortInput` 与目标 revision。
-7. 保留 Lesson Meta 等既有认证、保存、预览刷新、未保存离开提醒、发布失败和 rollback 测试。
+5. 构造只有 Pronunciation、Hanzi recognition pending 的 snapshot：顶部计数为 0，显示 `All editable modules published` / `Editable modules in sync`，且无隐藏名称、控制或反馈。
+6. 构造 Short Input、Pronunciation、Hanzi recognition 都 pending 的 snapshot：顶部只显示 `1 editable module pending publish`，并只出现 `Publish short input`；点击后断言 publish 请求使用 `moduleType: shortInput`。
+7. Publish 成功响应将 Short Input 设为 published、但继续保留两个隐藏 pending；页面必须回到上述 scoped 0 状态，且隐藏模块仍无名称、控制或反馈。
+8. 为 Short Input、Pronunciation、Hanzi recognition 都提供 published history；确认隐藏模块 history 不渲染，Short Input history 可见；点击旧 Short Input revision 的 rollback，断言 rollback 请求包含 `moduleType: shortInput` 与目标 revision。
+9. 保留 Lesson Meta 等既有认证、保存、预览刷新、未保存离开提醒、发布失败和 rollback 测试；更新旧的 `All modules published` 断言为 scoped wording。
 
 ### ModuleHistoryList 契约
 
@@ -230,6 +246,7 @@ type EditableModuleType = (typeof editableModuleOrder)[number]
 - 进入 `/admin/lesson/self-intro` 后目录只有 7 个 Edit 入口；
 - Pronunciation / Hanzi recognition 在课程编辑页不可见；
 - Short Input 可见；
+- Draft state 使用 `editable modules` 范围文案；
 - 既有 Lesson Meta 保存、返回列表和 Voice 页面流程继续通过；
 - Voice 页面仍可出现其既有 pronunciation 语音文案和目标，证明本轮未扩大到 Voice 管理。
 
@@ -275,7 +292,8 @@ type EditableModuleType = (typeof editableModuleOrder)[number]
 
 1. Admin lesson editor 的所有区域都不显示 Pronunciation / Hanzi recognition。
 2. 页面只展示并统计 7 个确认模块。
-3. Short Input 编辑、历史与发布能力保持。
-4. 完整 API snapshot 和底层旧数据能力不变。
-5. Voice、Admin 列表及学习者流程不回归。
-6. 自动化验证、review、部署与生产 smoke 均有可见证据。
+3. 可见 pending 为 0 时只声明 `editable modules` 已同步，不对隐藏模块状态作错误陈述。
+4. Short Input 编辑、历史与发布能力保持；发布最后一个可见 pending 后 scoped 0 状态正确。
+5. 完整 API snapshot 和底层旧数据能力不变。
+6. Voice、Admin 列表及学习者流程不回归。
+7. 自动化验证、review、部署与生产 smoke 均有可见证据。
