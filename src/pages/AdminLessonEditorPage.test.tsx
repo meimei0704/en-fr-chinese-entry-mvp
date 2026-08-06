@@ -67,6 +67,14 @@ describe('AdminLessonEditorPage', () => {
 
     expect(screen.getByTestId('admin-editor-loading-shell')).toBeVisible()
     expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    const main = screen.getByRole('main')
+    const adminHero = screen
+      .getByRole('heading', { level: 1, name: /edit self-intro/i })
+      .closest('.lesson-header-card')
+    expect(main).toHaveClass('admin-page-shell')
+    expect(main).not.toHaveClass('lesson-page')
+    expect(adminHero).toHaveClass('lesson-header-card', 'admin-editor-hero')
+    expect(adminHero?.closest('.lesson-page')).toBeNull()
     expect(screen.getByTestId('admin-editor-layout')).toBeVisible()
     expect(screen.getByTestId('admin-editor-main-column')).toBeVisible()
     expect(screen.getByTestId('admin-editor-side-column')).toBeVisible()

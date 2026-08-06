@@ -2,42 +2,44 @@ import { expect, test } from 'playwright/test'
 
 const dockLessons = ['self-intro', 'restaurant-order', 'train-station-ticket'] as const
 
-test('centers the Lesson CTA group in its action dock across responsive widths', async ({ page }) => {
+test('keeps the three-layer Lesson layout aligned across responsive widths', async ({ page }) => {
   for (const lessonId of dockLessons) {
-    for (const width of [1440, 390, 320]) {
+    for (const width of [1440, 760, 390, 320]) {
       await page.setViewportSize({ width, height: 900 })
       await page.goto(`/lesson/${lessonId}`)
 
       const dock = page.getByRole('navigation', { name: /lesson actions/i })
-      const practice = page.getByRole('link', { name: /go to practice/i })
-      const shortInput = page.getByRole('link', { name: /finish with short input/i })
-      const home = page.getByRole('link', { name: /back to home/i })
+      const practice = dock.getByRole('link', { name: /go to practice/i })
+      const home = dock.getByRole('link', { name: /back to home/i })
+      const rail = page.locator('.lesson-page .lesson-progress-preview__rail')
+      const steps = rail.getByRole('listitem')
 
       await expect(dock).toBeVisible()
+      await expect(dock.getByRole('link')).toHaveCount(2)
       await expect(practice).toHaveAttribute('href', `/lesson/${lessonId}/practice`)
-      await expect(shortInput).toHaveAttribute('href', `/lesson/${lessonId}/short-input`)
       await expect(home).toHaveAttribute('href', '/home')
+      await expect(
+        page.getByRole('link', { name: /finish with short input/i }),
+      ).toHaveCount(0)
+      await expect(steps).toHaveCount(3)
 
       await dock.scrollIntoViewIfNeeded()
 
-      const [dockBox, practiceBox, shortInputBox, homeBox] = await Promise.all([
+      const [dockBox, practiceBox, homeBox, railBox] = await Promise.all([
         dock.boundingBox(),
         practice.boundingBox(),
-        shortInput.boundingBox(),
         home.boundingBox(),
+        rail.boundingBox(),
       ])
 
       expect(dockBox).not.toBeNull()
       expect(practiceBox).not.toBeNull()
-      expect(shortInputBox).not.toBeNull()
       expect(homeBox).not.toBeNull()
+      expect(railBox).not.toBeNull()
 
-      const buttonLeft = Math.min(practiceBox!.x, shortInputBox!.x, homeBox!.x)
-      const buttonRight = Math.max(
-        practiceBox!.x + practiceBox!.width,
-        shortInputBox!.x + shortInputBox!.width,
-        homeBox!.x + homeBox!.width,
-      )
+      const buttonBoxes = [practiceBox!, homeBox!]
+      const buttonLeft = Math.min(...buttonBoxes.map((box) => box.x))
+      const buttonRight = Math.max(...buttonBoxes.map((box) => box.x + box.width))
       const buttonGroupCenter = (buttonLeft + buttonRight) / 2
       const buttonGroupWidth = buttonRight - buttonLeft
       const dockCenter = dockBox!.x + dockBox!.width / 2
@@ -45,16 +47,47 @@ test('centers the Lesson CTA group in its action dock across responsive widths',
       expect(Math.abs(buttonGroupCenter - dockCenter)).toBeLessThanOrEqual(2)
       expect(dockBox!.width - buttonGroupWidth).toBeLessThanOrEqual(64)
 
-      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
-      const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
-      expect(scrollWidth).toBe(clientWidth)
-
-      for (const buttonBox of [practiceBox!, shortInputBox!, homeBox!]) {
+      for (const buttonBox of buttonBoxes) {
         expect(buttonBox.x).toBeGreaterThanOrEqual(dockBox!.x - 1)
         expect(buttonBox.x + buttonBox.width).toBeLessThanOrEqual(
           dockBox!.x + dockBox!.width + 1,
         )
       }
+
+      const stepBoxes = await steps.evaluateAll((items) =>
+        items.map((item) => {
+          const box = item.getBoundingClientRect()
+          return { x: box.x, y: box.y, width: box.width }
+        }),
+      )
+
+      if (width > 760) {
+        expect(
+          Math.max(...stepBoxes.map((box) => box.width)) -
+            Math.min(...stepBoxes.map((box) => box.width)),
+        ).toBeLessThanOrEqual(1)
+        expect(
+          Math.max(...stepBoxes.map((box) => box.y)) -
+            Math.min(...stepBoxes.map((box) => box.y)),
+        ).toBeLessThanOrEqual(1)
+        expect(Math.abs(stepBoxes[0].x - railBox!.x)).toBeLessThanOrEqual(1)
+        expect(
+          Math.abs(
+            stepBoxes[2].x + stepBoxes[2].width - railBox!.x - railBox!.width,
+          ),
+        ).toBeLessThanOrEqual(1)
+      } else {
+        expect(
+          Math.max(...stepBoxes.map((box) => box.x)) -
+            Math.min(...stepBoxes.map((box) => box.x)),
+        ).toBeLessThanOrEqual(1)
+        expect(stepBoxes[1].y).toBeGreaterThan(stepBoxes[0].y)
+        expect(stepBoxes[2].y).toBeGreaterThan(stepBoxes[1].y)
+      }
+
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
+      const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
+      expect(scrollWidth).toBe(clientWidth)
     }
   }
 })
