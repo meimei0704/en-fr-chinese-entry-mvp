@@ -231,6 +231,9 @@ describe('learner progress', () => {
       'self-intro-review-1',
       'self-intro-review-2',
       'self-intro-review-3',
+      'self-intro-review-4',
+      'self-intro-review-5',
+      'self-intro-review-6',
     ])
     expect(updatedProgress.lastVisitedLesson).toBe('self-intro')
     expect(updatedProgress.lessonStepProgress['self-intro']).toEqual({
@@ -245,6 +248,9 @@ describe('learner progress', () => {
       'self-intro-review-1',
       'self-intro-review-2',
       'self-intro-review-3',
+      'self-intro-review-4',
+      'self-intro-review-5',
+      'self-intro-review-6',
     ])
   })
 })

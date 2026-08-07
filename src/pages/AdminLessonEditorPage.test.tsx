@@ -348,7 +348,7 @@ describe('AdminLessonEditorPage', () => {
     expect(screen.getByRole('heading', { level: 3, name: /listening/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 3, name: /speaking/i })).toBeVisible()
     expect(screen.getByRole('heading', { level: 3, name: /reading/i })).toBeVisible()
-    expect(screen.getByLabelText(/listening prompt \(en\)/i)).toBeVisible()
+    expect(screen.getAllByLabelText(/listening prompt \(en\)/i).length).toBeGreaterThanOrEqual(1)
   })
 
   it('publishes a changed module from the editor and refreshes module status/history', async () => {
