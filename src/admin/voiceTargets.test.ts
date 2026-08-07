@@ -95,11 +95,11 @@ describe('admin batch voice audio targets', () => {
     )
   })
 
-  it('locks the course manifest to the 239 existing zh-CN audio targets only', () => {
+  it('locks the course manifest to the 281 existing zh-CN audio targets only', () => {
     const targets = collectCourseVoiceAudioTargets(course.lessons)
     const targetTexts = new Set(targets.map((target) => target.text))
 
-    expect(targets).toHaveLength(239)
+    expect(targets).toHaveLength(281)
     expect(targets.every((target) => target.language === 'zh-CN')).toBe(true)
     expect(targets.every((target) => target.originalAudio.startsWith('/audio/'))).toBe(true)
     expect(targets.every((target) => target.storageKey.startsWith('audio/'))).toBe(true)
@@ -111,7 +111,7 @@ describe('admin batch voice audio targets', () => {
     expect(targets.some((target) => target.moduleType === 'reviewCards')).toBe(false)
   })
 
-  it('derives the 225 Admin Voice targets from the unchanged 239-target manifest', () => {
+  it('derives the 264 Admin Voice targets from the unchanged 281-target manifest', () => {
     const completeTargets = collectCourseVoiceAudioTargets(course.lessons)
     const visibleTargets = collectAdminVoiceVisibleTargets(course.lessons)
     const visibleModuleTypes = new Set([
@@ -128,14 +128,14 @@ describe('admin batch voice audio targets', () => {
       ]),
     )
 
-    expect(completeTargets).toHaveLength(239)
-    expect(completeTargets.filter((target) => target.moduleType === 'pronunciation')).toHaveLength(14)
-    expect(visibleTargets).toHaveLength(225)
+    expect(completeTargets).toHaveLength(281)
+    expect(completeTargets.filter((target) => target.moduleType === 'pronunciation')).toHaveLength(17)
+    expect(visibleTargets).toHaveLength(264)
     expect(visibleCounts).toEqual({
-      dialogue: 64,
-      sentencePatterns: 38,
-      vocabulary: 71,
-      practice: 42,
+      dialogue: 73,
+      sentencePatterns: 44,
+      vocabulary: 86,
+      practice: 51,
       shortInput: 10,
     })
     expect(visibleTargets.every((target) => visibleModuleTypes.has(target.moduleType))).toBe(true)

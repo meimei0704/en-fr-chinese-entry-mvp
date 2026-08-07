@@ -7,8 +7,8 @@ export const convenienceStoreRunLesson: LessonContent = {
     fr: 'Première course en supérette',
   },
   scenario: {
-    en: 'Buy a bottle of water, say you do not need anything else, ask the total, and pay.',
-    fr: 'Acheter une bouteille d’eau, dire que l’on n’a besoin de rien d’autre, demander le total et payer.',
+    en: 'Buy a bottle of water and a snack, say you do not need anything else, ask the total, pay by phone, and ask for a bag.',
+    fr: 'Acheter une bouteille d\'eau et un snack, dire que l\'on n\'a besoin de rien d\'autre, demander le total, payer par téléphone et demander un sac.',
   },
   dialogue: {
     title: {
@@ -22,15 +22,15 @@ export const convenienceStoreRunLesson: LessonContent = {
           en: 'Customer',
           fr: 'Client',
         },
-        hanzi: '你好，我要一瓶水。',
-        pinyin: 'Nǐ hǎo, wǒ yào yì píng shuǐ.',
+        hanzi: '你好，我要一瓶水和一包薯片。',
+        pinyin: 'Nǐ hǎo, wǒ yào yì píng shuǐ hé yì bāo shǔpiàn.',
         translation: {
-          en: 'Hello, I want a bottle of water.',
-          fr: 'Bonjour, je voudrais une bouteille d’eau.',
+          en: 'Hello, I want a bottle of water and a bag of chips.',
+          fr: 'Bonjour, je voudrais une bouteille d\'eau et un paquet de chips.',
         },
         explanation: {
-          en: '我要一瓶水 is a direct beginner phrase for a first convenience store purchase.',
-          fr: '我要一瓶水 est une phrase directe pour un premier achat en supérette.',
+          en: '我要...和... combines two items with 和 in one short sentence.',
+          fr: '我要...和... combine deux articles avec 和 dans une phrase courte.',
         },
         audio: '/audio/convenience-store-run/line-01.mp3',
       },
@@ -44,7 +44,7 @@ export const convenienceStoreRunLesson: LessonContent = {
         pinyin: 'Hǎo de, hái yào bié de ma?',
         translation: {
           en: 'Okay, do you want anything else?',
-          fr: 'D’accord, vous voulez autre chose ?',
+          fr: 'D\'accord, vous voulez autre chose ?',
         },
         explanation: {
           en: '还要别的吗 is a common checkout question after you name one item.',
@@ -62,11 +62,11 @@ export const convenienceStoreRunLesson: LessonContent = {
         pinyin: 'Bú yào le, yígòng duōshao qián?',
         translation: {
           en: 'No more, how much is it altogether?',
-          fr: 'Rien d’autre, ça fait combien au total ?',
+          fr: 'Rien d\'autre, ça fait combien au total ?',
         },
         explanation: {
           en: '不要了 closes the shopping list, and 一共多少钱 asks the total price.',
-          fr: '不要了 ferme la liste d’achats, et 一共多少钱 demande le prix total.',
+          fr: '不要了 ferme la liste d\'achats, et 一共多少钱 demande le prix total.',
         },
         audio: '/audio/convenience-store-run/line-03.mp3',
       },
@@ -76,11 +76,11 @@ export const convenienceStoreRunLesson: LessonContent = {
           en: 'Clerk',
           fr: 'Employé',
         },
-        hanzi: '五块钱。',
-        pinyin: 'Wǔ kuài qián.',
+        hanzi: '九块钱。',
+        pinyin: 'Jiǔ kuài qián.',
         translation: {
-          en: 'Five yuan.',
-          fr: 'Cinq yuans.',
+          en: 'Nine yuan.',
+          fr: 'Neuf yuans.',
         },
         explanation: {
           en: '块 is the everyday word you will hear for yuan in small purchases.',
@@ -105,6 +105,51 @@ export const convenienceStoreRunLesson: LessonContent = {
           fr: 'Cette phrase réutilise la question de paiement mobile de la leçon précédente dans un magasin.',
         },
         audio: '/audio/convenience-store-run/line-05.mp3',
+      },
+      {
+        id: 'convenience-store-run-line-06',
+        speaker: { en: 'Clerk', fr: 'Employé' },
+        hanzi: '可以，扫码这里。',
+        pinyin: 'Kěyǐ, sǎomǎ zhèlǐ.',
+        translation: {
+          en: 'Yes, scan here.',
+          fr: 'Oui, scannez ici.',
+        },
+        explanation: {
+          en: '扫码这里 points to the QR code on the counter or screen.',
+          fr: '扫码这里 indique le code QR sur le comptoir ou l\'écran.',
+        },
+        audio: '/audio/convenience-store-run/line-06.mp3',
+      },
+      {
+        id: 'convenience-store-run-line-07',
+        speaker: { en: 'Customer', fr: 'Client' },
+        hanzi: '有袋子吗？',
+        pinyin: 'Yǒu dàizi ma?',
+        translation: {
+          en: 'Do you have a bag?',
+          fr: 'Avez-vous un sac ?',
+        },
+        explanation: {
+          en: 'Ask 有袋子吗？ if you need a plastic bag for your items.',
+          fr: 'Demande 有袋子吗？ si tu as besoin d\'un sac plastique pour tes articles.',
+        },
+        audio: '/audio/convenience-store-run/line-07.mp3',
+      },
+      {
+        id: 'convenience-store-run-line-08',
+        speaker: { en: 'Clerk', fr: 'Employé' },
+        hanzi: '有，两毛钱。',
+        pinyin: 'Yǒu, liǎng máo qián.',
+        translation: {
+          en: 'Yes, twenty cents.',
+          fr: 'Oui, vingt centimes.',
+        },
+        explanation: {
+          en: 'Bags in some Chinese stores cost a small extra fee.',
+          fr: 'Les sacs dans certains magasins chinois coûtent un petit supplément.',
+        },
+        audio: '/audio/convenience-store-run/line-08.mp3',
       },
     ],
   },
@@ -134,7 +179,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       audio: '/audio/convenience-store-run/pattern-02.mp3',
       explanation: {
         en: 'This is a common question from a clerk before payment.',
-        fr: 'C’est une question courante de l’employé avant le paiement.',
+        fr: 'C\'est une question courante de l\'employé avant le paiement.',
       },
     },
     {
@@ -148,7 +193,29 @@ export const convenienceStoreRunLesson: LessonContent = {
       audio: '/audio/convenience-store-run/pattern-03.mp3',
       explanation: {
         en: 'Ask this when you are ready to pay for the purchase.',
-        fr: 'Demande cela quand tu es prêt à payer l’achat.',
+        fr: 'Demande cela quand tu es prêt à payer l\'achat.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-4',
+      pattern: '我要……和……',
+      meaning: { en: 'I want ... and ...', fr: 'Je voudrais ... et ...' },
+      example: '我要一瓶水和一包薯片。',
+      audio: '/audio/convenience-store-run/pattern-04.mp3',
+      explanation: {
+        en: 'Use 和 to list two items in one sentence at a store.',
+        fr: 'Utilise 和 pour énumérer deux articles dans une phrase au magasin.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-5',
+      pattern: '有……吗？',
+      meaning: { en: 'Do you have ...?', fr: 'Avez-vous ... ?' },
+      example: '有袋子吗？',
+      audio: '/audio/convenience-store-run/pattern-05.mp3',
+      explanation: {
+        en: 'Use 有…吗 to check if an item or service is available.',
+        fr: 'Utilise 有…吗 pour vérifier si un article ou un service est disponible.',
       },
     },
   ],
@@ -160,11 +227,11 @@ export const convenienceStoreRunLesson: LessonContent = {
       audio: '/audio/convenience-store-run/vocab-01.mp3',
       meaning: {
         en: 'a bottle of water',
-        fr: 'une bouteille d’eau',
+        fr: 'une bouteille d\'eau',
       },
       explanation: {
         en: 'A useful first purchase item after arriving.',
-        fr: 'Un premier achat utile après l’arrivée.',
+        fr: 'Un premier achat utile après l\'arrivée.',
       },
     },
     {
@@ -188,11 +255,11 @@ export const convenienceStoreRunLesson: LessonContent = {
       audio: '/audio/convenience-store-run/vocab-03.mp3',
       meaning: {
         en: 'no more / nothing else',
-        fr: 'rien d’autre',
+        fr: 'rien d\'autre',
       },
       explanation: {
         en: 'Use it to say you do not need anything else.',
-        fr: 'Utilise-le pour dire que tu n’as besoin de rien d’autre.',
+        fr: 'Utilise-le pour dire que tu n\'as besoin de rien d\'autre.',
       },
     },
     {
@@ -216,13 +283,18 @@ export const convenienceStoreRunLesson: LessonContent = {
       audio: '/audio/convenience-store-run/vocab-05.mp3',
       meaning: {
         en: 'how much money?',
-        fr: 'combien d’argent ? / combien ça coûte ?',
+        fr: 'combien d\'argent ? / combien ça coûte ?',
       },
       explanation: {
         en: 'The key phrase for asking a simple price.',
         fr: 'La phrase clé pour demander un prix simple.',
       },
     },
+    { id: 'convenience-store-run-vocab-6', hanzi: '薯片', pinyin: 'shǔpiàn', audio: '/audio/convenience-store-run/vocab-06.mp3', meaning: { en: 'potato chips', fr: 'chips' }, explanation: { en: 'A common snack to buy in convenience stores.', fr: 'Un snack courant à acheter en supérette.' } },
+    { id: 'convenience-store-run-vocab-7', hanzi: '袋子', pinyin: 'dàizi', audio: '/audio/convenience-store-run/vocab-07.mp3', meaning: { en: 'bag', fr: 'sac' }, explanation: { en: 'Ask for a 袋子 if you need something to carry your items.', fr: 'Demande un 袋子 si tu as besoin de porter tes articles.' } },
+    { id: 'convenience-store-run-vocab-8', hanzi: '扫码', pinyin: 'sǎomǎ', audio: '/audio/convenience-store-run/vocab-08.mp3', meaning: { en: 'scan code / scan to pay', fr: 'scanner le code / scanner pour payer' }, explanation: { en: 'The clerk points to the QR code and says this.', fr: 'L\'employé montre le code QR et dit ceci.' } },
+    { id: 'convenience-store-run-vocab-9', hanzi: '毛', pinyin: 'máo', audio: '/audio/convenience-store-run/vocab-09.mp3', meaning: { en: 'dime / one-tenth of a yuan', fr: 'dixième de yuan' }, explanation: { en: '毛 is the smaller unit when a price is under one yuan.', fr: '毛 est la petite unité quand un prix est inférieur à un yuan.' } },
+    { id: 'convenience-store-run-vocab-10', hanzi: '小票', pinyin: 'xiǎopiào', audio: '/audio/convenience-store-run/vocab-10.mp3', meaning: { en: 'receipt', fr: 'ticket de caisse' }, explanation: { en: 'The small receipt you get after paying at a store.', fr: 'Le petit reçu que tu obtiens après avoir payé en magasin.' } },
   ],
   pronunciation: [
     {
@@ -239,7 +311,21 @@ export const convenienceStoreRunLesson: LessonContent = {
       },
       explanation: {
         en: 'This first store lesson favors clear survival phrases over a long shopping conversation.',
-        fr: 'Cette première leçon de supérette privilégie des phrases de survie claires plutôt qu’une longue conversation.',
+        fr: 'Cette première leçon de supérette privilégie des phrases de survie claires plutôt qu\'une longue conversation.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pronunciation-2',
+      focus: { en: 'p vs b contrast: 瓶 vs 饼', fr: 'Contraste p vs b : 瓶 vs 饼' },
+      audioText: '一瓶水，不是一饼水',
+      audio: '/audio/convenience-store-run/pronunciation-02.mp3',
+      tip: {
+        en: '瓶 (píng bottle) starts with a puff of air; 饼 (bǐng flat cake) does not. Keep the contrast clear.',
+        fr: '瓶 (píng bouteille) commence avec un souffle d\'air ; 饼 (bǐng galette) non. Garde le contraste net.',
+      },
+      explanation: {
+        en: 'Mixing p and b in a store could give the wrong item.',
+        fr: 'Confondre p et b en magasin pourrait donner le mauvais article.',
       },
     },
   ],
@@ -254,7 +340,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       },
       explanation: {
         en: 'Recognize 水 when buying a bottle of water.',
-        fr: 'Reconnais 水 quand tu achètes une bouteille d’eau.',
+        fr: 'Reconnais 水 quand tu achètes une bouteille d\'eau.',
       },
     },
     {
@@ -296,6 +382,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         fr: '瓶 est le classificateur pour une bouteille dans 一瓶水.',
       },
     },
+    { id: 'convenience-store-run-hanzi-5', hanzi: '薯', pinyin: 'shǔ', meaning: { en: 'potato / yam', fr: 'pomme de terre / igname' }, explanation: { en: 'Recognize 薯 in 薯片 on snack packages.', fr: 'Reconnais 薯 dans 薯片 sur les paquets de snacks.' } },
+    { id: 'convenience-store-run-hanzi-6', hanzi: '袋', pinyin: 'dài', meaning: { en: 'bag / sack', fr: 'sac' }, explanation: { en: 'Recognize 袋 in 袋子 when you need a bag.', fr: 'Reconnais 袋 dans 袋子 quand tu as besoin d\'un sac.' } },
   ],
   practice: {
     listening: [
@@ -303,30 +391,32 @@ export const convenienceStoreRunLesson: LessonContent = {
         id: 'convenience-store-run-listening-1',
         prompt: {
           en: 'Listen for the phrase that means a bottle of water.',
-          fr: 'Écoute la phrase qui signifie une bouteille d’eau.',
+          fr: 'Écoute la phrase qui signifie une bouteille d\'eau.',
         },
         target: '一瓶水',
         audio: '/audio/convenience-store-run/practice-listening-01.mp3',
         explanation: {
           en: '一瓶水 is the item you are buying.',
-          fr: '一瓶水 est l’article que tu achètes.',
+          fr: '一瓶水 est l\'article que tu achètes.',
         },
       },
+      { id: 'convenience-store-run-listening-2', prompt: { en: 'Which phrase asks for a bag?', fr: 'Quelle phrase demande un sac ?' }, target: '有袋子吗？', audio: '/audio/convenience-store-run/practice-listening-02.mp3', explanation: { en: '有袋子吗 checks if the store provides bags.', fr: '有袋子吗 vérifie si le magasin fournit des sacs.' } },
     ],
     speaking: [
       {
         id: 'convenience-store-run-speaking-1',
         prompt: {
           en: 'Say you do not need anything else.',
-          fr: 'Dis que tu n’as besoin de rien d’autre.',
+          fr: 'Dis que tu n\'as besoin de rien d\'autre.',
         },
         target: '不要了。',
         audio: '/audio/convenience-store-run/practice-speaking-01.mp3',
         explanation: {
-          en: '不要了 answers the clerk’s “anything else?” question.',
-          fr: '不要了 répond à la question « autre chose ? » de l’employé.',
+          en: '不要了 answers the clerk\'s "anything else?" question.',
+          fr: '不要了 répond à la question « autre chose ? » de l\'employé.',
         },
       },
+      { id: 'convenience-store-run-speaking-2', prompt: { en: 'Ask if they have a bag.', fr: 'Demande s\'ils ont un sac.' }, target: '有袋子吗？', audio: '/audio/convenience-store-run/practice-speaking-02.mp3', explanation: { en: 'A short practical question when buying several items.', fr: 'Une question pratique et courte quand on achète plusieurs articles.' } },
     ],
     reading: [
       {
@@ -339,9 +429,10 @@ export const convenienceStoreRunLesson: LessonContent = {
         audio: '/audio/convenience-store-run/practice-reading-01.mp3',
         explanation: {
           en: '一共多少钱？ asks how much the purchase costs altogether.',
-          fr: '一共多少钱？ demande combien coûte l’achat au total.',
+          fr: '一共多少钱？ demande combien coûte l\'achat au total.',
         },
       },
+      { id: 'convenience-store-run-reading-2', prompt: { en: 'Match the word for potato chips.', fr: 'Associe le mot pour chips.' }, target: '薯片', audio: '/audio/convenience-store-run/practice-reading-02.mp3', explanation: { en: '薯片 is a common snack you will see on shelves.', fr: '薯片 est un snack courant que tu verras dans les rayons.' } },
     ],
   },
   reviewCards: [
@@ -350,7 +441,7 @@ export const convenienceStoreRunLesson: LessonContent = {
       front: '一瓶水',
       back: {
         en: 'a bottle of water',
-        fr: 'une bouteille d’eau',
+        fr: 'une bouteille d\'eau',
       },
       explanation: {
         en: 'A practical first convenience store item.',
@@ -374,19 +465,22 @@ export const convenienceStoreRunLesson: LessonContent = {
       front: '不要了',
       back: {
         en: 'no more / nothing else',
-        fr: 'rien d’autre',
+        fr: 'rien d\'autre',
       },
       explanation: {
         en: 'A short response when the clerk asks if you want anything else.',
-        fr: 'Une réponse courte quand l’employé demande si tu veux autre chose.',
+        fr: 'Une réponse courte quand l\'employé demande si tu veux autre chose.',
       },
     },
+    { id: 'convenience-store-run-review-4', front: '薯片', back: { en: 'potato chips', fr: 'chips' }, explanation: { en: 'A snack to grab at any convenience store.', fr: 'Un snack à prendre dans n\'importe quelle supérette.' } },
+    { id: 'convenience-store-run-review-5', front: '袋子', back: { en: 'bag', fr: 'sac' }, explanation: { en: 'Ask for this when you buy several items.', fr: 'Demande ceci quand tu achètes plusieurs articles.' } },
+    { id: 'convenience-store-run-review-6', front: '扫码', back: { en: 'scan to pay', fr: 'scanner pour payer' }, explanation: { en: 'The payment action at the counter.', fr: 'L\'action de paiement au comptoir.' } },
   ],
   shortInput: {
     id: 'convenience-store-run-short-input-01',
     prompt: {
       en: 'You want to buy a bottle of water.',
-      fr: 'Tu veux acheter une bouteille d’eau.',
+      fr: 'Tu veux acheter une bouteille d\'eau.',
     },
     target: '我要一瓶水。',
     explanation: {
