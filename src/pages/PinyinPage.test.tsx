@@ -143,7 +143,7 @@ describe('PinyinPage', () => {
 
   it('finishes the fixed eight-question tone game and records the score', async () => {
     const user = userEvent.setup()
-    const questions = pinyinCourse.lesson.toneGame.questions
+    const questions = pinyinCourse.lessons[0].toneGame.questions
 
     renderRoute('/pinyin')
 

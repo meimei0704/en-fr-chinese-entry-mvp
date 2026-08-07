@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
@@ -13,13 +13,35 @@ import {
 } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
 
+const courseLessonIds = pinyinCourse.lessons.map((l) => l.id)
+
+function findDefaultLesson(): (typeof courseLessonIds)[number] {
+  const progress = loadPinyinProgress()
+
+  for (const lesson of pinyinCourse.lessons) {
+    const lp = progress.lessonProgress[lesson.id]
+    if (!lp || lp.completedSections.length < 3) {
+      return lesson.id
+    }
+  }
+
+  return pinyinCourse.lessons[0].id
+}
+
 export function PinyinPage() {
   const language = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(language)
   const pinyinCopy = copy.pinyinPage
   const [progress, setProgress] = useState(() => loadPinyinProgress())
-  const lesson = pinyinCourse.lesson
-  const lessonId = lesson.id
+  const [selectedLessonId, setSelectedLessonId] = useState(findDefaultLesson)
+
+  const lesson = useMemo(
+    () => pinyinCourse.lessons.find((l) => l.id === selectedLessonId) ?? pinyinCourse.lessons[0],
+    [selectedLessonId],
+  )
+  const lessonIndex = pinyinCourse.lessons.findIndex((l) => l.id === selectedLessonId)
+  const lessonNumber = lessonIndex >= 0 ? lessonIndex + 1 : 1
+
   const navItems = [
     { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
     { href: '#pinyin-tone-game', label: pinyinCopy.toneGameNav },
@@ -27,7 +49,7 @@ export function PinyinPage() {
   ] as const
 
   function handleReferenceAudioPlay() {
-    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), lessonId)
+    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), selectedLessonId)
 
     savePinyinProgress(nextProgress)
     setProgress(nextProgress)
@@ -45,10 +67,28 @@ export function PinyinPage() {
           navItems={navItems}
         />
 
+        <nav role="tablist" aria-label="Pinyin lessons" className="pinyin-lesson-tabs">
+          {pinyinCourse.lessons.map((l) => (
+            <button
+              key={l.id}
+              type="button"
+              role="tab"
+              className={`pinyin-lesson-tab ${l.id === selectedLessonId ? 'pinyin-lesson-tab--selected' : ''}`}
+              aria-selected={l.id === selectedLessonId}
+              onClick={() => {
+                setProgress(loadPinyinProgress())
+                setSelectedLessonId(l.id)
+              }}
+            >
+              {getLocalizedText(l.title, language)}
+            </button>
+          ))}
+        </nav>
+
         <PinyinReferenceSection
           groups={lesson.reference}
           language={language}
-          eyebrow={pinyinCopy.lessonEyebrow(1)}
+          eyebrow={pinyinCopy.lessonEyebrow(lessonNumber)}
           heading={pinyinCopy.referenceHeading}
           summary={pinyinCopy.referenceSummary}
           playAudioLabel={pinyinCopy.playReferenceAudio}
@@ -58,9 +98,9 @@ export function PinyinPage() {
         <ToneGameSection
           toneGame={lesson.toneGame}
           language={language}
-          lessonId={lessonId}
+          lessonId={lesson.id}
           copy={{
-            lessonEyebrow: pinyinCopy.lessonEyebrow(1),
+            lessonEyebrow: pinyinCopy.lessonEyebrow(lessonNumber),
             questionProgress: pinyinCopy.toneGameQuestionProgress,
             playPromptAudio: pinyinCopy.playTonePromptAudio,
             choicesLegend: pinyinCopy.toneGameChoicesLegend,
@@ -77,9 +117,9 @@ export function PinyinPage() {
           shadowing={lesson.shadowing}
           language={language}
           progress={progress}
-          lessonId={lessonId}
+          lessonId={lesson.id}
           copy={{
-            lessonEyebrow: pinyinCopy.lessonEyebrow(1),
+            lessonEyebrow: pinyinCopy.lessonEyebrow(lessonNumber),
             promptProgress: pinyinCopy.shadowingPromptProgress,
             promptCompletionProgress: pinyinCopy.shadowingPromptCompletionProgress,
             playPromptAudio: pinyinCopy.playShadowingPromptAudio,
