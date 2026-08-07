@@ -23,9 +23,9 @@ export function LessonPage() {
   )
   const copy = getUiCopy(selectedLanguage)
   const studyLayers = [
-    copy.lessonPage.dialogue,
-    copy.lessonPage.sentencePatterns,
-    copy.lessonPage.vocabulary,
+    { id: 'lesson-dialogue', label: copy.lessonPage.dialogue },
+    { id: 'lesson-patterns', label: copy.lessonPage.sentencePatterns },
+    { id: 'lesson-vocabulary', label: copy.lessonPage.vocabulary },
   ]
 
   useEffect(() => {
@@ -88,9 +88,11 @@ export function LessonPage() {
           </div>
           <ol className="lesson-progress-preview__rail">
             {studyLayers.map((layer, index) => (
-              <li key={layer} className={index === 0 ? 'is-current' : undefined}>
-                <span>{index + 1}</span>
-                {layer}
+              <li key={layer.id} className={index === 0 ? 'is-current' : undefined}>
+                <a className="lesson-progress-preview__rail-link" href={`#${layer.id}`}>
+                  <span>{index + 1}</span>
+                  {layer.label}
+                </a>
               </li>
             ))}
           </ol>
@@ -100,20 +102,17 @@ export function LessonPage() {
           className="surface-card lesson-overview-card"
           aria-label={copy.lessonPage.lessonOverviewLabel}
         >
-          <div>
-            <h2>{copy.lessonPage.scenarioGoal}</h2>
-            <p className="muted-text">{getLocalizedText(lesson.scenario, selectedLanguage)}</p>
-          </div>
+          <p className="explanation-block">{copy.lessonPage.sectionSummary}</p>
           <LanguageToggle
             selectedLanguage={selectedLanguage}
             onSelect={handleSelectLanguage}
             ariaLabel={copy.languageToggleLabel}
           />
-          <p className="explanation-block">{copy.lessonPage.sectionSummary}</p>
         </section>
 
         <div className="section-stack">
           <section
+            id="lesson-dialogue"
             className="surface-card lesson-section-card"
             aria-label={copy.lessonPage.dialoguePracticeLabel}
           >
@@ -121,7 +120,7 @@ export function LessonPage() {
             <DialoguePlayer lines={lesson.dialogue.lines} language={selectedLanguage} />
           </section>
 
-          <section className="surface-card lesson-section-card">
+          <section id="lesson-patterns" className="surface-card lesson-section-card">
             <h2>{copy.lessonPage.sentencePatterns}</h2>
             <div className="card-grid">
               {lesson.sentencePatterns.map((pattern) => (
@@ -141,7 +140,7 @@ export function LessonPage() {
             </div>
           </section>
 
-          <section className="surface-card lesson-section-card">
+          <section id="lesson-vocabulary" className="surface-card lesson-section-card">
             <h2>{copy.lessonPage.vocabulary}</h2>
             <div className="card-grid card-grid--compact">
               {lesson.vocabulary.map((item) => (
