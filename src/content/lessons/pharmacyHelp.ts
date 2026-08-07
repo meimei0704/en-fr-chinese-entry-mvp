@@ -7,13 +7,13 @@ export const pharmacyHelpLesson: LessonContent = {
     fr: 'Demander de l’aide à la pharmacie',
   },
   scenario: {
-    en: 'Tell a pharmacy clerk you have a headache, answer whether you have a fever, understand medicine frequency, and ask the price.',
-    fr: 'Dire au pharmacien que tu as mal à la tête, répondre si tu as de la fièvre, comprendre la fréquence du médicament et demander le prix.',
+    en: 'Describe a headache or stomach ache, answer fever questions, ask about allergies, understand medicine frequency and dosage, and pay.',
+    fr: 'Décrire un mal de tête ou de ventre, répondre aux questions de fièvre, demander à propos des allergies, comprendre la fréquence et le dosage, et payer.',
   },
   dialogue: {
     title: {
-      en: 'Describe a mild symptom',
-      fr: 'Décrire un symptôme léger',
+      en: 'Describe symptoms and buy medicine',
+      fr: 'Décrire des symptômes et acheter un médicament',
     },
     lines: [
       {
@@ -58,15 +58,15 @@ export const pharmacyHelpLesson: LessonContent = {
           en: 'Traveler',
           fr: 'Voyageur',
         },
-        hanzi: '不发烧。',
-        pinyin: 'Bù fāshāo.',
+        hanzi: '不发烧，但是肚子也有点疼。',
+        pinyin: 'Bù fāshāo, dànshì dùzi yě yǒudiǎn téng.',
         translation: {
-          en: 'No fever.',
-          fr: 'Pas de fièvre.',
+          en: 'No fever, but my stomach also hurts a little.',
+          fr: 'Pas de fièvre, mais j’ai aussi un peu mal au ventre.',
         },
         explanation: {
-          en: 'A short negative answer is enough for this beginner exchange.',
-          fr: 'Une réponse négative courte suffit pour cet échange débutant.',
+          en: 'Add 但是 to link two symptoms in one turn.',
+          fr: 'Ajoute 但是 pour relier deux symptômes en une seule réplique.',
         },
         audio: '/audio/pharmacy-help/line-03.mp3',
       },
@@ -76,15 +76,15 @@ export const pharmacyHelpLesson: LessonContent = {
           en: 'Pharmacist',
           fr: 'Pharmacien',
         },
-        hanzi: '这个药，一天两次。',
-        pinyin: 'Zhège yào, yì tiān liǎng cì.',
+        hanzi: '你对什么过敏吗？',
+        pinyin: 'Nǐ duì shénme guòmǐn ma?',
         translation: {
-          en: 'This medicine, twice a day.',
-          fr: 'Ce médicament, deux fois par jour.',
+          en: 'Are you allergic to anything?',
+          fr: 'Êtes-vous allergique à quelque chose ?',
         },
         explanation: {
-          en: '一天两次 gives the frequency without complex medical wording.',
-          fr: '一天两次 donne la fréquence sans vocabulaire médical complexe.',
+          en: 'A safety question the pharmacist will ask before giving medicine.',
+          fr: 'Une question de sécurité que le pharmacien pose avant de donner un médicament.',
         },
         audio: '/audio/pharmacy-help/line-04.mp3',
       },
@@ -94,17 +94,62 @@ export const pharmacyHelpLesson: LessonContent = {
           en: 'Traveler',
           fr: 'Voyageur',
         },
-        hanzi: '多少钱？谢谢。',
-        pinyin: 'Duōshao qián? Xièxie.',
+        hanzi: '没有过敏。',
+        pinyin: 'Méiyǒu guòmǐn.',
         translation: {
-          en: 'How much is it? Thank you.',
-          fr: 'Combien ça coûte ? Merci.',
+          en: 'No allergies.',
+          fr: 'Pas d’allergie.',
         },
         explanation: {
-          en: 'The price question closes the pharmacy interaction politely.',
-          fr: 'La question du prix termine poliment l’échange à la pharmacie.',
+          en: 'A short clear answer to the allergy safety question.',
+          fr: 'Une réponse courte et claire à la question de sécurité sur les allergies.',
         },
         audio: '/audio/pharmacy-help/line-05.mp3',
+      },
+      {
+        id: 'pharmacy-help-line-06',
+        speaker: { en: 'Pharmacist', fr: 'Pharmacien' },
+        hanzi: '这个止疼药，一次一片，一天两次。',
+        pinyin: 'Zhège zhǐténg yào, yí cì yí piàn, yì tiān liǎng cì.',
+        translation: {
+          en: 'This painkiller, one tablet per dose, twice a day.',
+          fr: 'Cet antidouleur, un comprimé par prise, deux fois par jour.',
+        },
+        explanation: {
+          en: '一次一片 adds the dosage detail on top of the frequency.',
+          fr: '一次一片 ajoute le détail du dosage en plus de la fréquence.',
+        },
+        audio: '/audio/pharmacy-help/line-06.mp3',
+      },
+      {
+        id: 'pharmacy-help-line-07',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '饭前吃还是饭后吃？',
+        pinyin: 'Fàn qián chī háishi fàn hòu chī?',
+        translation: {
+          en: 'Take before or after meals?',
+          fr: 'Prendre avant ou après les repas ?',
+        },
+        explanation: {
+          en: '饭前/饭后 is a common instruction to check for any medicine.',
+          fr: '饭前/饭后 est une consigne courante à vérifier pour tout médicament.',
+        },
+        audio: '/audio/pharmacy-help/line-07.mp3',
+      },
+      {
+        id: 'pharmacy-help-line-08',
+        speaker: { en: 'Pharmacist', fr: 'Pharmacien' },
+        hanzi: '饭后吃。一共十八块钱。',
+        pinyin: 'Fàn hòu chī. Yígòng shíbā kuài qián.',
+        translation: {
+          en: 'After meals. Eighteen yuan altogether.',
+          fr: 'Après les repas. Dix-huit yuans au total.',
+        },
+        explanation: {
+          en: 'The pharmacist gives the instruction and the price together.',
+          fr: 'Le pharmacien donne la consigne et le prix ensemble.',
+        },
+        audio: '/audio/pharmacy-help/line-08.mp3',
       },
     ],
   },
@@ -139,16 +184,38 @@ export const pharmacyHelpLesson: LessonContent = {
     },
     {
       id: 'pharmacy-help-pattern-3',
-      pattern: '一天……次。',
+      pattern: '一次……片。',
       meaning: {
-        en: '... times a day.',
-        fr: '... fois par jour.',
+        en: '... tablet(s) per dose.',
+        fr: '... comprimé(s) par prise.',
       },
-      example: '一天两次。',
+      example: '一次一片。',
       audio: '/audio/pharmacy-help/pattern-03.mp3',
       explanation: {
-        en: 'This common dosing phrase appears on instructions and in speech.',
-        fr: 'Cette phrase de dosage courante apparaît dans les consignes et à l’oral.',
+        en: 'This tells you how many pills to take at one time.',
+        fr: 'Cela indique combien de pilules prendre en une fois.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-4',
+      pattern: '我对……过敏。',
+      meaning: { en: 'I am allergic to ...', fr: 'Je suis allergique à ...' },
+      example: '我对青霉素过敏。',
+      audio: '/audio/pharmacy-help/pattern-04.mp3',
+      explanation: {
+        en: 'Use this to name a specific allergy if asked.',
+        fr: 'Utilise cette structure pour nommer une allergie spécifique si on te le demande.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-5',
+      pattern: '饭前还是饭后？',
+      meaning: { en: 'Before or after meals?', fr: 'Avant ou après les repas ?' },
+      example: '饭前还是饭后？',
+      audio: '/audio/pharmacy-help/pattern-05.mp3',
+      explanation: {
+        en: 'Ask this to confirm when to take the medicine.',
+        fr: 'Demande cela pour confirmer quand prendre le médicament.',
       },
     },
   ],
@@ -223,6 +290,11 @@ export const pharmacyHelpLesson: LessonContent = {
         fr: 'Un mot de sécurité à reconnaître même dans une leçon de santé légère.',
       },
     },
+    { id: 'pharmacy-help-vocab-6', hanzi: '肚子疼', pinyin: 'dùzi téng', audio: '/audio/pharmacy-help/vocab-06.mp3', meaning: { en: 'stomach ache', fr: 'mal au ventre' }, explanation: { en: 'Another common symptom to report at the pharmacy.', fr: 'Un autre symptôme courant à signaler à la pharmacie.' } },
+    { id: 'pharmacy-help-vocab-7', hanzi: '止疼药', pinyin: 'zhǐténg yào', audio: '/audio/pharmacy-help/vocab-07.mp3', meaning: { en: 'painkiller', fr: 'antidouleur' }, explanation: { en: 'The kind of medicine you might ask for with a headache.', fr: 'Le type de médicament que tu pourrais demander pour un mal de tête.' } },
+    { id: 'pharmacy-help-vocab-8', hanzi: '一次一片', pinyin: 'yí cì yí piàn', audio: '/audio/pharmacy-help/vocab-08.mp3', meaning: { en: 'one tablet per dose', fr: 'un comprimé par prise' }, explanation: { en: 'The dosage instruction you will hear with medicine.', fr: 'La consigne de dosage que tu entendras avec le médicament.' } },
+    { id: 'pharmacy-help-vocab-9', hanzi: '饭前', pinyin: 'fàn qián', audio: '/audio/pharmacy-help/vocab-09.mp3', meaning: { en: 'before meals', fr: 'avant les repas' }, explanation: { en: 'One of the two common medicine timing words.', fr: 'Un des deux mots courants pour le moment de prise du médicament.' } },
+    { id: 'pharmacy-help-vocab-10', hanzi: '饭后', pinyin: 'fàn hòu', audio: '/audio/pharmacy-help/vocab-10.mp3', meaning: { en: 'after meals', fr: 'après les repas' }, explanation: { en: 'The other common medicine timing word paired with 饭前.', fr: 'L’autre mot courant pour le moment de prise, associé à 饭前.' } },
   ],
   pronunciation: [
     {
@@ -240,6 +312,20 @@ export const pharmacyHelpLesson: LessonContent = {
       explanation: {
         en: 'Clarity matters more than speed in pharmacy phrases.',
         fr: 'La clarté compte plus que la vitesse dans les phrases de pharmacie.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pronunciation-2',
+      focus: { en: '3rd tone before 3rd tone: 止疼 vs 头疼', fr: '3e ton avant 3e ton : 止疼 vs 头疼' },
+      audioText: '止疼药，头疼，一次一片',
+      audio: '/audio/pharmacy-help/pronunciation-02.mp3',
+      tip: {
+        en: 'When two 3rd-tone syllables meet, the first changes to 2nd tone. Compare 止疼 (zhí téng) with 头疼 (tóu téng).',
+        fr: 'Quand deux syllabes au 3e ton se rencontrent, la première passe au 2e ton. Compare 止疼 (zhí téng) avec 头疼 (tóu téng).',
+      },
+      explanation: {
+        en: 'The 3rd-tone sandhi rule changes pronunciation in pharmacy words.',
+        fr: 'La règle du sandhi du 3e ton change la prononciation dans les mots de pharmacie.',
       },
     },
   ],
@@ -296,6 +382,8 @@ export const pharmacyHelpLesson: LessonContent = {
         fr: 'Il apparaît dans 发烧.',
       },
     },
+    { id: 'pharmacy-help-hanzi-5', hanzi: '肚', pinyin: 'dù', meaning: { en: 'belly / stomach', fr: 'ventre' }, explanation: { en: 'Recognize 肚 in 肚子疼 on symptom descriptions.', fr: 'Reconnais 肚 dans 肚子疼 dans les descriptions de symptômes.' } },
+    { id: 'pharmacy-help-hanzi-6', hanzi: '片', pinyin: 'piàn', meaning: { en: 'tablet / slice', fr: 'comprimé / tranche' }, explanation: { en: 'Recognize 片 in 一片 on medicine packaging.', fr: 'Reconnais 片 dans 一片 sur l’emballage du médicament.' } },
   ],
   practice: {
     listening: [
@@ -312,6 +400,7 @@ export const pharmacyHelpLesson: LessonContent = {
           fr: 'Cela combine le symptôme et la réponse négative sur la fièvre.',
         },
       },
+      { id: 'pharmacy-help-listening-2', prompt: { en: 'Which phrase asks about allergies?', fr: 'Quelle phrase demande à propos des allergies ?' }, target: '你对什么过敏吗？', audio: '/audio/pharmacy-help/practice-listening-02.mp3', explanation: { en: 'This is a safety question you will hear at the pharmacy.', fr: 'C’est une question de sécurité que tu entendras à la pharmacie.' } },
     ],
     speaking: [
       {
@@ -327,6 +416,7 @@ export const pharmacyHelpLesson: LessonContent = {
           fr: 'Commence par la phrase de symptôme la plus courte et claire.',
         },
       },
+      { id: 'pharmacy-help-speaking-2', prompt: { en: 'Ask whether to take the medicine before or after meals.', fr: 'Demande si le médicament se prend avant ou après les repas.' }, target: '饭前还是饭后？', audio: '/audio/pharmacy-help/practice-speaking-02.mp3', explanation: { en: 'This confirms the correct timing for the medicine.', fr: 'Cela confirme le bon moment pour prendre le médicament.' } },
     ],
     reading: [
       {
@@ -342,6 +432,7 @@ export const pharmacyHelpLesson: LessonContent = {
           fr: 'Reconnais combien de fois par jour le médicament est utilisé.',
         },
       },
+      { id: 'pharmacy-help-reading-2', prompt: { en: 'Match the dosage instruction.', fr: 'Associe la consigne de dosage.' }, target: '一次一片', audio: '/audio/pharmacy-help/practice-reading-02.mp3', explanation: { en: '一次一片 is the pill count per dose.', fr: '一次一片 est le nombre de comprimés par prise.' } },
     ],
   },
   reviewCards: [
@@ -381,6 +472,9 @@ export const pharmacyHelpLesson: LessonContent = {
         fr: 'Une fréquence courante pour un médicament.',
       },
     },
+    { id: 'pharmacy-help-review-4', front: '肚子疼', back: { en: 'stomach ache', fr: 'mal au ventre' }, explanation: { en: 'Another symptom you can report with 我……疼.', fr: 'Un autre symptôme que tu peux signaler avec 我……疼.' } },
+    { id: 'pharmacy-help-review-5', front: '过敏', back: { en: 'allergy / allergic', fr: 'allergie / allergique' }, explanation: { en: 'A safety word the pharmacist will check.', fr: 'Un mot de sécurité que le pharmacien vérifiera.' } },
+    { id: 'pharmacy-help-review-6', front: '饭后', back: { en: 'after meals', fr: 'après les repas' }, explanation: { en: 'A common medicine timing instruction.', fr: 'Une consigne courante pour le moment de prise.' } },
   ],
   shortInput: {
     id: 'pharmacy-help-short-input-01',
