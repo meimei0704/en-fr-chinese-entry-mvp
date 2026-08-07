@@ -969,6 +969,9 @@ it('uses content-driven shared rows with stretched wrappers, anchors, and atomic
 
   expect(entryCard).toContain('min-width: 0;')
   expect(entryCard).toContain('min-height: 0;')
+  expect(entryCard).toContain(
+    '--course-series-entry-icon-size: clamp(2.25rem, 10vw, 3rem);',
+  )
   expect(entryCard).toContain('align-self: stretch;')
   expect(entryCard).toContain('justify-self: stretch;')
   expect(entryCard).toContain('text-decoration: none;')
@@ -1395,7 +1398,6 @@ for (const pageCase of pageCases) {
     await page.goto(pageCase.route)
 
     const courses = page.getByRole('region', { name: copy.label })
-    const pinyinLink = courses.getByRole('link', { name: copy.pinyin })
     const journeyLink = courses.getByRole('link', { name: copy.journey })
     const path = courses.locator(`#${pageCase.pathId}`)
 
@@ -1405,8 +1407,8 @@ for (const pageCase of pageCases) {
 
     await expect.poll(() => new URL(page.url()).pathname).toBe(pageCase.route)
     await expect.poll(() => new URL(page.url()).hash).toBe(`#${pageCase.pathId}`)
-    await expect(journeyLink).toBeFocused()
     await expect(path).toBeVisible()
+    await expect(path).not.toHaveAttribute('tabindex')
     await expect(path.locator(pageCase.nodeSelector)).toHaveCount(10)
     expect(await journeyLink.getAttribute('aria-expanded')).toBeNull()
 
@@ -1480,7 +1482,7 @@ In `src/styles/global.css`, replace the block from `.course-series {` at current
 }
 
 .course-series__entry-card {
-  --course-series-entry-icon-size: clamp(2.5rem, 10vw, 3rem);
+  --course-series-entry-icon-size: clamp(2.25rem, 10vw, 3rem);
 
   min-width: 0;
   min-height: 0;
@@ -1664,7 +1666,7 @@ npm run test -- --run src/styles/global.test.ts \
   -t "content-driven shared rows with stretched wrappers"
 ```
 
-Expected: **PASS**. The source contract now proves the `align-content: start` blocker is replaced, Pinyin has a full-height inner row, Basic uses subgrid, visible anchors stretch, entry heights remain content-driven, token spans are atomic, and obsolete header rules cannot win later in the cascade.
+Expected: **PASS**. The source contract now proves the `align-content: start` blocker is replaced, Pinyin has a full-height inner row, Basic uses subgrid, visible anchors stretch, entry heights remain content-driven, the equal icon/cue tracks can shrink to `2.25rem` at 320 px, token spans are atomic, and obsolete header rules cannot win later in the cascade.
 
 - [ ] **Step 9: Run the complete rendered matrix and verify all 18 browser cases are green**
 
@@ -1672,7 +1674,7 @@ Expected: **PASS**. The source contract now proves the `align-content: start` bl
 npm run test:e2e -- tests/e2e/course-series.spec.ts
 ```
 
-Expected: **PASS**, 16 page/language/viewport geometry cases plus 2 page-specific keyboard navigation cases. Every visible anchor pair has x/width/height equality within 1 CSS px; each anchor height equals its assigned outer track; Pinyin, Basic, and path are vertically ordered; every token has one Range fragment; `stress-free` remains whole; titles/cards/documents do not overflow; Home remains count-free; Progress retains `2/3` and `1/10`; focus outlines are computed and visible; Enter reaches `/pinyin` or the stable native fragment.
+Expected: **PASS**, 16 page/language/viewport geometry cases plus 2 page-specific keyboard navigation cases. Every visible anchor pair has x/width/height equality within 1 CSS px; each anchor height equals its assigned outer track; Pinyin, Basic, and path are vertically ordered; every token has one Range fragment; `stress-free` remains whole; titles/cards/documents do not overflow, including Progress EN/FR at 320 px; Home remains count-free; Progress retains `2/3` and `1/10`; focus outlines are computed and visible before activation; Enter reaches `/pinyin` or the stable native fragment; and each fragment target stays visible, populated, and free of `tabindex` without asserting that the source anchor retains focus after native fragment navigation.
 
 - [ ] **Step 10: Run all four focused implementation suites together**
 
