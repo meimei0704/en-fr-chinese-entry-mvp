@@ -1145,45 +1145,49 @@ h2 {
 }
 
 .lesson-progress-preview__rail {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .lesson-progress-preview__rail li {
-  display: grid;
   min-width: 0;
-  border: 1px solid rgba(231, 234, 240, 0.88);
-  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
   color: var(--color-muted);
-  background: rgba(247, 248, 251, 0.78);
-  font-size: 0.82rem;
-  font-weight: 750;
+  background: var(--color-surface);
+  transition: all 150ms ease;
+}
+
+.lesson-progress-preview__rail li:hover,
+.lesson-progress-preview__rail li:focus-within {
+  border-color: rgba(95, 143, 247, 0.35);
 }
 
 .lesson-progress-preview__rail li a {
-  display: grid;
-  gap: 0.45rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   min-width: 0;
-  padding: 0.75rem;
+  padding: 0.55rem 1.05rem;
   color: inherit;
-  font-size: inherit;
-  font-weight: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
   text-decoration: none;
 }
 
 .lesson-progress-preview__rail li a:hover,
 .lesson-progress-preview__rail li a:focus-visible {
-  text-decoration: underline;
+  color: var(--color-ink);
 }
 
 .lesson-progress-preview__rail li span {
   display: grid;
   place-items: center;
-  width: 1.65rem;
+  width: 1.4rem;
   aspect-ratio: 1;
   border-radius: 999px;
   color: var(--color-muted);
@@ -1193,24 +1197,14 @@ h2 {
 }
 
 .lesson-progress-preview__rail li.is-current {
-  color: var(--color-ink);
   background: #eef4ff;
-  border-color: rgba(95, 143, 247, 0.28);
+  border-color: rgba(95, 143, 247, 0.42);
+  color: var(--color-sky-ink);
 }
 
 .lesson-progress-preview__rail li.is-current span {
   color: #ffffff;
   background: var(--color-sky-ink);
-}
-
-.lesson-overview-card {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  background:
-    radial-gradient(circle at top right, rgba(255, 138, 61, 0.1), transparent 18rem),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(247, 248, 251, 0.92));
 }
 
 .lesson-page .lesson-header-card {
@@ -1233,14 +1227,6 @@ h2 {
 
 .lesson-page .lesson-progress-preview__summary {
   gap: 0.5rem;
-}
-
-.lesson-page .lesson-progress-preview__rail {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.lesson-page .lesson-overview-card {
-  gap: 0.75rem;
 }
 
 .section-stack {
@@ -1526,78 +1512,10 @@ h2 {
   margin: 0;
 }
 
-
-.selection-hero,
 .progress-page-card {
   width: min(100%, 64rem);
   display: grid;
   gap: clamp(1.25rem, 4vw, 2rem);
-}
-
-.selection-hero {
-  grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.48fr);
-  align-items: center;
-}
-
-.selection-hero__content {
-  min-width: 0;
-}
-
-.selection-options-card {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  background: linear-gradient(135deg, rgba(255, 253, 248, 0.96), rgba(255, 244, 230, 0.94));
-}
-
-.selection-options-card .button-row {
-  margin-top: 0;
-}
-
-.selection-options-card .option-button {
-  flex: 1 1 10rem;
-  min-height: 3.15rem;
-  justify-content: center;
-  background: rgba(255, 250, 242, 0.92);
-}
-
-.selection-options-card .option-button--selected {
-  background: linear-gradient(135deg, #eaf6f1, #fffdf8);
-  border-color: rgba(47, 143, 107, 0.62);
-  box-shadow: inset 0 0 0 1px rgba(47, 143, 107, 0.18);
-}
-
-.selection-primary-button {
-  margin-top: 1.25rem;
-}
-
-.selection-identity-card {
-  position: relative;
-  display: grid;
-  gap: 0.5rem;
-  justify-items: center;
-  padding: 1.35rem;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(217, 154, 43, 0.28);
-  background:
-    radial-gradient(circle at top right, rgba(194, 65, 45, 0.12), transparent 58%),
-    linear-gradient(145deg, #fffaf1, #fffdf8);
-  overflow: hidden;
-}
-
-.selection-identity-card::after {
-  position: absolute;
-  right: 0.8rem;
-  bottom: 0.35rem;
-  content: '语';
-  color: rgba(47, 143, 107, 0.1);
-  font-size: 4rem;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.selection-identity-card > * {
-  z-index: 1;
 }
 
 .progress-page-card {
@@ -2855,15 +2773,12 @@ h2 {
 }
 
 @media (max-width: 760px) {
-  .selection-hero,
   .lesson-grid,
   .card-grid,
   .journey-map__path,
   .progress-journey-map__path,
   .progress-stats-grid,
   .progress-summary-card,
-  .lesson-overview-card,
-  .lesson-progress-preview__rail,
   .review-status-panel,
   .admin-metric-grid,
   .admin-voice-status-grid,

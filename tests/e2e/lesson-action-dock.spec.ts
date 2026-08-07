@@ -61,28 +61,19 @@ test('keeps the three-layer Lesson layout aligned across responsive widths', asy
         }),
       )
 
+      for (const box of stepBoxes) {
+        expect(box.x).toBeGreaterThanOrEqual(railBox!.x - 1)
+        expect(box.x + box.width).toBeLessThanOrEqual(railBox!.x + railBox!.width + 1)
+      }
+
       if (width > 760) {
-        expect(
-          Math.max(...stepBoxes.map((box) => box.width)) -
-            Math.min(...stepBoxes.map((box) => box.width)),
-        ).toBeLessThanOrEqual(1)
         expect(
           Math.max(...stepBoxes.map((box) => box.y)) -
             Math.min(...stepBoxes.map((box) => box.y)),
         ).toBeLessThanOrEqual(1)
         expect(Math.abs(stepBoxes[0].x - railBox!.x)).toBeLessThanOrEqual(1)
-        expect(
-          Math.abs(
-            stepBoxes[2].x + stepBoxes[2].width - railBox!.x - railBox!.width,
-          ),
-        ).toBeLessThanOrEqual(1)
       } else {
-        expect(
-          Math.max(...stepBoxes.map((box) => box.x)) -
-            Math.min(...stepBoxes.map((box) => box.x)),
-        ).toBeLessThanOrEqual(1)
-        expect(stepBoxes[1].y).toBeGreaterThan(stepBoxes[0].y)
-        expect(stepBoxes[2].y).toBeGreaterThan(stepBoxes[1].y)
+        expect(Math.abs(stepBoxes[0].x - railBox!.x)).toBeLessThanOrEqual(1)
       }
 
       const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
