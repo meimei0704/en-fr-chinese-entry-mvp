@@ -67,7 +67,7 @@ export function PinyinPage() {
         />
 
         <nav role="tablist" aria-label="Pinyin lessons" className="pinyin-lesson-tabs">
-          {pinyinCourse.lessons.map((l) => (
+          {pinyinCourse.lessons.map((l, index) => (
             <button
               key={l.id}
               type="button"
@@ -79,6 +79,7 @@ export function PinyinPage() {
                 setSelectedLessonId(l.id)
               }}
             >
+              <span>{index + 1}</span>
               {getLocalizedText(l.title, language)}
             </button>
           ))}

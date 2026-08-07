@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
@@ -24,6 +24,7 @@ export function LessonPage() {
     { id: 'lesson-patterns', label: copy.lessonPage.sentencePatterns },
     { id: 'lesson-vocabulary', label: copy.lessonPage.vocabulary },
   ]
+  const [activeLayerId, setActiveLayerId] = useState(studyLayers[0].id)
 
   useEffect(() => {
     if (!lesson) {
@@ -77,8 +78,12 @@ export function LessonPage() {
           </div>
           <ol className="lesson-progress-preview__rail">
             {studyLayers.map((layer, index) => (
-              <li key={layer.id} className={index === 0 ? 'is-current' : undefined}>
-                <a className="lesson-progress-preview__rail-link" href={`#${layer.id}`}>
+              <li key={layer.id} className={layer.id === activeLayerId ? 'is-current' : undefined}>
+                <a
+                  className="lesson-progress-preview__rail-link"
+                  href={`#${layer.id}`}
+                  onClick={() => setActiveLayerId(layer.id)}
+                >
                   <span>{index + 1}</span>
                   {layer.label}
                 </a>
