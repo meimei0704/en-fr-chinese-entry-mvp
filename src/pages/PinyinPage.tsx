@@ -41,6 +41,7 @@ export function PinyinPage() {
   )
   const lessonIndex = pinyinCourse.lessons.findIndex((l) => l.id === selectedLessonId)
   const lessonNumber = lessonIndex >= 0 ? lessonIndex + 1 : 1
+  const sectionProgressDone = progress.lessonProgress[lesson.id]?.completedSections?.length ?? 0
 
   const navItems = [
     { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
@@ -62,7 +63,7 @@ export function PinyinPage() {
           eyebrow={pinyinCopy.eyebrow}
           heading={pinyinCopy.heading}
           summary={getLocalizedText(lesson.summary, language)}
-          sectionProgress={pinyinCopy.sectionProgress(progress.completedSections.length, 3)}
+          sectionProgress={pinyinCopy.sectionProgress(sectionProgressDone, 3)}
           sectionsNavLabel={pinyinCopy.sectionsNavLabel}
           navItems={navItems}
         />
