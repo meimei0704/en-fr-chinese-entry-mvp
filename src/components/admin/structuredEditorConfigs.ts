@@ -2,7 +2,6 @@ import type {
   PracticePrompt,
   ReviewCard,
   SentencePattern,
-  ShortInputPrompt,
   VocabularyItem,
 } from '../../content/types.js'
 
@@ -36,13 +35,6 @@ export const reviewCardFields: readonly StructuredFieldConfig<ReviewCard>[] = [
 ]
 
 export const practiceFields: readonly StructuredFieldConfig<PracticePrompt>[] = [
-  { key: 'prompt', label: 'Prompt', kind: 'localized', multiline: true },
-  { key: 'target', label: 'Target answer', kind: 'text' },
-  { key: 'audio', label: 'Audio URL', kind: 'text' },
-  { key: 'explanation', label: 'Explanation', kind: 'localized', multiline: true },
-]
-
-export const shortInputFields: readonly StructuredFieldConfig<ShortInputPrompt>[] = [
   { key: 'prompt', label: 'Prompt', kind: 'localized', multiline: true },
   { key: 'target', label: 'Target answer', kind: 'text' },
   { key: 'audio', label: 'Audio URL', kind: 'text' },

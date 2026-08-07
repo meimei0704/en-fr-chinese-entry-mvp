@@ -46,7 +46,6 @@ describe('learner progress', () => {
       lessonStepProgress: {
         'self-intro': {
           completedSections: ['dialogue', 'practice'],
-          shortInputComplete: false,
         },
       },
     }
@@ -80,23 +79,18 @@ describe('learner progress', () => {
       lessonStepProgress: {
         'restaurant-order': {
           completedSections: ['dialogue', 'practice'],
-          shortInputComplete: true,
         },
         'metro-ticket': {
           completedSections: ['dialogue'],
-          shortInputComplete: false,
         },
         'pharmacy-help': {
           completedSections: ['dialogue', 'patterns'],
-          shortInputComplete: true,
         },
         'ask-for-help-problem': {
           completedSections: ['dialogue'],
-          shortInputComplete: false,
         },
         'train-station-ticket': {
           completedSections: [],
-          shortInputComplete: false,
         },
       },
     }
@@ -196,7 +190,6 @@ describe('learner progress', () => {
     ])
     expect(afterRestaurant.lessonStepProgress['restaurant-order']).toEqual({
       completedSections: [],
-      shortInputComplete: true,
     })
     expect(afterTrainTicket.completedLessons).toEqual([
       'restaurant-order',
@@ -233,7 +226,6 @@ describe('learner progress', () => {
       lessonStepProgress: {
         'self-intro': {
           completedSections: ['dialogue', 'practice'],
-          shortInputComplete: false,
         },
       },
     })
@@ -250,7 +242,6 @@ describe('learner progress', () => {
     expect(updatedProgress.lastVisitedLesson).toBe('self-intro')
     expect(updatedProgress.lessonStepProgress['self-intro']).toEqual({
       completedSections: ['dialogue', 'practice'],
-      shortInputComplete: true,
     })
 
     const repeatedCompletion = completeLesson('self-intro', updatedProgress)
@@ -279,6 +270,39 @@ describe('learner progress', () => {
     expect(afterSecond.lessonStepProgress['self-intro']?.completedSections).toEqual(['practice'])
   })
 
+  it('loads legacy progress that still contains the removed shortInputComplete field', async () => {
+    const { loadProgress } = await importProgressModule()
+
+    localStorage.setItem(
+      'en-fr-chinese-entry-mvp.progress',
+      JSON.stringify({
+        selectedExplanationLanguage: 'en',
+        completedLessons: ['self-intro'],
+        reviewQueue: ['self-intro-review-1'],
+        lastVisitedLesson: 'self-intro',
+        lessonStepProgress: {
+          'self-intro': {
+            completedSections: ['dialogue', 'practice'],
+            shortInputComplete: true,
+          },
+        },
+      }),
+    )
+
+    expect(loadProgress()).toEqual({
+      selectedExplanationLanguage: 'en',
+      completedLessons: ['self-intro'],
+      reviewQueue: ['self-intro-review-1'],
+      lastVisitedLesson: 'self-intro',
+      lessonStepProgress: {
+        'self-intro': {
+          completedSections: ['dialogue', 'practice'],
+          shortInputComplete: true,
+        },
+      },
+    })
+  })
+
   it('keeps existing completed sections when marking practice', async () => {
     const { createDefaultProgress, markPracticeSection } = await importProgressModule()
 
@@ -287,7 +311,6 @@ describe('learner progress', () => {
       lessonStepProgress: {
         'self-intro': {
           completedSections: ['dialogue'],
-          shortInputComplete: false,
         },
       },
     })

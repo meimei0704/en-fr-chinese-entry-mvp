@@ -16,7 +16,6 @@ function seedProgressWithFirstLessonLearned(selectedExplanationLanguage: 'en' | 
     lessonStepProgress: {
       'self-intro': {
         completedSections: ['dialogue', 'practice'],
-        shortInputComplete: true,
       },
     },
   })

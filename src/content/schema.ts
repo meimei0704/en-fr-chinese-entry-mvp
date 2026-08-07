@@ -68,15 +68,6 @@ const reviewCardSchema = z.object({
   explanation: bilingualExplanationSchema,
 })
 
-const shortInputPromptSchema = z.object({
-  id: z.string(),
-  prompt: localizedFieldSchema,
-  target: z.string(),
-  explanation: bilingualExplanationSchema,
-  audio: z.string(),
-  audioFallback: z.string().optional(),
-})
-
 export const lessonMetaPayloadSchema = z.object({
   id: z.string(),
   title: localizedFieldSchema,
@@ -90,7 +81,6 @@ const modulePayloadSchemas: Record<ContentModuleType, z.ZodType<unknown>> = {
   vocabulary: z.array(vocabularyItemSchema),
   practice: lessonPracticeSchema,
   reviewCards: z.array(reviewCardSchema),
-  shortInput: shortInputPromptSchema,
 }
 
 export const lessonContentSchema = z.object({
@@ -102,7 +92,6 @@ export const lessonContentSchema = z.object({
   vocabulary: z.array(vocabularyItemSchema),
   practice: lessonPracticeSchema,
   reviewCards: z.array(reviewCardSchema),
-  shortInput: shortInputPromptSchema,
 })
 
 export function parseModulePayload(moduleType: ContentModuleType, payload: unknown): ModulePayload {

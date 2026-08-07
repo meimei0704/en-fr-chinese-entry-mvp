@@ -213,6 +213,7 @@ h2 {
 
 .option-button,
 .primary-button,
+.secondary-button,
 .secondary-link,
 .chip-button {
   min-height: 2.65rem;
@@ -231,6 +232,7 @@ h2 {
 
 .option-button,
 .primary-button,
+.secondary-button,
 .secondary-link,
 .chip-button {
   padding: 0.78rem 1.05rem;
@@ -259,6 +261,7 @@ h2 {
 }
 
 .secondary-link,
+.secondary-button,
 .chip-button {
   color: var(--color-ink);
   background: #ffffff;
@@ -277,6 +280,7 @@ h2 {
 
 .option-button:hover:not(:disabled),
 .primary-button:hover:not(:disabled),
+.secondary-button:hover:not(:disabled),
 .secondary-link:hover:not(:disabled),
 .chip-button:hover:not(:disabled) {
   transform: translateY(-1px);
@@ -285,6 +289,7 @@ h2 {
 
 .option-button:disabled,
 .primary-button:disabled,
+.secondary-button:disabled,
 .secondary-link:disabled,
 .chip-button:disabled {
   cursor: not-allowed;
@@ -3323,7 +3328,14 @@ h2 {
   box-shadow: var(--shadow-card);
 }
 
-.practice-challenge__result-summary .primary-button {
+.practice-challenge__result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.practice-challenge__result-actions .primary-button,
+.practice-challenge__result-actions .secondary-button {
   justify-self: start;
 }
 

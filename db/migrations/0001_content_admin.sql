@@ -35,8 +35,7 @@ create table if not exists lesson_modules (
       'sentencePatterns',
       'vocabulary',
       'practice',
-      'reviewCards',
-      'shortInput'
+      'reviewCards'
     )
   ),
   constraint lesson_modules_draft_kind_check check (current_draft_revision_kind = 'draft'),
@@ -66,8 +65,7 @@ create table if not exists module_revisions (
       'sentencePatterns',
       'vocabulary',
       'practice',
-      'reviewCards',
-      'shortInput'
+      'reviewCards'
     )
   ),
   constraint module_revisions_module_fk foreign key (lesson_id, module_type)

@@ -387,17 +387,4 @@ export const restaurantOrderLesson: LessonContent = {
     { id: 'restaurant-order-review-5', front: '带走', back: { en: 'take away', fr: 'à emporter' }, explanation: { en: 'Say this to take the food with you.', fr: 'Dis ceci pour emporter la nourriture.' } },
     { id: 'restaurant-order-review-6', front: '买单', back: { en: 'pay the bill', fr: 'payer l\'addition' }, explanation: { en: 'Ask the server for the check.', fr: 'Demande l\'addition au serveur.' } },
   ],
-  shortInput: {
-    id: 'restaurant-order-short-input-01',
-    prompt: {
-      en: 'Order beef noodles without spice.',
-      fr: 'Commande des nouilles au bœuf sans piment.',
-    },
-    target: '我要一碗牛肉面，不要辣。',
-    explanation: {
-      en: 'One sentence names the dish and the spice preference.',
-      fr: 'Une phrase nomme le plat et la préférence sans piment.',
-    },
-    audio: '/audio/restaurant-order/short-input-01.mp3',
-  },
 }

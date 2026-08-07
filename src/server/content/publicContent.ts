@@ -63,7 +63,6 @@ export function buildLessonFromPublishedModuleRows(rows: PublishedModuleRow[]): 
     vocabulary: byModule.get('vocabulary')?.payload as LessonContent['vocabulary'],
     practice: byModule.get('practice')?.payload as LessonContent['practice'],
     reviewCards: byModule.get('reviewCards')?.payload as LessonContent['reviewCards'],
-    shortInput: byModule.get('shortInput')?.payload as LessonContent['shortInput'],
   }
 }
 

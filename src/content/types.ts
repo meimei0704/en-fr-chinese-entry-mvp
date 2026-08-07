@@ -94,15 +94,6 @@ export interface ReviewCard {
   explanation: BilingualExplanation
 }
 
-export interface ShortInputPrompt {
-  id: string
-  prompt: LocalizedField
-  target: string
-  explanation: BilingualExplanation
-  audio: string
-  audioFallback?: string
-}
-
 export interface LessonContent {
   id: LessonId
   title: LocalizedField
@@ -112,7 +103,6 @@ export interface LessonContent {
   vocabulary: VocabularyItem[]
   practice: LessonPractice
   reviewCards: ReviewCard[]
-  shortInput: ShortInputPrompt
 }
 
 export interface CourseContent {

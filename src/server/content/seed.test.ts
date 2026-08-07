@@ -15,7 +15,6 @@ describe('initial content admin seed', () => {
       scenario: course.lessons[0].scenario,
     })
     expect(modules.find((module) => module.moduleType === 'dialogue')?.payload).toEqual(course.lessons[0].dialogue)
-    expect(modules.find((module) => module.moduleType === 'shortInput')?.payload).toEqual(course.lessons[0].shortInput)
   })
 
   it('creates initial published and draft revisions without changing audio refs or lesson structure', () => {
@@ -25,7 +24,6 @@ describe('initial content admin seed', () => {
       ...lesson.sentencePatterns.map((pattern) => pattern.audio),
       ...lesson.vocabulary.map((item) => item.audio),
       ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
-      lesson.shortInput.audio,
     ])
     const seededAudioRefs = JSON.stringify(seed.revisions)
 

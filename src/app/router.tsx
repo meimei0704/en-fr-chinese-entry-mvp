@@ -10,7 +10,6 @@ import { PinyinPage } from '../pages/PinyinPage'
 import { PracticePage } from '../pages/PracticePage'
 import { ProgressPage } from '../pages/ProgressPage'
 import { ReviewPage } from '../pages/ReviewPage'
-import { ShortInputPage } from '../pages/ShortInputPage'
 
 export const appRoutes: RouteObject[] = [
   {
@@ -23,7 +22,6 @@ export const appRoutes: RouteObject[] = [
       { path: '/home', element: <Navigate to="/" replace /> },
       { path: '/lesson/:lessonId', element: <LessonPage /> },
       { path: '/lesson/:lessonId/practice', element: <PracticePage /> },
-      { path: '/lesson/:lessonId/short-input', element: <ShortInputPage /> },
       { path: '/pinyin', element: <PinyinPage /> },
       { path: '/review', element: <ReviewPage /> },
       { path: '/progress', element: <ProgressPage /> },

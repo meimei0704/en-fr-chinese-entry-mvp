@@ -586,17 +586,4 @@ export const selfIntroLesson: LessonContent = {
       },
     },
   ],
-  shortInput: {
-    id: 'self-intro-short-input-01',
-    prompt: {
-      en: 'Ask where the exit is.',
-      fr: 'Demande où est la sortie.',
-    },
-    target: '请问出口在哪里？',
-    explanation: {
-      en: 'Use the same 请问…在哪里？ pattern after baggage claim.',
-      fr: 'Utilise la même structure 请问…在哪里？ après les bagages.',
-    },
-    audio: '/audio/self-intro/short-input-01.mp3',
-  },
 }

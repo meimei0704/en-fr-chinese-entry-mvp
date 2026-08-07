@@ -387,17 +387,4 @@ export const askForHelpProblemLesson: LessonContent = {
     { id: 'ask-for-help-problem-review-5', front: '密码', back: { en: 'password', fr: 'mot de passe' }, explanation: { en: 'Ask for this when connecting to WiFi.', fr: 'Demande ceci pour te connecter au WiFi.' } },
     { id: 'ask-for-help-problem-review-6', front: '没关系', back: { en: 'no problem', fr: 'pas de problème' }, explanation: { en: 'A friendly reply that keeps the exchange relaxed.', fr: 'Une réponse amicale qui garde l\'échange détendu.' } },
   ],
-  shortInput: {
-    id: 'ask-for-help-problem-short-input-01',
-    prompt: {
-      en: 'Ask someone to help you.',
-      fr: 'Demande à quelqu’un de t’aider.',
-    },
-    target: '可以帮我一下吗？',
-    explanation: {
-      en: 'This opens the problem-solving exchange politely.',
-      fr: 'Cela ouvre l’échange de résolution de problème poliment.',
-    },
-    audio: '/audio/ask-for-help-problem/short-input-01.mp3',
-  },
 }

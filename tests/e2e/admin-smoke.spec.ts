@@ -18,7 +18,6 @@ const editableModuleLabels = [
   'Vocabulary',
   'Practice',
   'Review Cards',
-  'Short Input',
 ]
 
 function buildLessonSummary(lessons: readonly LessonContent[]): AdminLessonSummary[] {
@@ -45,7 +44,6 @@ function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
       { moduleType: 'practice', draftRevisionId: 114, publishedRevisionId: 113, hasUnpublishedChanges: false },
       { moduleType: 'reviewCards', draftRevisionId: 116, publishedRevisionId: 115, hasUnpublishedChanges: false },
       { moduleType: 'sentencePatterns', draftRevisionId: 106, publishedRevisionId: 105, hasUnpublishedChanges: false },
-      { moduleType: 'shortInput', draftRevisionId: 118, publishedRevisionId: 117, hasUnpublishedChanges: false },
       { moduleType: 'vocabulary', draftRevisionId: 108, publishedRevisionId: 107, hasUnpublishedChanges: false },
     ],
     publishedHistory: {
@@ -70,7 +68,6 @@ function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
       vocabulary: [],
       practice: [],
       reviewCards: [],
-      shortInput: [],
     },
   }
 }
@@ -292,10 +289,10 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   const editor = page.getByRole('main')
   const directory = page.getByTestId('admin-module-directory')
   const history = page.getByRole('region', { name: /module history/i })
-  await expect(directory.getByRole('button', { name: /^Edit / })).toHaveCount(7)
+  await expect(directory.getByRole('button', { name: /^Edit / })).toHaveCount(6)
   expect(await directory.getByRole('heading', { level: 3 }).allTextContents()).toEqual(editableModuleLabels)
   expect(await history.getByRole('heading', { level: 3 }).allTextContents()).toEqual(editableModuleLabels)
-  await expect(directory.getByRole('button', { name: /edit short input/i })).toBeVisible()
+  await expect(directory.getByRole('button', { name: /edit short input/i })).toHaveCount(0)
   await expect(editor.getByText('1 editable module pending publish')).toBeVisible()
   await expect(editor.getByText('1 editable module pending', { exact: true })).toBeVisible()
   await expect(editor.getByText(/^Pronunciation$/)).toHaveCount(0)
@@ -317,7 +314,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(page).toHaveURL(/\/admin\/voice$/)
   await expect(page.getByRole('heading', { name: /original pronunciation is active/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /303 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /293 audio targets/i })).toBeVisible()
   await expect(page.locator('[data-testid^="voice-target-row-pronunciation:"]')).toHaveCount(0)
   await expect(page.getByText(/^pronunciation · zh-CN$/i)).toHaveCount(0)
   for (const targetId of [
@@ -325,7 +322,6 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
     'sentencePatterns:self-intro-pattern-1',
     'vocabulary:self-intro-vocab-1',
     'practice:listening:self-intro-listening-1',
-    'shortInput:self-intro-short-input-01',
   ]) {
     await expect(page.getByTestId(`voice-target-row-${targetId}`)).toBeVisible()
   }
@@ -352,10 +348,10 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/303 generated/i).first()).toBeVisible({ timeout: 15_000 })
-  expect(generatedTargets).toHaveLength(303)
+  await expect(page.getByText(/293 generated/i).first()).toBeVisible({ timeout: 15_000 })
+  expect(generatedTargets).toHaveLength(293)
   expect(new Set(generatedTargets.map((target) => target.moduleType))).toEqual(
-    new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice', 'shortInput']),
+    new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice']),
   )
   expect(generatedTargets.some((target) => target.targetId.startsWith('pronunciation:'))).toBe(false)
   expect(generatedTargets.some((target) => ['pronunciation', 'hanziRecognition'].includes(target.moduleType))).toBe(false)

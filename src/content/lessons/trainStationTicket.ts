@@ -387,17 +387,4 @@ export const trainStationTicketLesson: LessonContent = {
     { id: 'train-station-ticket-review-5', front: '站台', back: { en: 'platform', fr: 'quai' }, explanation: { en: 'Find this word on signs to locate your boarding area.', fr: 'Trouve ce mot sur les panneaux pour localiser ta zone d\'embarquement.' } },
     { id: 'train-station-ticket-review-6', front: '晚点', back: { en: 'delay', fr: 'retard' }, explanation: { en: 'Watch for this word on departure boards.', fr: 'Surveille ce mot sur les panneaux de départ.' } },
   ],
-  shortInput: {
-    id: 'train-station-ticket-short-input-01',
-    prompt: {
-      en: 'Buy a ticket to Shanghai.',
-      fr: 'Achète un billet pour Shanghai.',
-    },
-    target: '我想买一张去上海的票。',
-    explanation: {
-      en: 'This combines the buying verb, one-ticket measure word, and destination.',
-      fr: 'Cela combine le verbe acheter, le classificateur d\'un billet et la destination.',
-    },
-    audio: '/audio/train-station-ticket/short-input-01.mp3',
-  },
 }

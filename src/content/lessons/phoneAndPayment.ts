@@ -379,17 +379,4 @@ export const phoneAndPaymentLesson: LessonContent = {
     { id: 'phone-and-payment-review-5', front: '充值', back: { en: 'top up / recharge', fr: 'recharger' }, explanation: { en: 'How to add credit to your phone.', fr: 'Comment ajouter du crédit à ton téléphone.' } },
     { id: 'phone-and-payment-review-6', front: '微信', back: { en: 'WeChat', fr: 'WeChat' }, explanation: { en: 'The essential messaging and payment app.', fr: 'L\'application essentielle de messagerie et de paiement.' } },
   ],
-  shortInput: {
-    id: 'phone-and-payment-short-input-01',
-    prompt: {
-      en: 'You want to confirm whether you can pay by phone.',
-      fr: 'Tu veux confirmer si tu peux payer avec ton téléphone.',
-    },
-    target: '可以用手机支付吗？',
-    explanation: {
-      en: 'Use 可以用手机支付吗？ to ask if mobile payment is accepted.',
-      fr: 'Utilise 可以用手机支付吗？ pour demander si le paiement mobile est accepté.',
-    },
-    audio: '/audio/phone-and-payment/short-input-01.mp3',
-  },
 }

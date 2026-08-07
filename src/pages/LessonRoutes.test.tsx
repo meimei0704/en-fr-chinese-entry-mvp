@@ -8,32 +8,22 @@ const newLessons = [
   {
     id: 'restaurant-order',
     lessonHeading: /order a simple meal/i,
-    shortInputPrompt: /order beef noodles without spice/i,
-    target: '我要一碗牛肉面，不要辣。',
   },
   {
     id: 'metro-ticket',
     lessonHeading: /buy a metro ticket/i,
-    shortInputPrompt: /ask how many stops/i,
-    target: '要几站？',
   },
   {
     id: 'pharmacy-help',
     lessonHeading: /ask for help at a pharmacy/i,
-    shortInputPrompt: /say that your head hurts/i,
-    target: '我头疼，不发烧。',
   },
   {
     id: 'ask-for-help-problem',
     lessonHeading: /ask for help with a problem/i,
-    shortInputPrompt: /ask someone to help you/i,
-    target: '可以帮我一下吗？',
   },
   {
     id: 'train-station-ticket',
     lessonHeading: /buy a train station ticket/i,
-    shortInputPrompt: /buy a ticket to Shanghai/i,
-    target: '我想买一张去上海的票。',
   },
 ]
 
@@ -42,7 +32,7 @@ describe('expanded lesson routes', () => {
     localStorage.clear()
   })
 
-  it.each(newLessons)('renders lesson, practice, and short-input routes for $id', (lesson) => {
+  it.each(newLessons)('renders lesson and practice routes for $id', (lesson) => {
     renderRoute(`/lesson/${lesson.id}`)
 
     expect(screen.getByRole('heading', { level: 1, name: lesson.lessonHeading })).toBeVisible()
@@ -58,16 +48,9 @@ describe('expanded lesson routes', () => {
     expect(screen.getByText(/question 1 of 5/i)).toBeVisible()
     expect(screen.getByLabelText(/^score 0$/i)).toBeVisible()
     expect(screen.queryByText(/we couldn’t find that practice set/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /continue to short input/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /back to lesson/i })).toHaveAttribute(
       'href',
-      `/lesson/${lesson.id}/short-input`,
+      `/lesson/${lesson.id}`,
     )
-
-    cleanup()
-    renderRoute(`/lesson/${lesson.id}/short-input`)
-
-    expect(screen.getAllByText(lesson.shortInputPrompt)[0]).toBeVisible()
-    expect(screen.getAllByText(new RegExp(lesson.target))[0]).toBeVisible()
-    expect(screen.queryByText(/we couldn’t find that final step/i)).not.toBeInTheDocument()
   })
 })

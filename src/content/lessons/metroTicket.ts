@@ -387,17 +387,4 @@ export const metroTicketLesson: LessonContent = {
     { id: 'metro-ticket-review-5', front: '出口', back: { en: 'exit', fr: 'sortie' }, explanation: { en: 'Follow this sign to leave the station.', fr: 'Suis ce panneau pour quitter la station.' } },
     { id: 'metro-ticket-review-6', front: '公交卡', back: { en: 'transit card', fr: 'carte de transport' }, explanation: { en: 'A card for bus and metro rides.', fr: 'Une carte pour les trajets en bus et métro.' } },
   ],
-  shortInput: {
-    id: 'metro-ticket-short-input-01',
-    prompt: {
-      en: 'Ask how many stops.',
-      fr: 'Demande combien de stations il y a.',
-    },
-    target: '要几站？',
-    explanation: {
-      en: 'A short survival question for route checking.',
-      fr: 'Une courte question de survie pour vérifier un trajet.',
-    },
-    audio: '/audio/metro-ticket/short-input-01.mp3',
-  },
 }

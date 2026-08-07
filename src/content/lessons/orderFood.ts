@@ -422,17 +422,4 @@ export const orderFoodLesson: LessonContent = {
     { id: 'order-food-review-5', front: '退房', back: { en: 'check out', fr: 'check-out' }, explanation: { en: 'Know your checkout time.', fr: 'Connais ton heure de check-out.' } },
     { id: 'order-food-review-6', front: '押金', back: { en: 'deposit', fr: 'caution' }, explanation: { en: 'You may need to pay this at the front desk.', fr: 'Tu pourrais devoir payer ceci à la réception.' } },
   ],
-  shortInput: {
-    id: 'order-food-short-input-01',
-    prompt: {
-      en: 'You arrive at the front desk. Say you have a reservation.',
-      fr: 'Tu arrives à la réception. Dis que tu as une réservation.',
-    },
-    target: '你好，我有预订。',
-    explanation: {
-      en: 'This is the first sentence for a basic check-in.',
-      fr: 'C\'est la première phrase pour un check-in simple.',
-    },
-    audio: '/audio/order-food/short-input-01.mp3',
-  },
 }

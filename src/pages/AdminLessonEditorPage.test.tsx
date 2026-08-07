@@ -20,7 +20,6 @@ const editableModuleLabels = [
   'Vocabulary',
   'Practice',
   'Review Cards',
-  'Short Input',
 ]
 
 function jsonResponse(body: unknown, init: ResponseInit = {}) {
@@ -46,7 +45,6 @@ function lessonSnapshot(): AdminLessonSnapshot {
       { moduleType: 'practice', draftRevisionId: 114, publishedRevisionId: 113, hasUnpublishedChanges: false },
       { moduleType: 'reviewCards', draftRevisionId: 116, publishedRevisionId: 115, hasUnpublishedChanges: false },
       { moduleType: 'sentencePatterns', draftRevisionId: 106, publishedRevisionId: 105, hasUnpublishedChanges: false },
-      { moduleType: 'shortInput', draftRevisionId: 118, publishedRevisionId: 117, hasUnpublishedChanges: false },
       { moduleType: 'vocabulary', draftRevisionId: 108, publishedRevisionId: 107, hasUnpublishedChanges: false },
     ],
     publishedHistory: {
@@ -56,7 +54,6 @@ function lessonSnapshot(): AdminLessonSnapshot {
       vocabulary: [],
       practice: [],
       reviewCards: [],
-      shortInput: [],
     },
   }
 }
@@ -635,38 +632,40 @@ describe('AdminLessonEditorPage', () => {
     const directory = within(screen.getByTestId('admin-module-directory'))
     const history = within(screen.getByRole('region', { name: /module history/i }))
     expect(directory.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)).toEqual(editableModuleLabels)
-    expect(directory.getAllByRole('button', { name: /^edit /i })).toHaveLength(7)
+    expect(directory.getAllByRole('button', { name: /^edit /i })).toHaveLength(6)
     expect(history.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)).toEqual(editableModuleLabels)
-    expect(directory.getByRole('button', { name: /edit short input/i })).toBeVisible()
   })
 
-  it('saves the full Short Input payload through the existing draft endpoint', async () => {
+  it('saves the full Vocabulary payload through the existing draft endpoint', async () => {
     const user = userEvent.setup()
-    const updatedPrompt = {
-      ...lesson.shortInput,
-      prompt: { ...lesson.shortInput.prompt, en: 'Ask where baggage claim is.' },
+    const updatedItem = {
+      ...lesson.vocabulary[0]!,
+      meaning: { ...lesson.vocabulary[0]!.meaning, en: 'Passport' },
     }
     const updatedSnapshot = lessonSnapshot()
-    updatedSnapshot.draftLesson = { ...lesson, shortInput: updatedPrompt }
+    updatedSnapshot.draftLesson = {
+      ...lesson,
+      vocabulary: lesson.vocabulary.map((item, index) => (index === 0 ? updatedItem : item)),
+    }
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
       .mockResolvedValueOnce(jsonResponse(updatedSnapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
     await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
-    await user.click(screen.getByRole('button', { name: /edit short input/i }))
-    const prompt = screen.getByLabelText(/prompt \(en\)/i)
+    await user.click(screen.getByRole('button', { name: /edit vocabulary/i }))
+    const prompt = screen.getAllByLabelText(/meaning \(en\)/i)[0]!
     await user.clear(prompt)
-    await user.type(prompt, 'Ask where baggage claim is.')
-    await user.click(screen.getByRole('button', { name: /save short input draft/i }))
+    await user.type(prompt, 'Passport')
+    await user.click(screen.getByRole('button', { name: /save vocabulary draft/i }))
 
     expect(parsedRequestBody(1)).toEqual({
       lessonId: lesson.id,
-      moduleType: 'shortInput',
-      payload: updatedPrompt,
-      note: 'Save short input draft',
+      moduleType: 'vocabulary',
+      payload: lesson.vocabulary.map((item, index) => (index === 0 ? updatedItem : item)),
+      note: 'Save vocabulary draft',
     })
-    expect(await screen.findByDisplayValue('Ask where baggage claim is.')).toBeVisible()
+    expect(await screen.findByDisplayValue('Passport')).toBeVisible()
   })
 
   it('reports editable modules in sync when nothing is pending publish', async () => {
@@ -686,7 +685,7 @@ describe('AdminLessonEditorPage', () => {
     const snapshot = lessonSnapshot()
     snapshot.modules.forEach((module) => { module.hasUnpublishedChanges = false })
     setModuleSnapshot(snapshot, 'lessonMeta', { hasUnpublishedChanges: true })
-    setModuleSnapshot(snapshot, 'shortInput', { hasUnpublishedChanges: true })
+    setModuleSnapshot(snapshot, 'vocabulary', { hasUnpublishedChanges: true })
     vi.mocked(fetch).mockResolvedValue(jsonResponse(snapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
@@ -696,15 +695,15 @@ describe('AdminLessonEditorPage', () => {
     expect(screen.getByText('2 editable modules pending')).toBeVisible()
   })
 
-  it('publishes the only visible Short Input pending module and returns to scoped zero', async () => {
+  it('publishes the only visible Vocabulary pending module and returns to scoped zero', async () => {
     const user = userEvent.setup()
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     const pendingSnapshot = lessonSnapshot()
     pendingSnapshot.modules.forEach((module) => { module.hasUnpublishedChanges = false })
-    setModuleSnapshot(pendingSnapshot, 'shortInput', { hasUnpublishedChanges: true })
+    setModuleSnapshot(pendingSnapshot, 'vocabulary', { hasUnpublishedChanges: true })
     const publishedSnapshot = lessonSnapshot()
     publishedSnapshot.modules.forEach((module) => { module.hasUnpublishedChanges = false })
-    setModuleSnapshot(publishedSnapshot, 'shortInput', {
+    setModuleSnapshot(publishedSnapshot, 'vocabulary', {
       hasUnpublishedChanges: false,
       draftRevisionId: 202,
       publishedRevisionId: 201,
@@ -717,41 +716,41 @@ describe('AdminLessonEditorPage', () => {
     expect(await screen.findByText('1 editable module pending publish')).toBeVisible()
     const publishButtons = screen.getAllByRole('button', { name: /^publish /i })
     expect(publishButtons).toHaveLength(1)
-    expect(publishButtons[0]).toHaveAccessibleName(/publish short input/i)
+    expect(publishButtons[0]).toHaveAccessibleName(/publish vocabulary/i)
     await user.click(publishButtons[0]!)
 
     expect(parsedRequestBody(1)).toEqual({
       lessonId: lesson.id,
-      moduleType: 'shortInput',
-      note: 'Publish shortInput draft',
+      moduleType: 'vocabulary',
+      note: 'Publish vocabulary draft',
     })
     expect(await screen.findByText('All editable modules published')).toBeVisible()
     expect(screen.getByText('Editable modules in sync')).toBeVisible()
-    expect(screen.getByText(/short input published successfully/i)).toBeVisible()
+    expect(screen.getByText(/vocabulary published successfully/i)).toBeVisible()
   })
 
-  it('keeps Short Input history and rollback', async () => {
+  it('keeps Vocabulary history and rollback', async () => {
     const user = userEvent.setup()
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     const snapshot = lessonSnapshot()
-    snapshot.publishedHistory.shortInput = [
-      historyEntry('shortInput', 117, 'Current Short Input', lesson.shortInput),
-      historyEntry('shortInput', 77, 'Older Short Input', { ...lesson.shortInput, target: '出口在哪里？' }),
+    snapshot.publishedHistory.vocabulary = [
+      historyEntry('vocabulary', 107, 'Current Vocabulary', lesson.vocabulary),
+      historyEntry('vocabulary', 67, 'Older Vocabulary', [{ ...lesson.vocabulary[0]!, hanzi: '新护照' }]),
     ]
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(snapshot))
       .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
-    await screen.findByText('Older Short Input')
-    await user.click(screen.getByRole('button', { name: /rollback short input to revision 77/i }))
+    await screen.findByText('Older Vocabulary')
+    await user.click(screen.getByRole('button', { name: /rollback vocabulary to revision 67/i }))
 
     expect(parsedRequestBody(1)).toEqual({
       lessonId: lesson.id,
-      moduleType: 'shortInput',
-      publishedRevisionId: 77,
-      note: 'Rollback to revision 77',
+      moduleType: 'vocabulary',
+      publishedRevisionId: 67,
+      note: 'Rollback to revision 67',
     })
-    expect(await screen.findByText(/short input rolled back to revision 77/i)).toBeVisible()
+    expect(await screen.findByText(/vocabulary rolled back to revision 67/i)).toBeVisible()
   })
 })
