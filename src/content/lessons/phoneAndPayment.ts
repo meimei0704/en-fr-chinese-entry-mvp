@@ -7,13 +7,13 @@ export const phoneAndPaymentLesson: LessonContent = {
     fr: 'Téléphone & paiement mobile',
   },
   scenario: {
-    en: 'Ask for a SIM card, confirm a phone number, and ask whether you can pay by phone or use cash first.',
-    fr: 'Demander une carte SIM, confirmer un numéro de téléphone et demander si l’on peut payer avec son téléphone ou d’abord en espèces.',
+    en: 'Ask for a SIM card, compare data plans, learn how to top up, and ask whether you can pay by phone or use cash first.',
+    fr: 'Demander une carte SIM, comparer les forfaits data, apprendre à recharger et demander si l\'on peut payer avec son téléphone ou d\'abord en espèces.',
   },
   dialogue: {
     title: {
       en: 'Ask about phone and payment setup',
-      fr: 'Demander de l’aide pour le téléphone et le paiement',
+      fr: 'Demander de l\'aide pour le téléphone et le paiement',
     },
     lines: [
       {
@@ -30,7 +30,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         },
         explanation: {
           en: '我想办一张手机卡 keeps the request short and practical after check-in.',
-          fr: '我想办一张手机卡 garde la demande courte et pratique après l’arrivée au logement.',
+          fr: '我想办一张手机卡 garde la demande courte et pratique après l\'arrivée au logement.',
         },
         audio: '/audio/phone-and-payment/line-01.mp3',
       },
@@ -44,7 +44,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         pinyin: 'Hǎo de, qǐng chūshì hùzhào.',
         translation: {
           en: 'Okay, please show your passport.',
-          fr: 'D’accord, veuillez présenter votre passeport.',
+          fr: 'D\'accord, veuillez présenter votre passeport.',
         },
         explanation: {
           en: 'This reuses the passport phrase from arrival in a phone setup context.',
@@ -66,7 +66,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         },
         explanation: {
           en: 'The learner hears 手机号码 and 支付 as a simple setup question, not a full payment guide.',
-          fr: 'L’apprenant entend 手机号码 et 支付 dans une question simple, sans guide complet de paiement.',
+          fr: 'L\'apprenant entend 手机号码 et 支付 dans une question simple, sans guide complet de paiement.',
         },
         audio: '/audio/phone-and-payment/line-03.mp3',
       },
@@ -80,16 +80,61 @@ export const phoneAndPaymentLesson: LessonContent = {
         pinyin: 'Kěyǐ, yě kěyǐ xiān yòng xiànjīn.',
         translation: {
           en: 'Yes, and you can also use cash first.',
-          fr: 'Oui, et vous pouvez aussi utiliser des espèces d’abord.',
+          fr: 'Oui, et vous pouvez aussi utiliser des espèces d\'abord.',
         },
         explanation: {
           en: '现金 gives a safe fallback word if phone payment is not ready yet.',
-          fr: '现金 donne un mot de secours si le paiement mobile n’est pas encore prêt.',
+          fr: '现金 donne un mot de secours si le paiement mobile n\'est pas encore prêt.',
         },
         audio: '/audio/phone-and-payment/line-04.mp3',
       },
       {
         id: 'phone-and-payment-line-05',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '有什么流量套餐？',
+        pinyin: 'Yǒu shénme liúliàng tàocān?',
+        translation: {
+          en: 'What data plans do you have?',
+          fr: 'Quels forfaits data avez-vous ?',
+        },
+        explanation: {
+          en: 'Ask 有什么流量套餐 to compare data plan options at a phone shop.',
+          fr: 'Demande 有什么流量套餐 pour comparer les forfaits data dans une boutique.',
+        },
+        audio: '/audio/phone-and-payment/line-05.mp3',
+      },
+      {
+        id: 'phone-and-payment-line-06',
+        speaker: { en: 'Clerk', fr: 'Employé' },
+        hanzi: '有10G和30G的，你要哪个？',
+        pinyin: 'Yǒu shí G hé sānshí G de, nǐ yào nǎge?',
+        translation: {
+          en: 'We have 10G and 30G. Which one do you want?',
+          fr: 'Nous avons 10 Go et 30 Go. Lequel voulez-vous ?',
+        },
+        explanation: {
+          en: 'The clerk names two plan sizes and asks you to choose.',
+          fr: 'L\'employé nomme deux tailles de forfait et te demande de choisir.',
+        },
+        audio: '/audio/phone-and-payment/line-06.mp3',
+      },
+      {
+        id: 'phone-and-payment-line-07',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '怎么充值？',
+        pinyin: 'Zěnme chōngzhí?',
+        translation: {
+          en: 'How do I top up?',
+          fr: 'Comment recharger ?',
+        },
+        explanation: {
+          en: 'Ask 怎么充值 to learn how to add credit to your phone.',
+          fr: 'Demande 怎么充值 pour savoir comment ajouter du crédit à ton téléphone.',
+        },
+        audio: '/audio/phone-and-payment/line-07.mp3',
+      },
+      {
+        id: 'phone-and-payment-line-08',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -98,13 +143,13 @@ export const phoneAndPaymentLesson: LessonContent = {
         pinyin: 'Hǎo de, xièxie.',
         translation: {
           en: 'Okay, thank you.',
-          fr: 'D’accord, merci.',
+          fr: 'D\'accord, merci.',
         },
         explanation: {
           en: 'A short closing phrase keeps the exchange beginner friendly.',
-          fr: 'Une formule de clôture courte garde l’échange accessible aux débutants.',
+          fr: 'Une formule de clôture courte garde l\'échange accessible aux débutants.',
         },
-        audio: '/audio/phone-and-payment/line-05.mp3',
+        audio: '/audio/phone-and-payment/line-08.mp3',
       },
     ],
   },
@@ -134,7 +179,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       audio: '/audio/phone-and-payment/pattern-02.mp3',
       explanation: {
         en: 'This is the shortest useful question for checking a payment method.',
-        fr: 'C’est la question utile la plus courte pour vérifier un moyen de paiement.',
+        fr: 'C\'est la question utile la plus courte pour vérifier un moyen de paiement.',
       },
     },
     {
@@ -142,7 +187,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       pattern: '也可以先……',
       meaning: {
         en: 'It is also possible to first ...',
-        fr: 'Il est aussi possible de d’abord ...',
+        fr: 'Il est aussi possible de d\'abord ...',
       },
       example: '也可以先用现金。',
       audio: '/audio/phone-and-payment/pattern-03.mp3',
@@ -150,6 +195,20 @@ export const phoneAndPaymentLesson: LessonContent = {
         en: 'This pattern introduces a fallback without adding complex payment details.',
         fr: 'Cette structure introduit une solution de secours sans détails de paiement complexes.',
       },
+    },
+    {
+      id: 'phone-and-payment-pattern-4',
+      pattern: '有什么……？',
+      meaning: { en: 'What ... do you have?', fr: 'Qu\'est-ce que vous avez comme ... ?' },
+      example: '有什么流量套餐？', audio: '/audio/phone-and-payment/pattern-04.mp3',
+      explanation: { en: 'Use 有什么 to ask about available options at a shop or counter.', fr: 'Utilise 有什么 pour demander les options disponibles dans un magasin ou à un comptoir.' },
+    },
+    {
+      id: 'phone-and-payment-pattern-5',
+      pattern: '怎么……？',
+      meaning: { en: 'How to ...?', fr: 'Comment ... ?' },
+      example: '怎么充值？', audio: '/audio/phone-and-payment/pattern-05.mp3',
+      explanation: { en: 'Use 怎么 before a verb to ask how to do something.', fr: 'Utilise 怎么 avant un verbe pour demander comment faire quelque chose.' },
     },
   ],
   vocabulary: [
@@ -164,7 +223,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       },
       explanation: {
         en: 'The practical word for asking about phone service after arrival.',
-        fr: 'Le mot pratique pour demander un service téléphonique après l’arrivée.',
+        fr: 'Le mot pratique pour demander un service téléphonique après l\'arrivée.',
       },
     },
     {
@@ -178,7 +237,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       },
       explanation: {
         en: 'Recognize it when someone confirms the number attached to the phone.',
-        fr: 'Reconnais-le quand quelqu’un confirme le numéro lié au téléphone.',
+        fr: 'Reconnais-le quand quelqu\'un confirme le numéro lié au téléphone.',
       },
     },
     {
@@ -206,7 +265,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       },
       explanation: {
         en: 'A useful fallback if phone payment is not ready.',
-        fr: 'Une solution utile si le paiement mobile n’est pas prêt.',
+        fr: 'Une solution utile si le paiement mobile n\'est pas prêt.',
       },
     },
     {
@@ -223,6 +282,11 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'Utilise-le pour demander si une action ou un moyen de paiement est possible.',
       },
     },
+    { id: 'phone-and-payment-vocab-6', hanzi: '流量', pinyin: 'liúliàng', audio: '/audio/phone-and-payment/vocab-06.mp3', meaning: { en: 'data / mobile data', fr: 'données mobiles' }, explanation: { en: 'The key word when choosing a phone plan.', fr: 'Le mot clé pour choisir un forfait téléphonique.' } },
+    { id: 'phone-and-payment-vocab-7', hanzi: '套餐', pinyin: 'tàocān', audio: '/audio/phone-and-payment/vocab-07.mp3', meaning: { en: 'plan / package', fr: 'forfait' }, explanation: { en: '套餐 means a bundled plan for phone, data, or even meals.', fr: '套餐 désigne un forfait groupé pour le téléphone, les données ou même les repas.' } },
+    { id: 'phone-and-payment-vocab-8', hanzi: '充值', pinyin: 'chōngzhí', audio: '/audio/phone-and-payment/vocab-08.mp3', meaning: { en: 'top up / recharge', fr: 'recharger' }, explanation: { en: 'Use 充值 when you need to add credit to your phone or transit card.', fr: 'Utilise 充值 quand tu dois ajouter du crédit à ton téléphone ou ta carte de transport.' } },
+    { id: 'phone-and-payment-vocab-9', hanzi: '微信', pinyin: 'Wēixìn', audio: '/audio/phone-and-payment/vocab-09.mp3', meaning: { en: 'WeChat', fr: 'WeChat' }, explanation: { en: 'The most common messaging and payment app in China.', fr: 'L\'application de messagerie et de paiement la plus courante en Chine.' } },
+    { id: 'phone-and-payment-vocab-10', hanzi: '余额', pinyin: 'yú\'é', audio: '/audio/phone-and-payment/vocab-10.mp3', meaning: { en: 'balance', fr: 'solde' }, explanation: { en: 'Check your 余额 to know how much credit you have left.', fr: 'Vérifie ton 余额 pour savoir combien de crédit il te reste.' } },
   ],
   pronunciation: [
     {
@@ -240,6 +304,20 @@ export const phoneAndPaymentLesson: LessonContent = {
       explanation: {
         en: 'This lesson prioritizes recognizing the useful service words over technical setup detail.',
         fr: 'Cette leçon vise la reconnaissance de mots de service utiles, pas les détails techniques.',
+      },
+    },
+    {
+      id: 'phone-and-payment-pronunciation-2',
+      focus: { en: 'ch vs zh contrast: 充 vs 重', fr: 'Contraste ch vs zh : 充 vs 重' },
+      audioText: '充值不是重置',
+      audio: '/audio/phone-and-payment/pronunciation-02.mp3',
+      tip: {
+        en: '充值 (chōngzhí top-up) vs 重置 (chóngzhì reset) — different initial sounds, different meanings.',
+        fr: '充值 (chōngzhí recharger) vs 重置 (chóngzhì réinitialiser) — sons initiaux différents, sens différents.',
+      },
+      explanation: {
+        en: 'The ch/zh contrast avoids mixing up topping up with resetting.',
+        fr: 'Le contraste ch/zh évite de confondre recharger et réinitialiser.',
       },
     },
   ],
@@ -296,6 +374,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: '付 complète 支付, le mot pour paiement.',
       },
     },
+    { id: 'phone-and-payment-hanzi-5', hanzi: '充', pinyin: 'chōng', meaning: { en: 'fill / charge', fr: 'remplir / charger' }, explanation: { en: 'Recognize 充 in 充值, the top-up word.', fr: 'Reconnais 充 dans 充值, le mot pour recharger.' } },
+    { id: 'phone-and-payment-hanzi-6', hanzi: '信', pinyin: 'xìn', meaning: { en: 'message / trust', fr: 'message / confiance' }, explanation: { en: 'Recognize 信 in 微信, WeChat.', fr: 'Reconnais 信 dans 微信, WeChat.' } },
   ],
   practice: {
     listening: [
@@ -312,6 +392,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fr: '手机卡 désigne la carte SIM dans cet échange de service.',
         },
       },
+      { id: 'phone-and-payment-listening-2', prompt: { en: 'Which phrase asks about data plans?', fr: 'Quelle phrase demande les forfaits data ?' }, target: '有什么流量套餐？', audio: '/audio/phone-and-payment/practice-listening-02.mp3', explanation: { en: '有什么流量套餐 helps you compare phone plan options.', fr: '有什么流量套餐 t\'aide à comparer les forfaits téléphoniques.' } },
     ],
     speaking: [
       {
@@ -327,6 +408,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fr: 'Cette question est la manière courte la plus sûre de vérifier le paiement mobile.',
         },
       },
+      { id: 'phone-and-payment-speaking-2', prompt: { en: 'Ask how to top up your phone.', fr: 'Demande comment recharger ton téléphone.' }, target: '怎么充值？', audio: '/audio/phone-and-payment/practice-speaking-02.mp3', explanation: { en: '怎么充值 is the fastest way to ask about adding credit.', fr: '怎么充值 est la façon la plus rapide de demander comment ajouter du crédit.' } },
     ],
     reading: [
       {
@@ -342,6 +424,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fr: '手机号码 signifie numéro de téléphone.',
         },
       },
+      { id: 'phone-and-payment-reading-2', prompt: { en: 'Match the payment app name.', fr: 'Associe le nom de l\'appli de paiement.' }, target: '微信', audio: '/audio/phone-and-payment/practice-reading-02.mp3', explanation: { en: '微信 is the most important app name to recognize in China.', fr: '微信 est le nom d\'application le plus important à reconnaître en Chine.' } },
     ],
   },
   reviewCards: [
@@ -366,7 +449,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       },
       explanation: {
         en: 'This is the number attached to the phone or SIM card.',
-        fr: 'C’est le numéro lié au téléphone ou à la carte SIM.',
+        fr: 'C\'est le numéro lié au téléphone ou à la carte SIM.',
       },
     },
     {
@@ -381,6 +464,9 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'Une question courte et pratique dans les magasins et aux comptoirs.',
       },
     },
+    { id: 'phone-and-payment-review-4', front: '流量', back: { en: 'mobile data', fr: 'données mobiles' }, explanation: { en: 'The word for mobile data.', fr: 'Le mot pour les données mobiles.' } },
+    { id: 'phone-and-payment-review-5', front: '充值', back: { en: 'top up / recharge', fr: 'recharger' }, explanation: { en: 'How to add credit to your phone.', fr: 'Comment ajouter du crédit à ton téléphone.' } },
+    { id: 'phone-and-payment-review-6', front: '微信', back: { en: 'WeChat', fr: 'WeChat' }, explanation: { en: 'The essential messaging and payment app.', fr: 'L\'application essentielle de messagerie et de paiement.' } },
   ],
   shortInput: {
     id: 'phone-and-payment-short-input-01',

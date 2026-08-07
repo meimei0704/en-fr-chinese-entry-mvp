@@ -129,18 +129,28 @@ describe('course content', () => {
     expect(course.lessons).toHaveLength(10)
     expect(course.lessons.map((lesson) => lesson.id)).toEqual(expectedLessonIds)
 
+    const expandedCounts: Record<string, Record<string, number>> = {
+      'self-intro': { dialogue: 10, patterns: 5, vocab: 11, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'ask-directions': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'order-food': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'phone-and-payment': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+    }
+
     for (const lesson of course.lessons) {
-      if (lesson.id === 'self-intro') {
-        expect(lesson.sentencePatterns).toHaveLength(5)
-        expect(lesson.vocabulary).toHaveLength(11)
-        expect(lesson.pronunciation).toHaveLength(2)
-        expect(lesson.hanziRecognition).toHaveLength(6)
-        expect(lesson.practice.listening).toHaveLength(2)
-        expect(lesson.practice.speaking).toHaveLength(2)
-        expect(lesson.practice.reading).toHaveLength(2)
-        expect(lesson.reviewCards).toHaveLength(6)
+      const counts = expandedCounts[lesson.id]
+      if (counts) {
+        expect(lesson.dialogue.lines).toHaveLength(counts.dialogue)
+        expect(lesson.sentencePatterns).toHaveLength(counts.patterns)
+        expect(lesson.vocabulary).toHaveLength(counts.vocab)
+        expect(lesson.pronunciation).toHaveLength(counts.pronunciation)
+        expect(lesson.hanziRecognition).toHaveLength(counts.hanzi)
+        expect(lesson.practice.listening).toHaveLength(counts.practice)
+        expect(lesson.practice.speaking).toHaveLength(counts.practice)
+        expect(lesson.practice.reading).toHaveLength(counts.practice)
+        expect(lesson.reviewCards).toHaveLength(counts.cards)
         expect(lesson.shortInput.audio).toMatch(/^\/audio\//)
       } else {
+        expect(lesson.dialogue.lines).toHaveLength(5)
         expect(lesson.sentencePatterns).toHaveLength(3)
         expect(lesson.vocabulary).toHaveLength(5)
         expect(lesson.pronunciation).toHaveLength(1)
@@ -345,25 +355,37 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(197)
+    expect(audioPaths).toHaveLength(239)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
-    const newSelfIntroPaths = new Set([
-      '/audio/self-intro/line-08.mp3',
-      '/audio/self-intro/line-09.mp3',
-      '/audio/self-intro/line-10.mp3',
-      '/audio/self-intro/pattern-04.mp3',
-      '/audio/self-intro/pattern-05.mp3',
-      '/audio/self-intro/vocab-06.mp3',
-      '/audio/self-intro/vocab-07.mp3',
-      '/audio/self-intro/vocab-08.mp3',
-      '/audio/self-intro/vocab-09.mp3',
-      '/audio/self-intro/vocab-10.mp3',
-      '/audio/self-intro/vocab-11.mp3',
+    const newAudioPaths = new Set([
+      '/audio/self-intro/line-02.mp3', '/audio/self-intro/line-04.mp3', '/audio/self-intro/line-05.mp3',
+      '/audio/self-intro/line-08.mp3', '/audio/self-intro/line-09.mp3', '/audio/self-intro/line-10.mp3',
+      '/audio/self-intro/pattern-04.mp3', '/audio/self-intro/pattern-05.mp3',
+      '/audio/self-intro/vocab-06.mp3', '/audio/self-intro/vocab-07.mp3', '/audio/self-intro/vocab-08.mp3',
+      '/audio/self-intro/vocab-09.mp3', '/audio/self-intro/vocab-10.mp3', '/audio/self-intro/vocab-11.mp3',
       '/audio/self-intro/pronunciation-02.mp3',
-      '/audio/self-intro/practice-listening-02.mp3',
-      '/audio/self-intro/practice-speaking-02.mp3',
-      '/audio/self-intro/practice-reading-02.mp3',
+      '/audio/self-intro/practice-listening-02.mp3', '/audio/self-intro/practice-speaking-02.mp3', '/audio/self-intro/practice-reading-02.mp3',
+      '/audio/ask-directions/line-04.mp3', '/audio/ask-directions/line-05.mp3',
+      '/audio/ask-directions/line-06.mp3', '/audio/ask-directions/line-07.mp3', '/audio/ask-directions/line-08.mp3',
+      '/audio/ask-directions/pattern-04.mp3', '/audio/ask-directions/pattern-05.mp3',
+      '/audio/ask-directions/vocab-06.mp3', '/audio/ask-directions/vocab-07.mp3', '/audio/ask-directions/vocab-08.mp3',
+      '/audio/ask-directions/vocab-09.mp3', '/audio/ask-directions/vocab-10.mp3',
+      '/audio/ask-directions/pronunciation-02.mp3',
+      '/audio/ask-directions/practice-listening-02.mp3', '/audio/ask-directions/practice-speaking-02.mp3', '/audio/ask-directions/practice-reading-02.mp3',
+      '/audio/order-food/line-06.mp3', '/audio/order-food/line-07.mp3', '/audio/order-food/line-08.mp3',
+      '/audio/order-food/pattern-04.mp3', '/audio/order-food/pattern-05.mp3',
+      '/audio/order-food/vocab-06.mp3', '/audio/order-food/vocab-07.mp3', '/audio/order-food/vocab-08.mp3',
+      '/audio/order-food/vocab-09.mp3', '/audio/order-food/vocab-10.mp3',
+      '/audio/order-food/pronunciation-02.mp3',
+      '/audio/order-food/practice-listening-02.mp3', '/audio/order-food/practice-speaking-02.mp3', '/audio/order-food/practice-reading-02.mp3',
+      '/audio/phone-and-payment/line-05.mp3', '/audio/phone-and-payment/line-06.mp3',
+      '/audio/phone-and-payment/line-07.mp3', '/audio/phone-and-payment/line-08.mp3',
+      '/audio/phone-and-payment/pattern-04.mp3', '/audio/phone-and-payment/pattern-05.mp3',
+      '/audio/phone-and-payment/vocab-06.mp3', '/audio/phone-and-payment/vocab-07.mp3', '/audio/phone-and-payment/vocab-08.mp3',
+      '/audio/phone-and-payment/vocab-09.mp3', '/audio/phone-and-payment/vocab-10.mp3',
+      '/audio/phone-and-payment/pronunciation-02.mp3',
+      '/audio/phone-and-payment/practice-listening-02.mp3', '/audio/phone-and-payment/practice-speaking-02.mp3', '/audio/phone-and-payment/practice-reading-02.mp3',
     ])
 
     for (const audioPath of audioPaths) {
@@ -371,7 +393,7 @@ describe('course content', () => {
         /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|pronunciation|short-input|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
       )
 
-      if (newSelfIntroPaths.has(audioPath)) {
+      if (newAudioPaths.has(audioPath)) {
         continue
       }
 
