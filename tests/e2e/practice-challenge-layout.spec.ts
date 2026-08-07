@@ -13,6 +13,17 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
   await expect(options).toBeVisible()
   await expect(statTiles).toHaveCount(3)
 
+  const header = page.locator('.practice-page__header')
+  const body = page.locator('.practice-page__body')
+  await expect(header).toBeVisible()
+  await expect(body).toBeVisible()
+  const headerBox = await header.boundingBox()
+  const bodyBox = await body.boundingBox()
+  expect(headerBox).not.toBeNull()
+  expect(bodyBox).not.toBeNull()
+  expect(Math.abs(headerBox!.x - bodyBox!.x)).toBeLessThanOrEqual(2)
+  expect(Math.abs(headerBox!.width - bodyBox!.width)).toBeLessThanOrEqual(2)
+
   const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth)
   const clientWidth = await page.evaluate(() => document.documentElement.clientWidth)
   expect(scrollWidth).toBe(clientWidth)
