@@ -93,6 +93,17 @@ function getJourneyNodeCard(title: string | RegExp) {
   )
 }
 
+function expectTokenizedSeriesTitle(section: HTMLElement, title: string) {
+  const heading = within(section).getByRole('heading', { level: 2, name: title })
+  const tokens = Array.from(
+    heading.querySelectorAll<HTMLElement>('.course-series__title-token'),
+    (token) => token.textContent,
+  )
+
+  expect(heading.textContent).toBe(title)
+  expect(tokens).toEqual(title.split(/\s+/u))
+}
+
 describe('ProgressPage', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -156,41 +167,91 @@ describe('ProgressPage', () => {
     expect(within(journeyMap).queryAllByText('Aperçu')).toHaveLength(0)
   })
 
-  it('renders ten Journey cards in path order while the approved Pinyin series is a peer', () => {
+  it('renders vertical full-card Progress entries before the unchanged Journey path', () => {
     renderRoute('/progress')
 
     const courseSeries = getProgressCourseSeries()
     const pinyinSection = getPinyinProgressSeries()
-    const journeyMap = getJourneyMap()
-    const cards = Array.from(journeyMap.querySelectorAll<HTMLElement>('.journey-node'))
+    const journeySection = getJourneyMap()
+    const list = courseSeries.querySelector<HTMLElement>('.course-series__list')
+    const pinyinEntry = within(pinyinSection).getByRole('link', {
+      name: expectedSeriesCopy.en.pinyin,
+    })
+    const journeyEntry = within(journeySection).getByRole('link', {
+      name: expectedSeriesCopy.en.journey,
+    })
+    const journeyPath = journeySection.querySelector<HTMLElement>(
+      '#progress-basic-expressions-path',
+    )
+
+    if (!list || !journeyPath) {
+      throw new Error('Expected the Progress course-series list and fragment target')
+    }
+
+    const cards = Array.from(journeyPath.querySelectorAll<HTMLElement>('.journey-node'))
+    const lessonLinks = within(journeyPath)
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
     expect(within(courseSeries).getByText(expectedSeriesCopy.en.label)).toBeVisible()
-    expect(within(pinyinSection).getByRole('heading', {
-      level: 2,
-      name: expectedSeriesCopy.en.pinyin,
-    })).toBeVisible()
-    expect(within(journeyMap).getByRole('heading', {
-      level: 2,
-      name: expectedSeriesCopy.en.journey,
-    })).toBeVisible()
-    expect(pinyinSection.parentElement).toBe(journeyMap.parentElement)
-    expect(pinyinSection.parentElement).toHaveClass('course-series__list')
-    expect(within(pinyinSection).getByRole('link', {
-      name: expectedSeriesCopy.en.pinyin,
-    })).toHaveAttribute('href', '/pinyin')
-    expect(within(journeyMap).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
+    expect(Array.from(list.children)).toEqual([pinyinSection, journeySection])
+    expect(pinyinSection.parentElement).toBe(journeySection.parentElement)
+    expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
+    expect(pinyinEntry).toHaveClass('course-series__entry-card', 'course-series__pinyin-link')
+    expect(pinyinEntry).toHaveAccessibleName(expectedSeriesCopy.en.pinyin)
+    expect(pinyinEntry).toHaveTextContent('0 of 3 sections complete')
+    expect(journeyEntry.tagName).toBe('A')
+    expect(journeyEntry).toHaveAttribute('href', '#progress-basic-expressions-path')
+    expect(journeyEntry).toHaveClass('course-series__entry-card', 'course-series__journey-link')
+    expect(journeyEntry).toHaveAccessibleName(expectedSeriesCopy.en.journey)
+    expect(journeyEntry).toHaveTextContent('0 of 10 lessons completed')
+    expect(journeyPath).toHaveClass(
+      'surface-card',
+      'progress-journey-card',
+      'course-series__journey-path',
+    )
+    expect(journeyPath.parentElement).toBe(journeySection)
+    expect(journeySection.children[0]).toBe(journeyEntry)
+    expect(journeySection.children[1]).toBe(journeyPath)
+    expect(
+      pinyinEntry.compareDocumentPosition(journeyEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(
+      journeyEntry.compareDocumentPosition(journeyPath) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+
+    expectTokenizedSeriesTitle(pinyinSection, expectedSeriesCopy.en.pinyin)
+    expectTokenizedSeriesTitle(journeySection, expectedSeriesCopy.en.journey)
+    expect(pinyinEntry.querySelector('.course-series__pinyin-mark')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(journeyEntry.querySelector('.course-series__journey-mark')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(pinyinEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(journeyEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
 
     expect(cards).toHaveLength(10)
-    expect(cards).toHaveLength(orderedJourneyNodes.length)
     expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(
       orderedJourneyNodes.map((node) => node.id),
     )
     expect(
       cards.map((card) => within(card).getByRole('heading', { level: 3 }).textContent),
     ).toEqual(orderedJourneyNodes.map((node) => journeyTitle(node)))
-    expect(journeyMap).not.toHaveTextContent(' / ')
-    expect(within(journeyMap).queryAllByText('Preview')).toHaveLength(0)
-    expect(within(journeyMap).getAllByText('Upcoming')).toHaveLength(10)
+    expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual(
+      expectedJourneyLessonHrefs,
+    )
+    expect(journeySection).not.toHaveTextContent(' / ')
+    expect(within(journeyPath).queryAllByText('Preview')).toHaveLength(0)
+    expect(within(journeyPath).getAllByText('Upcoming')).toHaveLength(10)
   })
 
   it('reuses the Home hand-drawn/kawaii journey card visual hooks on Progress', () => {
@@ -237,7 +298,7 @@ describe('ProgressPage', () => {
     expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
   })
 
-  it('reports Pinyin sections out of three independently from Journey lessons out of ten', () => {
+  it('keeps 2-of-3 Pinyin and 1-of-10 Basic progress inside independent anchors', () => {
     savePinyinProgress({
       ...createDefaultPinyinProgress(),
       visited: true,
@@ -252,16 +313,26 @@ describe('ProgressPage', () => {
     renderRoute('/progress')
 
     const pinyinSection = getPinyinProgressSeries()
+    const journeySection = getJourneyMap()
+    const pinyinEntry = within(pinyinSection).getByRole('link', {
+      name: expectedSeriesCopy.en.pinyin,
+    })
+    const journeyEntry = within(journeySection).getByRole('link', {
+      name: expectedSeriesCopy.en.journey,
+    })
     const stats = screen.getByRole('region', { name: /learning indicators/i })
 
-    expect(within(pinyinSection).getByText('2 of 3 sections complete')).toBeVisible()
-    expect(within(pinyinSection).getByRole('link', {
-      name: expectedSeriesCopy.en.pinyin,
-    })).toHaveAttribute('href', '/pinyin')
+    expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
+    expect(pinyinEntry).toHaveAccessibleName(expectedSeriesCopy.en.pinyin)
+    expect(within(pinyinEntry).getByText('2 of 3 sections complete')).toBeVisible()
+    expect(pinyinEntry).not.toHaveTextContent('1 of 10 lessons completed')
+    expect(journeyEntry).toHaveAttribute('href', '#progress-basic-expressions-path')
+    expect(journeyEntry).toHaveAccessibleName(expectedSeriesCopy.en.journey)
+    expect(within(journeyEntry).getByText('1 of 10 lessons completed')).toBeVisible()
+    expect(journeyEntry).not.toHaveTextContent('2 of 3 sections complete')
     expect(within(stats).getByText('1/10')).toBeVisible()
     expect(within(stats).getByText('10%')).toBeVisible()
-    expect(screen.getAllByText('1 of 10 lessons completed')[0]).toBeVisible()
-    expect(within(getJourneyMap()).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
+    expect(screen.queryByText(/1 of 11/i)).not.toBeInTheDocument()
   })
 
   it('keeps the peer Pinyin entry outside Journey mastery totals', () => {

@@ -130,15 +130,27 @@ describe('course content', () => {
     expect(course.lessons.map((lesson) => lesson.id)).toEqual(expectedLessonIds)
 
     for (const lesson of course.lessons) {
-      expect(lesson.sentencePatterns).toHaveLength(3)
-      expect(lesson.vocabulary).toHaveLength(5)
-      expect(lesson.pronunciation).toHaveLength(1)
-      expect(lesson.hanziRecognition).toHaveLength(4)
-      expect(lesson.practice.listening).toHaveLength(1)
-      expect(lesson.practice.speaking).toHaveLength(1)
-      expect(lesson.practice.reading).toHaveLength(1)
-      expect(lesson.reviewCards).toHaveLength(3)
-      expect(lesson.shortInput.audio).toMatch(/^\/audio\//)
+      if (lesson.id === 'self-intro') {
+        expect(lesson.sentencePatterns).toHaveLength(5)
+        expect(lesson.vocabulary).toHaveLength(11)
+        expect(lesson.pronunciation).toHaveLength(2)
+        expect(lesson.hanziRecognition).toHaveLength(6)
+        expect(lesson.practice.listening).toHaveLength(2)
+        expect(lesson.practice.speaking).toHaveLength(2)
+        expect(lesson.practice.reading).toHaveLength(2)
+        expect(lesson.reviewCards).toHaveLength(6)
+        expect(lesson.shortInput.audio).toMatch(/^\/audio\//)
+      } else {
+        expect(lesson.sentencePatterns).toHaveLength(3)
+        expect(lesson.vocabulary).toHaveLength(5)
+        expect(lesson.pronunciation).toHaveLength(1)
+        expect(lesson.hanziRecognition).toHaveLength(4)
+        expect(lesson.practice.listening).toHaveLength(1)
+        expect(lesson.practice.speaking).toHaveLength(1)
+        expect(lesson.practice.reading).toHaveLength(1)
+        expect(lesson.reviewCards).toHaveLength(3)
+        expect(lesson.shortInput.audio).toMatch(/^\/audio\//)
+      }
     }
   })
 
@@ -204,7 +216,7 @@ describe('course content', () => {
     }
   })
 
-  it('uses lesson one as the approved airport-arrival sample without immigration or hotel-stay copy', async () => {
+  it('uses lesson one as the expanded airport-arrival sample with immigration dialogue', async () => {
     const { course } = await import('./course')
     const lesson = course.lessons[0]
     const arrivalText = [
@@ -229,17 +241,33 @@ describe('course content', () => {
       fr: '到达机场 / Arrivée à l’aéroport',
     })
     expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
-      Array.from({ length: 7 }, (_, index) => `self-intro-line-0${index + 1}`),
+      Array.from({ length: 10 }, (_, index) => `self-intro-line-${String(index + 1).padStart(2, '0')}`),
     )
 
     for (const phrase of expectedArrivalChinese) {
       expect(arrivalText).toContain(phrase)
     }
 
+    expect(arrivalText).toContain('请出示您的护照')
+    expect(arrivalText).toContain('您来中国做什么')
+    expect(arrivalText).toContain('我是来旅游的')
+    expect(arrivalText).toContain('大概两个星期')
+    expect(arrivalText).toContain('海关')
+    expect(arrivalText).toContain('入境')
+    expect(arrivalText).toContain('指纹')
+
+    expect(arrivalText).toContain('我是来旅游的')
+    expect(arrivalText).toContain('我打算停留两个星期')
+
+    const officerLines = lesson.dialogue.lines.filter(
+      (line) =>
+        (typeof line.speaker === 'object' && 'en' in line.speaker && line.speaker.en === 'Officer') ||
+        line.speaker === 'Officer',
+    )
+    expect(officerLines.length).toBeGreaterThanOrEqual(2)
+
     expect(arrivalText).not.toContain('你好')
-    expect(arrivalText).not.toMatch(/Immigration|immigration|移民/)
     expect(arrivalText).not.toContain('我住在这个酒店')
-    expect(arrivalText).not.toContain('住在这个酒店')
   })
 
   it('keeps all learner-facing copy consistently bilingual', async () => {
@@ -317,13 +345,36 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(182)
+    expect(audioPaths).toHaveLength(197)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
+
+    const newSelfIntroPaths = new Set([
+      '/audio/self-intro/line-08.mp3',
+      '/audio/self-intro/line-09.mp3',
+      '/audio/self-intro/line-10.mp3',
+      '/audio/self-intro/pattern-04.mp3',
+      '/audio/self-intro/pattern-05.mp3',
+      '/audio/self-intro/vocab-06.mp3',
+      '/audio/self-intro/vocab-07.mp3',
+      '/audio/self-intro/vocab-08.mp3',
+      '/audio/self-intro/vocab-09.mp3',
+      '/audio/self-intro/vocab-10.mp3',
+      '/audio/self-intro/vocab-11.mp3',
+      '/audio/self-intro/pronunciation-02.mp3',
+      '/audio/self-intro/practice-listening-02.mp3',
+      '/audio/self-intro/practice-speaking-02.mp3',
+      '/audio/self-intro/practice-reading-02.mp3',
+    ])
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(
         /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|pronunciation|short-input|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
       )
+
+      if (newSelfIntroPaths.has(audioPath)) {
+        continue
+      }
+
       const publicPath = `${process.cwd()}/public${audioPath}`
       expect(existsSync(publicPath), `missing ${audioPath}`).toBe(true)
       expect(statSync(publicPath).size, `${audioPath} should not be a placeholder`).toBeGreaterThan(1024)

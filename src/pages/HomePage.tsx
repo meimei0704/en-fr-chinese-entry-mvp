@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
 import { HomeHeroIllustration } from '../components/HomeHeroIllustration'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
@@ -64,132 +65,152 @@ export function HomePage() {
             aria-labelledby="home-pinyin-series-title"
           >
             <Link
-              className="course-series__pinyin-link"
+              className="course-series__entry-card course-series__pinyin-link"
               to="/pinyin"
               aria-labelledby="home-pinyin-series-title"
             >
               <span className="course-series__pinyin-mark" aria-hidden="true">
                 拼
               </span>
-              <h2 id="home-pinyin-series-title" className="course-series__title">
-                {copy.courseSeries.pinyinTitle}
-              </h2>
+              <CourseSeriesTitle
+                id="home-pinyin-series-title"
+                title={copy.courseSeries.pinyinTitle}
+              />
+              <span className="course-series__entry-cue" aria-hidden="true">
+                →
+              </span>
             </Link>
           </section>
 
           <section
             aria-labelledby="home-journey-series-title"
-            className="course-series__panel course-series__panel--journey journey-map"
+            className="course-series__panel course-series__panel--journey"
           >
-            <div className="section-heading journey-map__intro course-series__panel-header">
-              <div>
-                <h2 id="home-journey-series-title" className="course-series__title">
-                  {copy.courseSeries.basicExpressionsTitle}
-                </h2>
-              </div>
-            </div>
+            <a
+              className="course-series__entry-card course-series__journey-link"
+              href="#home-basic-expressions-path"
+              aria-labelledby="home-journey-series-title"
+            >
+              <span className="course-series__journey-mark" aria-hidden="true">
+                旅
+              </span>
+              <CourseSeriesTitle
+                id="home-journey-series-title"
+                title={copy.courseSeries.basicExpressionsTitle}
+              />
+              <span className="course-series__entry-cue" aria-hidden="true">
+                ↓
+              </span>
+            </a>
 
-            <div className="journey-map__path">
-              {journeyNodes.map((node) => {
-            const nodeSummary = getLocalizedText(node.summary, language)
-            const nodeEyebrow = getLocalizedText(node.eyebrow, language)
-            const nodeIcon = journeyNodeIcons[node.id]
+            <div
+              id="home-basic-expressions-path"
+              className="course-series__journey-path journey-map"
+            >
+              <div className="journey-map__path">
+                {journeyNodes.map((node) => {
+                  const nodeSummary = getLocalizedText(node.summary, language)
+                  const nodeEyebrow = getLocalizedText(node.eyebrow, language)
+                  const nodeIcon = journeyNodeIcons[node.id]
 
-            if (node.kind === 'lesson' && node.lessonId) {
-              return (
-                <Link
-                  key={node.id}
-                  className="journey-node journey-node--lesson journey-node--card-link"
-                  to={`/lesson/${node.lessonId}`}
-                >
-                  <div className="journey-node__body">
-                    <div className="journey-node__header">
-                      <span className="badge badge--jade">{nodeEyebrow}</span>
-                    </div>
+                  if (node.kind === 'lesson' && node.lessonId) {
+                    return (
+                      <Link
+                        key={node.id}
+                        className="journey-node journey-node--lesson journey-node--card-link"
+                        to={`/lesson/${node.lessonId}`}
+                      >
+                        <div className="journey-node__body">
+                          <div className="journey-node__header">
+                            <span className="badge badge--jade">{nodeEyebrow}</span>
+                          </div>
 
-                    <LessonTopicTitle as="h3" lessonId={node.lessonId} language={language} />
-                    <p className="muted-text">{nodeSummary}</p>
-                  </div>
+                          <LessonTopicTitle as="h3" lessonId={node.lessonId} language={language} />
+                          <p className="muted-text">{nodeSummary}</p>
+                        </div>
 
-                  <span
-                    className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
-                    aria-hidden="true"
-                  >
-                    <span className="journey-node__doodle journey-node__doodle--stamp">
-                      {nodeIcon}
-                    </span>
-                  </span>
-                </Link>
-              )
-            }
-
-            const isExpanded = expandedPreviewNodeId === node.id
-            const previewPanelId = `journey-preview-${node.id}`
-
-            return (
-              <article
-                key={node.id}
-                className={`journey-node journey-node--preview ${isExpanded ? 'journey-node--is-open' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="journey-node__preview-button"
-                  aria-expanded={isExpanded}
-                  aria-controls={previewPanelId}
-                  onClick={() =>
-                    setExpandedPreviewNodeId((currentNodeId) =>
-                      currentNodeId === node.id ? null : node.id,
+                        <span
+                          className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
+                          aria-hidden="true"
+                        >
+                          <span className="journey-node__doodle journey-node__doodle--stamp">
+                            {nodeIcon}
+                          </span>
+                        </span>
+                      </Link>
                     )
                   }
-                >
-                  <div className="journey-node__body">
-                    <div className="journey-node__header">
-                      <span className="badge badge--gold">{nodeEyebrow}</span>
-                      <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
-                    </div>
 
-                    <LessonTopicTitle as="h3" title={node.title} language={language} />
-                    <p className="muted-text">{nodeSummary}</p>
-                    <span className="journey-node__cta">
-                      {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
-                    </span>
-                  </div>
+                  const isExpanded = expandedPreviewNodeId === node.id
+                  const previewPanelId = `journey-preview-${node.id}`
 
-                  <span
-                    className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
-                    aria-hidden="true"
-                  >
-                    <span className="journey-node__doodle journey-node__doodle--stamp">
-                      {nodeIcon}
-                    </span>
-                  </span>
-                </button>
+                  return (
+                    <article
+                      key={node.id}
+                      className={`journey-node journey-node--preview ${isExpanded ? 'journey-node--is-open' : ''}`}
+                    >
+                      <button
+                        type="button"
+                        className="journey-node__preview-button"
+                        aria-expanded={isExpanded}
+                        aria-controls={previewPanelId}
+                        onClick={() =>
+                          setExpandedPreviewNodeId((currentNodeId) =>
+                            currentNodeId === node.id ? null : node.id,
+                          )
+                        }
+                      >
+                        <div className="journey-node__body">
+                          <div className="journey-node__header">
+                            <span className="badge badge--gold">{nodeEyebrow}</span>
+                            <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
+                          </div>
 
-                {node.previewDetails && isExpanded ? (
-                  <div id={previewPanelId} className="journey-node__preview-panel" role="note">
-                    <span className="journey-node__preview-stamp">{copy.homePage.comingSoon}</span>
+                          <LessonTopicTitle as="h3" title={node.title} language={language} />
+                          <p className="muted-text">{nodeSummary}</p>
+                          <span className="journey-node__cta">
+                            {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
+                          </span>
+                        </div>
 
-                    <div className="journey-node__phrase-card">
-                      <span className="journey-node__panel-label">
-                        {copy.homePage.previewKeyPhraseLabel}
-                      </span>
-                      <strong>{node.previewDetails.phrase}</strong>
-                      <span className="pinyin-line">{node.previewDetails.pinyin}</span>
-                      <span className="journey-node__phrase-meaning">
-                        {copy.homePage.previewMeaningLabel}:{' '}
-                        {getLocalizedText(node.previewDetails.meaning, language)}
-                      </span>
-                    </div>
+                        <span
+                          className="journey-node__illustration-slot journey-node__illustration-slot--stamp"
+                          aria-hidden="true"
+                        >
+                          <span className="journey-node__doodle journey-node__doodle--stamp">
+                            {nodeIcon}
+                          </span>
+                        </span>
+                      </button>
 
-                    <p className="journey-node__goal">
-                      <span>{copy.homePage.previewGoalLabel}</span>
-                      {getLocalizedText(node.previewDetails.goal, language)}
-                    </p>
-                  </div>
-                ) : null}
-              </article>
-            )
-              })}
+                      {node.previewDetails && isExpanded ? (
+                        <div id={previewPanelId} className="journey-node__preview-panel" role="note">
+                          <span className="journey-node__preview-stamp">
+                            {copy.homePage.comingSoon}
+                          </span>
+
+                          <div className="journey-node__phrase-card">
+                            <span className="journey-node__panel-label">
+                              {copy.homePage.previewKeyPhraseLabel}
+                            </span>
+                            <strong>{node.previewDetails.phrase}</strong>
+                            <span className="pinyin-line">{node.previewDetails.pinyin}</span>
+                            <span className="journey-node__phrase-meaning">
+                              {copy.homePage.previewMeaningLabel}:{' '}
+                              {getLocalizedText(node.previewDetails.meaning, language)}
+                            </span>
+                          </div>
+
+                          <p className="journey-node__goal">
+                            <span>{copy.homePage.previewGoalLabel}</span>
+                            {getLocalizedText(node.previewDetails.goal, language)}
+                          </p>
+                        </div>
+                      ) : null}
+                    </article>
+                  )
+                })}
+              </div>
             </div>
           </section>
         </div>

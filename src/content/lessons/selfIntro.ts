@@ -7,13 +7,13 @@ export const selfIntroLesson: LessonContent = {
     fr: '到达机场 / Arrivée à l’aéroport',
   },
   scenario: {
-    en: 'Move through the first airport steps after landing in China: ask for help politely, find baggage claim, handle a missing bag, leave the terminal, and show an address to a driver.',
-    fr: 'Avancer dans les premières étapes à l’aéroport après l’arrivée en Chine : demander de l’aide poliment, trouver les bagages, signaler un bagage manquant, sortir du terminal et montrer une adresse au chauffeur.',
+    en: 'Move through the first airport steps after landing in China: pass border control, find baggage claim, handle a missing bag, leave the terminal, and show an address to a driver.',
+    fr: 'Avancer dans les premières étapes à l’aéroport après l’arrivée en Chine : passer le contrôle aux frontières, trouver les bagages, signaler un bagage manquant, sortir du terminal et montrer une adresse au chauffeur.',
   },
   dialogue: {
     title: {
-      en: 'Ask for help from baggage claim to the taxi pickup',
-      fr: 'Demander de l’aide des bagages jusqu’au taxi',
+      en: 'From border control to the taxi pickup',
+      fr: 'Du contrôle aux frontières jusqu’au taxi',
     },
     lines: [
       {
@@ -37,6 +37,24 @@ export const selfIntroLesson: LessonContent = {
       {
         id: 'self-intro-line-02',
         speaker: {
+          en: 'Officer',
+          fr: 'Agent',
+        },
+        hanzi: '您好。请出示您的护照。',
+        pinyin: 'Nín hǎo. Qǐng chūshì nín de hùzhào.',
+        translation: {
+          en: 'Hello. Please show your passport.',
+          fr: 'Bonjour. Veuillez présenter votre passeport.',
+        },
+        explanation: {
+          en: 'At border control, the officer will use 请出示 to ask for your documents.',
+          fr: 'Au contrôle aux frontières, l’agent utilise 请出示 pour demander vos documents.',
+        },
+        audio: '/audio/self-intro/line-02.mp3',
+      },
+      {
+        id: 'self-intro-line-03',
+        speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
         },
@@ -47,13 +65,49 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voici mon passeport.',
         },
         explanation: {
-          en: '这是我的… lets you hand over a document clearly without adding extra details.',
-          fr: '这是我的… permet de présenter un document clairement sans ajouter de détails inutiles.',
+          en: 'Respond to the officer with 这是我的护照 while handing over your passport.',
+          fr: 'Réponds à l’agent avec 这是我的护照 en tendant ton passeport.',
         },
-        audio: '/audio/self-intro/line-02.mp3',
+        audio: '/audio/self-intro/line-03.mp3',
       },
       {
-        id: 'self-intro-line-03',
+        id: 'self-intro-line-04',
+        speaker: {
+          en: 'Officer',
+          fr: 'Agent',
+        },
+        hanzi: '您来中国做什么？您打算停留多久？',
+        pinyin: 'Nín lái Zhōngguó zuò shénme? Nín dǎsuàn tíngliú duōjiǔ?',
+        translation: {
+          en: 'What are you coming to China for? How long do you plan to stay?',
+          fr: 'Que venez-vous faire en Chine ? Combien de temps comptez-vous rester ?',
+        },
+        explanation: {
+          en: 'These questions combine 来…做什么 (purpose of visit) and 停留多久 (length of stay).',
+          fr: 'Ces questions combinent 来…做什么 (motif du séjour) et 停留多久 (durée du séjour).',
+        },
+        audio: '/audio/self-intro/line-04.mp3',
+      },
+      {
+        id: 'self-intro-line-05',
+        speaker: {
+          en: 'Traveler',
+          fr: 'Voyageur',
+        },
+        hanzi: '我是来旅游的，大概两个星期。',
+        pinyin: 'Wǒ shì lái lǚyóu de, dàgài liǎng gè xīngqī.',
+        translation: {
+          en: 'I am here for tourism, about two weeks.',
+          fr: 'Je viens pour le tourisme, environ deux semaines.',
+        },
+        explanation: {
+          en: '我是来…的 is the key pattern for stating your purpose. Choose a simple word like 旅游 and a round number.',
+          fr: '我是来…的 est la structure clé pour indiquer le motif. Choisis un mot simple comme 旅游 et un nombre rond.',
+        },
+        audio: '/audio/self-intro/line-05.mp3',
+      },
+      {
+        id: 'self-intro-line-06',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -68,10 +122,10 @@ export const selfIntroLesson: LessonContent = {
           en: '请问…在哪里？ is the main airport navigation pattern in this lesson.',
           fr: '请问…在哪里？ est la structure principale pour s’orienter dans l’aéroport.',
         },
-        audio: '/audio/self-intro/line-03.mp3',
+        audio: '/audio/self-intro/line-06.mp3',
       },
       {
-        id: 'self-intro-line-04',
+        id: 'self-intro-line-07',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -86,10 +140,10 @@ export const selfIntroLesson: LessonContent = {
           en: 'Use 还没到 for something expected but not here yet, then ask where to get help.',
           fr: 'Utilise 还没到 pour quelque chose d’attendu mais pas encore arrivé, puis demande où obtenir de l’aide.',
         },
-        audio: '/audio/self-intro/line-04.mp3',
+        audio: '/audio/self-intro/line-07.mp3',
       },
       {
-        id: 'self-intro-line-05',
+        id: 'self-intro-line-08',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -104,10 +158,10 @@ export const selfIntroLesson: LessonContent = {
           en: 'After baggage, the next useful steps are finding the exit and the taxi area.',
           fr: 'Après les bagages, les étapes utiles sont de trouver la sortie puis la zone des taxis.',
         },
-        audio: '/audio/self-intro/line-05.mp3',
+        audio: '/audio/self-intro/line-08.mp3',
       },
       {
-        id: 'self-intro-line-06',
+        id: 'self-intro-line-09',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -122,10 +176,10 @@ export const selfIntroLesson: LessonContent = {
           en: 'Point to a saved address and say this instead of explaining where you are staying.',
           fr: 'Montre une adresse enregistrée et dis cela au lieu d’expliquer où tu loges.',
         },
-        audio: '/audio/self-intro/line-06.mp3',
+        audio: '/audio/self-intro/line-09.mp3',
       },
       {
-        id: 'self-intro-line-07',
+        id: 'self-intro-line-10',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -140,7 +194,7 @@ export const selfIntroLesson: LessonContent = {
           en: '大概 softens the question when you only need an estimate before the ride starts.',
           fr: '大概 adoucit la question quand tu veux seulement une estimation avant le trajet.',
         },
-        audio: '/audio/self-intro/line-07.mp3',
+        audio: '/audio/self-intro/line-10.mp3',
       },
     ],
   },
@@ -185,6 +239,34 @@ export const selfIntroLesson: LessonContent = {
       explanation: {
         en: 'Use 大概 before time or price questions when an estimate is enough.',
         fr: 'Place 大概 avant les questions de temps ou de prix quand une estimation suffit.',
+      },
+    },
+    {
+      id: 'self-intro-pattern-4',
+      pattern: '我是来……的。',
+      meaning: {
+        en: 'I came to ... / I am here to ...',
+        fr: 'Je suis venu(e) pour ...',
+      },
+      example: '我是来旅游的。',
+      audio: '/audio/self-intro/pattern-04.mp3',
+      explanation: {
+        en: 'Use this at a counter when asked about your visit purpose. Swap 旅游 for 出差 (business) or 学习 (study).',
+        fr: 'Utilise cette structure au guichet quand on te demande le motif de ta visite. Remplace 旅游 par 出差 (affaires) ou 学习 (études).',
+      },
+    },
+    {
+      id: 'self-intro-pattern-5',
+      pattern: '我打算……',
+      meaning: {
+        en: 'I plan to ...',
+        fr: 'Je compte / J\'ai l\'intention de ...',
+      },
+      example: '我打算停留两个星期。',
+      audio: '/audio/self-intro/pattern-05.mp3',
+      explanation: {
+        en: 'Use 我打算 followed by a verb and duration to state your plan at immigration or a hotel desk.',
+        fr: 'Utilise 我打算 suivi d\'un verbe et d\'une durée pour indiquer ton projet à l\'immigration ou à la réception.',
       },
     },
   ],
@@ -259,6 +341,90 @@ export const selfIntroLesson: LessonContent = {
         fr: 'Montre l’adresse enregistrée et garde la phrase chinoise simple.',
       },
     },
+    {
+      id: 'self-intro-vocab-6',
+      hanzi: '海关',
+      pinyin: 'hǎiguān',
+      audio: '/audio/self-intro/vocab-06.mp3',
+      meaning: {
+        en: 'customs',
+        fr: 'douane',
+      },
+      explanation: {
+        en: 'Look for 海关 signs after baggage claim before exiting the airport.',
+        fr: 'Cherche les panneaux 海关 après la récupération des bagages avant de sortir.',
+      },
+    },
+    {
+      id: 'self-intro-vocab-7',
+      hanzi: '入境',
+      pinyin: 'rùjìng',
+      audio: '/audio/self-intro/vocab-07.mp3',
+      meaning: {
+        en: 'entry / immigration',
+        fr: 'entrée / immigration',
+      },
+      explanation: {
+        en: '入境 is the border control step you go through after landing.',
+        fr: '入境 est l\'étape du contrôle aux frontières après l\'atterrissage.',
+      },
+    },
+    {
+      id: 'self-intro-vocab-8',
+      hanzi: '旅游',
+      pinyin: 'lǚyóu',
+      audio: '/audio/self-intro/vocab-08.mp3',
+      meaning: {
+        en: 'tourism / travel',
+        fr: 'tourisme / voyage',
+      },
+      explanation: {
+        en: 'The simplest answer when asked 来中国做什么 at immigration.',
+        fr: 'La réponse la plus simple quand on te demande 来中国做什么 à l\'immigration.',
+      },
+    },
+    {
+      id: 'self-intro-vocab-9',
+      hanzi: '停留',
+      pinyin: 'tíngliú',
+      audio: '/audio/self-intro/vocab-09.mp3',
+      meaning: {
+        en: 'stay / stop over',
+        fr: 'séjourner / faire escale',
+      },
+      explanation: {
+        en: '停留多久 is how an officer or hotel clerk asks about your length of stay.',
+        fr: '停留多久 est la façon dont un agent ou un réceptionniste demande la durée du séjour.',
+      },
+    },
+    {
+      id: 'self-intro-vocab-10',
+      hanzi: '星期',
+      pinyin: 'xīngqī',
+      audio: '/audio/self-intro/vocab-10.mp3',
+      meaning: {
+        en: 'week',
+        fr: 'semaine',
+      },
+      explanation: {
+        en: 'Use this after a number to state how many weeks you will stay.',
+        fr: 'Utilise ce mot après un nombre pour indiquer combien de semaines tu restes.',
+      },
+    },
+    {
+      id: 'self-intro-vocab-11',
+      hanzi: '指纹',
+      pinyin: 'zhǐwén',
+      audio: '/audio/self-intro/vocab-11.mp3',
+      meaning: {
+        en: 'fingerprint',
+        fr: 'empreinte digitale',
+      },
+      explanation: {
+        en: 'You may hear this word at immigration when they ask you to scan your fingerprints.',
+        fr: 'Tu pourrais entendre ce mot à l\'immigration quand on te demande de scanner tes empreintes.',
+      },
+    },
   ],
   pronunciation: [
     {
@@ -276,6 +442,23 @@ export const selfIntroLesson: LessonContent = {
       explanation: {
         en: 'This phrase is more useful than pretending to understand at a counter or in a taxi.',
         fr: 'Cette phrase est plus utile que de faire semblant de comprendre à un guichet ou dans un taxi.',
+      },
+    },
+    {
+      id: 'self-intro-pronunciation-2',
+      focus: {
+        en: 'Third-tone change in 旅游',
+        fr: 'Changement de ton dans 旅游',
+      },
+      audioText: '我是来旅游的。',
+      audio: '/audio/self-intro/pronunciation-02.mp3',
+      tip: {
+        en: 'When two third tones meet, the first changes to rising. Say lǚyóu as lúyóu.',
+        fr: 'Quand deux troisièmes tons se suivent, le premier devient montant. Prononce lǚyóu comme lúyóu.',
+      },
+      explanation: {
+        en: 'Listen for the natural rising flow in 旅游 when spoken at normal speed.',
+        fr: 'Écoute le flux montant naturel de 旅游 prononcé à vitesse normale.',
       },
     },
   ],
@@ -332,6 +515,32 @@ export const selfIntroLesson: LessonContent = {
         fr: '口 complète 出口, un panneau fréquent dans les gares et les aéroports.',
       },
     },
+    {
+      id: 'self-intro-hanzi-5',
+      hanzi: '入',
+      pinyin: 'rù',
+      meaning: {
+        en: 'enter; first character of immigration',
+        fr: 'entrer ; premier caractère de immigration',
+      },
+      explanation: {
+        en: 'Look for 入 in 入境 when going through border control.',
+        fr: 'Repère 入 dans 入境 au contrôle aux frontières.',
+      },
+    },
+    {
+      id: 'self-intro-hanzi-6',
+      hanzi: '关',
+      pinyin: 'guān',
+      meaning: {
+        en: 'pass / border; second character of customs',
+        fr: 'passage / frontière ; deuxième caractère de douane',
+      },
+      explanation: {
+        en: 'Recognize 关 in 海关 on airport signs after baggage claim.',
+        fr: 'Reconnais 关 dans 海关 sur les panneaux après les bagages.',
+      },
+    },
   ],
   practice: {
     listening: [
@@ -346,6 +555,19 @@ export const selfIntroLesson: LessonContent = {
         explanation: {
           en: 'Use 我听不懂 when the other person is speaking but the meaning is not clear.',
           fr: 'Utilise 我听不懂 quand l’autre personne parle mais que le sens n’est pas clair.',
+        },
+      },
+      {
+        id: 'self-intro-listening-2',
+        prompt: {
+          en: 'Which sentence means “I am here for tourism”?',
+          fr: 'Quelle phrase signifie « Je viens pour le tourisme » ?',
+        },
+        target: '我是来旅游的。',
+        audio: '/audio/self-intro/practice-listening-02.mp3',
+        explanation: {
+          en: '我是来…的 is the core pattern to listen for at border control.',
+          fr: '我是来…的 est la structure clé à écouter au contrôle aux frontières.',
         },
       },
     ],
@@ -363,6 +585,19 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Cela permet d’obtenir une adresse, un prix ou une instruction par écrit quand l’oral est trop rapide.',
         },
       },
+      {
+        id: 'self-intro-speaking-2',
+        prompt: {
+          en: 'Say that you are here for tourism and will stay about two weeks.',
+          fr: 'Dis que tu viens pour le tourisme et que tu restes environ deux semaines.',
+        },
+        target: '我是来旅游的，大概两个星期。',
+        audio: '/audio/self-intro/practice-speaking-02.mp3',
+        explanation: {
+          en: 'This two-part answer covers both the purpose and the length.',
+          fr: 'Cette réponse en deux parties couvre à la fois le motif et la durée.',
+        },
+      },
     ],
     reading: [
       {
@@ -376,6 +611,19 @@ export const selfIntroLesson: LessonContent = {
         explanation: {
           en: '出口 is the sign you need after collecting baggage.',
           fr: '出口 est le panneau utile après la récupération des bagages.',
+        },
+      },
+      {
+        id: 'self-intro-reading-2',
+        prompt: {
+          en: 'Match the airport sign for “customs”.',
+          fr: 'Associe le panneau d’aéroport à « douane ».',
+        },
+        target: '海关',
+        audio: '/audio/self-intro/practice-reading-02.mp3',
+        explanation: {
+          en: '海关 is the sign to follow when you have items to declare.',
+          fr: '海关 est le panneau à suivre quand tu as des articles à déclarer.',
         },
       },
     ],
@@ -415,6 +663,42 @@ export const selfIntroLesson: LessonContent = {
       explanation: {
         en: 'A self-rescue phrase when airport or taxi speech is too fast.',
         fr: 'Une phrase de secours quand le personnel ou le chauffeur parle trop vite.',
+      },
+    },
+    {
+      id: 'self-intro-review-4',
+      front: '海关',
+      back: {
+        en: 'customs',
+        fr: 'douane',
+      },
+      explanation: {
+        en: 'A key airport sign word to recognize.',
+        fr: 'Un mot de panneau d\'aéroport essentiel à reconnaître.',
+      },
+    },
+    {
+      id: 'self-intro-review-5',
+      front: '入境',
+      back: {
+        en: 'immigration / entry',
+        fr: 'immigration / entrée',
+      },
+      explanation: {
+        en: 'The border control step where you present your passport.',
+        fr: 'L\'étape du contrôle aux frontières où tu présentes ton passeport.',
+      },
+    },
+    {
+      id: 'self-intro-review-6',
+      front: '指纹',
+      back: {
+        en: 'fingerprint',
+        fr: 'empreinte digitale',
+      },
+      explanation: {
+        en: 'You may be asked to provide this at immigration.',
+        fr: 'On pourrait te demander de fournir ceci à l\'immigration.',
       },
     },
   ],

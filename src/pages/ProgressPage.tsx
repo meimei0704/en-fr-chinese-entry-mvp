@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { course } from '../content/course'
@@ -166,154 +167,183 @@ export function ProgressPage() {
               aria-labelledby="progress-pinyin-series-title"
             >
               <Link
-                className="course-series__pinyin-link"
+                className="course-series__entry-card course-series__pinyin-link"
                 to="/pinyin"
                 aria-labelledby="progress-pinyin-series-title"
               >
                 <span className="course-series__pinyin-mark" aria-hidden="true">
                   拼
                 </span>
-                <h2 id="progress-pinyin-series-title" className="course-series__title">
-                  {copy.courseSeries.pinyinTitle}
-                </h2>
+                <CourseSeriesTitle
+                  id="progress-pinyin-series-title"
+                  title={copy.courseSeries.pinyinTitle}
+                />
                 <p className="course-series__progress">
-                  {copy.pinyinPage.sectionProgress(completedPinyinSectionsCount, totalPinyinSections)}
+                  {copy.pinyinPage.sectionProgress(
+                    completedPinyinSectionsCount,
+                    totalPinyinSections,
+                  )}
                 </p>
+                <span className="course-series__entry-cue" aria-hidden="true">
+                  →
+                </span>
               </Link>
             </section>
 
             <section
-              className="surface-card progress-journey-card course-series__panel course-series__panel--journey"
+              className="course-series__panel course-series__panel--journey"
               aria-labelledby="progress-journey-series-title"
             >
-              <div className="progress-list-card__header course-series__panel-header">
-                <div>
-                  <h2 id="progress-journey-series-title" className="course-series__title">
-                    {copy.courseSeries.basicExpressionsTitle}
-                  </h2>
-                </div>
-                <span className="badge badge--sky">
-                  {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
+              <a
+                className="course-series__entry-card course-series__journey-link"
+                href="#progress-basic-expressions-path"
+                aria-labelledby="progress-journey-series-title"
+              >
+                <span className="course-series__journey-mark" aria-hidden="true">
+                  旅
                 </span>
-              </div>
+                <CourseSeriesTitle
+                  id="progress-journey-series-title"
+                  title={copy.courseSeries.basicExpressionsTitle}
+                />
+                <p className="course-series__progress">
+                  {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
+                </p>
+                <span className="course-series__entry-cue" aria-hidden="true">
+                  ↓
+                </span>
+              </a>
 
-              <div className="progress-journey-map__path">
-                {orderedJourneyNodes.map((node) => {
-              const nodeTitle = isLessonJourneyNode(node)
-                ? getLessonTopicText(node.lessonId, language)
-                : getLocalizedText(node.title, language)
-              const nodeSummary = getLocalizedText(node.summary, language)
-              const nodeEyebrow = getLocalizedText(node.eyebrow, language)
-              const nodeIcon = journeyNodeIcons[node.id]
+              <div
+                id="progress-basic-expressions-path"
+                className="surface-card progress-journey-card course-series__journey-path"
+              >
+                <div className="progress-journey-map__path">
+                  {orderedJourneyNodes.map((node) => {
+                    const nodeTitle = isLessonJourneyNode(node)
+                      ? getLessonTopicText(node.lessonId, language)
+                      : getLocalizedText(node.title, language)
+                    const nodeSummary = getLocalizedText(node.summary, language)
+                    const nodeEyebrow = getLocalizedText(node.eyebrow, language)
+                    const nodeIcon = journeyNodeIcons[node.id]
 
-              if (isLessonJourneyNode(node)) {
-                const status = getJourneyNodeStatus(node)
-                const statusLabel = getStatusLabel(status)
+                    if (isLessonJourneyNode(node)) {
+                      const status = getJourneyNodeStatus(node)
+                      const statusLabel = getStatusLabel(status)
 
-                return (
-                  <Link
-                    key={node.id}
-                    className={`journey-node progress-journey-node journey-node--lesson journey-node--card-link progress-journey-node--lesson progress-journey-node--${status}`}
-                    data-journey-node-id={node.id}
-                    to={`/lesson/${node.lessonId}`}
-                    aria-label={`${nodeTitle}: ${statusLabel}`}
-                  >
-                    <div className="journey-node__header">
-                      <span className="badge badge--jade">{nodeEyebrow}</span>
-                      <span className="journey-node__stamp journey-node__stamp--lesson">
-                        {copy.progressPage.openLesson}
-                      </span>
-                    </div>
+                      return (
+                        <Link
+                          key={node.id}
+                          className={`journey-node progress-journey-node journey-node--lesson journey-node--card-link progress-journey-node--lesson progress-journey-node--${status}`}
+                          data-journey-node-id={node.id}
+                          to={`/lesson/${node.lessonId}`}
+                          aria-label={`${nodeTitle}: ${statusLabel}`}
+                        >
+                          <div className="journey-node__header">
+                            <span className="badge badge--jade">{nodeEyebrow}</span>
+                            <span className="journey-node__stamp journey-node__stamp--lesson">
+                              {copy.progressPage.openLesson}
+                            </span>
+                          </div>
 
-                    <span className="journey-node__doodle" aria-hidden="true">
-                      {nodeIcon}
-                    </span>
+                          <span className="journey-node__doodle" aria-hidden="true">
+                            {nodeIcon}
+                          </span>
 
-                    <div>
-                      <span className={`progress-status-seal progress-status-seal--${status}`}>
-                        {statusLabel}
-                      </span>
-                      <LessonTopicTitle as="h3" lessonId={node.lessonId} language={language} />
-                      <p className="muted-text">{nodeSummary}</p>
-                    </div>
+                          <div>
+                            <span className={`progress-status-seal progress-status-seal--${status}`}>
+                              {statusLabel}
+                            </span>
+                            <LessonTopicTitle
+                              as="h3"
+                              lessonId={node.lessonId}
+                              language={language}
+                            />
+                            <p className="muted-text">{nodeSummary}</p>
+                          </div>
 
-                    <span className="journey-node__cta">{copy.progressPage.openLesson} →</span>
-                  </Link>
-                )
-              }
-
-              const status = getJourneyNodeStatus(node)
-              const statusLabel = getStatusLabel(status)
-              const isExpanded = expandedPreviewNodeId === node.id
-              const previewPanelId = `progress-journey-preview-${node.id}`
-
-              return (
-                <article
-                  key={node.id}
-                  className={`journey-node progress-journey-node journey-node--preview progress-journey-node--preview progress-journey-node--${status} ${isExpanded ? 'journey-node--is-open' : ''}`}
-                  data-journey-node-id={node.id}
-                  aria-label={`${nodeTitle}: ${statusLabel}`}
-                >
-                  <button
-                    type="button"
-                    className="journey-node__preview-button"
-                    aria-expanded={isExpanded}
-                    aria-controls={previewPanelId}
-                    onClick={() =>
-                      setExpandedPreviewNodeId((currentNodeId) =>
-                        currentNodeId === node.id ? null : node.id,
+                          <span className="journey-node__cta">
+                            {copy.progressPage.openLesson} →
+                          </span>
+                        </Link>
                       )
                     }
-                  >
-                    <div className="journey-node__header">
-                      <span className="badge badge--gold">{nodeEyebrow}</span>
-                      <span className="journey-node__stamp">{copy.homePage.comingSoon}</span>
-                    </div>
 
-                    <span className="journey-node__doodle" aria-hidden="true">
-                      {nodeIcon}
-                    </span>
+                    const status = getJourneyNodeStatus(node)
+                    const statusLabel = getStatusLabel(status)
+                    const isExpanded = expandedPreviewNodeId === node.id
+                    const previewPanelId = `progress-journey-preview-${node.id}`
 
-                    <div>
-                      <span className={`progress-status-seal progress-status-seal--${status}`}>
-                        {statusLabel}
-                      </span>
-                      <h3>{nodeTitle}</h3>
-                      <p className="muted-text">{nodeSummary}</p>
-                    </div>
+                    return (
+                      <article
+                        key={node.id}
+                        className={`journey-node progress-journey-node journey-node--preview progress-journey-node--preview progress-journey-node--${status} ${isExpanded ? 'journey-node--is-open' : ''}`}
+                        data-journey-node-id={node.id}
+                        aria-label={`${nodeTitle}: ${statusLabel}`}
+                      >
+                        <button
+                          type="button"
+                          className="journey-node__preview-button"
+                          aria-expanded={isExpanded}
+                          aria-controls={previewPanelId}
+                          onClick={() =>
+                            setExpandedPreviewNodeId((currentNodeId) =>
+                              currentNodeId === node.id ? null : node.id,
+                            )
+                          }
+                        >
+                          <div className="journey-node__header">
+                            <span className="badge badge--gold">{nodeEyebrow}</span>
+                            <span className="journey-node__stamp">
+                              {copy.homePage.comingSoon}
+                            </span>
+                          </div>
 
-                    <span className="journey-node__cta">
-                      {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
-                    </span>
-                  </button>
+                          <span className="journey-node__doodle" aria-hidden="true">
+                            {nodeIcon}
+                          </span>
 
-                  {node.previewDetails && isExpanded ? (
-                    <div id={previewPanelId} className="journey-node__preview-panel" role="note">
-                      <span className="journey-node__preview-stamp">
-                        {copy.homePage.comingSoon}
-                      </span>
+                          <div>
+                            <span className={`progress-status-seal progress-status-seal--${status}`}>
+                              {statusLabel}
+                            </span>
+                            <h3>{nodeTitle}</h3>
+                            <p className="muted-text">{nodeSummary}</p>
+                          </div>
 
-                      <div className="journey-node__phrase-card">
-                        <span className="journey-node__panel-label">
-                          {copy.homePage.previewKeyPhraseLabel}
-                        </span>
-                        <strong>{node.previewDetails.phrase}</strong>
-                        <span className="pinyin-line">{node.previewDetails.pinyin}</span>
-                        <span className="journey-node__phrase-meaning">
-                          {copy.homePage.previewMeaningLabel}:{' '}
-                          {getLocalizedText(node.previewDetails.meaning, language)}
-                        </span>
-                      </div>
+                          <span className="journey-node__cta">
+                            {isExpanded ? copy.homePage.previewHide : copy.homePage.previewPeek}
+                          </span>
+                        </button>
 
-                      <p className="journey-node__goal">
-                        <span>{copy.homePage.previewGoalLabel}</span>
-                        {getLocalizedText(node.previewDetails.goal, language)}
-                      </p>
-                    </div>
-                  ) : null}
-                </article>
-              )
-                })}
+                        {node.previewDetails && isExpanded ? (
+                          <div id={previewPanelId} className="journey-node__preview-panel" role="note">
+                            <span className="journey-node__preview-stamp">
+                              {copy.homePage.comingSoon}
+                            </span>
+
+                            <div className="journey-node__phrase-card">
+                              <span className="journey-node__panel-label">
+                                {copy.homePage.previewKeyPhraseLabel}
+                              </span>
+                              <strong>{node.previewDetails.phrase}</strong>
+                              <span className="pinyin-line">{node.previewDetails.pinyin}</span>
+                              <span className="journey-node__phrase-meaning">
+                                {copy.homePage.previewMeaningLabel}:{' '}
+                                {getLocalizedText(node.previewDetails.meaning, language)}
+                              </span>
+                            </div>
+
+                            <p className="journey-node__goal">
+                              <span>{copy.homePage.previewGoalLabel}</span>
+                              {getLocalizedText(node.previewDetails.goal, language)}
+                            </p>
+                          </div>
+                        ) : null}
+                      </article>
+                    )
+                  })}
+                </div>
               </div>
             </section>
           </div>

@@ -162,49 +162,118 @@ describe('global color accessibility tokens', () => {
     }
   })
 
-  it('defines a shared peer-series panel baseline with a compact focusable Pinyin entry', () => {
-    const declarations = [
-      ['.course-series', 'width: min(100%, 72rem);'],
-      ['.course-series__list', 'grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);'],
-      ['.course-series__panel', 'min-width: 0;'],
-      ['.course-series__panel', 'border-radius: var(--radius-lg);'],
-      ['.course-series__title', 'overflow-wrap: anywhere;'],
-      ['.course-series__pinyin-link', 'min-width: 0;'],
-      ['.course-series__pinyin-link', 'min-height: 10rem;'],
-      ['.course-series__pinyin-link', 'text-decoration: none;'],
-      ['.course-series__pinyin-link:focus-visible', 'outline: 3px solid rgba(47, 111, 186, 0.5);'],
-      ['.course-series__pinyin-mark', 'border-radius: 999px;'],
-      ['.course-series__progress', 'overflow-wrap: anywhere;'],
-    ]
+  it('uses content-driven shared rows with stretched wrappers, anchors, and atomic titles', () => {
+    const list = ruleBlock('.course-series__list')
+    const panel = ruleBlock('.course-series__panel')
+    const pinyinPanel = ruleBlock('.course-series__panel--pinyin')
+    const journeyPanel = ruleBlock('.course-series__panel--journey')
+    const entryCard = ruleBlock('.course-series__entry-card')
+    const title = ruleBlock('.course-series__title')
+    const token = ruleBlock('.course-series__title-token')
+    const journeyPath = ruleBlock('.course-series__journey-path')
 
-    for (const [selector, declaration] of declarations) {
-      expect(hasRule(selector)).toBe(true)
-      expect(hasRuleWithDeclaration(selector, declaration)).toBe(true)
+    expect(list).toContain('grid-template-columns: minmax(0, 1fr);')
+    expect(list).toContain('grid-template-rows: repeat(2, minmax(auto, 1fr)) auto;')
+    expect(list).toContain('align-items: stretch;')
+
+    expect(panel).toContain('align-self: stretch;')
+    expect(panel).toContain('align-content: stretch;')
+    expect(panel).toContain('padding: 0;')
+    expect(panel).toContain('border: 0;')
+    expect(panel).toContain('background: none;')
+    expect(panel).toContain('box-shadow: none;')
+    expect(panel).toContain('overflow: visible;')
+    expect(panel).not.toContain('align-content: start;')
+
+    expect(pinyinPanel).toContain('grid-row: 1;')
+    expect(pinyinPanel).toContain('display: grid;')
+    expect(pinyinPanel).toContain('grid-template-rows: minmax(0, 1fr);')
+    expect(pinyinPanel).not.toContain('background:')
+    expect(journeyPanel).toContain('grid-row: 2 / span 2;')
+    expect(journeyPanel).toContain('display: grid;')
+    expect(journeyPanel).toContain('grid-template-rows: subgrid;')
+    expect(journeyPanel).not.toContain('background:')
+    expect(journeyPanel).not.toContain('overflow: hidden;')
+
+    expect(entryCard).toContain('min-width: 0;')
+    expect(entryCard).toContain('min-height: 0;')
+    expect(entryCard).toContain(
+      '--course-series-entry-icon-size: clamp(2.25rem, 10vw, 3rem);',
+    )
+    expect(entryCard).toContain('align-self: stretch;')
+    expect(entryCard).toContain('justify-self: stretch;')
+    expect(entryCard).toContain('text-decoration: none;')
+    expect(entryCard).toContain('border-radius: var(--radius-lg);')
+    expect(ruleBlock('.course-series__entry-card:focus-visible')).toContain(
+      'outline: 3px solid rgba(47, 111, 186, 0.5);',
+    )
+    expect(ruleBlock('.course-series__entry-card:focus-visible')).toContain('outline-offset: 3px;')
+
+    for (const selector of [
+      '.course-series__entry-card',
+      '.course-series__pinyin-link',
+      '.course-series__journey-link',
+    ]) {
+      const block = ruleBlock(selector)
+      const minHeight = block.match(/min-height:\s*([^;]+);/)?.[1].trim()
+
+      expect(block).not.toMatch(/(^|\n)\s*height\s*:/)
+      expect(minHeight === undefined || minHeight === '0').toBe(true)
+      expect(block).not.toContain('max-height:')
+      expect(block).not.toMatch(/overflow:\s*(?:hidden|clip)/)
+      expect(block).not.toContain('line-clamp:')
+      expect(block).not.toContain('text-overflow:')
     }
 
-    expect(hasRuleWithDeclaration('.course-series__panel--journey', 'overflow: hidden;')).toBe(true)
+    expect(title).toContain('white-space: normal;')
+    expect(title).toContain('overflow-wrap: normal;')
+    expect(title).toContain('word-break: normal;')
+    expect(title).toContain('hyphens: none;')
+    expect(token).toContain('display: inline-block;')
+    expect(token).toContain('white-space: nowrap;')
+
+    expect(journeyPath).toContain('display: grid;')
+    expect(journeyPath).toContain('align-content: start;')
+    expect(journeyPath).toContain('overflow: hidden;')
+    expect(journeyPath).toContain('scroll-margin-block-start: 1rem;')
+    expect(hasRule('.course-series__panel-header')).toBe(false)
+    expect(hasRule('.journey-map__intro')).toBe(false)
+
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(prefers-reduced-motion: reduce)',
+        '.course-series__pinyin-link',
+        'transition: none;',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(prefers-reduced-motion: reduce)',
+        '.course-series__journey-link',
+        'transition: none;',
+      ),
+    ).toBe(true)
     expect(
       hasMediaRuleWithDeclaration(
         '(max-width: 760px)',
-        '.course-series__list',
+        '.journey-map__path',
         'grid-template-columns: 1fr;',
       ),
     ).toBe(true)
-  })
-
-  it('stacks the Progress series heading and badge at the narrow breakpoint', () => {
-    const query = '(max-width: 760px)'
-    const headerSelector = '.progress-course-series .progress-list-card__header'
-
-    expect(hasMediaRuleWithDeclaration(query, headerSelector, 'display: grid;')).toBe(true)
-    expect(hasMediaRuleWithDeclaration(query, headerSelector, 'align-items: start;')).toBe(true)
     expect(
       hasMediaRuleWithDeclaration(
-        query,
-        `${headerSelector} > .badge`,
-        'justify-self: start;',
+        '(max-width: 760px)',
+        '.progress-journey-map__path',
+        'grid-template-columns: 1fr;',
       ),
     ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 760px)',
+        '.progress-course-series .progress-list-card__header',
+        'display: grid;',
+      ),
+    ).toBe(false)
   })
 
   it('keeps the shared speech button as a small circular icon control with interaction states', () => {
