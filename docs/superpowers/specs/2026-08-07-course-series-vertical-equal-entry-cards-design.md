@@ -31,9 +31,10 @@ The approved option B is final and has no remaining product choices:
 - English and French titles wrap at whole-word boundaries;
 - the same structure remains usable at desktop, 1024 px, 390 px, and the product minimum of 320 px.
 
-## Current Main-Branch Context
+## Current Main-Branch Context and Planned Addition
 
-The design is grounded in these current code paths and selectors:
+The design is grounded in these current code paths and selectors, plus the one explicitly marked
+new renderer:
 
 - `src/pages/HomePage.tsx`
   - renders `.course-series`, `.course-series__list`, the Pinyin peer section, and the Home `.journey-map__path`;
@@ -45,6 +46,8 @@ The design is grounded in these current code paths and selectors:
   - computes Pinyin progress against `3` sections and Basic progress against the ten lesson Journey nodes.
 - `src/styles/global.css`
   - owns the shared `.course-series*` styles, current two-column `.course-series__list`, entry focus treatment, Home Journey layout, Progress Journey layout, and responsive rules.
+- `src/components/CourseSeriesTitle.tsx` (new, course-series-only)
+  - will render the exact shared title string as whitespace plus nonbreaking whole-token spans, so explicit hyphens such as the one in `stress-free` cannot become line-break opportunities.
 - `src/pages/HomePage.test.tsx` and `src/pages/ProgressPage.test.tsx`
   - pin the peer hierarchy, exact localized copy, ten Journey destinations/order, and independent Progress totals.
 - `src/styles/global.test.ts`
@@ -87,7 +90,8 @@ This work does not:
 - refactor unrelated Journey cards or shared page primitives;
 - change package, TypeScript, Vite, Vitest, Playwright, or deployment configuration.
 
-The implementation is limited to the Home/Progress course-series markup, shared course-series CSS, and the directly corresponding tests.
+The implementation is limited to the Home/Progress course-series markup, one course-series title
+renderer, shared course-series CSS, and the directly corresponding tests.
 
 ## Copy, Data, and Destination Invariants
 
@@ -99,7 +103,12 @@ The implementation is limited to the Home/Progress course-series markup, shared 
 | Pinyin entry | `Mandarin tones and pinyin` | `Tons et pinyin du mandarin` |
 | Basic entry | `Basic Chinese expressions for a stress-free journey` | `Expressions chinoises essentielles pour voyager sereinement` |
 
-The implementation continues to read these values from `copy.courseSeries`. It does not duplicate them as JSX literals and does not add an entry subtitle, localized CTA label, new count label, or Journey introduction. Progress retains its existing localized progress sentences. Directional `→` / `↓` glyphs are decorative and `aria-hidden`, so they require no new copy.
+The implementation continues to read these values from `copy.courseSeries`. It does not duplicate
+them as JSX literals and does not add an entry subtitle, localized CTA label, new count label, or
+Journey introduction. A shared `CourseSeriesTitle` renderer receives the unmodified string and
+splits it only for layout; it does not substitute, normalize, or translate any character. Progress
+retains its existing localized progress sentences. Directional `→` / `↓` glyphs are decorative and
+`aria-hidden`, so they require no new copy.
 
 ### Data and route invariants
 
@@ -156,12 +165,14 @@ section.page-grid.course-series [aria-label = localized series-group copy]
     │   └── Link.course-series__entry-card.course-series__pinyin-link [to = /pinyin]
     │       ├── span.course-series__pinyin-mark [aria-hidden = true]
     │       ├── h2#home-pinyin-series-title.course-series__title
+    │       │   └── non-space spans.course-series__title-token + original whitespace text nodes
     │       └── span.course-series__entry-cue [aria-hidden = true] →
     └── section.course-series__panel.course-series__panel--journey
         ├── a.course-series__entry-card.course-series__journey-link
         │   [href = #home-basic-expressions-path]
         │   ├── span.course-series__journey-mark [aria-hidden = true] 旅
         │   ├── h2#home-journey-series-title.course-series__title
+        │   │   └── non-space spans.course-series__title-token + original whitespace text nodes
         │   └── span.course-series__entry-cue [aria-hidden = true] ↓
         └── div#home-basic-expressions-path.course-series__journey-path.journey-map
             └── div.journey-map__path
@@ -224,6 +235,7 @@ The Pinyin section occupies entry row 1. The Basic section spans entry row 2 and
 .course-series__panel--pinyin {
   grid-row: 1;
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .course-series__panel--journey {
@@ -233,10 +245,40 @@ The Pinyin section occupies entry row 1. The Basic section spans entry row 2 and
 }
 ```
 
-Both card anchors stretch to the full single-column track and their assigned entry row through the
-shared `.course-series__entry-card` rule. The semantic section wrappers add no independent card
-padding, border, background, shadow, or height; entry visual surface properties belong to the
-anchors, while Journey surface properties belong to the separate path child. The current
+The baseline `.course-series__panel` rule contains `align-content: start`; retaining it would make
+the Pinyin wrapper fill the equal outer row while its implicit inner row and visible anchor remain
+content-height. The implementation therefore explicitly resets the semantic wrappers and stretches
+both the wrapper and its inner track:
+
+```css
+.course-series__panel {
+  align-self: stretch;
+  align-content: stretch;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.course-series__entry-card {
+  min-width: 0;
+  min-height: 0;
+  align-self: stretch;
+  justify-self: stretch;
+}
+```
+
+The Pinyin wrapper's explicit `minmax(0, 1fr)` inner row consumes the wrapper's full equalized
+outer row. The Basic wrapper's `subgrid` exposes the outer entry and path rows directly, and its
+entry anchor stretches within the shared entry row. This is a required three-level contract:
+equal outer rows, stretched semantic wrappers/inner tracks, and stretched visible anchors.
+
+The semantic section wrappers add no independent card padding, border, background, shadow, or
+height; entry visual surface properties belong to the anchors, while Journey surface properties
+belong to the separate path child. The current `.course-series__panel--pinyin` and
+`.course-series__panel--journey` background declarations are removed or retargeted to the
+corresponding entry/path selectors; no later modifier rule may restore a surface or
+`align-content: start` on a semantic wrapper. The current
 `.course-series__panel--journey { overflow: hidden; }` does not remain on the semantic wrapper:
 the wrapper uses visible overflow so neither entry focus ring can be clipped. Overflow clipping
 needed by decorative Journey backgrounds is scoped to `.course-series__journey-path`.
@@ -249,7 +291,9 @@ row heights.
 This design has these required consequences:
 
 - both cards have exactly the same inline size because they occupy the same grid column;
-- both cards have exactly the same block size because rows 1 and 2 are equal `1fr` tracks in one grid;
+- both visible anchors have exactly the same block size because rows 1 and 2 are equal `1fr` tracks,
+  both section wrappers stretch to those rows, and both inner anchor tracks stretch within their
+  wrappers;
 - `minmax(auto, 1fr)` honors each card's intrinsic minimum contribution before equalizing the rows;
 - if French or a Progress count needs more lines, the grid increases both entry rows to the larger content requirement;
 - the Journey row remains `auto` and never affects entry-card equality;
@@ -257,13 +301,14 @@ This design has these required consequences:
 
 The current `.course-series__pinyin-link { min-height: 10rem; }` is removed. Equal height must not be simulated with `height`, a fixed `min-height`, absolute positioning, JavaScript measurement, `ResizeObserver`, or language-specific overrides.
 
-Before committing this spec, the shared-row/subgrid structure was rendered in Chromium for the full
+The amended structure was rendered fresh in Chromium for the full
 Home/Progress × English/French × 1440/1024/390/320 matrix. `CSS.supports()` reported subgrid
-support, every Pinyin/Basic card pair had identical measured width and height, the path began after
-the Basic card, and document width did not overflow. The content-driven card height grew from the
-desktop Home case through the 320 px French Progress case rather than clipping longer content.
-This feasibility check validates the architecture; the implementation must still repeat the matrix
-against the real application and screenshots.
+support. All 16 Pinyin/Basic **anchor** pairs, not only their outer rows or wrappers, had identical
+measured width and height; each Pinyin anchor also matched its stretched wrapper height. The path
+began after the Basic anchor, every title token—including `stress-free`—occupied one rendered
+fragment, and no document overflowed. Content-driven equal anchor height ranged from about 93 px
+in the desktop Home fixture to about 180 px in the 320 px French Progress fixture. The
+implementation repeats the same matrix against the real application and screenshots.
 
 ### Surface and alignment
 
@@ -279,22 +324,65 @@ and grid alignment make them read as peers. Inner content differs only as follow
 
 Inner content aligns consistently from the start of each card. Empty space created by equalization remains inside the shorter card; content is not vertically clipped or overlaid.
 
-## Title Wrapping
+## Title Rendering and Wrapping
 
-Both localized `h2.course-series__title` elements use:
+Both pages render their localized headings through a shared `CourseSeriesTitle` component. Its
+input is the exact `copy.courseSeries` string. It splits with `/(\s+)/u`, emits every whitespace
+segment unchanged as a text node, and wraps every non-space segment in
+`<span className="course-series__title-token">`. The spans have no `aria-label`, `aria-hidden`, or
+role. Consequently the heading's `textContent`, computed accessible text, copy source, punctuation,
+and spacing remain unchanged; only browser line-break opportunities are constrained.
 
-```css
-white-space: normal;
-overflow-wrap: normal;
-word-break: normal;
-hyphens: none;
-text-wrap: balance;
+The component's production contract is:
+
+```tsx
+type CourseSeriesTitleProps = {
+  id: string
+  title: string
+}
+
+export function CourseSeriesTitle({ id, title }: CourseSeriesTitleProps) {
+  return (
+    <h2 id={id} className="course-series__title">
+      {title.split(/(\s+)/u).map((segment, index) =>
+        /^\s+$/u.test(segment) ? (
+          segment
+        ) : (
+          <span className="course-series__title-token" key={`${index}-${segment}`}>
+            {segment}
+          </span>
+        ),
+      )}
+    </h2>
+  )
+}
 ```
 
-The title width remains `100%` of the content area with `min-width: 0` on grid ancestors. The
-browser wraps at spaces, and no non-space word occupies more than one rendered line fragment. There
-is no `nowrap`, ellipsis, line clamp, manual `<br>`, copied short label, font-size override by
-language, or character-level `overflow-wrap: anywhere`.
+Current copy has no leading or trailing whitespace, so the split produces only non-empty word and
+separator segments. The focused component test also pins the absence of empty token spans.
+
+The whole `h2.course-series__title` remains a normal wrapping container:
+
+```css
+.course-series__title {
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+.course-series__title-token {
+  display: inline-block;
+  white-space: nowrap;
+}
+```
+
+The inline-block token is atomic, so an explicit hyphen in `stress-free` cannot become an internal
+line-break opportunity. Breaks remain available at the original whitespace text nodes between
+tokens. The title width remains `100%` of the content area with `min-width: 0` on grid ancestors.
+There is no title-level `nowrap`, ellipsis, line clamp, manual `<br>`, copied short label,
+font-size override by language, or character-level `overflow-wrap: anywhere`.
 
 At 320 px, the available card content width still accommodates the longest individual token in both approved languages. The full titles therefore wrap to additional content-driven lines rather than splitting a word or overflowing.
 
@@ -372,6 +460,9 @@ The entry-card structure and order do not change at any breakpoint.
 - Each peer section is named by one localized level-2 heading through its existing page-unique `aria-labelledby`.
 - Pinyin remains a real route link; Basic remains a real fragment anchor.
 - Link accessible names are the exact localized series titles.
+- `CourseSeriesTitle` token spans remain in the accessibility tree; original whitespace text nodes
+  remain between them, and unit/browser assertions pin the heading text and link accessible name to
+  the exact shared-copy value.
 - Reading, focus, and visual order are Pinyin, Basic, then the ten Journey items.
 - The decorative `拼` mark remains `aria-hidden="true"`.
 - The new equal-size decorative `旅` mark and both directional cues are also `aria-hidden="true"`.
@@ -422,6 +513,8 @@ Update the course-series contract to assert:
 - DOM order is Pinyin entry, Basic entry, then Journey path;
 - the path still contains exactly ten lesson links in current order and with current destinations;
 - both entries use `.course-series__entry-card`;
+- each heading retains the exact shared-copy text while rendering each non-space segment as a
+  `.course-series__title-token`;
 - the equal-size `拼` / `旅` marks and directional cues remain decorative;
 - after seeding non-zero Pinyin and Journey progress, Home contains neither the Pinyin sections-out-of-3 copy nor the Basic lessons-out-of-10 copy;
 - English/French exact copy and existing language-switch behavior remain pinned;
@@ -438,6 +531,7 @@ Update the course-series contract to assert:
 - the Pinyin count remains inside its entry and uses the current sections-out-of-3 copy;
 - the Basic count moves into its entry and uses the current lessons-out-of-10 copy;
 - each link's accessible name remains only its localized series title;
+- each heading retains the exact shared-copy text and nonbreaking token structure;
 - the Journey still contains ten cards in existing order with existing IDs, status logic, and destinations;
 - Journey mastery, summary, and stats remain out of 10 and independent from Pinyin.
 
@@ -447,12 +541,17 @@ Replace the old side-by-side/fixed-minimum assertions with contracts for:
 
 - one `minmax(0, 1fr)` entry column;
 - two `minmax(auto, 1fr)` shared entry rows followed by the auto Journey row;
-- Pinyin row placement and Basic section row spanning/subgrid;
-- shared `.course-series__entry-card` stretch, surface, and focus rules;
+- Pinyin row placement, its explicit full-height inner row, and Basic section row spanning/subgrid;
+- replacement of the baseline `.course-series__panel { align-content: start; }` behavior with
+  wrapper stretch;
+- shared `.course-series__entry-card` self-stretch, surface, and focus rules;
 - visible overflow on the semantic wrappers and path-scoped decorative clipping;
+- removal or retargeting of the old panel-modifier background declarations so the cascade cannot
+  override the surface-free/stretch wrapper contract;
 - content-sized grid behavior for `.course-series__journey-path`;
 - absence of fixed `height`, fixed `min-height`, `max-height`, clipping, line clamp, and ellipsis on entry cards;
-- normal white-space, normal overflow wrapping, normal word breaking, and disabled automatic hyphenation on titles;
+- normal title-level white-space/overflow wrapping/word breaking, disabled automatic hyphenation,
+  and atomic `.course-series__title-token { display: inline-block; white-space: nowrap; }`;
 - reduced-motion coverage for both entry link selectors;
 - retained single-column Journey paths at the existing narrow breakpoint.
 
@@ -473,13 +572,17 @@ Use a parameterized matrix covering:
 For all 16 page/language/viewport combinations:
 
 1. locate the two `.course-series__entry-card` anchors and their path;
-2. assert Pinyin's bounding-box x and width equal Basic's;
-3. assert Pinyin's bounding-box height equals Basic's;
+2. assert the two **anchor** bounding boxes have equal x-coordinate and width;
+3. assert the two **anchor** bounding-box heights are equal, and separately assert that each anchor
+   height equals its assigned outer entry-row height so equal wrappers cannot mask a short visible
+   card;
 4. allow at most 1 CSS px comparison tolerance for fractional device-pixel rounding while requiring the CSS Grid tracks themselves to be equal;
 5. assert Basic starts below Pinyin and the path starts below Basic;
 6. assert the path contains ten Journey nodes;
 7. assert both localized titles have normal white-space and no overflow;
-8. use token-level `Range#getClientRects()` measurement for every non-space title token and require exactly one rendered rectangle per token, proving no word is split across lines;
+8. assert the heading `textContent` and accessible link name equal the exact shared copy, then use
+   `Range#getClientRects()` on every `.course-series__title-token` and require exactly one rendered
+   rectangle per token, including the literal `stress-free` token;
 9. assert title and card `scrollWidth` do not exceed `clientWidth`;
 10. assert document `scrollWidth` equals `clientWidth`;
 11. attach bounded screenshots for visual review.
@@ -509,28 +612,52 @@ The existing Home hero browser matrix remains the #t46 geometry guard. Course-se
 
 ## Implementation Outline
 
-1. In `src/pages/HomePage.test.tsx` and `src/pages/ProgressPage.test.tsx`, add failing structural, fragment-link, count-placement, order, and Home-no-count assertions.
-2. In `src/styles/global.test.ts`, replace the old two-column/fixed-Pinyin-height contract with failing shared-row, no-fixed-height, full-card focus, and whole-word wrapping assertions.
-3. In `tests/e2e/course-series.spec.ts`, add the complete two-page, two-language, four-viewport geometry and interaction matrix.
-4. In `src/pages/HomePage.tsx`, make the two peer entry anchors precede the unchanged Home Journey mapping, add the stable Home fragment target, and remove the old separate Basic panel header.
-5. In `src/pages/ProgressPage.tsx`, apply the same structure, move the existing Basic completion badge content into its native anchor, add the stable Progress fragment target, and leave all progress calculations and Journey rendering unchanged.
-6. In `src/styles/global.css`, convert `.course-series__list` to the one-column shared-row grid, use subgrid for the Basic section/path relationship, move the visible surface to `.course-series__entry-card`, remove the fixed Pinyin minimum height, and add shared focus/wrapping/fragment-target rules.
-7. Run the focused tests, full checks, browser matrix, and screenshot review; make only course-series-scoped corrections.
+1. Add `src/components/CourseSeriesTitle.tsx` plus a focused test that first fails for exact
+   text/accessibility-preserving whitespace tokenization and then passes with the shared renderer.
+2. In `src/pages/HomePage.test.tsx` and `src/pages/ProgressPage.test.tsx`, add failing structural,
+   fragment-link, count-placement, order, title-token, and Home-no-count assertions.
+3. In `src/styles/global.test.ts`, replace the old two-column/fixed-Pinyin-height contract with
+   failing shared-row, explicit wrapper/inner-track stretch, no-fixed-height, full-card focus, and
+   atomic-token wrapping assertions.
+4. In `tests/e2e/course-series.spec.ts`, add the complete two-page, two-language, four-viewport geometry and interaction matrix.
+5. In `src/pages/HomePage.tsx`, use `CourseSeriesTitle`, make the two peer entry anchors precede the
+   unchanged Home Journey mapping, add the stable Home fragment target, and remove the old separate
+   Basic panel header.
+6. In `src/pages/ProgressPage.tsx`, use `CourseSeriesTitle`, apply the same structure, move the
+   existing Basic completion badge content into its native anchor, add the stable Progress fragment
+   target, and leave all progress calculations and Journey rendering unchanged.
+7. In `src/styles/global.css`, convert `.course-series__list` to the one-column shared-row grid,
+   explicitly replace the panel `align-content: start` behavior with stretch, give the Pinyin
+   wrapper a full-height inner row, use subgrid for the Basic section/path relationship, move the
+   visible surface to `.course-series__entry-card`, remove the fixed Pinyin minimum height, and add
+   shared focus/token/fragment-target rules. Remove the obsolete
+   `.course-series__panel-header` and narrow-screen
+   `.progress-course-series .progress-list-card__header` rules after their markup is removed.
+8. Run the focused tests, full checks, browser matrix, and screenshot review; make only
+   course-series-scoped corrections.
 
-No new production component, route, copy key, store field, schema version, asset, package, or configuration file is required.
+No new route, copy key, store field, schema version, asset, package, or configuration file is
+required. `CourseSeriesTitle` is the only new production component and is presentation-only.
 
 ## Acceptance Criteria
 
 1. On Home and Progress, Pinyin is the first entry card, Basic expressions is the second entry card, and the ten-lesson Journey path renders after both in DOM and visual order.
 2. The two entry cards are semantic peers and have exactly equal rendered width and equal rendered height on their page in English and French at 1440, 1024, 390, and 320 px.
-3. Equality is produced by shared CSS Grid track sizing with intrinsic/content-driven row minimums. No entry card uses a fixed pixel height or fixed pixel minimum height, and longer localized/state content is not clipped.
+3. Equality is produced by shared CSS Grid track sizing with intrinsic/content-driven row minimums,
+   explicit semantic-wrapper/inner-track stretch, and visible-anchor stretch. No entry card uses a
+   fixed pixel height or fixed pixel minimum height, and longer localized/state content is not
+   clipped.
 4. Pinyin is a full-card `Link` to `/pinyin` on both pages.
 5. Basic expressions is a full-card native keyboard-focusable same-page anchor to `#home-basic-expressions-path` on Home and `#progress-basic-expressions-path` on Progress.
 6. Both entries expose visible keyboard focus, contain no nested controls, and retain localized title-only accessible names.
 7. Home displays no Pinyin or Basic progress count, regardless of stored completion.
 8. Progress displays the existing independent Pinyin sections-out-of-3 and Basic lessons-out-of-10 counts; Journey summary, stats, mastery, and statuses remain based on ten lessons only.
-9. The exact approved English and French group/title copy is unchanged and comes from `copy.courseSeries`.
-10. At all four viewports, both EN/FR titles wrap naturally between whole words, no word splits across lines, no text is truncated, and neither cards nor document overflow horizontally.
+9. The exact approved English and French group/title copy is unchanged and comes from
+   `copy.courseSeries`; tokenized rendering preserves exact heading text and exact localized link
+   names.
+10. At all four viewports, both EN/FR titles wrap only at original whitespace boundaries; every
+    non-space token, including `stress-free`, occupies one rendered fragment, no text is truncated,
+    and neither cards nor document overflow horizontally.
 11. The Basic path contains exactly the existing ten Journey lessons in the existing order with existing content, icons, statuses, and destinations.
 12. Routes, stores, progress schema, completion logic, Journey data, course data, lesson/Pinyin content, packages, and configuration are unchanged.
 13. The #t45 peer hierarchy and independence guarantees remain intact.
