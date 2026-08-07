@@ -31,6 +31,9 @@ const copy: PracticeChallengeCopy = {
   ratingValue: (rating: string) => `${rating}`,
   outOfLivesMessage: 'You ran out of lives.',
   playAgain: 'Play again',
+  answerReview: 'Your answers',
+  answerReviewCorrect: 'Correct',
+  answerReviewIncorrect: 'Incorrect',
   encouragement: () => 'Keep going.',
 }
 
@@ -159,6 +162,44 @@ describe('PracticeChallenge', () => {
     expect(screen.getByText(copy.resultHeading)).toBeVisible()
     expect(screen.getByText(copy.outOfLivesMessage)).toBeVisible()
     expect(onComplete).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows the answer review with per-question results on the result page', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <PracticeChallenge
+        lesson={selfIntroLesson}
+        language="en"
+        copy={copy}
+        seed={11}
+        onComplete={vi.fn()}
+      />,
+    )
+
+    const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 11)
+
+    for (const question of challenge.questions) {
+      if (screen.queryByText(copy.resultHeading)) {
+        break
+      }
+
+      const correctLabel =
+        question.kind === 'speak'
+          ? copy.fluentOption
+          : (question.options.find((option) => option.id === question.correctOptionId)?.label ??
+            '')
+      await user.click(screen.getByRole('button', { name: correctLabel }))
+
+      const nextButton = screen.queryByRole('button', { name: copy.nextQuestion })
+      if (nextButton) {
+        await user.click(nextButton)
+      }
+    }
+
+    expect(screen.getByText(copy.resultHeading)).toBeVisible()
+    expect(screen.getByText(copy.answerReview)).toBeVisible()
+    expect(screen.getAllByText(copy.answerReviewCorrect).length).toBeGreaterThan(0)
   })
 
   it('re-starts the round with a fresh challenge when replaying', async () => {

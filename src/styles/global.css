@@ -3267,3 +3267,139 @@ h2 {
   font-weight: 900;
   color: var(--color-sky-ink);
 }
+
+.practice-challenge__stars {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.practice-challenge__star {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: #dbe3ee;
+  animation: practice-star-pop 300ms ease backwards;
+}
+
+.practice-challenge__star--lit {
+  color: var(--color-gold);
+  animation: practice-star-pop 300ms ease backwards;
+}
+
+@keyframes practice-star-pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.practice-challenge__review {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.practice-challenge__review h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.practice-challenge__review-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.practice-challenge__review-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
+  padding: 0.75rem 1rem;
+  border-radius: 0.9rem;
+  background: #f7f8fb;
+  border: 1px solid var(--color-border);
+}
+
+.practice-challenge__review-item--correct {
+  background: #ebf6f1;
+  border-color: rgba(47, 143, 107, 0.25);
+}
+
+.practice-challenge__review-item--incorrect {
+  background: #fff1ec;
+  border-color: rgba(194, 65, 45, 0.2);
+}
+
+.practice-challenge__review-mark {
+  font-weight: 900;
+}
+
+.practice-challenge__review-item--correct .practice-challenge__review-mark {
+  color: var(--color-jade-ink);
+}
+
+.practice-challenge__review-item--incorrect .practice-challenge__review-mark {
+  color: var(--color-cinnabar-dark);
+}
+
+.practice-challenge__review-question {
+  font-size: 0.95rem;
+}
+
+.practice-challenge__review-answer {
+  grid-column: 2;
+  font-size: 0.88rem;
+  color: var(--color-muted);
+}
+
+.practice-challenge__feedback--correct .practice-challenge__feedback-heading {
+  animation: practice-correct-pop 260ms ease;
+}
+
+.practice-challenge__feedback--incorrect {
+  animation: practice-incorrect-shake 280ms ease;
+}
+
+@keyframes practice-correct-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes practice-incorrect-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .practice-challenge__star,
+  .practice-challenge__star--lit,
+  .practice-challenge__feedback--correct .practice-challenge__feedback-heading,
+  .practice-challenge__feedback--incorrect {
+    animation: none;
+  }
+}

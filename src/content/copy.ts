@@ -115,6 +115,9 @@ export const uiCopy = {
       ratingValue: (rating: string) => `${rating}`,
       outOfLivesMessage: 'You ran out of lives — the words you saw stay with you.',
       playAgain: 'Play again',
+      answerReview: 'Your answers',
+      answerReviewCorrect: 'Correct',
+      answerReviewIncorrect: 'Incorrect',
       encouragement: (rating: string) => {
         if (rating === 'S') {
           return 'Outstanding — you nailed the challenge.'
@@ -320,6 +323,9 @@ export const uiCopy = {
       ratingValue: (rating: string) => `${rating}`,
       outOfLivesMessage: 'Tu n’as plus de vies — les mots vus restent acquis.',
       playAgain: 'Rejouer',
+      answerReview: 'Tes réponses',
+      answerReviewCorrect: 'Correct',
+      answerReviewIncorrect: 'Incorrect',
       encouragement: (rating: string) => {
         if (rating === 'S') {
           return 'Exceptionnel — tu as réussi le défi.'

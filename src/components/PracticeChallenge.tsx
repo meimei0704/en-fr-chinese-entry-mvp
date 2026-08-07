@@ -8,6 +8,7 @@ import {
   pointsForCorrect,
   type PracticeChallengeQuestion,
 } from '../lib/practiceChallenge'
+import { playPracticeSound } from '../lib/practiceSound'
 import { ExplanationBlock } from './ExplanationBlock'
 import { SpeechButton } from './SpeechButton'
 
@@ -32,6 +33,9 @@ export interface PracticeChallengeCopy {
   outOfLivesMessage: string
   playAgain: string
   encouragement: (rating: string) => string
+  answerReview: string
+  answerReviewCorrect: string
+  answerReviewIncorrect: string
 }
 
 interface PracticeChallengeProps {
@@ -40,6 +44,11 @@ interface PracticeChallengeProps {
   copy: PracticeChallengeCopy
   seed: number
   onComplete: () => void
+}
+
+interface AnswerRecord {
+  question: PracticeChallengeQuestion
+  correct: boolean
 }
 
 const startingLives = 3
@@ -56,6 +65,7 @@ export function PracticeChallenge({
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
   const [lives, setLives] = useState(startingLives)
+  const [answers, setAnswers] = useState<AnswerRecord[]>([])
   const [feedback, setFeedback] = useState<{
     correct: boolean
     points: number
@@ -91,9 +101,19 @@ export function PracticeChallenge({
     setScore(nextScore)
     setStreak(nextStreak)
     setLives(nextLives)
+    setAnswers((current) => [...current, { question: currentQuestion, correct: isCorrect }])
     setFeedback({ correct: isCorrect, points: gained, reveal })
 
+    if (isCorrect && nextStreak >= 3) {
+      playPracticeSound('streak')
+    } else if (isCorrect) {
+      playPracticeSound('correct')
+    } else {
+      playPracticeSound('incorrect')
+    }
+
     if (isLastQuestion || nextLives <= 0) {
+      playPracticeSound('complete')
       setFinished(true)
     }
   }
@@ -112,6 +132,7 @@ export function PracticeChallenge({
     setScore(0)
     setStreak(0)
     setLives(startingLives)
+    setAnswers([])
     setFeedback(null)
     setFinished(false)
     setReported(false)
@@ -138,16 +159,64 @@ export function PracticeChallenge({
   }
 
   if (finished) {
+    const correctCount = answers.filter((answer) => answer.correct).length
+
     return (
       <section className="surface-card practice-challenge practice-challenge--result">
         <p className="eyebrow">{copy.resultHeading}</p>
         <p className="practice-challenge__score">{copy.finalScore(score)}</p>
         <dl className="practice-challenge__rating">
           <dt>{copy.ratingLabel}</dt>
-          <dd className="practice-challenge__rating-value">{copy.ratingValue(rating)}</dd>
+          <dd className="practice-challenge__rating-value" aria-label={copy.ratingValue(rating)}>
+            {copy.ratingValue(rating)}
+          </dd>
         </dl>
+        <div className="practice-challenge__stars" aria-label={copy.ratingValue(rating)}>
+          {[0, 1, 2].map((starIndex) => (
+            <span
+              key={starIndex}
+              aria-hidden="true"
+              className={`practice-challenge__star ${
+                starIndex < Math.ceil((correctCount / questions.length) * 3)
+                  ? 'practice-challenge__star--lit'
+                  : ''
+              }`}
+            >
+              ★
+            </span>
+          ))}
+        </div>
         <p className="muted-text">{copy.encouragement(rating)}</p>
         {lives <= 0 ? <p className="muted-text">{copy.outOfLivesMessage}</p> : null}
+
+        <div className="practice-challenge__review">
+          <h3>{copy.answerReview}</h3>
+          <ul className="practice-challenge__review-list">
+            {answers.map((answer, index) => (
+              <li
+                key={answer.question.id}
+                className={`practice-challenge__review-item ${
+                  answer.correct
+                    ? 'practice-challenge__review-item--correct'
+                    : 'practice-challenge__review-item--incorrect'
+                }`}
+              >
+                <span className="practice-challenge__review-mark" aria-hidden="true">
+                  {answer.correct ? '✓' : '✗'}
+                </span>
+                <span className="practice-challenge__review-question">
+                  {index + 1}. {getLocalizedText(answer.question.prompt, language)}
+                </span>
+                <span className="practice-challenge__review-answer">
+                  {answer.correct
+                    ? copy.answerReviewCorrect
+                    : `${copy.answerReviewIncorrect} — ${copy.correctAnswer(answer.question.target)}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <button type="button" className="primary-button" onClick={restart}>
           {copy.playAgain}
         </button>
