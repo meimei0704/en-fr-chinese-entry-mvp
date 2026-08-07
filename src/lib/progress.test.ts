@@ -213,9 +213,15 @@ describe('learner progress', () => {
       'ask-for-help-problem-review-1',
       'ask-for-help-problem-review-2',
       'ask-for-help-problem-review-3',
+      'ask-for-help-problem-review-4',
+      'ask-for-help-problem-review-5',
+      'ask-for-help-problem-review-6',
       'train-station-ticket-review-1',
       'train-station-ticket-review-2',
       'train-station-ticket-review-3',
+      'train-station-ticket-review-4',
+      'train-station-ticket-review-5',
+      'train-station-ticket-review-6',
     ])
   })
 

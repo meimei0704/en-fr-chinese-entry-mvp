@@ -17,15 +17,15 @@ const expectedLessonIds = [
 const newLessonIds = expectedLessonIds.slice(7)
 
 const expectedReviewFrontsByNewLesson = {
-  'pharmacy-help': ['药店', '头疼', '一天两次'],
-  'ask-for-help-problem': ['帮我一下', '有问题', '慢一点'],
-  'train-station-ticket': ['火车站', '车票', '三点出发'],
+  'pharmacy-help': ['药店', '头疼', '一天两次', '肚子疼', '过敏', '饭后'],
+  'ask-for-help-problem': ['帮我一下', '有问题', '慢一点', '没电', '密码', '没关系'],
+  'train-station-ticket': ['火车站', '车票', '三点出发', '硬座', '站台', '晚点'],
 } as const
 
 const expectedKeyChineseByNewLesson = {
-  'pharmacy-help': /头疼|发烧|一天两次|多少钱/,
-  'ask-for-help-problem': /帮我一下|手机有问题|不能支付|慢一点/,
-  'train-station-ticket': /上海|今天下午|护照|三点出发/,
+  'pharmacy-help': /头疼|发烧|肚子疼|过敏|止疼药|饭前|饭后/,
+  'ask-for-help-problem': /帮我一下|手机有问题|不能支付|慢一点|没电|无线网|充电|没关系/,
+  'train-station-ticket': /上海|今天下午|护照|硬座|站台|晚点|三点出发/,
 } as const
 
 const expectedArrivalChinese = [
@@ -105,13 +105,17 @@ function numberedAudioPaths(lessonId: string, prefix: string, count: number) {
 
 function expectedNewLessonAudioPaths(lessonId: string) {
   return [
-    ...numberedAudioPaths(lessonId, 'line', 5),
-    ...numberedAudioPaths(lessonId, 'pattern', 3),
-    ...numberedAudioPaths(lessonId, 'vocab', 5),
+    ...numberedAudioPaths(lessonId, 'line', 8),
+    ...numberedAudioPaths(lessonId, 'pattern', 5),
+    ...numberedAudioPaths(lessonId, 'vocab', 10),
     `/audio/${lessonId}/pronunciation-01.mp3`,
+    `/audio/${lessonId}/pronunciation-02.mp3`,
     `/audio/${lessonId}/practice-listening-01.mp3`,
+    `/audio/${lessonId}/practice-listening-02.mp3`,
     `/audio/${lessonId}/practice-speaking-01.mp3`,
+    `/audio/${lessonId}/practice-speaking-02.mp3`,
     `/audio/${lessonId}/practice-reading-01.mp3`,
+    `/audio/${lessonId}/practice-reading-02.mp3`,
     `/audio/${lessonId}/short-input-01.mp3`,
   ]
 }
@@ -133,6 +137,9 @@ describe('course content', () => {
       'convenience-store-run': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
       'restaurant-order': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
       'metro-ticket': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'pharmacy-help': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'ask-for-help-problem': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'train-station-ticket': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
     }
 
     for (const lesson of course.lessons) {
@@ -179,11 +186,13 @@ describe('course content', () => {
     for (const lessonId of newLessonIds) {
       const lesson = byId[lessonId]
       expect(lesson, `${lessonId} should be present`).toBeDefined()
-      expect(lesson.dialogue.lines).toHaveLength(5)
+      expect(lesson.dialogue.lines).toHaveLength(8)
       expect(lesson.sentencePatterns.map((pattern) => pattern.id)).toEqual([
         `${lessonId}-pattern-1`,
         `${lessonId}-pattern-2`,
         `${lessonId}-pattern-3`,
+        `${lessonId}-pattern-4`,
+        `${lessonId}-pattern-5`,
       ])
       expect(lesson.vocabulary.map((item) => item.id)).toEqual([
         `${lessonId}-vocab-1`,
@@ -191,12 +200,18 @@ describe('course content', () => {
         `${lessonId}-vocab-3`,
         `${lessonId}-vocab-4`,
         `${lessonId}-vocab-5`,
+        `${lessonId}-vocab-6`,
+        `${lessonId}-vocab-7`,
+        `${lessonId}-vocab-8`,
+        `${lessonId}-vocab-9`,
+        `${lessonId}-vocab-10`,
       ])
       expect(lesson.pronunciation.map((tip) => tip.id)).toEqual([
         `${lessonId}-pronunciation-1`,
+        `${lessonId}-pronunciation-2`,
       ])
       expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
-        Array.from({ length: 5 }, (_, index) => `${lessonId}-line-0${index + 1}`),
+        Array.from({ length: 8 }, (_, index) => `${lessonId}-line-${String(index + 1).padStart(2, '0')}`),
       )
       expect(lesson.shortInput.id).toBe(`${lessonId}-short-input-01`)
       expect(collectLessonAudioPaths(lesson)).toEqual(expectedNewLessonAudioPaths(lessonId))
@@ -354,7 +369,7 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(281)
+    expect(audioPaths).toHaveLength(323)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     const newAudioPaths = new Set([
@@ -403,6 +418,24 @@ describe('course content', () => {
       '/audio/metro-ticket/vocab-09.mp3', '/audio/metro-ticket/vocab-10.mp3',
       '/audio/metro-ticket/pronunciation-02.mp3',
       '/audio/metro-ticket/practice-listening-02.mp3', '/audio/metro-ticket/practice-speaking-02.mp3', '/audio/metro-ticket/practice-reading-02.mp3',
+      '/audio/pharmacy-help/line-06.mp3', '/audio/pharmacy-help/line-07.mp3', '/audio/pharmacy-help/line-08.mp3',
+      '/audio/pharmacy-help/pattern-04.mp3', '/audio/pharmacy-help/pattern-05.mp3',
+      '/audio/pharmacy-help/vocab-06.mp3', '/audio/pharmacy-help/vocab-07.mp3', '/audio/pharmacy-help/vocab-08.mp3',
+      '/audio/pharmacy-help/vocab-09.mp3', '/audio/pharmacy-help/vocab-10.mp3',
+      '/audio/pharmacy-help/pronunciation-02.mp3',
+      '/audio/pharmacy-help/practice-listening-02.mp3', '/audio/pharmacy-help/practice-speaking-02.mp3', '/audio/pharmacy-help/practice-reading-02.mp3',
+      '/audio/ask-for-help-problem/line-06.mp3', '/audio/ask-for-help-problem/line-07.mp3', '/audio/ask-for-help-problem/line-08.mp3',
+      '/audio/ask-for-help-problem/pattern-04.mp3', '/audio/ask-for-help-problem/pattern-05.mp3',
+      '/audio/ask-for-help-problem/vocab-06.mp3', '/audio/ask-for-help-problem/vocab-07.mp3', '/audio/ask-for-help-problem/vocab-08.mp3',
+      '/audio/ask-for-help-problem/vocab-09.mp3', '/audio/ask-for-help-problem/vocab-10.mp3',
+      '/audio/ask-for-help-problem/pronunciation-02.mp3',
+      '/audio/ask-for-help-problem/practice-listening-02.mp3', '/audio/ask-for-help-problem/practice-speaking-02.mp3', '/audio/ask-for-help-problem/practice-reading-02.mp3',
+      '/audio/train-station-ticket/line-06.mp3', '/audio/train-station-ticket/line-07.mp3', '/audio/train-station-ticket/line-08.mp3',
+      '/audio/train-station-ticket/pattern-04.mp3', '/audio/train-station-ticket/pattern-05.mp3',
+      '/audio/train-station-ticket/vocab-06.mp3', '/audio/train-station-ticket/vocab-07.mp3', '/audio/train-station-ticket/vocab-08.mp3',
+      '/audio/train-station-ticket/vocab-09.mp3', '/audio/train-station-ticket/vocab-10.mp3',
+      '/audio/train-station-ticket/pronunciation-02.mp3',
+      '/audio/train-station-ticket/practice-listening-02.mp3', '/audio/train-station-ticket/practice-speaking-02.mp3', '/audio/train-station-ticket/practice-reading-02.mp3',
     ])
 
     for (const audioPath of audioPaths) {

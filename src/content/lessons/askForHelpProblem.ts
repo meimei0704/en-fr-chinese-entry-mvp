@@ -7,13 +7,13 @@ export const askForHelpProblemLesson: LessonContent = {
     fr: 'Demander de l’aide pour un problème',
   },
   scenario: {
-    en: 'Ask politely for help, explain that your phone has a payment problem, and ask the other person to speak more slowly.',
-    fr: 'Demander poliment de l’aide, expliquer que ton téléphone a un problème de paiement et demander à l’autre personne de parler plus lentement.',
+    en: 'Ask for help with a phone, payment, battery, or lost-item problem, explain what is wrong, ask to speak slowly, and request practical solutions like WiFi or a charger.',
+    fr: 'Demander de l’aide pour un téléphone, un paiement, une batterie ou un objet perdu, expliquer ce qui ne va pas, demander de parler lentement et solliciter des solutions pratiques comme le WiFi ou un chargeur.',
   },
   dialogue: {
     title: {
-      en: 'Get help with a phone payment problem',
-      fr: 'Obtenir de l’aide pour un problème de paiement mobile',
+      en: 'Solve a phone problem and ask for practical help',
+      fr: 'Résoudre un problème de téléphone et demander une aide pratique',
     },
     lines: [
       {
@@ -76,15 +76,15 @@ export const askForHelpProblemLesson: LessonContent = {
           en: 'Helper',
           fr: 'Aide',
         },
-        hanzi: '我帮你看一下。',
-        pinyin: 'Wǒ bāng nǐ kàn yíxià.',
+        hanzi: '我帮你看一下。手机还有电吗？',
+        pinyin: 'Wǒ bāng nǐ kàn yíxià. Shǒujī hái yǒu diàn ma?',
         translation: {
-          en: 'I’ll help you take a look.',
-          fr: 'Je vais regarder pour vous aider.',
+          en: 'I\'ll take a look. Does your phone still have battery?',
+          fr: 'Je vais regarder. Votre téléphone a-t-il encore de la batterie ?',
         },
         explanation: {
-          en: '看一下 signals a quick check, not a long technical conversation.',
-          fr: '看一下 indique une vérification rapide, pas une longue conversation technique.',
+          en: '还有电吗 is a practical check before troubleshooting further.',
+          fr: '还有电吗 est une vérification pratique avant de dépanner davantage.',
         },
         audio: '/audio/ask-for-help-problem/line-04.mp3',
       },
@@ -94,17 +94,62 @@ export const askForHelpProblemLesson: LessonContent = {
           en: 'Traveler',
           fr: 'Voyageur',
         },
-        hanzi: '请慢一点说，谢谢。',
-        pinyin: 'Qǐng màn yìdiǎn shuō, xièxie.',
+        hanzi: '快没电了。这里有无线网吗？',
+        pinyin: 'Kuài méi diàn le. Zhèlǐ yǒu wúxiànwǎng ma?',
         translation: {
-          en: 'Please speak a little more slowly, thank you.',
-          fr: 'Parlez un peu plus lentement, s’il vous plaît. Merci.',
+          en: 'Almost out of battery. Is there WiFi here?',
+          fr: 'Presque plus de batterie. Y a-t-il du WiFi ici ?',
         },
         explanation: {
-          en: '请慢一点说 helps when the helper answers too quickly.',
-          fr: '请慢一点说 aide quand la personne répond trop vite.',
+          en: '快没电了 warns about low battery; 无线网 asks for a WiFi connection.',
+          fr: '快没电了 avertit que la batterie est faible ; 无线网 demande une connexion WiFi.',
         },
         audio: '/audio/ask-for-help-problem/line-05.mp3',
+      },
+      {
+        id: 'ask-for-help-problem-line-06',
+        speaker: { en: 'Helper', fr: 'Aide' },
+        hanzi: '有，密码在那边。可以充电吗？',
+        pinyin: 'Yǒu, mìmǎ zài nàbiān. Kěyǐ chōngdiàn ma?',
+        translation: {
+          en: 'Yes, the password is over there. Can you charge your phone?',
+          fr: 'Oui, le mot de passe est là-bas. Pouvez-vous recharger votre téléphone ?',
+        },
+        explanation: {
+          en: '密码 in 那边 is a common response; 充电 asks if you can plug in.',
+          fr: '密码在那边 est une réponse courante ; 充电 demande si tu peux brancher.',
+        },
+        audio: '/audio/ask-for-help-problem/line-06.mp3',
+      },
+      {
+        id: 'ask-for-help-problem-line-07',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '可以，可是我没有充电器。',
+        pinyin: 'Kěyǐ, kěshì wǒ méiyǒu chōngdiànqì.',
+        translation: {
+          en: 'Yes I can, but I don\'t have a charger.',
+          fr: 'Oui je peux, mais je n\'ai pas de chargeur.',
+        },
+        explanation: {
+          en: '可是 introduces a new obstacle in the help exchange.',
+          fr: '可是 introduit un nouvel obstacle dans l\'échange d\'aide.',
+        },
+        audio: '/audio/ask-for-help-problem/line-07.mp3',
+      },
+      {
+        id: 'ask-for-help-problem-line-08',
+        speaker: { en: 'Helper', fr: 'Aide' },
+        hanzi: '没关系，我这里有。请慢一点说，不着急。',
+        pinyin: 'Méi guānxi, wǒ zhèlǐ yǒu. Qǐng màn yìdiǎn shuō, bù zháojí.',
+        translation: {
+          en: 'No problem, I have one here. Please speak more slowly, no rush.',
+          fr: 'Pas de problème, j\'en ai un ici. Parlez un peu plus lentement, sans vous presser.',
+        },
+        explanation: {
+          en: '没关系 keeps the tone friendly; the helper also encourages slower speech.',
+          fr: '没关系 garde un ton amical ; la personne encourage aussi une parole plus lente.',
+        },
+        audio: '/audio/ask-for-help-problem/line-08.mp3',
       },
     ],
   },
@@ -139,16 +184,38 @@ export const askForHelpProblemLesson: LessonContent = {
     },
     {
       id: 'ask-for-help-problem-pattern-3',
-      pattern: '请……一点。',
+      pattern: '……还有电吗？',
       meaning: {
-        en: 'Please ... a little.',
-        fr: 'Veuillez ... un peu.',
+        en: 'Does ... still have battery?',
+        fr: 'Est-ce que ... a encore de la batterie ?',
       },
-      example: '请慢一点说。',
+      example: '手机还有电吗？',
       audio: '/audio/ask-for-help-problem/pattern-03.mp3',
       explanation: {
-        en: 'This makes a repair request when speech is too fast.',
-        fr: 'Cela sert à réparer l’échange quand la parole est trop rapide.',
+        en: 'A practical question when a phone-related problem happens.',
+        fr: 'Une question pratique quand un problème de téléphone survient.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-4',
+      pattern: '……快没电了。',
+      meaning: { en: '... is almost out of battery.', fr: '... est presque déchargé.' },
+      example: '手机快没电了。',
+      audio: '/audio/ask-for-help-problem/pattern-04.mp3',
+      explanation: {
+        en: 'Use 快没电了 to warn that battery is running low.',
+        fr: 'Utilise 快没电了 pour avertir que la batterie est presque vide.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-5',
+      pattern: '这里有……吗？',
+      meaning: { en: 'Is there ... here?', fr: 'Y a-t-il ... ici ?' },
+      example: '这里有无线网吗？',
+      audio: '/audio/ask-for-help-problem/pattern-05.mp3',
+      explanation: {
+        en: 'Ask about an available service or item at a location.',
+        fr: 'Demande à propos d\'un service ou d\'un article disponible sur place.',
       },
     },
   ],
@@ -223,6 +290,11 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'Une phrase de réparation pour comprendre le chinois parlé.',
       },
     },
+    { id: 'ask-for-help-problem-vocab-6', hanzi: '没电', pinyin: 'méi diàn', audio: '/audio/ask-for-help-problem/vocab-06.mp3', meaning: { en: 'out of battery / no power', fr: 'plus de batterie / pas d\'électricité' }, explanation: { en: 'The key phrase for a dead phone or device.', fr: 'La phrase clé pour un téléphone ou un appareil déchargé.' } },
+    { id: 'ask-for-help-problem-vocab-7', hanzi: '无线网', pinyin: 'wúxiànwǎng', audio: '/audio/ask-for-help-problem/vocab-07.mp3', meaning: { en: 'WiFi / wireless network', fr: 'WiFi / réseau sans fil' }, explanation: { en: 'A common word for WiFi you will see on signs.', fr: 'Un mot courant pour le WiFi que tu verras sur les panneaux.' } },
+    { id: 'ask-for-help-problem-vocab-8', hanzi: '密码', pinyin: 'mìmǎ', audio: '/audio/ask-for-help-problem/vocab-08.mp3', meaning: { en: 'password / PIN', fr: 'mot de passe / code' }, explanation: { en: 'You will hear this when asking for WiFi access.', fr: 'Tu entendras ce mot en demandant l\'accès au WiFi.' } },
+    { id: 'ask-for-help-problem-vocab-9', hanzi: '充电', pinyin: 'chōngdiàn', audio: '/audio/ask-for-help-problem/vocab-09.mp3', meaning: { en: 'charge / recharge', fr: 'charger / recharger' }, explanation: { en: 'The action to restore battery power.', fr: 'L\'action pour restaurer la batterie.' } },
+    { id: 'ask-for-help-problem-vocab-10', hanzi: '没关系', pinyin: 'méi guānxi', audio: '/audio/ask-for-help-problem/vocab-10.mp3', meaning: { en: 'no problem / it doesn\'t matter', fr: 'pas de problème / ce n\'est pas grave' }, explanation: { en: 'A friendly phrase to keep the help exchange relaxed.', fr: 'Une phrase amicale pour garder l\'échange d\'aide détendu.' } },
   ],
   pronunciation: [
     {
@@ -240,6 +312,20 @@ export const askForHelpProblemLesson: LessonContent = {
       explanation: {
         en: 'Problem phrases work best when they are short and easy to repeat.',
         fr: 'Les phrases de problème fonctionnent mieux quand elles sont courtes et faciles à répéter.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pronunciation-2',
+      focus: { en: '轻声 (neutral tone): 关系 vs 没关系', fr: 'Ton neutre : 关系 vs 没关系' },
+      audioText: '没关系，有问题，快没电了',
+      audio: '/audio/ask-for-help-problem/pronunciation-02.mp3',
+      tip: {
+        en: 'In 没关系, the 系 is light and unstressed. Practice the difference between 关系 (guānxì) and 没关系 (méi guānxi).',
+        fr: 'Dans 没关系, le 系 est léger et non accentué. Entraîne-toi à la différence entre 关系 (guānxì) et 没关系 (méi guānxi).',
+      },
+      explanation: {
+        en: 'The neutral tone in 系 makes the phrase sound natural and friendly.',
+        fr: 'Le ton neutre dans 系 rend la phrase naturelle et amicale.',
       },
     },
   ],
@@ -296,6 +382,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'Utilise-le dans 慢一点 pour demander une parole plus lente.',
       },
     },
+    { id: 'ask-for-help-problem-hanzi-5', hanzi: '电', pinyin: 'diàn', meaning: { en: 'electricity / battery', fr: 'électricité / batterie' }, explanation: { en: 'Recognize 电 in 没电 and 充电 on signs and menus.', fr: 'Reconnais 电 dans 没电 et 充电 sur les panneaux et menus.' } },
+    { id: 'ask-for-help-problem-hanzi-6', hanzi: '密', pinyin: 'mì', meaning: { en: 'secret / password element', fr: 'secret / élément de mot de passe' }, explanation: { en: 'Recognize 密 in 密码 when asking for a WiFi password.', fr: 'Reconnais 密 dans 密码 en demandant un mot de passe WiFi.' } },
   ],
   practice: {
     listening: [
@@ -312,6 +400,7 @@ export const askForHelpProblemLesson: LessonContent = {
           fr: 'C’est l’explication clé après la demande d’aide.',
         },
       },
+      { id: 'ask-for-help-problem-listening-2', prompt: { en: 'Which phrase warns about low battery?', fr: 'Quelle phrase avertit d\'une batterie faible ?' }, target: '快没电了。', audio: '/audio/ask-for-help-problem/practice-listening-02.mp3', explanation: { en: '快没电了 is the warning you say or hear when battery is low.', fr: '快没电了 est l\'avertissement que tu dis ou entends quand la batterie est faible.' } },
     ],
     speaking: [
       {
@@ -327,6 +416,7 @@ export const askForHelpProblemLesson: LessonContent = {
           fr: 'Commence par la demande polie avant d’expliquer le problème.',
         },
       },
+      { id: 'ask-for-help-problem-speaking-2', prompt: { en: 'Ask if there is WiFi here.', fr: 'Demande s\'il y a du WiFi ici.' }, target: '这里有WiFi吗？', audio: '/audio/ask-for-help-problem/practice-speaking-02.mp3', explanation: { en: 'A practical question when you need internet access.', fr: 'Une question pratique quand tu as besoin d\'accès internet.' } },
     ],
     reading: [
       {
@@ -342,6 +432,7 @@ export const askForHelpProblemLesson: LessonContent = {
           fr: 'Cela t’aide à garder la conversation compréhensible.',
         },
       },
+      { id: 'ask-for-help-problem-reading-2', prompt: { en: 'Match the phrase for "no problem".', fr: 'Associe la phrase pour "pas de problème".' }, target: '没关系', audio: '/audio/ask-for-help-problem/practice-reading-02.mp3', explanation: { en: '没关系 is a friendly go-to reply in many situations.', fr: '没关系 est une réponse amicale passe-partout dans de nombreuses situations.' } },
     ],
   },
   reviewCards: [
@@ -381,6 +472,9 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'Une phrase de réparation si la parole est trop rapide.',
       },
     },
+    { id: 'ask-for-help-problem-review-4', front: '没电', back: { en: 'out of battery', fr: 'plus de batterie' }, explanation: { en: 'Say this when your phone is dead.', fr: 'Dis ceci quand ton téléphone est déchargé.' } },
+    { id: 'ask-for-help-problem-review-5', front: '密码', back: { en: 'password', fr: 'mot de passe' }, explanation: { en: 'Ask for this when connecting to WiFi.', fr: 'Demande ceci pour te connecter au WiFi.' } },
+    { id: 'ask-for-help-problem-review-6', front: '没关系', back: { en: 'no problem', fr: 'pas de problème' }, explanation: { en: 'A friendly reply that keeps the exchange relaxed.', fr: 'Une réponse amicale qui garde l\'échange détendu.' } },
   ],
   shortInput: {
     id: 'ask-for-help-problem-short-input-01',

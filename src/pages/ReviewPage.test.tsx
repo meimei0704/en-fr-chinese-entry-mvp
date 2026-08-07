@@ -101,7 +101,7 @@ describe('ReviewPage', () => {
       'restaurant-order',
       'train-station-ticket',
     ])
-    expect(screen.getByText(/cards due today: 9/i)).toBeVisible()
+    expect(screen.getByText(/cards due today: 12/i)).toBeVisible()
     expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('菜单')
 
     await user.click(screen.getByRole('button', { name: /mark complete/i }))
@@ -116,6 +116,9 @@ describe('ReviewPage', () => {
       'train-station-ticket-review-1',
       'train-station-ticket-review-2',
       'train-station-ticket-review-3',
+      'train-station-ticket-review-4',
+      'train-station-ticket-review-5',
+      'train-station-ticket-review-6',
     ])
   })
 
