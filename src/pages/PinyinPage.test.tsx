@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { act, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -16,63 +16,6 @@ vi.mock('../lib/speech', () => ({
 
 const courseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 
-function setMediaDevices(getUserMedia: ReturnType<typeof vi.fn>) {
-  Object.defineProperty(navigator, 'mediaDevices', {
-    configurable: true,
-    value: { getUserMedia },
-  })
-}
-
-function createDeferred<T>() {
-  let resolve!: (value: T) => void
-  let reject!: (error: unknown) => void
-  const promise = new Promise<T>((promiseResolve, promiseReject) => {
-    resolve = promiseResolve
-    reject = promiseReject
-  })
-
-  return { promise, resolve, reject }
-}
-
-function mockRecorderSupport(
-  dataEvents: Blob[] = [new Blob(['shadowing audio'], { type: 'audio/webm' })],
-) {
-  const getUserMedia = vi.fn().mockResolvedValue({
-    getTracks: () => [{ stop: vi.fn() }],
-  })
-  const createObjectURL = vi.fn(() => 'blob:shadowing-recording')
-
-  class FakeMediaRecorder {
-    ondataavailable: ((event: BlobEvent) => void) | null = null
-    onstop: (() => void) | null = null
-    onerror: (() => void) | null = null
-
-    start() {}
-
-    stop() {
-      for (const data of dataEvents) {
-        this.ondataavailable?.({
-          data,
-        } as BlobEvent)
-      }
-      this.onstop?.()
-    }
-  }
-
-  vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
-  Object.defineProperty(URL, 'createObjectURL', {
-    configurable: true,
-    value: createObjectURL,
-  })
-  Object.defineProperty(URL, 'revokeObjectURL', {
-    configurable: true,
-    value: vi.fn(),
-  })
-  setMediaDevices(getUserMedia)
-
-  return { createObjectURL }
-}
-
 describe('PinyinPage', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -81,8 +24,6 @@ describe('PinyinPage', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals()
-    Reflect.deleteProperty(URL, 'createObjectURL')
-    Reflect.deleteProperty(URL, 'revokeObjectURL')
   })
 
   it('renders the Pinyin lesson hero with stable section navigation', () => {
@@ -99,10 +40,6 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('link', { name: 'Tone game' })).toHaveAttribute(
       'href',
       '#pinyin-tone-game',
-    )
-    expect(screen.getByRole('link', { name: 'Shadowing' })).toHaveAttribute(
-      'href',
-      '#pinyin-shadowing',
     )
   })
 
@@ -134,7 +71,7 @@ describe('PinyinPage', () => {
       text: 'bo',
       audioSrc: '/audio/pinyin/lesson-1/reference-initial-b.mp3',
     })
-    expect(screen.getByText('1 of 3 sections complete')).toBeVisible()
+    expect(screen.getByText('1 of 2 sections complete')).toBeVisible()
     expect(loadPinyinProgress()).toMatchObject({
       completedSections: ['reference'],
     })
@@ -164,169 +101,12 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('heading', { level: 3, name: 'Tone game result' })).toBeVisible()
     expect(screen.getByText('Correct rate')).toBeVisible()
     expect(screen.getByText('8/8')).toBeVisible()
-    expect(screen.getByText('1 of 3 sections complete')).toBeVisible()
+    expect(screen.getByText('1 of 2 sections complete')).toBeVisible()
     expect(loadPinyinProgress()).toMatchObject({
       toneGameLastScore: 8,
       toneGameBestScore: 8,
       completedSections: ['tone-game'],
     })
-  })
-
-  it('shows a visible failure state when MediaRecorder is unsupported', async () => {
-    const user = userEvent.setup()
-
-    vi.stubGlobal('MediaRecorder', undefined)
-    setMediaDevices(vi.fn())
-
-    renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('button', { name: /start recording/i }))
-
-    expect(screen.getByText(/recording is not supported/i)).toBeVisible()
-  })
-
-  it('records, replays, and marks one shadowing prompt complete', async () => {
-    const user = userEvent.setup()
-
-    mockRecorderSupport()
-    renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('button', { name: /start recording/i }))
-    await user.click(screen.getByRole('button', { name: /stop recording/i }))
-
-    expect(screen.getByLabelText('Your recording')).toBeVisible()
-    expect(screen.getByRole('button', { name: /record again/i })).toBeVisible()
-    expect(loadPinyinProgress().shadowingCompletedPromptIds.length).toBeGreaterThan(0)
-  })
-
-  it('does not replay or complete shadowing when recorder stops without audio data', async () => {
-    const user = userEvent.setup()
-
-    const { createObjectURL } = mockRecorderSupport([])
-    renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('button', { name: /start recording/i }))
-    await user.click(screen.getByRole('button', { name: /stop recording/i }))
-
-    expect(screen.getByRole('alert')).toHaveTextContent(/no audio was captured/i)
-    expect(screen.queryByLabelText('Your recording')).not.toBeInTheDocument()
-    expect(createObjectURL).not.toHaveBeenCalled()
-    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
-  })
-
-  it('does not replay or complete shadowing when recorder only emits empty audio data', async () => {
-    const user = userEvent.setup()
-
-    const { createObjectURL } = mockRecorderSupport([new Blob([], { type: 'audio/webm' })])
-    renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('button', { name: /start recording/i }))
-    await user.click(screen.getByRole('button', { name: /stop recording/i }))
-
-    expect(screen.getByRole('alert')).toHaveTextContent(/no audio was captured/i)
-    expect(screen.queryByLabelText('Your recording')).not.toBeInTheDocument()
-    expect(createObjectURL).not.toHaveBeenCalled()
-    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
-  })
-
-  it('does not replay or complete shadowing when recorder error is followed by stop data', async () => {
-    const user = userEvent.setup()
-    const createObjectURL = vi.fn(() => 'blob:shadowing-recording')
-    const streamStop = vi.fn()
-    const recorders: FakeMediaRecorder[] = []
-
-    class FakeMediaRecorder {
-      ondataavailable: ((event: BlobEvent) => void) | null = null
-      onstop: (() => void) | null = null
-      onerror: (() => void) | null = null
-
-      constructor() {
-        recorders.push(this)
-      }
-
-      start() {}
-      stop() {}
-    }
-
-    vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
-    Object.defineProperty(URL, 'createObjectURL', {
-      configurable: true,
-      value: createObjectURL,
-    })
-    Object.defineProperty(URL, 'revokeObjectURL', {
-      configurable: true,
-      value: vi.fn(),
-    })
-    setMediaDevices(
-      vi.fn().mockResolvedValue({
-        getTracks: () => [{ stop: streamStop }],
-      }),
-    )
-
-    renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('button', { name: /start recording/i }))
-
-    expect(recorders).toHaveLength(1)
-    const [recorder] = recorders
-
-    await act(async () => {
-      recorder.onerror?.()
-      recorder.ondataavailable?.({
-        data: new Blob(['discarded audio'], { type: 'audio/webm' }),
-      } as BlobEvent)
-      recorder.onstop?.()
-    })
-
-    expect(screen.getByText(/recording could not start/i)).toBeVisible()
-    expect(screen.queryByLabelText('Your recording')).not.toBeInTheDocument()
-    expect(createObjectURL).not.toHaveBeenCalled()
-    expect(streamStop).toHaveBeenCalledTimes(1)
-    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
-  })
-
-  it('stops a late microphone stream and does not start recording after unmount', async () => {
-    const user = userEvent.setup()
-    const streamStop = vi.fn()
-    const recorderStart = vi.fn()
-    const getUserMediaResult = createDeferred<MediaStream>()
-
-    class FakeMediaRecorder {
-      ondataavailable: ((event: BlobEvent) => void) | null = null
-      onstop: (() => void) | null = null
-      onerror: (() => void) | null = null
-
-      start = recorderStart
-      stop() {}
-    }
-
-    vi.stubGlobal('MediaRecorder', FakeMediaRecorder)
-    Object.defineProperty(URL, 'createObjectURL', {
-      configurable: true,
-      value: vi.fn(() => 'blob:shadowing-recording'),
-    })
-    Object.defineProperty(URL, 'revokeObjectURL', {
-      configurable: true,
-      value: vi.fn(),
-    })
-    setMediaDevices(vi.fn(() => getUserMediaResult.promise))
-
-    const { unmount } = renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('button', { name: /start recording/i }))
-    unmount()
-
-    await act(async () => {
-      getUserMediaResult.resolve({
-        getTracks: () => [{ stop: streamStop }],
-      } as unknown as MediaStream)
-      await getUserMediaResult.promise
-      await Promise.resolve()
-    })
-
-    expect(streamStop).toHaveBeenCalledTimes(1)
-    expect(recorderStart).not.toHaveBeenCalled()
-    expect(loadPinyinProgress().shadowingCompletedPromptIds).toEqual([])
   })
 
   it('localizes Pinyin page chrome and audio labels for French learners', () => {
@@ -345,13 +125,9 @@ describe('PinyinPage', () => {
       'href',
       '#pinyin-tone-game',
     )
-    expect(screen.getByRole('link', { name: 'Répétition' })).toHaveAttribute(
-      'href',
-      '#pinyin-shadowing',
-    )
 
-    expect(screen.getByText('0 section sur 3 terminée')).toBeVisible()
-    expect(screen.getAllByText('Leçon 1')).toHaveLength(3)
+    expect(screen.getByText('0 section sur 2 terminée')).toBeVisible()
+    expect(screen.getAllByText('Leçon 1')).toHaveLength(2)
     expect(screen.getByRole('heading', { level: 2, name: 'Référence' })).toBeVisible()
     expect(screen.getByText(/Construisez une première carte sonore/i)).toBeVisible()
     expect(screen.getByText('Premier ton')).toBeVisible()
@@ -361,9 +137,6 @@ describe('PinyinPage', () => {
     expect(screen.getByText('Premier ton : haut et plat')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter l’extrait de ton 1' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Valider la réponse' })).toBeVisible()
-    expect(screen.getByRole('heading', { level: 2, name: 'Répéter de courtes phrases' })).toBeVisible()
-    expect(screen.getByText('Phrase 1 sur 5')).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Commencer l’enregistrement' })).toBeVisible()
 
     expect(screen.queryByText('Reference')).not.toBeInTheDocument()
     expect(screen.queryByText('First tone: high and level')).not.toBeInTheDocument()

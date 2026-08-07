@@ -60,24 +60,11 @@ function deriveLegacyFields(progress: PinyinProgress): PinyinProgress {
     .map((lp) => lp.toneGameBestScore)
     .filter((s): s is number => s !== null)
 
-  const shadowingIds = new Set<string>()
-  for (const lp of entries) {
-    for (const id of lp.shadowingCompletedPromptIds) {
-      shadowingIds.add(id)
-    }
-  }
-
-  const lastPromptId = [...entries]
-    .reverse()
-    .find((lp) => lp.lastVisitedPromptId !== null)?.lastVisitedPromptId ?? null
-
   return {
     ...progress,
     completedSections,
     toneGameLastScore: scores.length > 0 ? scores[scores.length - 1] : null,
     toneGameBestScore: scoresForBest.length > 0 ? Math.max(...scoresForBest) : null,
-    shadowingCompletedPromptIds: [...shadowingIds],
-    lastVisitedPromptId: lastPromptId,
   }
 }
 
@@ -280,41 +267,6 @@ export function recordPinyinToneGameScore(
         toneGameLastScore: score,
         toneGameBestScore:
           lp.toneGameBestScore === null ? score : Math.max(lp.toneGameBestScore, score),
-      },
-    },
-  }
-
-  return deriveLegacyFields(updated)
-}
-
-export function recordPinyinShadowingPromptComplete(
-  progress: PinyinProgress,
-  lessonId: PinyinLessonId,
-  promptId: string,
-  promptIds: readonly string[],
-): PinyinProgress {
-  const lp = progress.lessonProgress[lessonId] ?? createDefaultLessonProgress()
-
-  const shadowingCompletedPromptIds = lp.shadowingCompletedPromptIds.includes(promptId)
-    ? lp.shadowingCompletedPromptIds
-    : [...lp.shadowingCompletedPromptIds, promptId]
-  const completedEveryPrompt =
-    promptIds.length > 0 && promptIds.every((id) => shadowingCompletedPromptIds.includes(id))
-  const completedSections: PinyinModuleId[] =
-    completedEveryPrompt && !lp.completedSections.includes('shadowing')
-      ? [...lp.completedSections, 'shadowing']
-      : lp.completedSections
-
-  const updated: PinyinProgress = {
-    ...progress,
-    lessonProgress: {
-      ...progress.lessonProgress,
-      [lessonId]: {
-        ...lp,
-        visited: true,
-        completedSections,
-        shadowingCompletedPromptIds,
-        lastVisitedPromptId: promptId,
       },
     },
   }

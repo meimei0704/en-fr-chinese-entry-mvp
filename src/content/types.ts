@@ -171,7 +171,6 @@ export type PinyinLessonId =
   | 'pinyin-foundations-1'
   | 'pinyin-sibilants-2'
   | 'pinyin-compound-finals-3'
-  | 'pinyin-spelling-rules-4'
 
 export type PinyinModuleId = 'reference' | 'tone-game' | 'shadowing'
 
@@ -187,9 +186,6 @@ export type PinyinReferenceGroupId =
   | 'finals-compound'
   | 'finals-nasal-n'
   | 'finals-nasal-ng'
-  | 'spelling-u'
-  | 'spelling-abbrev'
-  | 'sandhi-rules'
 
 export interface PinyinReferenceItem {
   id: string
@@ -227,27 +223,12 @@ export interface PinyinToneGame {
   questions: ToneGameQuestion[]
 }
 
-export interface PinyinShadowingPrompt {
-  id: string
-  promptText: string
-  pinyin: string
-  meaning: LocalizedField
-  audio: string
-}
-
-export interface PinyinShadowing {
-  title: LocalizedField
-  instructions: LocalizedField
-  prompts: PinyinShadowingPrompt[]
-}
-
 export interface PinyinLessonContent {
   id: PinyinLessonId
   title: LocalizedField
   summary: LocalizedField
   reference: PinyinReferenceGroup[]
   toneGame: PinyinToneGame
-  shadowing: PinyinShadowing
 }
 
 export interface PinyinCourseContent {

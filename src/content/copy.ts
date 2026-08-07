@@ -181,7 +181,6 @@ export const uiCopy = {
       sectionsNavLabel: 'Pinyin lesson sections',
       referenceNav: 'Reference',
       toneGameNav: 'Tone game',
-      shadowingNav: 'Shadowing',
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
       lessonEyebrow: (n: number) => `Lesson ${n}`,
@@ -197,23 +196,6 @@ export const uiCopy = {
       toneGameCorrectRate: 'Correct rate',
       toneGameCompletedMessage: 'Tone game complete.',
       toneGameKeepPracticingMessage: 'Score 6/8 or higher to complete this section.',
-      shadowingPromptProgress: (current: number, total: number) => `Prompt ${current} of ${total}`,
-      shadowingPromptCompletionProgress: (done: number, total: number) =>
-        `${done} of ${total} prompt${total === 1 ? '' : 's'} complete`,
-      playShadowingPromptAudio: (current: number) => `Play shadowing prompt ${current}`,
-      startRecording: 'Start recording',
-      stopRecording: 'Stop recording',
-      recordAgain: 'Record again',
-      nextShadowingPrompt: 'Next prompt',
-      recordingInProgress: 'Recording…',
-      localOnlyRecordingNotice: 'Your recording stays on this device and is never uploaded.',
-      localPlaybackLabel: 'Your recording',
-      shadowingCompletedMessage: 'Shadowing section complete.',
-      recordingUnsupportedMessage: 'Recording is not supported in this browser.',
-      recordingPermissionDeniedMessage:
-        'Microphone permission was denied. Please allow microphone access and try again.',
-      recordingInitFailedMessage: 'Recording could not start. Please try again.',
-      recordingEmptyMessage: 'No audio was captured. Please try again.',
     },
     common: {
       explanation: 'Explanation',
@@ -387,7 +369,6 @@ export const uiCopy = {
       sectionsNavLabel: 'Sections de la leçon de pinyin',
       referenceNav: 'Référence',
       toneGameNav: 'Jeu des tons',
-      shadowingNav: 'Répétition',
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       lessonEyebrow: (n: number) => `Leçon ${n}`,
@@ -403,26 +384,6 @@ export const uiCopy = {
       toneGameCorrectRate: 'Taux de réussite',
       toneGameCompletedMessage: 'Jeu des tons terminé.',
       toneGameKeepPracticingMessage: 'Obtenez 6/8 ou plus pour terminer cette section.',
-      shadowingPromptProgress: (current: number, total: number) =>
-        `Phrase ${current} sur ${total}`,
-      shadowingPromptCompletionProgress: (done: number, total: number) =>
-        `${done} phrase${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
-      playShadowingPromptAudio: (current: number) => `Écouter la phrase ${current}`,
-      startRecording: 'Commencer l’enregistrement',
-      stopRecording: 'Arrêter l’enregistrement',
-      recordAgain: 'Réenregistrer',
-      nextShadowingPrompt: 'Phrase suivante',
-      recordingInProgress: 'Enregistrement en cours…',
-      localOnlyRecordingNotice:
-        'Votre enregistrement reste sur cet appareil et n’est jamais envoyé.',
-      localPlaybackLabel: 'Votre enregistrement',
-      shadowingCompletedMessage: 'Section de répétition terminée.',
-      recordingUnsupportedMessage:
-        'L’enregistrement n’est pas pris en charge dans ce navigateur.',
-      recordingPermissionDeniedMessage:
-        'L’accès au micro a été refusé. Autorisez le micro puis réessayez.',
-      recordingInitFailedMessage: 'L’enregistrement n’a pas pu démarrer. Réessayez.',
-      recordingEmptyMessage: 'Aucun son n’a été capté. Réessayez.',
     },
     common: {
       explanation: 'Explication',

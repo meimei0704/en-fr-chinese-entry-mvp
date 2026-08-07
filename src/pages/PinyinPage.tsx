@@ -4,7 +4,6 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
-import { ShadowingPracticeSection } from '../components/pinyin/ShadowingPracticeSection'
 import { ToneGameSection } from '../components/pinyin/ToneGameSection'
 import {
   loadPinyinProgress,
@@ -20,7 +19,7 @@ function findDefaultLesson(): (typeof courseLessonIds)[number] {
 
   for (const lesson of pinyinCourse.lessons) {
     const lp = progress.lessonProgress[lesson.id]
-    if (!lp || lp.completedSections.length < 3) {
+    if (!lp || lp.completedSections.length < 2) {
       return lesson.id
     }
   }
@@ -46,7 +45,6 @@ export function PinyinPage() {
   const navItems = [
     { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
     { href: '#pinyin-tone-game', label: pinyinCopy.toneGameNav },
-    { href: '#pinyin-shadowing', label: pinyinCopy.shadowingNav },
   ] as const
 
   function handleReferenceAudioPlay() {
@@ -63,7 +61,7 @@ export function PinyinPage() {
           eyebrow={pinyinCopy.eyebrow}
           heading={pinyinCopy.heading}
           summary={getLocalizedText(lesson.summary, language)}
-          sectionProgress={pinyinCopy.sectionProgress(sectionProgressDone, 3)}
+          sectionProgress={pinyinCopy.sectionProgress(sectionProgressDone, 2)}
           sectionsNavLabel={pinyinCopy.sectionsNavLabel}
           navItems={navItems}
         />
@@ -110,34 +108,6 @@ export function PinyinPage() {
             correctRate: pinyinCopy.toneGameCorrectRate,
             completedMessage: pinyinCopy.toneGameCompletedMessage,
             keepPracticingMessage: pinyinCopy.toneGameKeepPracticingMessage,
-          }}
-          onProgressChange={setProgress}
-        />
-
-        <ShadowingPracticeSection
-          shadowing={lesson.shadowing}
-          language={language}
-          progress={progress}
-          lessonId={lesson.id}
-          copy={{
-            lessonEyebrow: pinyinCopy.lessonEyebrow(lessonNumber),
-            promptProgress: pinyinCopy.shadowingPromptProgress,
-            promptCompletionProgress: pinyinCopy.shadowingPromptCompletionProgress,
-            playPromptAudio: pinyinCopy.playShadowingPromptAudio,
-            startRecording: pinyinCopy.startRecording,
-            stopRecording: pinyinCopy.stopRecording,
-            recordAgain: pinyinCopy.recordAgain,
-            nextPrompt: pinyinCopy.nextShadowingPrompt,
-            recordingInProgress: pinyinCopy.recordingInProgress,
-            localOnlyNotice: pinyinCopy.localOnlyRecordingNotice,
-            localPlaybackLabel: pinyinCopy.localPlaybackLabel,
-            completedMessage: pinyinCopy.shadowingCompletedMessage,
-            recordingErrors: {
-              unsupported: pinyinCopy.recordingUnsupportedMessage,
-              'permission-denied': pinyinCopy.recordingPermissionDeniedMessage,
-              'init-failed': pinyinCopy.recordingInitFailedMessage,
-              'empty-recording': pinyinCopy.recordingEmptyMessage,
-            },
           }}
           onProgressChange={setProgress}
         />

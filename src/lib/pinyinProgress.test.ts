@@ -105,52 +105,6 @@ describe('pinyin progress storage', () => {
     expect(loadPinyinProgress()).toEqual(progressAfterLowerRetake)
   })
 
-  it('records shadowing prompt completion without duplicates and completes the section', async () => {
-    const { createDefaultPinyinProgress, recordPinyinShadowingPromptComplete } =
-      await importPinyinProgressModule()
-    const lessonId = 'pinyin-foundations-1'
-    const promptIds = ['shadow-ni-hao', 'shadow-xie-xie']
-
-    const progressAfterFirstPrompt = recordPinyinShadowingPromptComplete(
-      createDefaultPinyinProgress(),
-      lessonId,
-      'shadow-ni-hao',
-      promptIds,
-    )
-
-    expect(progressAfterFirstPrompt.lessonProgress[lessonId]).toMatchObject({
-      completedSections: [],
-      shadowingCompletedPromptIds: ['shadow-ni-hao'],
-      lastVisitedPromptId: 'shadow-ni-hao',
-    })
-    expect(progressAfterFirstPrompt.completedSections).toEqual([])
-
-    const progressAfterRepeat = recordPinyinShadowingPromptComplete(
-      progressAfterFirstPrompt,
-      lessonId,
-      'shadow-ni-hao',
-      promptIds,
-    )
-
-    expect(progressAfterRepeat.lessonProgress[lessonId]?.shadowingCompletedPromptIds).toEqual([
-      'shadow-ni-hao',
-    ])
-
-    const progressAfterAllPrompts = recordPinyinShadowingPromptComplete(
-      progressAfterRepeat,
-      lessonId,
-      'shadow-xie-xie',
-      promptIds,
-    )
-
-    expect(progressAfterAllPrompts.lessonProgress[lessonId]).toMatchObject({
-      completedSections: ['shadowing'],
-      shadowingCompletedPromptIds: ['shadow-ni-hao', 'shadow-xie-xie'],
-      lastVisitedPromptId: 'shadow-xie-xie',
-    })
-    expect(progressAfterAllPrompts.completedSections).toEqual(['shadowing'])
-  })
-
   it('records reference completion and reflects in derived legacy fields', async () => {
     const { createDefaultPinyinProgress, recordPinyinReferenceComplete } =
       await importPinyinProgressModule()
@@ -186,11 +140,11 @@ describe('pinyin progress storage', () => {
         ...progress.lessonProgress,
         'pinyin-sibilants-2': {
           visited: true,
-          completedSections: ['reference', 'shadowing'] as const,
+          completedSections: ['reference'] as const,
           toneGameLastScore: 5,
           toneGameBestScore: 7,
-          shadowingCompletedPromptIds: ['shadow-zhi-dao'],
-          lastVisitedPromptId: 'shadow-zhi-dao',
+          shadowingCompletedPromptIds: [],
+          lastVisitedPromptId: null,
         },
       },
     }
@@ -200,11 +154,9 @@ describe('pinyin progress storage', () => {
     const { loadPinyinProgress } = await importPinyinProgressModule()
     const result = loadPinyinProgress()
 
-    expect(result.completedSections.sort()).toEqual(['reference', 'shadowing', 'tone-game'])
+    expect(result.completedSections.sort()).toEqual(['reference', 'tone-game'])
     expect(result.toneGameLastScore).toBe(5)
     expect(result.toneGameBestScore).toBe(7)
-    expect(result.shadowingCompletedPromptIds).toEqual(['shadow-zhi-dao'])
-    expect(result.lastVisitedPromptId).toBe('shadow-zhi-dao')
   })
 
   it('migrates v1 progress to v2 with lessonProgress and derived fields', async () => {
@@ -227,15 +179,11 @@ describe('pinyin progress storage', () => {
     expect(result.completedSections.sort()).toEqual(['reference', 'tone-game'])
     expect(result.toneGameLastScore).toBe(6)
     expect(result.toneGameBestScore).toBe(7)
-    expect(result.shadowingCompletedPromptIds).toEqual(['shadow-ni-hao'])
-    expect(result.lastVisitedPromptId).toBe('shadow-ni-hao')
     expect(result.lessonProgress['pinyin-foundations-1']).toMatchObject({
       visited: true,
       completedSections: ['reference', 'tone-game'],
       toneGameLastScore: 6,
       toneGameBestScore: 7,
-      shadowingCompletedPromptIds: ['shadow-ni-hao'],
-      lastVisitedPromptId: 'shadow-ni-hao',
     })
   })
 
