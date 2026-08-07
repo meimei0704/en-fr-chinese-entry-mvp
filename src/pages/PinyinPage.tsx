@@ -47,7 +47,7 @@ export function PinyinPage() {
         <PinyinReferenceSection
           groups={lesson.reference}
           language={language}
-          eyebrow={pinyinCopy.lessonEyebrow}
+          eyebrow={pinyinCopy.lessonEyebrow(1)}
           heading={pinyinCopy.referenceHeading}
           summary={pinyinCopy.referenceSummary}
           playAudioLabel={pinyinCopy.playReferenceAudio}
@@ -58,7 +58,7 @@ export function PinyinPage() {
           toneGame={lesson.toneGame}
           language={language}
           copy={{
-            lessonEyebrow: pinyinCopy.lessonEyebrow,
+            lessonEyebrow: pinyinCopy.lessonEyebrow(1),
             questionProgress: pinyinCopy.toneGameQuestionProgress,
             playPromptAudio: pinyinCopy.playTonePromptAudio,
             choicesLegend: pinyinCopy.toneGameChoicesLegend,
@@ -76,7 +76,7 @@ export function PinyinPage() {
           language={language}
           progress={progress}
           copy={{
-            lessonEyebrow: pinyinCopy.lessonEyebrow,
+            lessonEyebrow: pinyinCopy.lessonEyebrow(1),
             promptProgress: pinyinCopy.shadowingPromptProgress,
             promptCompletionProgress: pinyinCopy.shadowingPromptCompletionProgress,
             playPromptAudio: pinyinCopy.playShadowingPromptAudio,
