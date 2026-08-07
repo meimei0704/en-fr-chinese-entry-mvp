@@ -163,31 +163,39 @@ export function PracticeChallenge({
 
     return (
       <section className="surface-card practice-challenge practice-challenge--result">
-        <p className="eyebrow">{copy.resultHeading}</p>
-        <p className="practice-challenge__score">{copy.finalScore(score)}</p>
-        <dl className="practice-challenge__rating">
-          <dt>{copy.ratingLabel}</dt>
-          <dd className="practice-challenge__rating-value" aria-label={copy.ratingValue(rating)}>
-            {copy.ratingValue(rating)}
-          </dd>
-        </dl>
-        <div className="practice-challenge__stars" aria-label={copy.ratingValue(rating)}>
-          {[0, 1, 2].map((starIndex) => (
-            <span
-              key={starIndex}
-              aria-hidden="true"
-              className={`practice-challenge__star ${
-                starIndex < Math.ceil((correctCount / questions.length) * 3)
-                  ? 'practice-challenge__star--lit'
-                  : ''
-              }`}
-            >
-              ★
-            </span>
-          ))}
+        <div className="practice-challenge__result-summary">
+          <div className="practice-challenge__result-main">
+            <p className="eyebrow">{copy.resultHeading}</p>
+            <p className="practice-challenge__score">{copy.finalScore(score)}</p>
+            <dl className="practice-challenge__rating">
+              <dt>{copy.ratingLabel}</dt>
+              <dd className="practice-challenge__rating-value" aria-label={copy.ratingValue(rating)}>
+                {copy.ratingValue(rating)}
+              </dd>
+            </dl>
+            <div className="practice-challenge__stars" aria-label={copy.ratingValue(rating)}>
+              {[0, 1, 2].map((starIndex) => (
+                <span
+                  key={starIndex}
+                  aria-hidden="true"
+                  className={`practice-challenge__star ${
+                    starIndex < Math.ceil((correctCount / questions.length) * 3)
+                      ? 'practice-challenge__star--lit'
+                      : ''
+                  }`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <p className="muted-text">{copy.encouragement(rating)}</p>
+            {lives <= 0 ? <p className="muted-text">{copy.outOfLivesMessage}</p> : null}
+          </div>
+
+          <button type="button" className="primary-button" onClick={restart}>
+            {copy.playAgain}
+          </button>
         </div>
-        <p className="muted-text">{copy.encouragement(rating)}</p>
-        {lives <= 0 ? <p className="muted-text">{copy.outOfLivesMessage}</p> : null}
 
         <div className="practice-challenge__review">
           <h3>{copy.answerReview}</h3>
@@ -216,10 +224,6 @@ export function PracticeChallenge({
             ))}
           </ul>
         </div>
-
-        <button type="button" className="primary-button" onClick={restart}>
-          {copy.playAgain}
-        </button>
       </section>
     )
   }
@@ -230,53 +234,60 @@ export function PracticeChallenge({
         <p className="eyebrow">
           {copy.questionProgress(questionNumber, questions.length)}
         </p>
-        <p className="practice-challenge__status-line" aria-label={copy.scoreLabel}>
-          {copy.scoreLabel} {score}
-        </p>
-        <p className="practice-challenge__status-line" aria-label={copy.streakLabel}>
-          {copy.streakLabel} {streak}
-        </p>
-        <p className="practice-challenge__status-line" aria-label={copy.livesLabel}>
-          {copy.livesLabel} {lives}
-        </p>
-      </div>
-
-      <div className="practice-challenge__prompt">
-        <p>{getLocalizedText(currentQuestion.prompt, language)}</p>
-        <SpeechButton
-          label={copy.playPromptAudio(questionNumber)}
-          text={currentQuestion.target}
-          audioSrc={currentQuestion.audio}
-          fallbackAudioSrc={currentQuestion.audioFallback}
-        />
-      </div>
-
-      {currentQuestion.kind === 'speak' ? (
-        <div className="practice-challenge__options" role="group" aria-label={copy.streakLabel}>
-          <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'fluent')}>
-            {copy.fluentOption}
-          </button>
-          <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'needs-practice')}>
-            {copy.needsPracticeOption}
-          </button>
-          <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'show-me')}>
-            {copy.showMeOption}
-          </button>
+        <div className="practice-challenge__stats">
+          <div className="practice-challenge__stat" aria-label={`${copy.scoreLabel} ${score}`}>
+            <span className="practice-challenge__stat-label">{copy.scoreLabel}</span>
+            <strong className="practice-challenge__stat-value">{score}</strong>
+          </div>
+          <div className="practice-challenge__stat" aria-label={`${copy.streakLabel} ${streak}`}>
+            <span className="practice-challenge__stat-label">{copy.streakLabel}</span>
+            <strong className="practice-challenge__stat-value">{streak}</strong>
+          </div>
+          <div className="practice-challenge__stat" aria-label={`${copy.livesLabel} ${lives}`}>
+            <span className="practice-challenge__stat-label">{copy.livesLabel}</span>
+            <strong className="practice-challenge__stat-value">{lives}</strong>
+          </div>
         </div>
-      ) : (
-        <div className="practice-challenge__options" role="group" aria-label={copy.scoreLabel}>
-          {currentQuestion.options.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              className="option-button"
-              onClick={() => handleChoice(currentQuestion, option.id)}
-            >
-              {option.label}
+      </div>
+
+      <div className="practice-challenge__question">
+        <div className="practice-challenge__prompt">
+          <p>{getLocalizedText(currentQuestion.prompt, language)}</p>
+          <SpeechButton
+            label={copy.playPromptAudio(questionNumber)}
+            text={currentQuestion.target}
+            audioSrc={currentQuestion.audio}
+            fallbackAudioSrc={currentQuestion.audioFallback}
+          />
+        </div>
+
+        {currentQuestion.kind === 'speak' ? (
+          <div className="practice-challenge__options" role="group" aria-label={copy.streakLabel}>
+            <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'fluent')}>
+              {copy.fluentOption}
             </button>
-          ))}
-        </div>
-      )}
+            <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'needs-practice')}>
+              {copy.needsPracticeOption}
+            </button>
+            <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'show-me')}>
+              {copy.showMeOption}
+            </button>
+          </div>
+        ) : (
+          <div className="practice-challenge__options" role="group" aria-label={copy.scoreLabel}>
+            {currentQuestion.options.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className="option-button"
+                onClick={() => handleChoice(currentQuestion, option.id)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
       {feedback ? (
         <div
@@ -284,14 +295,16 @@ export function PracticeChallenge({
             feedback.correct ? 'correct' : 'incorrect'
           }`}
         >
-          <p className="practice-challenge__feedback-heading">
-            {feedback.correct
-              ? `${copy.correctFeedback} ${copy.pointsGained(feedback.points)}`
-              : copy.incorrectFeedback}
-          </p>
-          {!feedback.correct ? (
-            <p className="muted-text">{copy.correctAnswer(feedback.reveal)}</p>
-          ) : null}
+          <div className="practice-challenge__feedback-body">
+            <p className="practice-challenge__feedback-heading">
+              {feedback.correct
+                ? `${copy.correctFeedback} ${copy.pointsGained(feedback.points)}`
+                : copy.incorrectFeedback}
+            </p>
+            {!feedback.correct ? (
+              <p className="muted-text">{copy.correctAnswer(feedback.reveal)}</p>
+            ) : null}
+          </div>
           <button type="button" className="primary-button" onClick={advance}>
             {copy.nextQuestion}
           </button>

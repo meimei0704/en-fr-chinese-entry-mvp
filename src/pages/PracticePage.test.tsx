@@ -57,9 +57,9 @@ describe('PracticePage', () => {
 
     expect(screen.getByRole('heading', { name: /到达机场/i })).toBeVisible()
     expect(screen.getByText(/question 1 of 5/i)).toBeVisible()
-    expect(screen.getByText(/score 0/i)).toBeVisible()
-    expect(screen.getByText(/streak 0/i)).toBeVisible()
-    expect(screen.getByText(/lives 3/i)).toBeVisible()
+    expect(screen.getByLabelText(/^score 0$/i)).toBeVisible()
+    expect(screen.getByLabelText(/^streak 0$/i)).toBeVisible()
+    expect(screen.getByLabelText(/^lives 3$/i)).toBeVisible()
   })
 
   it('keeps the navigation to short input and back to lesson', () => {
