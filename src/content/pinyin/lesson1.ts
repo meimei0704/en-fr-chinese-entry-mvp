@@ -61,12 +61,12 @@ function toneQuestion(
 export const pinyinLesson1: PinyinLessonContent = {
   id: 'pinyin-foundations-1',
   title: {
-    en: 'Pinyin Foundations 1',
-    fr: 'Bases du pinyin 1',
+    en: 'Pinyin Foundations',
+    fr: 'Bases du pinyin',
   },
   summary: {
-    en: 'Hear core initials, finals, and tones before shadowing short beginner phrases.',
-    fr: 'Écoutez les initiales, finales et tons essentiels avant de répéter de courtes phrases débutantes.',
+    en: 'Hear 11 core initials, 6 single finals, and 4 tones before shadowing practical beginner phrases.',
+    fr: 'Écoutez 11 initiales essentielles, 6 finales simples et 4 tons avant de répéter des phrases pratiques.',
   },
   reference: [
     {
@@ -76,8 +76,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         fr: 'Initiales',
       },
       summary: {
-        en: 'Start with crisp consonant sounds that open common syllables.',
-        fr: 'Commencez par les consonnes nettes qui ouvrent des syllabes fréquentes.',
+        en: 'Master crisp consonant sounds — aspirated vs unaspirated pairs at the heart of Mandarin syllables.',
+        fr: 'Maîtrisez les consonnes nettes — paires aspirées vs non aspirées au cœur des syllabes mandarines.',
       },
       items: [
         {
@@ -120,6 +120,76 @@ export const pinyinLesson1: PinyinLessonContent = {
           },
           audio: `${lessonAudioBase}/reference-initial-f.mp3`,
         },
+        {
+          id: 'initial-d',
+          label: 'd',
+          pinyin: 'de',
+          description: {
+            en: 'Unaspirated d, soft and unvoiced.',
+            fr: 'd non aspiré, doux et non voisé.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-d.mp3`,
+        },
+        {
+          id: 'initial-t',
+          label: 't',
+          pinyin: 'te',
+          description: {
+            en: 'Aspirated t with a strong puff of air.',
+            fr: 't aspiré avec un souffle puissant.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-t.mp3`,
+        },
+        {
+          id: 'initial-n',
+          label: 'n',
+          pinyin: 'ne',
+          description: {
+            en: 'Nasal n, tip of tongue behind upper teeth.',
+            fr: 'n nasal, pointe de la langue derrière les dents supérieures.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-n.mp3`,
+        },
+        {
+          id: 'initial-l',
+          label: 'l',
+          pinyin: 'le',
+          description: {
+            en: 'Light l, similar to English but clearer.',
+            fr: 'l léger, similaire à l’anglais mais plus clair.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-l.mp3`,
+        },
+        {
+          id: 'initial-g',
+          label: 'g',
+          pinyin: 'ge',
+          description: {
+            en: 'Unaspirated g, soft like an English “k” without the puff.',
+            fr: 'g non aspiré, doux comme un « k » anglais sans souffle.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-g.mp3`,
+        },
+        {
+          id: 'initial-k',
+          label: 'k',
+          pinyin: 'ke',
+          description: {
+            en: 'Aspirated k with a strong burst of air.',
+            fr: 'k aspiré avec une forte explosion d’air.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-k.mp3`,
+        },
+        {
+          id: 'initial-h',
+          label: 'h',
+          pinyin: 'he',
+          description: {
+            en: 'Rough h, harsher than English — like the “ch” in Scottish “loch”.',
+            fr: 'h rauque, plus dur qu’en anglais — proche du « ch » allemand.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-h.mp3`,
+        },
       ],
     },
     {
@@ -129,8 +199,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         fr: 'Finales',
       },
       summary: {
-        en: 'Anchor syllables with open vowel endings.',
-        fr: 'Stabilisez les syllabes avec des voyelles finales ouvertes.',
+        en: 'Anchor syllables with clear single-vowel endings including the special ü.',
+        fr: 'Stabilisez les syllabes avec des voyelles simples claires, y compris le ü spécial.',
       },
       items: [
         {
@@ -172,6 +242,26 @@ export const pinyinLesson1: PinyinLessonContent = {
             fr: 'Son clair « i ».',
           },
           audio: `${lessonAudioBase}/reference-final-i.mp3`,
+        },
+        {
+          id: 'final-u',
+          label: 'u',
+          pinyin: 'wu',
+          description: {
+            en: 'Rounded “oo” sound with tight lips.',
+            fr: 'Son arrondi « ou » avec les lèvres serrées.',
+          },
+          audio: `${lessonAudioBase}/reference-final-u.mp3`,
+        },
+        {
+          id: 'final-ue',
+          label: 'ü',
+          pinyin: 'yu',
+          description: {
+            en: 'Round your lips as if saying “ee” — a unique Mandarin vowel.',
+            fr: 'Arrondissez les lèvres comme pour dire « i » — une voyelle unique au mandarin.',
+          },
+          audio: `${lessonAudioBase}/reference-final-ue.mp3`,
         },
       ],
     },
@@ -281,31 +371,31 @@ export const pinyinLesson1: PinyinLessonContent = {
       ),
       toneQuestion(
         'tone-question-05',
-        'bā',
-        'tone-game-ba-1.mp3',
+        'dā',
+        'tone-game-da-1.mp3',
         'tone-1',
-        'Keep the pitch high and steady for first tone.',
+        'First tone stays high from start to finish.',
       ),
       toneQuestion(
         'tone-question-06',
-        'pó',
-        'tone-game-po-2.mp3',
-        'tone-2',
-        'The rising pitch marks second tone.',
+        'tǎ',
+        'tone-game-ta-3.mp3',
+        'tone-3',
+        'Third tone dips low — d and t make an aspirated pair.',
       ),
       toneQuestion(
         'tone-question-07',
-        'mǐ',
-        'tone-game-mi-3.mp3',
-        'tone-3',
-        'The low dipping shape marks third tone.',
+        'gá',
+        'tone-game-ga-2.mp3',
+        'tone-2',
+        'Second tone rises — hear g/k as another unaspirated/aspirated pair.',
       ),
       toneQuestion(
         'tone-question-08',
-        'fù',
-        'tone-game-fu-4.mp3',
-        'tone-4',
-        'The sharp fall marks fourth tone.',
+        'nǚ',
+        'tone-game-nue-3.mp3',
+        'tone-3',
+        'Third tone with the ü vowel — round your lips.',
       ),
     ],
   },
@@ -350,14 +440,24 @@ export const pinyinLesson1: PinyinLessonContent = {
         audio: `${lessonAudioBase}/shadow-dui-bu-qi.mp3`,
       },
       {
-        id: 'shadow-qing',
-        promptText: '请',
-        pinyin: 'qǐng',
+        id: 'shadow-bu-ke-qi',
+        promptText: '不客气',
+        pinyin: 'bú kè qì',
         meaning: {
-          en: 'Please.',
-          fr: 'S’il vous plaît.',
+          en: 'You\'re welcome.',
+          fr: 'Je vous en prie.',
         },
-        audio: `${lessonAudioBase}/shadow-qing.mp3`,
+        audio: `${lessonAudioBase}/shadow-bu-ke-qi.mp3`,
+      },
+      {
+        id: 'shadow-da-jia-hao',
+        promptText: '大家好',
+        pinyin: 'dà jiā hǎo',
+        meaning: {
+          en: 'Hello everyone.',
+          fr: 'Bonjour tout le monde.',
+        },
+        audio: `${lessonAudioBase}/shadow-da-jia-hao.mp3`,
       },
     ],
   },
