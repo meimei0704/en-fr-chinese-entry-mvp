@@ -3,6 +3,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { createDefaultPinyinProgress, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
 import { renderRoute } from '../test/renderRoute'
@@ -37,6 +38,17 @@ function getHomeJourneySeries(language: keyof typeof expectedSeriesCopy = 'en') 
   return screen.getByRole('region', { name: expectedSeriesCopy[language].journey })
 }
 
+function expectTokenizedSeriesTitle(section: HTMLElement, title: string) {
+  const heading = within(section).getByRole('heading', { level: 2, name: title })
+  const tokens = Array.from(
+    heading.querySelectorAll<HTMLElement>('.course-series__title-token'),
+    (token) => token.textContent,
+  )
+
+  expect(heading.textContent).toBe(title)
+  expect(tokens).toEqual(title.split(/\s+/u))
+}
+
 describe('HomePage', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -56,53 +68,105 @@ describe('HomePage', () => {
     expect(screen.queryByText(/Un parcours ciblé de dix leçons/i)).not.toBeInTheDocument()
   })
 
-  it('renders the approved Pinyin and ten-card Journey series as labeled siblings', () => {
+  it('renders vertical full-card course entries before the unchanged Home Journey path', () => {
     renderRoute('/home')
 
     const courseSeries = getHomeCourseSeries()
     const pinyinSection = getHomePinyinSeries()
     const journeySection = getHomeJourneySeries()
+    const list = courseSeries.querySelector<HTMLElement>('.course-series__list')
     const pinyinEntry = within(pinyinSection).getByRole('link', {
       name: expectedSeriesCopy.en.pinyin,
     })
-    const journeyLessonLinks = within(journeySection)
+    const journeyEntry = within(journeySection).getByRole('link', {
+      name: expectedSeriesCopy.en.journey,
+    })
+    const journeyPath = journeySection.querySelector<HTMLElement>('#home-basic-expressions-path')
+
+    if (!list || !journeyPath) {
+      throw new Error('Expected the Home course-series list and fragment target')
+    }
+
+    const journeyLessonLinks = within(journeyPath)
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
     expect(within(courseSeries).getByText(expectedSeriesCopy.en.label)).toBeVisible()
-    expect(within(pinyinSection).getByRole('heading', {
-      level: 2,
-      name: expectedSeriesCopy.en.pinyin,
-    })).toBeVisible()
-    expect(within(journeySection).getByRole('heading', {
-      level: 2,
-      name: expectedSeriesCopy.en.journey,
-    })).toBeVisible()
+    expect(Array.from(list.children)).toEqual([pinyinSection, journeySection])
     expect(pinyinSection.parentElement).toBe(journeySection.parentElement)
-    expect(pinyinSection.parentElement).toHaveClass('course-series__list')
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
-    expect(pinyinEntry).toHaveClass('course-series__pinyin-link')
+    expect(pinyinEntry).toHaveClass('course-series__entry-card', 'course-series__pinyin-link')
+    expect(journeyEntry.tagName).toBe('A')
+    expect(journeyEntry).toHaveAttribute('href', '#home-basic-expressions-path')
+    expect(journeyEntry).toHaveClass('course-series__entry-card', 'course-series__journey-link')
+    expect(journeyPath).toHaveClass('course-series__journey-path', 'journey-map')
+    expect(journeyPath.parentElement).toBe(journeySection)
+    expect(journeySection.children[0]).toBe(journeyEntry)
+    expect(journeySection.children[1]).toBe(journeyPath)
+    expect(
+      pinyinEntry.compareDocumentPosition(journeyEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(
+      journeyEntry.compareDocumentPosition(journeyPath) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+
+    expectTokenizedSeriesTitle(pinyinSection, expectedSeriesCopy.en.pinyin)
+    expectTokenizedSeriesTitle(journeySection, expectedSeriesCopy.en.journey)
     expect(pinyinEntry.querySelector('.course-series__pinyin-mark')).toHaveAttribute(
       'aria-hidden',
       'true',
     )
-    expect(within(journeySection).queryByRole('link', { name: /pinyin/i }))
-      .not.toBeInTheDocument()
+    expect(journeyEntry.querySelector('.course-series__journey-mark')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(pinyinEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(journeyEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+
     expect(journeyLessonLinks).toHaveLength(10)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
-    expect(within(journeySection).queryAllByText(/coming soon/i)).toHaveLength(0)
+    expect(within(journeyPath).queryAllByText(/coming soon/i)).toHaveLength(0)
     expect(journeySection).not.toHaveTextContent(' / ')
-    expect(screen.queryByText('Journey Map')).not.toBeInTheDocument()
-    expect(screen.queryByText('Arrive in China step by step')).not.toBeInTheDocument()
 
     for (const [index, title] of expectedJourneyTitles.entries()) {
       const topic = expectedLessonTopicOrder[index]
-      const heading = within(journeySection).getByRole('heading', { level: 3, name: title })
+      const heading = within(journeyPath).getByRole('heading', { level: 3, name: title })
 
       expect(heading).toBeVisible()
       expect(within(heading).getByText(topic.hanzi)).toHaveClass('lesson-topic-title__primary')
       expect(within(heading).getByText(topic.en)).toHaveClass('lesson-topic-title__secondary')
     }
+  })
+
+  it('keeps both Home entry cards count-free with non-zero progress in both stores', () => {
+    savePinyinProgress({
+      ...createDefaultPinyinProgress(),
+      visited: true,
+      completedSections: ['reference', 'tone-game'],
+    })
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro'],
+      lastVisitedLesson: 'self-intro',
+    })
+
+    renderRoute('/home')
+
+    const pinyinEntry = within(getHomePinyinSeries()).getByRole('link', {
+      name: expectedSeriesCopy.en.pinyin,
+    })
+    const journeyEntry = within(getHomeJourneySeries()).getByRole('link', {
+      name: expectedSeriesCopy.en.journey,
+    })
+
+    expect(pinyinEntry).not.toHaveTextContent('2 of 3 sections complete')
+    expect(journeyEntry).not.toHaveTextContent('1 of 10 lessons completed')
   })
 
   it('centers the hero theme and removes the old right-side learning mockup', () => {
