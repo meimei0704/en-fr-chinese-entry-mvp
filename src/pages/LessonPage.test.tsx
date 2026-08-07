@@ -118,9 +118,6 @@ describe('LessonPage', () => {
     expect(screen.getByText('到达机场')).toHaveClass('lesson-topic-title__primary')
     expect(screen.getByText('Arrivée à l’aéroport')).toHaveClass('lesson-topic-title__secondary')
     expect(screen.getByRole('region', { name: /aperçu de la leçon/i })).toBeVisible()
-    expect(
-      screen.getByRole('heading', { level: 2, name: /objectif de la scène/i }),
-    ).toBeVisible()
     expect(screen.getByRole('region', { name: /aperçu de progression de la leçon/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /pratique du dialogue/i })).toBeVisible()
     expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur voyageur/i)[0]).toHaveTextContent(
@@ -225,6 +222,49 @@ describe('LessonPage', () => {
         screen.queryByRole('heading', { level: 2, name: removed }),
       ).not.toBeInTheDocument()
       expect(screen.queryByText(dialogueTitle)).not.toBeInTheDocument()
+    },
+  )
+
+  it.each([
+    {
+      language: 'en',
+      railLabel: /lesson progress preview/i,
+      summary: 'This lesson covers dialogue, useful patterns, and vocabulary.',
+      overviewLabel: /lesson overview/i,
+    },
+    {
+      language: 'fr',
+      railLabel: /aperçu de progression/i,
+      summary: 'Cette leçon couvre le dialogue, les structures utiles et le vocabulaire.',
+      overviewLabel: /aperçu de la leçon/i,
+    },
+  ] as const)(
+    'links each study layer to its section anchor in $language',
+    ({ language, railLabel, summary, overviewLabel }) => {
+      saveProgress({ ...createDefaultProgress(), selectedExplanationLanguage: language })
+      renderRoute('/lesson/self-intro')
+
+      const preview = screen.getByRole('region', { name: railLabel })
+      const links = within(preview).getAllByRole('link')
+      expect(links).toHaveLength(3)
+      expect(links.map((link) => link.getAttribute('href'))).toEqual([
+        '#lesson-dialogue',
+        '#lesson-patterns',
+        '#lesson-vocabulary',
+      ])
+
+      for (const link of links) {
+        const targetId = link.getAttribute('href')?.slice(1)
+        expect(targetId).toBeTruthy()
+        expect(document.getElementById(targetId!)).not.toBeNull()
+      }
+
+      expect(screen.queryByRole('heading', { level: 2, name: /scenario goal|objectif de la scène/i }))
+        .not.toBeInTheDocument()
+      expect(screen.getByRole('region', { name: overviewLabel })).toHaveTextContent(summary)
+      expect(screen.getByRole('region', { name: overviewLabel })).not.toHaveTextContent(
+        /scenario goal|objectif de la scène/i,
+      )
     },
   )
 
