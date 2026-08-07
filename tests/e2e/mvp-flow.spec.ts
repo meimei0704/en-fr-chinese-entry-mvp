@@ -1,5 +1,9 @@
 import { expect, test } from 'playwright/test'
 
+import { course } from '../../src/content/course'
+
+const expectedReviewItemsWaiting = course.lessons[0].reviewCards.length - 1
+
 test('a first-time learner can start from Home, finish lesson one, and reach review and progress', async ({ page }) => {
   await page.goto('/')
 
@@ -27,7 +31,9 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
   await page.getByRole('link', { name: /view progress/i }).click()
   const learningIndicators = page.getByRole('region', { name: /learning indicators/i })
   await expect(learningIndicators).toContainText('1 of 10 lessons completed')
-  await expect(learningIndicators).toContainText('2 review items waiting')
+  await expect(learningIndicators).toContainText(
+    `${expectedReviewItemsWaiting} review items waiting`,
+  )
 
   await page.getByRole('link', { name: /back to home/i }).click()
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
