@@ -3,7 +3,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createDefaultProgress, saveProgress } from '../lib/progress'
+import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
 import { renderRoute } from '../test/renderRoute'
 
@@ -52,12 +52,27 @@ describe('PracticePage', () => {
     vi.stubGlobal('Audio', MockAudio)
   })
 
-  it('renders listening, speaking, and reading practice in the practice view', () => {
+  it('renders the practice challenge in the practice view', () => {
     renderRoute('/lesson/self-intro/practice')
 
-    expect(screen.getByText(/listen and choose/i)).toBeVisible()
-    expect(screen.getByText(/repeat aloud/i)).toBeVisible()
-    expect(screen.getByText(/match the hanzi/i)).toBeVisible()
+    expect(screen.getByRole('heading', { name: /到达机场/i })).toBeVisible()
+    expect(screen.getByText(/question 1 of 5/i)).toBeVisible()
+    expect(screen.getByText(/score 0/i)).toBeVisible()
+    expect(screen.getByText(/streak 0/i)).toBeVisible()
+    expect(screen.getByText(/lives 3/i)).toBeVisible()
+  })
+
+  it('keeps the navigation to short input and back to lesson', () => {
+    renderRoute('/lesson/self-intro/practice')
+
+    expect(screen.getByRole('link', { name: /continue to short input/i })).toHaveAttribute(
+      'href',
+      '/lesson/self-intro/short-input',
+    )
+    expect(screen.getByRole('link', { name: /back to lesson/i })).toHaveAttribute(
+      'href',
+      '/lesson/self-intro',
+    )
   })
 
   it.each(['en', 'fr'] as const)(
@@ -88,37 +103,36 @@ describe('PracticePage', () => {
     },
   )
 
-  it('plays each practice prompt through its same-voice MP3 asset', async () => {
+  it('marks the practice section complete after finishing a challenge', async () => {
     const user = userEvent.setup()
 
+    saveProgress({
+      ...createDefaultProgress(),
+      lastVisitedLesson: 'self-intro',
+    })
     renderRoute('/lesson/self-intro/practice')
 
-    const playbackButtons = screen.getAllByRole('button', { name: /play chinese/i })
-    expect(playbackButtons).toHaveLength(3)
-    expect(screen.queryAllByText(/^Play Chinese$/i)).toHaveLength(0)
-    playbackButtons.forEach((button) => {
-      expect(button).toHaveAttribute('title', 'Play Chinese')
-      expect(button).not.toHaveTextContent(/play chinese/i)
-    })
+    for (let questionNumber = 1; questionNumber <= 5; questionNumber += 1) {
+      if (screen.queryByText(/challenge complete/i)) {
+        break
+      }
 
-    for (const button of playbackButtons) {
-      await user.click(button)
+      const options = screen
+        .getAllByRole('button', { name: /./ })
+        .filter((button) => !button.getAttribute('aria-label'))
+
+      expect(options.length).toBeGreaterThan(0)
+      await user.click(options[0])
+
+      const nextButton = screen.queryByRole('button', { name: /next question/i })
+      if (nextButton) {
+        await user.click(nextButton)
+      }
     }
 
-    expect(audioConstructor).toHaveBeenNthCalledWith(
-      1,
-      '/audio/self-intro/practice-listening-01.mp3',
-    )
-    expect(audioConstructor).toHaveBeenNthCalledWith(
-      2,
-      '/audio/self-intro/practice-speaking-01.mp3',
-    )
-    expect(audioConstructor).toHaveBeenNthCalledWith(
-      3,
-      '/audio/self-intro/practice-reading-01.mp3',
-    )
-    expect(audioPlay).toHaveBeenCalledTimes(3)
-    expect(cancel).toHaveBeenCalledTimes(3)
-    expect(speak).not.toHaveBeenCalled()
+    expect(screen.getByText(/challenge complete/i)).toBeVisible()
+
+    const progress = loadProgress()
+    expect(progress.lessonStepProgress['self-intro']?.completedSections).toContain('practice')
   })
 })

@@ -1,59 +1,21 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
-import { getLocalizedText, getUiCopy } from '../content/copy'
-import { ExplanationBlock } from '../components/ExplanationBlock'
+import { getUiCopy } from '../content/copy'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
-import { PracticeChecklist } from '../components/PracticeChecklist'
-import { SpeechButton } from '../components/SpeechButton'
+import { PracticeChallenge } from '../components/PracticeChallenge'
 import { course } from '../content/course'
-import type { ExplanationLanguage, LessonContent, PracticePrompt } from '../content/types'
-import { loadProgress, saveProgress } from '../lib/progress'
+import type { LessonContent } from '../content/types'
+import { loadProgress, markPracticeSection, saveProgress } from '../lib/progress'
 
 function findLesson(lessonId?: string): LessonContent | undefined {
   return course.lessons.find((lesson) => lesson.id === lessonId)
 }
 
-function PracticeCard({
-  heading,
-  prompt,
-  answerLabel,
-  answer,
-  language,
-  listenLabel,
-}: {
-  heading: string
-  prompt: PracticePrompt
-  answerLabel: string
-  answer: string
-  language: ExplanationLanguage
-  listenLabel: string
-}) {
-  return (
-    <article
-      style={{
-        padding: '1rem',
-        borderRadius: '1rem',
-        background: '#f8fafc',
-        border: '1px solid #dbeafe',
-      }}
-    >
-      <h2>{heading}</h2>
-      <p>{getLocalizedText(prompt.prompt, language)}</p>
-      <p style={{ margin: '0.5rem 0 0', fontWeight: 700 }}>
-        {answerLabel}: {answer}
-      </p>
-      <div style={{ marginTop: '0.75rem' }}>
-        <SpeechButton label={listenLabel} text={answer} audioSrc={prompt.audio} fallbackAudioSrc={prompt.audioFallback} />
-      </div>
-      <ExplanationBlock explanation={prompt.explanation} language={language} />
-    </article>
-  )
-}
-
 export function PracticePage() {
   const { lessonId } = useParams()
   const lesson = findLesson(lessonId)
+  const [seed] = useState(() => Math.floor(Math.random() * 2 ** 31))
   const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
 
@@ -88,10 +50,6 @@ export function PracticePage() {
     )
   }
 
-  const listeningPrompt = lesson.practice.listening[0]
-  const speakingPrompt = lesson.practice.speaking[0]
-  const readingPrompt = lesson.practice.reading[0]
-
   return (
     <main className="page-shell" style={{ placeItems: 'start center' }}>
       <section className="hero-card" style={{ display: 'grid', gap: '1.5rem' }}>
@@ -101,66 +59,15 @@ export function PracticePage() {
           <p className="lede">{copy.practicePage.lede}</p>
         </header>
 
-        <section>
-          <h2>{copy.practicePage.checklistHeading}</h2>
-          <PracticeChecklist
-            ariaLabel={copy.practicePage.checklistLabel}
-            items={[
-              { label: copy.practicePage.listeningReady, complete: Boolean(listeningPrompt) },
-              { label: copy.practicePage.speakingReady, complete: Boolean(speakingPrompt) },
-              { label: copy.practicePage.readingReady, complete: Boolean(readingPrompt) },
-            ]}
-          />
-        </section>
-
-        {listeningPrompt ? (
-          <PracticeCard
-            heading={copy.practicePage.listenAndChoose}
-            prompt={listeningPrompt}
-            answerLabel={copy.practicePage.answer}
-            answer={listeningPrompt.target}
-            language={selectedLanguage}
-            listenLabel={copy.practicePage.listenChinese}
-          />
-        ) : null}
-
-        {speakingPrompt ? (
-          <article
-            style={{
-              padding: '1rem',
-              borderRadius: '1rem',
-              background: '#f8fafc',
-              border: '1px solid #dbeafe',
-            }}
-          >
-            <h2>{copy.practicePage.repeatAloud}</h2>
-            <p>{getLocalizedText(speakingPrompt.prompt, selectedLanguage)}</p>
-            <p style={{ margin: '0.5rem 0 0', fontWeight: 700 }}>
-              {copy.practicePage.modelAnswer}: {speakingPrompt.target}
-            </p>
-            <div style={{ marginTop: '0.75rem' }}>
-              <SpeechButton
-                label={copy.practicePage.listenChinese}
-                text={speakingPrompt.target}
-                audioSrc={speakingPrompt.audio}
-                fallbackAudioSrc={speakingPrompt.audioFallback}
-              />
-            </div>
-            <p style={{ margin: '0.75rem 0 0' }}>{copy.practicePage.selfCheck}</p>
-            <ExplanationBlock explanation={speakingPrompt.explanation} language={selectedLanguage} />
-          </article>
-        ) : null}
-
-        {readingPrompt ? (
-          <PracticeCard
-            heading={copy.practicePage.matchHanzi}
-            prompt={readingPrompt}
-            answerLabel={copy.practicePage.readingGoal}
-            answer={readingPrompt.target}
-            language={selectedLanguage}
-            listenLabel={copy.practicePage.listenChinese}
-          />
-        ) : null}
+        <PracticeChallenge
+          lesson={lesson}
+          language={selectedLanguage}
+          copy={copy.practiceChallenge}
+          seed={seed}
+          onComplete={() => {
+            saveProgress(markPracticeSection(lesson.id, loadProgress()))
+          }}
+        />
 
         <nav className="button-row" aria-label={copy.practicePage.practiceActions}>
           <Link className="secondary-link" to={`/lesson/${lesson.id}/short-input`}>
