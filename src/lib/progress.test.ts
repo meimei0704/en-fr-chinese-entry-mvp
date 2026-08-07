@@ -265,4 +265,36 @@ describe('learner progress', () => {
       'self-intro-review-6',
     ])
   })
+
+  it('marks the practice section complete once without duplicating it', async () => {
+    const { createDefaultProgress, markPracticeSection } = await importProgressModule()
+
+    const afterFirst = markPracticeSection('self-intro', createDefaultProgress())
+
+    expect(afterFirst.lessonStepProgress['self-intro']?.completedSections).toEqual(['practice'])
+    expect(afterFirst.completedLessons).toEqual([])
+
+    const afterSecond = markPracticeSection('self-intro', afterFirst)
+
+    expect(afterSecond.lessonStepProgress['self-intro']?.completedSections).toEqual(['practice'])
+  })
+
+  it('keeps existing completed sections when marking practice', async () => {
+    const { createDefaultProgress, markPracticeSection } = await importProgressModule()
+
+    const result = markPracticeSection('self-intro', {
+      ...createDefaultProgress(),
+      lessonStepProgress: {
+        'self-intro': {
+          completedSections: ['dialogue'],
+          shortInputComplete: false,
+        },
+      },
+    })
+
+    expect(result.lessonStepProgress['self-intro']?.completedSections).toEqual([
+      'dialogue',
+      'practice',
+    ])
+  })
 })

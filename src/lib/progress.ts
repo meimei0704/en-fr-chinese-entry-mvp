@@ -133,6 +133,31 @@ export function completeLesson(
   }
 }
 
+export function markPracticeSection(
+  lessonId: LessonId,
+  progress: LearnerProgress,
+): LearnerProgress {
+  const lessonProgress = progress.lessonStepProgress[lessonId] ?? {
+    completedSections: [],
+    shortInputComplete: false,
+  }
+
+  const completedSections = lessonProgress.completedSections.includes('practice')
+    ? lessonProgress.completedSections
+    : [...lessonProgress.completedSections, 'practice']
+
+  return {
+    ...progress,
+    lessonStepProgress: {
+      ...progress.lessonStepProgress,
+      [lessonId]: {
+        ...lessonProgress,
+        completedSections,
+      },
+    },
+  }
+}
+
 export function getContinueLessonId(progress: LearnerProgress): LessonId | null {
   if (progress.lastVisitedLesson === null) {
     return course.lessons[0]?.id ?? null

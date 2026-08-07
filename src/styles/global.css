@@ -3173,3 +3173,233 @@ h2 {
   border-color: rgba(95, 143, 247, 0.42);
   color: var(--color-sky-ink);
 }
+
+.practice-challenge {
+  display: grid;
+  gap: 1.25rem;
+  width: min(100%, 72rem);
+}
+
+.practice-challenge__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+}
+
+.practice-challenge__status .eyebrow {
+  margin: 0;
+  flex: 1 1 100%;
+}
+
+.practice-challenge__status-line {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.practice-challenge__prompt {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.practice-challenge__prompt p {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+}
+
+.practice-challenge__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+}
+
+.practice-challenge__options .option-button {
+  min-height: 3rem;
+  text-align: center;
+  white-space: normal;
+}
+
+.practice-challenge__feedback {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+}
+
+.practice-challenge__feedback-heading {
+  margin: 0;
+  font-weight: 800;
+}
+
+.practice-challenge__feedback--correct {
+  background: #ebf6f1;
+  border: 1px solid rgba(47, 143, 107, 0.35);
+  color: var(--color-jade-ink);
+}
+
+.practice-challenge__feedback--incorrect {
+  background: #fff1ec;
+  border: 1px solid rgba(194, 65, 45, 0.25);
+  color: var(--color-cinnabar-dark);
+}
+
+.practice-challenge__score {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.practice-challenge__rating {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.practice-challenge__rating dt {
+  color: var(--color-muted);
+}
+
+.practice-challenge__rating-value {
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  font-weight: 900;
+  color: var(--color-sky-ink);
+}
+
+.practice-challenge__stars {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.practice-challenge__star {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: #dbe3ee;
+  animation: practice-star-pop 300ms ease backwards;
+}
+
+.practice-challenge__star--lit {
+  color: var(--color-gold);
+  animation: practice-star-pop 300ms ease backwards;
+}
+
+@keyframes practice-star-pop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.practice-challenge__review {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.practice-challenge__review h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.practice-challenge__review-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.practice-challenge__review-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
+  padding: 0.75rem 1rem;
+  border-radius: 0.9rem;
+  background: #f7f8fb;
+  border: 1px solid var(--color-border);
+}
+
+.practice-challenge__review-item--correct {
+  background: #ebf6f1;
+  border-color: rgba(47, 143, 107, 0.25);
+}
+
+.practice-challenge__review-item--incorrect {
+  background: #fff1ec;
+  border-color: rgba(194, 65, 45, 0.2);
+}
+
+.practice-challenge__review-mark {
+  font-weight: 900;
+}
+
+.practice-challenge__review-item--correct .practice-challenge__review-mark {
+  color: var(--color-jade-ink);
+}
+
+.practice-challenge__review-item--incorrect .practice-challenge__review-mark {
+  color: var(--color-cinnabar-dark);
+}
+
+.practice-challenge__review-question {
+  font-size: 0.95rem;
+}
+
+.practice-challenge__review-answer {
+  grid-column: 2;
+  font-size: 0.88rem;
+  color: var(--color-muted);
+}
+
+.practice-challenge__feedback--correct .practice-challenge__feedback-heading {
+  animation: practice-correct-pop 260ms ease;
+}
+
+.practice-challenge__feedback--incorrect {
+  animation: practice-incorrect-shake 280ms ease;
+}
+
+@keyframes practice-correct-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes practice-incorrect-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .practice-challenge__star,
+  .practice-challenge__star--lit,
+  .practice-challenge__feedback--correct .practice-challenge__feedback-heading,
+  .practice-challenge__feedback--incorrect {
+    animation: none;
+  }
+}
