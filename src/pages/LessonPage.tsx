@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { DialoguePlayer } from '../components/DialoguePlayer'
 import { ExplanationBlock } from '../components/ExplanationBlock'
-import { LanguageToggle } from '../components/LanguageToggle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { SpeechButton } from '../components/SpeechButton'
 import { course } from '../content/course'
-import type { ExplanationLanguage, LessonContent } from '../content/types'
+import type { LessonContent } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
 
 function findLesson(lessonId?: string): LessonContent | undefined {
@@ -18,9 +17,7 @@ function findLesson(lessonId?: string): LessonContent | undefined {
 export function LessonPage() {
   const { lessonId } = useParams()
   const lesson = findLesson(lessonId)
-  const [selectedLanguage, setSelectedLanguage] = useState<ExplanationLanguage>(
-    () => loadProgress().selectedExplanationLanguage,
-  )
+  const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
   const studyLayers = [
     { id: 'lesson-dialogue', label: copy.lessonPage.dialogue },
@@ -44,14 +41,6 @@ export function LessonPage() {
       lastVisitedLesson: lesson.id,
     })
   }, [lesson])
-
-  function handleSelectLanguage(language: ExplanationLanguage) {
-    setSelectedLanguage(language)
-    saveProgress({
-      ...loadProgress(),
-      selectedExplanationLanguage: language,
-    })
-  }
 
   if (!lesson) {
     return (
@@ -96,18 +85,6 @@ export function LessonPage() {
               </li>
             ))}
           </ol>
-        </section>
-
-        <section
-          className="surface-card lesson-overview-card"
-          aria-label={copy.lessonPage.lessonOverviewLabel}
-        >
-          <p className="explanation-block">{copy.lessonPage.sectionSummary}</p>
-          <LanguageToggle
-            selectedLanguage={selectedLanguage}
-            onSelect={handleSelectLanguage}
-            ariaLabel={copy.languageToggleLabel}
-          />
         </section>
 
         <div className="section-stack">

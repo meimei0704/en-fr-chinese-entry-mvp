@@ -53,10 +53,9 @@ describe('LessonPage', () => {
     vi.stubGlobal('Audio', MockAudio)
   })
 
-  it('wraps the lesson in scannable overview and dialogue regions', () => {
+  it('wraps the lesson in scannable dialogue region', () => {
     renderRoute('/lesson/self-intro')
 
-    expect(screen.getByRole('region', { name: /lesson overview/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /dialogue practice/i })).toBeVisible()
     expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent('您好')
     expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent('Nín hǎo')
@@ -102,8 +101,7 @@ describe('LessonPage', () => {
     expect(loadProgress()).toEqual({ ...before, lastVisitedLesson: 'ask-directions' })
   })
 
-  it('renders the full lesson template and lets the user switch explanations without changing progress', async () => {
-    const user = userEvent.setup()
+  it('renders the full lesson template in the persisted explanation language without a language switcher', async () => {
     saveProgress({
       ...createDefaultProgress(),
       selectedExplanationLanguage: 'fr',
@@ -117,7 +115,6 @@ describe('LessonPage', () => {
     expect(screen.queryByText(/到达机场 \/ Arrivée à l’aéroport/i)).not.toBeInTheDocument()
     expect(screen.getByText('到达机场')).toHaveClass('lesson-topic-title__primary')
     expect(screen.getByText('Arrivée à l’aéroport')).toHaveClass('lesson-topic-title__secondary')
-    expect(screen.getByRole('region', { name: /aperçu de la leçon/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /aperçu de progression de la leçon/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /pratique du dialogue/i })).toBeVisible()
     expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur voyageur/i)[0]).toHaveTextContent(
@@ -133,12 +130,10 @@ describe('LessonPage', () => {
     expect(screen.getByText(/voici mon passeport/i)).toBeVisible()
     expect(screen.getByRole('link', { name: /passer à la pratique/i })).toBeVisible()
     expect(screen.getByRole('link', { name: /retour à l’accueil/i })).toBeVisible()
-    expect(screen.queryByRole('region', { name: /lesson overview/i })).not.toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'English' }))
-
-    expect(screen.getByText(/this is my passport/i)).toBeVisible()
-    expect(loadProgress().selectedExplanationLanguage).toBe('en')
+    expect(screen.queryByRole('group', { name: /explication/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Français' })).not.toBeInTheDocument()
+    expect(loadProgress().selectedExplanationLanguage).toBe('fr')
   })
 
   it.each(['en', 'fr'] as const)(
@@ -173,20 +168,18 @@ describe('LessonPage', () => {
     {
       language: 'en',
       count: '3 study layers',
-      summary: 'This lesson covers dialogue, useful patterns, and vocabulary.',
       removed: /pronunciation|hanzi recognition/i,
       dialogueTitle: 'Ask for help from baggage claim to the taxi pickup',
     },
     {
       language: 'fr',
       count: '3 étapes d’étude',
-      summary: 'Cette leçon couvre le dialogue, les structures utiles et le vocabulaire.',
       removed: /prononciation|reconnaissance des hanzi|hanzi à reconnaître/i,
       dialogueTitle: 'Demander de l’aide des bagages jusqu’au taxi',
     },
   ] as const)(
     'shows only the three learner layers in $language',
-    ({ language, count, summary, removed, dialogueTitle }) => {
+    ({ language, count, removed, dialogueTitle }) => {
       saveProgress({ ...createDefaultProgress(), selectedExplanationLanguage: language })
       renderRoute('/lesson/self-intro')
 
@@ -213,11 +206,6 @@ describe('LessonPage', () => {
       for (const heading of retainedHeadings) {
         expect(screen.getByRole('heading', { level: 2, name: heading })).toBeVisible()
       }
-      const overview = screen.getByRole('region', {
-        name: language === 'en' ? /lesson overview/i : /aperçu de la leçon/i,
-      })
-      expect(within(overview).getByText(summary)).toBeVisible()
-      expect(overview).not.toHaveTextContent(removed)
       expect(
         screen.queryByRole('heading', { level: 2, name: removed }),
       ).not.toBeInTheDocument()
@@ -229,18 +217,14 @@ describe('LessonPage', () => {
     {
       language: 'en',
       railLabel: /lesson progress preview/i,
-      summary: 'This lesson covers dialogue, useful patterns, and vocabulary.',
-      overviewLabel: /lesson overview/i,
     },
     {
       language: 'fr',
       railLabel: /aperçu de progression/i,
-      summary: 'Cette leçon couvre le dialogue, les structures utiles et le vocabulaire.',
-      overviewLabel: /aperçu de la leçon/i,
     },
   ] as const)(
     'links each study layer to its section anchor in $language',
-    ({ language, railLabel, summary, overviewLabel }) => {
+    ({ language, railLabel }) => {
       saveProgress({ ...createDefaultProgress(), selectedExplanationLanguage: language })
       renderRoute('/lesson/self-intro')
 
@@ -261,10 +245,6 @@ describe('LessonPage', () => {
 
       expect(screen.queryByRole('heading', { level: 2, name: /scenario goal|objectif de la scène/i }))
         .not.toBeInTheDocument()
-      expect(screen.getByRole('region', { name: overviewLabel })).toHaveTextContent(summary)
-      expect(screen.getByRole('region', { name: overviewLabel })).not.toHaveTextContent(
-        /scenario goal|objectif de la scène/i,
-      )
     },
   )
 

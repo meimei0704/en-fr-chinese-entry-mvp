@@ -351,20 +351,18 @@ describe('global color accessibility tokens', () => {
       ['.lesson-page .lesson-progress-preview', 'gap: 0.75rem;'],
       ['.lesson-page .lesson-progress-preview', 'padding: 0.85rem;'],
       ['.lesson-page .lesson-progress-preview__summary', 'gap: 0.5rem;'],
-      [
-        '.lesson-page .lesson-progress-preview__rail',
-        'grid-template-columns: repeat(3, minmax(0, 1fr));',
-      ],
-      ['.lesson-page .lesson-overview-card', 'gap: 0.75rem;'],
     ] as const
     for (const [selector, declaration] of scoped) {
       expect(ruleBlock(selector)).toContain(declaration)
     }
 
-    expect(ruleBlock('.lesson-progress-preview__rail')).toContain(
-      'grid-template-columns: repeat(5, minmax(0, 1fr));',
+    expect(ruleBlock('.lesson-progress-preview__rail')).toContain('display: flex;')
+    expect(ruleBlock('.lesson-progress-preview__rail')).toContain('flex-wrap: wrap;')
+    expect(ruleBlock('.lesson-progress-preview__rail')).not.toContain('grid-template-columns')
+    expect(ruleBlock('.lesson-progress-preview__rail li')).toContain('border-radius: 999px;')
+    expect(ruleBlock('.lesson-progress-preview__rail li.is-current')).toContain(
+      'background: #eef4ff;',
     )
-    expect(ruleBlock('.lesson-progress-preview__rail')).not.toContain('repeat(3')
     expect(ruleBlock('.lesson-header-card,\n.review-card')).not.toContain(
       'gap: clamp(0.9rem, 2vw, 1.25rem);',
     )
@@ -373,9 +371,6 @@ describe('global color accessibility tokens', () => {
     )
     expect(css).not.toMatch(
       /\.admin-[^{]*\{[^}]*(?:gap: clamp\(0\.9rem, 2vw, 1\.25rem\)|padding: clamp\(1\.25rem, 3vw, 2rem\))/,
-    )
-    expect(css).toMatch(
-      /@media \(max-width: 760px\)[\s\S]*?\.lesson-page \.lesson-progress-preview__rail\s*\{[^}]*grid-template-columns:\s*1fr;/,
     )
   })
 })
