@@ -373,13 +373,6 @@ describe('course content', () => {
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     const newAudioPaths = new Set([
-      '/audio/self-intro/line-02.mp3', '/audio/self-intro/line-04.mp3', '/audio/self-intro/line-05.mp3',
-      '/audio/self-intro/line-08.mp3', '/audio/self-intro/line-09.mp3', '/audio/self-intro/line-10.mp3',
-      '/audio/self-intro/pattern-04.mp3', '/audio/self-intro/pattern-05.mp3',
-      '/audio/self-intro/vocab-06.mp3', '/audio/self-intro/vocab-07.mp3', '/audio/self-intro/vocab-08.mp3',
-      '/audio/self-intro/vocab-09.mp3', '/audio/self-intro/vocab-10.mp3', '/audio/self-intro/vocab-11.mp3',
-      '/audio/self-intro/pronunciation-02.mp3',
-      '/audio/self-intro/practice-listening-02.mp3', '/audio/self-intro/practice-speaking-02.mp3', '/audio/self-intro/practice-reading-02.mp3',
       '/audio/ask-directions/line-04.mp3', '/audio/ask-directions/line-05.mp3',
       '/audio/ask-directions/line-06.mp3', '/audio/ask-directions/line-07.mp3', '/audio/ask-directions/line-08.mp3',
       '/audio/ask-directions/pattern-04.mp3', '/audio/ask-directions/pattern-05.mp3',
