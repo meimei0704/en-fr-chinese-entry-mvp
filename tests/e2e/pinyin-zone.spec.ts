@@ -154,15 +154,15 @@ test('completes Pinyin Zone from the course entry with reference audio, tone gam
   await expect(page.getByText('8/8')).toBeVisible()
   await expect(page.getByText('2 of 3 sections complete')).toBeVisible()
 
-  for (let promptNumber = 1; promptNumber <= 4; promptNumber += 1) {
-    await expect(page.getByText(`Prompt ${promptNumber} of 4`)).toBeVisible()
+  for (let promptNumber = 1; promptNumber <= 5; promptNumber += 1) {
+    await expect(page.getByText(`Prompt ${promptNumber} of 5`)).toBeVisible()
     await page.getByRole('button', { name: `Play shadowing prompt ${promptNumber}` }).click()
     await page.getByRole('button', { name: 'Start recording' }).click()
     await expect(page.getByText('Recording…')).toBeVisible()
     await page.getByRole('button', { name: 'Stop recording' }).click()
     await expect(page.getByLabel('Your recording')).toBeVisible()
 
-    if (promptNumber < 4) {
+    if (promptNumber < 5) {
       await page.getByRole('button', { name: 'Next prompt' }).click()
     }
   }
@@ -201,7 +201,7 @@ test('completes Pinyin Zone from the course entry with reference audio, tone gam
     'tone-game',
     'shadowing',
   ])
-  expect(browserState.pinyinProgress.shadowingCompletedPromptIds).toHaveLength(4)
+  expect(browserState.pinyinProgress.shadowingCompletedPromptIds).toHaveLength(5)
   expect(browserState.pinyinProgress.toneGameBestScore).toBe(8)
   expect(browserState.pinyinProgress.toneGameLastScore).toBe(8)
   expect(browserState.courseProgress).toBeNull()
@@ -212,8 +212,41 @@ test('completes Pinyin Zone from the course entry with reference audio, tone gam
     { audio: true },
     { audio: true },
     { audio: true },
+    { audio: true },
   ])
-  expect(browserState.localRecordingUrls).toHaveLength(4)
-  expect(browserState.stoppedTrackCount).toBe(4)
+  expect(browserState.localRecordingUrls).toHaveLength(5)
+  expect(browserState.stoppedTrackCount).toBe(5)
   expect(unexpectedRecordingRequests).toEqual([])
+})
+
+test('renders four lesson tabs and switches between lessons preserving progress', async ({ page }) => {
+  await installPinyinBrowserMocks(page)
+  await page.goto('/pinyin')
+
+  const tabs = page.getByRole('tab')
+  await expect(tabs).toHaveCount(4)
+  await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
+  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'false')
+
+  await page.getByRole('radio', { name: correctToneChoices[0] }).check()
+  await page.getByRole('button', { name: 'Submit answer' }).click()
+
+  await tabs.nth(1).click()
+  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true')
+  await expect(page.getByRole('heading', { name: 'Sibilant ear training' })).toBeVisible()
+
+  await tabs.first().click()
+  await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
+  await expect(page.getByText('1 of 3 sections complete')).toBeVisible()
+
+  const browserState = await page.evaluate((key) => {
+    return JSON.parse(localStorage.getItem(key) ?? '{}') as {
+      completedSections?: string[]
+      lessonProgress?: Record<string, unknown>
+    }
+  }, pinyinProgressStorageKey)
+
+  expect(browserState.completedSections).toContain('tone-game')
+  expect(browserState.lessonProgress).toBeDefined()
+  expect(browserState.lessonProgress?.['pinyin-foundations-1']).toBeDefined()
 })
