@@ -7,11 +7,9 @@ It creates one published revision and one editable draft revision for each fixed
 2. `dialogue`
 3. `sentencePatterns`
 4. `vocabulary`
-5. `pronunciation`
-6. `hanziRecognition`
-7. `practice`
-8. `reviewCards`
-9. `shortInput`
+5. `practice`
+6. `reviewCards`
+7. `shortInput`
 
 The generated draft rows copy the published baseline and point `source_revision_id` at the corresponding published revision.
 Audio references and lesson structure are not edited by the seed; they are copied from the current static content as-is.

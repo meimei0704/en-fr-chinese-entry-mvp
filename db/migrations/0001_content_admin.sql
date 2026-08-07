@@ -34,8 +34,6 @@ create table if not exists lesson_modules (
       'dialogue',
       'sentencePatterns',
       'vocabulary',
-      'pronunciation',
-      'hanziRecognition',
       'practice',
       'reviewCards',
       'shortInput'
@@ -67,8 +65,6 @@ create table if not exists module_revisions (
       'dialogue',
       'sentencePatterns',
       'vocabulary',
-      'pronunciation',
-      'hanziRecognition',
       'practice',
       'reviewCards',
       'shortInput'
