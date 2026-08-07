@@ -248,6 +248,26 @@ describe('LessonPage', () => {
     },
   )
 
+  it('moves the rail highlight to the clicked study layer and keeps it after scrolling', async () => {
+    const user = userEvent.setup()
+    renderRoute('/lesson/self-intro')
+
+    const preview = screen.getByRole('region', { name: /lesson progress preview/i })
+    const steps = within(preview).getAllByRole('listitem')
+    const links = within(preview).getAllByRole('link')
+    expect(steps[0]).toHaveClass('is-current')
+    expect(steps[1]).not.toHaveClass('is-current')
+
+    await user.click(links[1])
+
+    expect(steps[0]).not.toHaveClass('is-current')
+    expect(steps[1]).toHaveClass('is-current')
+    expect(steps[2]).not.toHaveClass('is-current')
+
+    window.scrollTo(0, 0)
+    expect(steps[1]).toHaveClass('is-current')
+  })
+
   it('keeps only Practice and Home in the lesson action dock', () => {
     renderRoute('/lesson/self-intro')
     const actions = screen.getByRole('navigation', { name: /lesson actions/i })

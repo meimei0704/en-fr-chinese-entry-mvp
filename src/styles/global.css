@@ -3067,6 +3067,9 @@ h2 {
 }
 
 .pinyin-lesson-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.55rem 1.05rem;
   border: 1px solid var(--color-border);
   border-radius: 999px;
@@ -3078,6 +3081,18 @@ h2 {
   transition: all 150ms ease;
 }
 
+.pinyin-lesson-tab span {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  color: var(--color-muted);
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
 .pinyin-lesson-tab:hover {
   border-color: rgba(95, 143, 247, 0.35);
   color: var(--color-ink);
@@ -3087,6 +3102,11 @@ h2 {
   background: #eef4ff;
   border-color: rgba(95, 143, 247, 0.42);
   color: var(--color-sky-ink);
+}
+
+.pinyin-lesson-tab--selected span {
+  color: #ffffff;
+  background: var(--color-sky-ink);
 }
 
 .practice-challenge {

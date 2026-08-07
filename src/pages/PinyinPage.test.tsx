@@ -43,6 +43,16 @@ describe('PinyinPage', () => {
     )
   })
 
+  it('renders numbered lesson tab badges for every pinyin lesson', () => {
+    renderRoute('/pinyin')
+
+    const tabs = screen.getAllByRole('tab')
+    expect(tabs).toHaveLength(pinyinCourse.lessons.length)
+    expect(tabs.map((tab) => tab.querySelector('span')?.textContent)).toEqual(
+      pinyinCourse.lessons.map((_, index) => String(index + 1)),
+    )
+  })
+
   it('renders reference cards with audio playback entry points', () => {
     renderRoute('/pinyin')
 
