@@ -387,17 +387,4 @@ export const pharmacyHelpLesson: LessonContent = {
     { id: 'pharmacy-help-review-5', front: '过敏', back: { en: 'allergy / allergic', fr: 'allergie / allergique' }, explanation: { en: 'A safety word the pharmacist will check.', fr: 'Un mot de sécurité que le pharmacien vérifiera.' } },
     { id: 'pharmacy-help-review-6', front: '饭后', back: { en: 'after meals', fr: 'après les repas' }, explanation: { en: 'A common medicine timing instruction.', fr: 'Une consigne courante pour le moment de prise.' } },
   ],
-  shortInput: {
-    id: 'pharmacy-help-short-input-01',
-    prompt: {
-      en: 'Say that your head hurts and you do not have a fever.',
-      fr: 'Dis que tu as mal à la tête et pas de fièvre.',
-    },
-    target: '我头疼，不发烧。',
-    explanation: {
-      en: 'This gives a mild symptom and a clear no-fever answer.',
-      fr: 'Cela donne un symptôme léger et une réponse claire sans fièvre.',
-    },
-    audio: '/audio/pharmacy-help/short-input-01.mp3',
-  },
 }

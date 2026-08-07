@@ -62,13 +62,9 @@ describe('PracticePage', () => {
     expect(screen.getByLabelText(/^lives 3$/i)).toBeVisible()
   })
 
-  it('keeps the navigation to short input and back to lesson', () => {
+  it('keeps the navigation back to lesson', () => {
     renderRoute('/lesson/self-intro/practice')
 
-    expect(screen.getByRole('link', { name: /continue to short input/i })).toHaveAttribute(
-      'href',
-      '/lesson/self-intro/short-input',
-    )
     expect(screen.getByRole('link', { name: /back to lesson/i })).toHaveAttribute(
       'href',
       '/lesson/self-intro',

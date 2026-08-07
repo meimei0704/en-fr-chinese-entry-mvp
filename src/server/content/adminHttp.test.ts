@@ -49,7 +49,6 @@ describe('content admin HTTP handlers', () => {
         vocabulary: [],
         practice: [],
         reviewCards: [],
-        shortInput: [],
       },
     }
     const repository = {

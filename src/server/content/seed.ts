@@ -26,7 +26,6 @@ export function lessonToModulePayloads(lesson: LessonContent): LessonModulePaylo
     { moduleType: 'vocabulary', payload: lesson.vocabulary },
     { moduleType: 'practice', payload: lesson.practice },
     { moduleType: 'reviewCards', payload: lesson.reviewCards },
-    { moduleType: 'shortInput', payload: lesson.shortInput },
   ]
 }
 

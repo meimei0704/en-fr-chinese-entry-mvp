@@ -10,7 +10,6 @@ export type VoiceAudioTargetId =
   | `practice:listening:${string}`
   | `practice:speaking:${string}`
   | `practice:reading:${string}`
-  | `shortInput:${string}`
 
 export type VoiceAudioPracticeSection = 'listening' | 'speaking' | 'reading'
 
@@ -42,7 +41,6 @@ export interface VoiceGenerationBatchPatch {
     | LessonContent['sentencePatterns']
     | LessonContent['vocabulary']
     | LessonContent['practice']
-    | LessonContent['shortInput']
 }
 
 export interface CreateAdminVoiceSampleProfileInput {

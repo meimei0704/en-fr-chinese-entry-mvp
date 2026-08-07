@@ -7,7 +7,6 @@ export const contentModuleTypes = [
   'vocabulary',
   'practice',
   'reviewCards',
-  'shortInput',
 ] as const
 
 export type ContentModuleType = (typeof contentModuleTypes)[number]
@@ -27,7 +26,6 @@ export type ModulePayload =
   | LessonContent['vocabulary']
   | LessonContent['practice']
   | LessonContent['reviewCards']
-  | LessonContent['shortInput']
 
 export interface LessonSeedRow {
   lessonId: string

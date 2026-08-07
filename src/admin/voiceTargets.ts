@@ -4,7 +4,6 @@ import type {
   LessonId,
   PracticePrompt,
   SentencePattern,
-  ShortInputPrompt,
   VocabularyItem,
 } from '../content/types.js'
 import type {
@@ -22,7 +21,6 @@ const moduleOrder: readonly VoiceAudioModuleType[] = [
   'sentencePatterns',
   'vocabulary',
   'practice',
-  'shortInput',
 ]
 
 function targetId<T extends VoiceAudioTargetId>(id: T) {
@@ -161,15 +159,6 @@ export function collectLessonVoiceAudioTargets(lesson: LessonContent): VoiceAudi
       }),
     ),
     ...collectPracticeTargets(lesson),
-    createTarget({
-      lessonId: lesson.id,
-      targetId: targetId(`shortInput:${lesson.shortInput.id}`),
-      moduleType: 'shortInput',
-      itemId: lesson.shortInput.id,
-      label: `${lesson.id} · Short input prompt`,
-      text: lesson.shortInput.target,
-      item: lesson.shortInput,
-    }),
   ]
 }
 
@@ -182,7 +171,6 @@ const adminVoiceVisibleModuleTypes = new Set<VoiceAudioModuleType>([
   'sentencePatterns',
   'vocabulary',
   'practice',
-  'shortInput',
 ])
 
 export function collectAdminVoiceVisibleTargets(
@@ -211,8 +199,7 @@ function parseTargetId(target: string) {
   if (
     moduleType === 'dialogue' ||
     moduleType === 'sentencePatterns' ||
-    moduleType === 'vocabulary' ||
-    moduleType === 'shortInput'
+    moduleType === 'vocabulary'
   ) {
     if (!maybeSection || maybeItemId) {
       throw new Error(`Unsupported voice generation target: ${target}`)
@@ -308,16 +295,6 @@ export function applyVoiceGenerationBatchToLesson(
         }
 
         patches.push({ moduleType, payload: nextPractice })
-        break
-      }
-      case 'shortInput': {
-        const generatedAudioUrl = replacementsByModule.get(moduleType)!.get(lesson.shortInput.id)
-        patches.push({
-          moduleType,
-          payload: generatedAudioUrl
-            ? withGeneratedAudio<ShortInputPrompt>(lesson.shortInput, generatedAudioUrl)
-            : lesson.shortInput,
-        })
         break
       }
       default:

@@ -63,21 +63,6 @@ const publishedRows = (lessonId = 'self-intro'): PublishedModuleRow[] => [
     revisionId: 106,
     payload: [],
   },
-  {
-    lessonId,
-    slug: lessonId,
-    displayOrder: 1,
-    enabled: true,
-    moduleType: 'shortInput',
-    revisionId: 107,
-    payload: {
-      id: `${lessonId}-short-input-01`,
-      prompt: { en: 'Published prompt', fr: 'Invite publiée' },
-      target: '发布',
-      explanation: { en: 'Published only', fr: 'Publié seulement' },
-      audio: `/audio/${lessonId}/short-input-01.mp3`,
-    },
-  },
 ]
 
 function createResponseRecorder() {

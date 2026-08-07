@@ -5,11 +5,9 @@ import type {
   LocalizedField,
   LocalizedText,
   PracticePrompt,
-  ShortInputPrompt,
 } from '../../content/types.js'
 import {
   practiceFields,
-  shortInputFields,
   type StructuredFieldConfig,
 } from './structuredEditorConfigs.js'
 
@@ -380,89 +378,6 @@ export function PracticeModuleEditor({ practice, onSave, onDirtyChange }: Practi
         <span className="muted-text">Practice stays split by mode, but saves as the existing module payload.</span>
         <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
           {saving ? 'Saving practice draft…' : 'Save practice draft'}
-        </button>
-      </div>
-    </section>
-  )
-}
-
-interface ShortInputModuleEditorProps {
-  prompt: ShortInputPrompt
-  onSave(payload: ShortInputPrompt): Promise<void>
-  onDirtyChange?(dirty: boolean): void
-}
-
-export function ShortInputModuleEditor({ prompt, onSave, onDirtyChange }: ShortInputModuleEditorProps) {
-  const [draftPrompt, setDraftPrompt] = useState(() => toEditableItem(prompt, shortInputFields))
-  const [saving, setSaving] = useState(false)
-
-  useEffect(() => {
-    setDraftPrompt(toEditableItem(prompt, shortInputFields))
-  }, [prompt])
-
-  const draftPayload = useMemo(
-    () => buildSavedItem(draftPrompt, shortInputFields),
-    [draftPrompt],
-  )
-
-  useEffect(() => {
-    onDirtyChange?.(JSON.stringify(draftPayload) !== JSON.stringify(prompt))
-  }, [draftPayload, onDirtyChange, prompt])
-
-  async function handleSave() {
-    setSaving(true)
-    try {
-      await onSave(draftPayload)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  return (
-    <section className="surface-card lesson-section-card admin-module-card" aria-label="Short Input">
-      <div className="admin-section-heading">
-        <div>
-          <p className="eyebrow">Content editor</p>
-          <h2>Short Input</h2>
-          <p className="muted-text">Edit the short-answer prompt as structured content instead of a JSON object.</p>
-        </div>
-        <span className="badge badge--sky">Single prompt</span>
-      </div>
-      <div className="admin-field-grid admin-field-grid--two-column">
-        {shortInputFields.map((field) => (
-          <StructuredField
-            key={field.key}
-            field={field}
-            item={draftPrompt}
-            itemIndex={0}
-            onTextChange={(_, key, value) =>
-              setDraftPrompt((current) => ({
-                ...current,
-                values: {
-                  ...current.values,
-                  [key]: value,
-                },
-              }))
-            }
-            onLocalizedChange={(_, key, locale, value) =>
-              setDraftPrompt((current) => ({
-                ...current,
-                values: {
-                  ...current.values,
-                  [key]: {
-                    ...(current.values[key] as EditableLocalizedText),
-                    [locale]: value,
-                  },
-                },
-              }))
-            }
-          />
-        ))}
-      </div>
-      <div className="admin-card-actions">
-        <span className="muted-text">Keep the prompt human-readable while preserving the existing module payload.</span>
-        <button type="button" className="primary-button" onClick={handleSave} disabled={saving}>
-          {saving ? 'Saving short input draft…' : 'Save short input draft'}
         </button>
       </div>
     </section>

@@ -22,8 +22,6 @@ function moduleLabel(moduleType: string) {
       return 'Sentence Patterns'
     case 'reviewCards':
       return 'Review Cards'
-    case 'shortInput':
-      return 'Short Input'
     default:
       return moduleType.charAt(0).toUpperCase() + moduleType.slice(1)
   }

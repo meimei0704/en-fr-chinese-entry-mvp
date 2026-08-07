@@ -33,7 +33,6 @@ function modulePayloadsForLesson(lesson: LessonContent) {
     ['vocabulary', clone(lesson.vocabulary)],
     ['practice', clone(lesson.practice)],
     ['reviewCards', clone(lesson.reviewCards)],
-    ['shortInput', clone(lesson.shortInput)],
   ])
 }
 

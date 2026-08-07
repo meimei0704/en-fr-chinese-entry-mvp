@@ -16,10 +16,22 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
     'Arrival at the airport',
   )
   await page.getByRole('link', { name: /go to practice/i }).click()
-  await page.getByRole('link', { name: /continue to short input/i }).click()
-  await page.getByRole('button', { name: /i finished the short input/i }).click()
 
-  await expect(page.getByText(/lesson complete/i)).toBeVisible()
+  const resultCard = page.locator('.practice-challenge--result')
+  for (let attempt = 0; attempt < 10 && !(await resultCard.isVisible()); attempt += 1) {
+    const firstOption = page.locator('.practice-challenge__options .option-button').first()
+    await firstOption.click()
+    if (await resultCard.isVisible()) {
+      break
+    }
+    const nextButton = page.getByRole('button', { name: /next question/i })
+    await expect(nextButton).toBeVisible()
+    await nextButton.click()
+  }
+  await expect(resultCard).toBeVisible()
+
+  await page.getByRole('button', { name: /complete lesson/i }).click()
+  await expect(page.getByText(/lesson complete\. review cards are ready/i)).toBeVisible()
 
   await page.getByRole('link', { name: /go to review/i }).click()
   await expect(page.getByText(/cards due today/i)).toBeVisible()

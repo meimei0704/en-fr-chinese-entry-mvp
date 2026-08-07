@@ -387,17 +387,4 @@ export const convenienceStoreRunLesson: LessonContent = {
     { id: 'convenience-store-run-review-5', front: '袋子', back: { en: 'bag', fr: 'sac' }, explanation: { en: 'Ask for this when you buy several items.', fr: 'Demande ceci quand tu achètes plusieurs articles.' } },
     { id: 'convenience-store-run-review-6', front: '扫码', back: { en: 'scan to pay', fr: 'scanner pour payer' }, explanation: { en: 'The payment action at the counter.', fr: 'L\'action de paiement au comptoir.' } },
   ],
-  shortInput: {
-    id: 'convenience-store-run-short-input-01',
-    prompt: {
-      en: 'You want to buy a bottle of water.',
-      fr: 'Tu veux acheter une bouteille d\'eau.',
-    },
-    target: '我要一瓶水。',
-    explanation: {
-      en: 'Use 我要一瓶水。 to ask for one simple item.',
-      fr: 'Utilise 我要一瓶水。 pour demander un article simple.',
-    },
-    audio: '/audio/convenience-store-run/short-input-01.mp3',
-  },
 }

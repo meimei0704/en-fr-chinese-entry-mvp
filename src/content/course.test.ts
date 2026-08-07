@@ -57,7 +57,6 @@ function collectLessonAudioPaths(lesson: Awaited<ReturnType<typeof importCourse>
     ...lesson.sentencePatterns.map((pattern) => pattern.audio),
     ...lesson.vocabulary.map((item) => item.audio),
     ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
-    lesson.shortInput.audio,
   ]
 }
 
@@ -112,7 +111,6 @@ function expectedNewLessonAudioPaths(lessonId: string) {
     `/audio/${lessonId}/practice-speaking-02.mp3`,
     `/audio/${lessonId}/practice-reading-01.mp3`,
     `/audio/${lessonId}/practice-reading-02.mp3`,
-    `/audio/${lessonId}/short-input-01.mp3`,
   ]
 }
 
@@ -148,7 +146,6 @@ describe('course content', () => {
         expect(lesson.practice.speaking).toHaveLength(counts.practice)
         expect(lesson.practice.reading).toHaveLength(counts.practice)
         expect(lesson.reviewCards).toHaveLength(counts.cards)
-        expect(lesson.shortInput.audio).toMatch(/^\/audio\//)
       } else {
         expect(lesson.dialogue.lines).toHaveLength(5)
         expect(lesson.sentencePatterns).toHaveLength(3)
@@ -157,7 +154,6 @@ describe('course content', () => {
         expect(lesson.practice.speaking).toHaveLength(1)
         expect(lesson.practice.reading).toHaveLength(1)
         expect(lesson.reviewCards).toHaveLength(3)
-        expect(lesson.shortInput.audio).toMatch(/^\/audio\//)
       }
     }
   })
@@ -201,7 +197,6 @@ describe('course content', () => {
       expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
         Array.from({ length: 8 }, (_, index) => `${lessonId}-line-${String(index + 1).padStart(2, '0')}`),
       )
-      expect(lesson.shortInput.id).toBe(`${lessonId}-short-input-01`)
       expect(collectLessonAudioPaths(lesson)).toEqual(expectedNewLessonAudioPaths(lessonId))
     }
   })
@@ -217,7 +212,6 @@ describe('course content', () => {
         ...lesson.sentencePatterns.map((pattern) => pattern.example),
         ...lesson.vocabulary.map((item) => item.hanzi),
         ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
-        lesson.shortInput.target,
       ].join('\n')
 
       expect(chineseText).toMatch(expectedKeyChineseByNewLesson[lessonId])
@@ -242,7 +236,6 @@ describe('course content', () => {
       ...lesson.vocabulary.map((item) => item.hanzi),
       ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
       ...lesson.reviewCards.map((card) => card.front),
-      lesson.shortInput.target,
     ].join('\n')
 
     expect(lesson.id).toBe('self-intro')
@@ -314,9 +307,6 @@ describe('course content', () => {
         expectLocalizedField(card.back, `${card.id}.back`)
         expectLocalizedField(card.explanation, `${card.id}.explanation`)
       })
-
-      expectLocalizedField(lesson.shortInput.prompt, `${lesson.id}.shortInput.prompt`)
-      expectLocalizedField(lesson.shortInput.explanation, `${lesson.id}.shortInput.explanation`)
     }
   })
 
@@ -344,7 +334,7 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(303)
+    expect(audioPaths).toHaveLength(293)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     const newAudioPaths = new Set([

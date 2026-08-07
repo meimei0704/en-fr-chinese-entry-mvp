@@ -19,7 +19,6 @@ function audioCountForFixture() {
     ...lesson.practice.listening,
     ...lesson.practice.speaking,
     ...lesson.practice.reading,
-    lesson.shortInput,
   ].length
 }
 
@@ -70,25 +69,15 @@ describe('admin batch voice audio targets', () => {
           language: 'zh-CN',
           storageKey: 'audio/self-intro/practice-listening-01.mp3',
         }),
-        expect.objectContaining({
-          targetId: `shortInput:${lesson.shortInput.id}`,
-          lessonId: lesson.id,
-          moduleType: 'shortInput',
-          itemId: lesson.shortInput.id,
-          text: lesson.shortInput.target,
-          originalAudio: lesson.shortInput.audio,
-          language: 'zh-CN',
-          storageKey: 'audio/self-intro/short-input-01.mp3',
-        }),
       ]),
     )
   })
 
-  it('locks the course manifest to the 303 existing zh-CN audio targets only', () => {
+  it('locks the course manifest to the 293 existing zh-CN audio targets only', () => {
     const targets = collectCourseVoiceAudioTargets(course.lessons)
     const targetTexts = new Set(targets.map((target) => target.text))
 
-    expect(targets).toHaveLength(303)
+    expect(targets).toHaveLength(293)
     expect(targets.every((target) => target.language === 'zh-CN')).toBe(true)
     expect(targets.every((target) => target.originalAudio.startsWith('/audio/'))).toBe(true)
     expect(targets.every((target) => target.storageKey.startsWith('audio/'))).toBe(true)
@@ -100,7 +89,7 @@ describe('admin batch voice audio targets', () => {
     expect(targets.some((target) => target.moduleType === 'reviewCards')).toBe(false)
   })
 
-  it('derives the 303 Admin Voice targets from the 303-target manifest', () => {
+  it('derives the 293 Admin Voice targets from the 293-target manifest', () => {
     const completeTargets = collectCourseVoiceAudioTargets(course.lessons)
     const visibleTargets = collectAdminVoiceVisibleTargets(course.lessons)
     const visibleModuleTypes = new Set([
@@ -108,7 +97,6 @@ describe('admin batch voice audio targets', () => {
       'sentencePatterns',
       'vocabulary',
       'practice',
-      'shortInput',
     ])
     const visibleCounts = Object.fromEntries(
       [...visibleModuleTypes].map((moduleType) => [
@@ -117,15 +105,14 @@ describe('admin batch voice audio targets', () => {
       ]),
     )
 
-    expect(completeTargets).toHaveLength(303)
+    expect(completeTargets).toHaveLength(293)
     expect(completeTargets.some((target) => target.moduleType === 'pronunciation')).toBe(false)
-    expect(visibleTargets).toHaveLength(303)
+    expect(visibleTargets).toHaveLength(293)
     expect(visibleCounts).toEqual({
       dialogue: 82,
       sentencePatterns: 50,
       vocabulary: 101,
       practice: 60,
-      shortInput: 10,
     })
     expect(visibleTargets.every((target) => visibleModuleTypes.has(target.moduleType))).toBe(true)
     expect(visibleTargets.map((target) => target.targetId)).toEqual(
@@ -214,14 +201,9 @@ describe('admin batch voice audio targets', () => {
         targetId: `practice:listening:${lesson.practice.listening[0]!.id}`,
         generatedAudioUrl: '/voice/generated/listening.mp3',
       },
-      {
-        lessonId: lesson.id,
-        targetId: `shortInput:${lesson.shortInput.id}`,
-        generatedAudioUrl: '/voice/generated/short-input.mp3',
-      },
     ])
 
-    expect(patches.map((patch) => patch.moduleType)).toEqual(['practice', 'shortInput'])
+    expect(patches.map((patch) => patch.moduleType)).toEqual(['practice'])
     expect(patches[0]!.payload).toEqual({
       ...lesson.practice,
       listening: lesson.practice.listening.map((prompt, index) =>
@@ -229,11 +211,6 @@ describe('admin batch voice audio targets', () => {
           ? { ...prompt, audio: '/voice/generated/listening.mp3', audioFallback: prompt.audio }
           : prompt,
       ),
-    })
-    expect(patches[1]!.payload).toEqual({
-      ...lesson.shortInput,
-      audio: '/voice/generated/short-input.mp3',
-      audioFallback: lesson.shortInput.audio,
     })
   })
 })

@@ -10,7 +10,6 @@ const progressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 
 export interface LessonStepProgress {
   completedSections: string[]
-  shortInputComplete: boolean
 }
 
 export interface LearnerProgress {
@@ -47,14 +46,20 @@ function isStringArray(value: unknown): value is string[] {
 }
 
 function isLessonStepProgress(value: unknown): value is LessonStepProgress {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'completedSections' in value &&
-    isStringArray(value.completedSections) &&
-    'shortInputComplete' in value &&
-    typeof value.shortInputComplete === 'boolean'
-  )
+  if (
+    typeof value !== 'object' ||
+    value === null ||
+    !('completedSections' in value) ||
+    !isStringArray(value.completedSections)
+  ) {
+    return false
+  }
+
+  if ('shortInputComplete' in value && typeof value.shortInputComplete !== 'boolean') {
+    return false
+  }
+
+  return true
 }
 
 function isLearnerProgress(value: unknown): value is LearnerProgress {
@@ -111,7 +116,6 @@ export function completeLesson(
 
   const lessonProgress = progress.lessonStepProgress[lessonId] ?? {
     completedSections: [],
-    shortInputComplete: false,
   }
 
   return {
@@ -125,10 +129,7 @@ export function completeLesson(
     lastVisitedLesson: lessonId,
     lessonStepProgress: {
       ...progress.lessonStepProgress,
-      [lessonId]: {
-        ...lessonProgress,
-        shortInputComplete: true,
-      },
+      [lessonId]: lessonProgress,
     },
   }
 }
@@ -139,7 +140,6 @@ export function markPracticeSection(
 ): LearnerProgress {
   const lessonProgress = progress.lessonStepProgress[lessonId] ?? {
     completedSections: [],
-    shortInputComplete: false,
   }
 
   const completedSections = lessonProgress.completedSections.includes('practice')

@@ -19,7 +19,6 @@ import { LessonMetaEditor } from '../components/admin/LessonMetaEditor.js'
 import { ModuleHistoryList } from '../components/admin/ModuleHistoryList.js'
 import {
   PracticeModuleEditor,
-  ShortInputModuleEditor,
   StructuredListModuleEditor,
 } from '../components/admin/StructuredContentEditors.js'
 import {
@@ -36,7 +35,6 @@ const editableModuleOrder = [
   'vocabulary',
   'practice',
   'reviewCards',
-  'shortInput',
 ] as const satisfies readonly ContentModuleType[]
 
 type EditableModuleType = (typeof editableModuleOrder)[number]
@@ -65,10 +63,6 @@ const moduleConfig: Record<EditableModuleType, { label: string; description: str
   reviewCards: {
     label: 'Review Cards',
     description: 'Flashcard-style recap content for spaced review.',
-  },
-  shortInput: {
-    label: 'Short Input',
-    description: 'Short response prompts and compact learner inputs.',
   },
 }
 
@@ -474,14 +468,6 @@ export function AdminLessonEditorPage() {
             items={draftLesson.reviewCards}
             fields={reviewCardFields}
             onSave={(payload) => handleSaveModule('reviewCards', payload, 'Save review cards draft')}
-            onDirtyChange={setHasUnsavedChanges}
-          />
-        )
-      case 'shortInput':
-        return (
-          <ShortInputModuleEditor
-            prompt={draftLesson.shortInput}
-            onSave={(payload) => handleSaveModule('shortInput', payload, 'Save short input draft')}
             onDirtyChange={setHasUnsavedChanges}
           />
         )

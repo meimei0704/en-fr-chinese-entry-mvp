@@ -500,17 +500,4 @@ export const askDirectionsLesson: LessonContent = {
       explanation: { en: 'Ask for this if you need proof of payment.', fr: 'Demande ceci si tu as besoin d\'une preuve de paiement.' },
     },
   ],
-  shortInput: {
-    id: 'ask-directions-short-input-01',
-    prompt: {
-      en: 'You need to tell the driver the destination.',
-      fr: 'Tu dois indiquer la destination au chauffeur.',
-    },
-    target: '师傅，去这个酒店。',
-    explanation: {
-      en: 'This short taxi sentence is enough to start the ride.',
-      fr: 'Cette courte phrase de taxi suffit pour commencer le trajet.',
-    },
-    audio: '/audio/ask-directions/short-input-01.mp3',
-  },
 }
