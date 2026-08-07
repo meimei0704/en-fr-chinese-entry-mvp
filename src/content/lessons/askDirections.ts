@@ -4,11 +4,11 @@ export const askDirectionsLesson: LessonContent = {
   id: 'ask-directions',
   title: {
     en: 'Take a taxi to your hotel',
-    fr: 'Prendre un taxi jusqu’à son hôtel',
+    fr: 'Prendre un taxi jusqu\'à son hôtel',
   },
   scenario: {
     en: 'Get into a taxi, show the address, and ask roughly how long the ride will take.',
-    fr: 'Monter dans un taxi, montrer l’adresse et demander environ combien de temps prendra le trajet.',
+    fr: 'Monter dans un taxi, montrer l\'adresse et demander environ combien de temps prendra le trajet.',
   },
   dialogue: {
     title: {
@@ -26,11 +26,11 @@ export const askDirectionsLesson: LessonContent = {
         pinyin: 'Shīfu, qù zhège jiǔdiàn.',
         translation: {
           en: 'Driver, please go to this hotel.',
-          fr: 'Chauffeur, allez à cet hôtel, s’il vous plaît.',
+          fr: 'Chauffeur, allez à cet hôtel, s\'il vous plaît.',
         },
         explanation: {
           en: '师傅 is a practical way to address a taxi driver politely.',
-          fr: '师傅 est une façon pratique et polie de s’adresser à un chauffeur.',
+          fr: '师傅 est une façon pratique et polie de s\'adresser à un chauffeur.',
         },
         audio: '/audio/ask-directions/line-01.mp3',
       },
@@ -44,11 +44,11 @@ export const askDirectionsLesson: LessonContent = {
         pinyin: 'Hǎo de, nǐ gěi wǒ kàn yíxià dìzhǐ.',
         translation: {
           en: 'Okay, show me the address.',
-          fr: 'D’accord, montre-moi l’adresse.',
+          fr: 'D\'accord, montre-moi l\'adresse.',
         },
         explanation: {
           en: '给我看一下 is useful when the driver wants to see your phone or booking address.',
-          fr: '给我看一下 est utile quand le chauffeur veut voir l’adresse sur ton téléphone ou ta réservation.',
+          fr: '给我看一下 est utile quand le chauffeur veut voir l\'adresse sur ton téléphone ou ta réservation.',
         },
         audio: '/audio/ask-directions/line-02.mp3',
       },
@@ -62,16 +62,52 @@ export const askDirectionsLesson: LessonContent = {
         pinyin: 'Zài zhèlǐ.',
         translation: {
           en: 'It is here.',
-          fr: 'C’est ici.',
+          fr: 'C\'est ici.',
         },
         explanation: {
           en: 'Use 在这里 while pointing to the address on your phone.',
-          fr: 'Utilise 在这里 en montrant l’adresse sur ton téléphone.',
+          fr: 'Utilise 在这里 en montrant l\'adresse sur ton téléphone.',
         },
         audio: '/audio/ask-directions/line-03.mp3',
       },
       {
         id: 'ask-directions-line-04',
+        speaker: {
+          en: 'Traveler',
+          fr: 'Voyageur',
+        },
+        hanzi: '请打表。',
+        pinyin: 'Qǐng dǎbiǎo.',
+        translation: {
+          en: 'Please use the meter.',
+          fr: 'Veuillez utiliser le compteur.',
+        },
+        explanation: {
+          en: 'Say 请打表 when you get in to make sure the driver starts the meter.',
+          fr: 'Dis 请打表 en montant pour t\'assurer que le chauffeur démarre le compteur.',
+        },
+        audio: '/audio/ask-directions/line-04.mp3',
+      },
+      {
+        id: 'ask-directions-line-05',
+        speaker: {
+          en: 'Driver',
+          fr: 'Chauffeur',
+        },
+        hanzi: '好的，打表。',
+        pinyin: 'Hǎo de, dǎbiǎo.',
+        translation: {
+          en: 'Okay, the meter is on.',
+          fr: 'D\'accord, le compteur est allumé.',
+        },
+        explanation: {
+          en: 'The driver confirms the meter is running.',
+          fr: 'Le chauffeur confirme que le compteur fonctionne.',
+        },
+        audio: '/audio/ask-directions/line-05.mp3',
+      },
+      {
+        id: 'ask-directions-line-06',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -86,10 +122,10 @@ export const askDirectionsLesson: LessonContent = {
           en: '大概多久到 is a short way to ask the approximate travel time.',
           fr: '大概多久到 est une façon courte de demander la durée approximative du trajet.',
         },
-        audio: '/audio/ask-directions/line-04.mp3',
+        audio: '/audio/ask-directions/line-06.mp3',
       },
       {
-        id: 'ask-directions-line-05',
+        id: 'ask-directions-line-07',
         speaker: {
           en: 'Driver',
           fr: 'Chauffeur',
@@ -102,9 +138,27 @@ export const askDirectionsLesson: LessonContent = {
         },
         explanation: {
           en: '左右 means around or about, useful with time and price estimates.',
-          fr: '左右 signifie environ ; c’est utile pour les durées et les prix approximatifs.',
+          fr: '左右 signifie environ ; c\'est utile pour les durées et les prix approximatifs.',
         },
-        audio: '/audio/ask-directions/line-05.mp3',
+        audio: '/audio/ask-directions/line-07.mp3',
+      },
+      {
+        id: 'ask-directions-line-08',
+        speaker: {
+          en: 'Traveler',
+          fr: 'Voyageur',
+        },
+        hanzi: '多少钱？可以扫码吗？',
+        pinyin: 'Duōshǎo qián? Kěyǐ sǎomǎ ma?',
+        translation: {
+          en: 'How much? Can I scan to pay?',
+          fr: 'Combien ? Je peux scanner pour payer ?',
+        },
+        explanation: {
+          en: 'Ask 多少钱 for the fare, then 可以扫码吗 to check if QR payment is accepted.',
+          fr: 'Demande 多少钱 pour le prix, puis 可以扫码吗 pour vérifier si le paiement par QR est accepté.',
+        },
+        audio: '/audio/ask-directions/line-08.mp3',
       },
     ],
   },
@@ -134,7 +188,7 @@ export const askDirectionsLesson: LessonContent = {
       audio: '/audio/ask-directions/pattern-02.mp3',
       explanation: {
         en: 'Drivers may use this to ask for the address on your phone.',
-        fr: 'Les chauffeurs peuvent utiliser cette phrase pour demander l’adresse sur ton téléphone.',
+        fr: 'Les chauffeurs peuvent utiliser cette phrase pour demander l\'adresse sur ton téléphone.',
       },
     },
     {
@@ -149,6 +203,34 @@ export const askDirectionsLesson: LessonContent = {
       explanation: {
         en: 'Use it to ask a short travel-time question in the taxi.',
         fr: 'Utilise-le pour demander rapidement la durée du trajet en taxi.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-4',
+      pattern: '请……',
+      meaning: {
+        en: 'Please ... (polite request)',
+        fr: 'S\'il vous plaît ... (demande polie)',
+      },
+      example: '请打表。',
+      audio: '/audio/ask-directions/pattern-04.mp3',
+      explanation: {
+        en: 'Use 请 before a short action to make a polite request in a taxi or at a counter.',
+        fr: 'Utilise 请 avant une action courte pour faire une demande polie en taxi ou à un comptoir.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-5',
+      pattern: '可以……吗？',
+      meaning: {
+        en: 'Can I ...? / Is it possible to ...?',
+        fr: 'Puis-je ... ? / Est-il possible de ... ?',
+      },
+      example: '可以扫码吗？',
+      audio: '/audio/ask-directions/pattern-05.mp3',
+      explanation: {
+        en: 'Use 可以…吗 to check if a payment method, action, or request is okay.',
+        fr: 'Utilise 可以…吗 pour vérifier si un moyen de paiement, une action ou une demande est accepté.',
       },
     },
   ],
@@ -178,7 +260,7 @@ export const askDirectionsLesson: LessonContent = {
       },
       explanation: {
         en: 'The key word when showing a hotel or apartment location.',
-        fr: 'Le mot clé quand on montre l’emplacement d’un hôtel ou d’un appartement.',
+        fr: 'Le mot clé quand on montre l\'emplacement d\'un hôtel ou d\'un appartement.',
       },
     },
     {
@@ -192,7 +274,7 @@ export const askDirectionsLesson: LessonContent = {
       },
       explanation: {
         en: 'Use it as the first arrival destination after the airport.',
-        fr: 'Utilise-le pour la première destination après l’aéroport.',
+        fr: 'Utilise-le pour la première destination après l\'aéroport.',
       },
     },
     {
@@ -206,7 +288,7 @@ export const askDirectionsLesson: LessonContent = {
       },
       explanation: {
         en: 'Useful for asking about travel time.',
-        fr: 'Utile pour demander la durée d’un trajet.',
+        fr: 'Utile pour demander la durée d\'un trajet.',
       },
     },
     {
@@ -223,6 +305,61 @@ export const askDirectionsLesson: LessonContent = {
         fr: 'Utilise-le après des minutes ou une somme pour donner une estimation.',
       },
     },
+    {
+      id: 'ask-directions-vocab-6',
+      hanzi: '打表',
+      pinyin: 'dǎbiǎo',
+      audio: '/audio/ask-directions/vocab-06.mp3',
+      meaning: { en: 'turn on the meter', fr: 'allumer le compteur' },
+      explanation: {
+        en: 'Say this to make sure the taxi uses the meter instead of a fixed price.',
+        fr: 'Dis ceci pour t\'assurer que le taxi utilise le compteur plutôt qu\'un prix fixe.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-7',
+      hanzi: '二维码',
+      pinyin: 'èrwéimǎ',
+      audio: '/audio/ask-directions/vocab-07.mp3',
+      meaning: { en: 'QR code', fr: 'code QR' },
+      explanation: {
+        en: 'You will see 二维码 everywhere for payment, menus, and WiFi in China.',
+        fr: 'Tu verras 二维码 partout en Chine pour le paiement, les menus et le WiFi.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-8',
+      hanzi: '扫码',
+      pinyin: 'sǎomǎ',
+      audio: '/audio/ask-directions/vocab-08.mp3',
+      meaning: { en: 'scan to pay', fr: 'scanner pour payer' },
+      explanation: {
+        en: 'The most common payment action: open your app and scan a QR code.',
+        fr: 'L\'action de paiement la plus courante : ouvre ton appli et scanne un code QR.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-9',
+      hanzi: '发票',
+      pinyin: 'fāpiào',
+      audio: '/audio/ask-directions/vocab-09.mp3',
+      meaning: { en: 'receipt / invoice', fr: 'reçu / facture' },
+      explanation: {
+        en: 'Ask for a 发票 if you need an official receipt for reimbursement.',
+        fr: 'Demande un 发票 si tu as besoin d\'un reçu officiel pour te faire rembourser.',
+      },
+    },
+    {
+      id: 'ask-directions-vocab-10',
+      hanzi: '高速',
+      pinyin: 'gāosù',
+      audio: '/audio/ask-directions/vocab-10.mp3',
+      meaning: { en: 'highway / expressway', fr: 'autoroute' },
+      explanation: {
+        en: 'The driver may ask 走高速吗？ to check if you prefer the expressway.',
+        fr: 'Le chauffeur peut demander 走高速吗？ pour vérifier si tu préfères l\'autoroute.',
+      },
+    },
   ],
   pronunciation: [
     {
@@ -235,11 +372,25 @@ export const askDirectionsLesson: LessonContent = {
       audio: '/audio/ask-directions/pronunciation-01.mp3',
       tip: {
         en: 'Keep 师傅, 地址, and 左右 clear; avoid adding complex route talk in this first taxi lesson.',
-        fr: 'Prononce clairement 师傅, 地址 et 左右 ; n’ajoute pas encore de phrases complexes sur l’itinéraire.',
+        fr: 'Prononce clairement 师傅, 地址 et 左右 ; n\'ajoute pas encore de phrases complexes sur l\'itinéraire.',
       },
       explanation: {
         en: 'These words are enough to start the ride and check the arrival time.',
-        fr: 'Ces mots suffisent pour démarrer le trajet et vérifier l’heure d’arrivée.',
+        fr: 'Ces mots suffisent pour démarrer le trajet et vérifier l\'heure d\'arrivée.',
+      },
+    },
+    {
+      id: 'ask-directions-pronunciation-2',
+      focus: { en: 'sh vs s contrast', fr: 'Contraste sh vs s' },
+      audioText: '师傅，是否走高速？',
+      audio: '/audio/ask-directions/pronunciation-02.mp3',
+      tip: {
+        en: 'Curl your tongue for 师 (shī) but keep it flat for 四 (sì). Practice 师傅 vs 是否.',
+        fr: 'Enroule ta langue pour 师 (shī) mais garde-la plate pour 四 (sì). Entraîne-toi avec 师傅 vs 是否.',
+      },
+      explanation: {
+        en: 'The sh/s contrast is critical for taxi communication in China.',
+        fr: 'Le contraste sh/s est essentiel pour communiquer en taxi en Chine.',
       },
     },
   ],
@@ -280,7 +431,7 @@ export const askDirectionsLesson: LessonContent = {
       },
       explanation: {
         en: '多 appears in 多久, the phrase for how long.',
-        fr: '多 apparaît dans 多久, l’expression pour combien de temps.',
+        fr: '多 apparaît dans 多久, l\'expression pour combien de temps.',
       },
     },
     {
@@ -296,6 +447,26 @@ export const askDirectionsLesson: LessonContent = {
         fr: '久 complète 多久, une question clé sur la durée du trajet.',
       },
     },
+    {
+      id: 'ask-directions-hanzi-5',
+      hanzi: '表',
+      pinyin: 'biǎo',
+      meaning: { en: 'meter / watch / form', fr: 'compteur / montre / formulaire' },
+      explanation: {
+        en: 'Recognize 表 in 打表, meaning the taxi meter.',
+        fr: 'Reconnais 表 dans 打表, le compteur du taxi.',
+      },
+    },
+    {
+      id: 'ask-directions-hanzi-6',
+      hanzi: '码',
+      pinyin: 'mǎ',
+      meaning: { en: 'code; as in QR code', fr: 'code ; comme dans code QR' },
+      explanation: {
+        en: 'Recognize 码 in 扫码 and 二维码.',
+        fr: 'Reconnais 码 dans 扫码 et 二维码.',
+      },
+    },
   ],
   practice: {
     listening: [
@@ -309,7 +480,20 @@ export const askDirectionsLesson: LessonContent = {
         audio: '/audio/ask-directions/practice-listening-01.mp3',
         explanation: {
           en: 'This is the first taxi sentence to get moving from the airport.',
-          fr: 'C’est la première phrase de taxi pour partir de l’aéroport.',
+          fr: 'C\'est la première phrase de taxi pour partir de l\'aéroport.',
+        },
+      },
+      {
+        id: 'ask-directions-listening-2',
+        prompt: {
+          en: 'Which phrase asks to use the meter?',
+          fr: 'Quelle phrase demande d\'utiliser le compteur ?',
+        },
+        target: '请打表。',
+        audio: '/audio/ask-directions/practice-listening-02.mp3',
+        explanation: {
+          en: '请打表 is the key safety phrase before the taxi starts moving.',
+          fr: '请打表 est la phrase de sécurité clé avant que le taxi ne démarre.',
         },
       },
     ],
@@ -318,13 +502,26 @@ export const askDirectionsLesson: LessonContent = {
         id: 'ask-directions-speaking-1',
         prompt: {
           en: 'Tell the driver to go to this hotel.',
-          fr: 'Dis au chauffeur d’aller à cet hôtel.',
+          fr: 'Dis au chauffeur d\'aller à cet hôtel.',
         },
         target: '师傅，去这个酒店。',
         audio: '/audio/ask-directions/practice-speaking-01.mp3',
         explanation: {
           en: 'You can swap 酒店 for 公寓 when going to an apartment.',
           fr: 'Tu peux remplacer 酒店 par 公寓 si tu vas à un appartement.',
+        },
+      },
+      {
+        id: 'ask-directions-speaking-2',
+        prompt: {
+          en: 'Ask the driver to use the meter.',
+          fr: 'Demande au chauffeur d\'utiliser le compteur.',
+        },
+        target: '请打表。',
+        audio: '/audio/ask-directions/practice-speaking-02.mp3',
+        explanation: {
+          en: 'A short 请 before an action keeps the request polite and simple.',
+          fr: 'Un 请 court avant une action garde la demande polie et simple.',
         },
       },
     ],
@@ -339,7 +536,20 @@ export const askDirectionsLesson: LessonContent = {
         audio: '/audio/ask-directions/practice-reading-01.mp3',
         explanation: {
           en: '大概多久到 asks about the approximate arrival time.',
-          fr: '大概多久到 demande l’heure ou la durée approximative d’arrivée.',
+          fr: '大概多久到 demande l\'heure ou la durée approximative d\'arrivée.',
+        },
+      },
+      {
+        id: 'ask-directions-reading-2',
+        prompt: {
+          en: 'Match the payment phrase.',
+          fr: 'Associe la phrase de paiement.',
+        },
+        target: '可以扫码吗？',
+        audio: '/audio/ask-directions/practice-reading-02.mp3',
+        explanation: {
+          en: 'Recognize 扫码 as the scan-to-pay action.',
+          fr: 'Reconnais 扫码 comme l\'action de scanner pour payer.',
         },
       },
     ],
@@ -354,7 +564,7 @@ export const askDirectionsLesson: LessonContent = {
       },
       explanation: {
         en: 'Use it while showing the hotel on your phone.',
-        fr: 'Utilise-le en montrant l’hôtel sur ton téléphone.',
+        fr: 'Utilise-le en montrant l\'hôtel sur ton téléphone.',
       },
     },
     {
@@ -380,6 +590,21 @@ export const askDirectionsLesson: LessonContent = {
         en: 'Ask this when you want a rough travel-time estimate.',
         fr: 'Pose cette question pour obtenir une estimation de durée.',
       },
+    },
+    {
+      id: 'ask-directions-review-4', front: '打表',
+      back: { en: 'use the meter', fr: 'utiliser le compteur' },
+      explanation: { en: 'A key taxi safety word.', fr: 'Un mot clé de sécurité en taxi.' },
+    },
+    {
+      id: 'ask-directions-review-5', front: '扫码',
+      back: { en: 'scan to pay', fr: 'scanner pour payer' },
+      explanation: { en: 'The main way to pay in China.', fr: 'Le principal moyen de payer en Chine.' },
+    },
+    {
+      id: 'ask-directions-review-6', front: '发票',
+      back: { en: 'receipt / invoice', fr: 'reçu / facture' },
+      explanation: { en: 'Ask for this if you need proof of payment.', fr: 'Demande ceci si tu as besoin d\'une preuve de paiement.' },
     },
   ],
   shortInput: {

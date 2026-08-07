@@ -4,11 +4,11 @@ export const orderFoodLesson: LessonContent = {
   id: 'order-food',
   title: {
     en: 'Hotel or apartment check-in',
-    fr: 'Arrivée à l’hôtel ou à l’appartement',
+    fr: 'Arrivée à l\'hôtel ou à l\'appartement',
   },
   scenario: {
-    en: 'Complete the simplest front desk check-in: say you have a reservation, give your name, show your passport, and receive the room card.',
-    fr: 'Effectuer le check-in le plus simple à la réception : dire que l’on a une réservation, donner son nom, présenter son passeport et recevoir la carte de chambre.',
+    en: 'Complete the simplest front desk check-in: say you have a reservation, give your name, show your passport, receive the room card, ask about WiFi, breakfast, deposit, and checkout time.',
+    fr: 'Effectuer le check-in le plus simple à la réception : dire que l\'on a une réservation, donner son nom, présenter son passeport, recevoir la carte de chambre, demander le WiFi, le petit-déjeuner, la caution et l\'heure de check-out.',
   },
   dialogue: {
     title: {
@@ -26,11 +26,11 @@ export const orderFoodLesson: LessonContent = {
         pinyin: 'Nǐ hǎo, wǒ yǒu yùdìng.',
         translation: {
           en: 'Hello, I have a reservation.',
-          fr: 'Bonjour, j’ai une réservation.',
+          fr: 'Bonjour, j\'ai une réservation.',
         },
         explanation: {
           en: '我有预订 is the fastest way to start hotel check-in.',
-          fr: '我有预订 est la façon la plus rapide de commencer un check-in à l’hôtel.',
+          fr: '我有预订 est la façon la plus rapide de commencer un check-in à l\'hôtel.',
         },
         audio: '/audio/order-food/line-01.mp3',
       },
@@ -47,7 +47,7 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Puis-je vous demander votre nom ?',
         },
         explanation: {
-          en: 'The front desk uses 您 for polite “you” when checking the reservation.',
+          en: 'The front desk uses 您 for polite "you" when checking the reservation.',
           fr: 'La réception utilise 您, un « vous » poli, pour vérifier la réservation.',
         },
         audio: '/audio/order-food/line-02.mp3',
@@ -62,7 +62,7 @@ export const orderFoodLesson: LessonContent = {
         pinyin: 'Wǒ jiào Alex.',
         translation: {
           en: 'My name is Alex.',
-          fr: 'Je m’appelle Alex.',
+          fr: 'Je m\'appelle Alex.',
         },
         explanation: {
           en: 'Keep only the name pattern here because the situation is a front desk check-in.',
@@ -98,13 +98,58 @@ export const orderFoodLesson: LessonContent = {
         pinyin: 'Hǎo de, zhè shì nín de fángkǎ.',
         translation: {
           en: 'Okay, this is your room card.',
-          fr: 'D’accord, voici votre carte de chambre.',
+          fr: 'D\'accord, voici votre carte de chambre.',
         },
         explanation: {
           en: '房卡 is the room card you need after check-in.',
           fr: '房卡 est la carte de chambre nécessaire après le check-in.',
         },
         audio: '/audio/order-food/line-05.mp3',
+      },
+      {
+        id: 'order-food-line-06',
+        speaker: { en: 'Guest', fr: 'Client' },
+        hanzi: 'WiFi密码是多少？',
+        pinyin: 'WiFi mìmǎ shì duōshǎo?',
+        translation: {
+          en: 'What is the WiFi password?',
+          fr: 'Quel est le mot de passe WiFi ?',
+        },
+        explanation: {
+          en: 'WiFi密码是多少 is the most practical hotel check-in follow-up question.',
+          fr: 'WiFi密码是多少 est la question de suivi la plus pratique après le check-in.',
+        },
+        audio: '/audio/order-food/line-06.mp3',
+      },
+      {
+        id: 'order-food-line-07',
+        speaker: { en: 'Front desk', fr: 'Réception' },
+        hanzi: '在这里，早餐是早上七点到九点。',
+        pinyin: 'Zài zhèlǐ, zǎocān shì zǎoshang qī diǎn dào jiǔ diǎn.',
+        translation: {
+          en: 'Here it is. Breakfast is from 7 to 9 in the morning.',
+          fr: 'Le voici. Le petit-déjeuner est de 7h à 9h du matin.',
+        },
+        explanation: {
+          en: 'The front desk gives WiFi and breakfast info in one practical reply.',
+          fr: 'La réception donne le WiFi et les infos petit-déjeuner en une réponse pratique.',
+        },
+        audio: '/audio/order-food/line-07.mp3',
+      },
+      {
+        id: 'order-food-line-08',
+        speaker: { en: 'Guest', fr: 'Client' },
+        hanzi: '需要押金吗？几点退房？',
+        pinyin: 'Xūyào yājīn ma? Jǐ diǎn tuìfáng?',
+        translation: {
+          en: 'Is a deposit needed? What time is checkout?',
+          fr: 'Une caution est-elle nécessaire ? À quelle heure est le check-out ?',
+        },
+        explanation: {
+          en: 'Ask about deposit and checkout time together to finish the check-in quickly.',
+          fr: 'Demande la caution et l\'heure de check-out ensemble pour terminer le check-in rapidement.',
+        },
+        audio: '/audio/order-food/line-08.mp3',
       },
     ],
   },
@@ -114,7 +159,7 @@ export const orderFoodLesson: LessonContent = {
       pattern: '我有预订。',
       meaning: {
         en: 'I have a reservation.',
-        fr: 'J’ai une réservation.',
+        fr: 'J\'ai une réservation.',
       },
       example: '你好，我有预订。',
       audio: '/audio/order-food/pattern-01.mp3',
@@ -128,7 +173,7 @@ export const orderFoodLesson: LessonContent = {
       pattern: '我叫……',
       meaning: {
         en: 'My name is ...',
-        fr: 'Je m’appelle ...',
+        fr: 'Je m\'appelle ...',
       },
       example: '我叫 Alex。',
       audio: '/audio/order-food/pattern-02.mp3',
@@ -151,6 +196,28 @@ export const orderFoodLesson: LessonContent = {
         fr: 'Tu peux entendre cette structure en recevant une carte de chambre ou un document.',
       },
     },
+    {
+      id: 'order-food-pattern-4',
+      pattern: '……是多少？',
+      meaning: { en: 'What is ...? (for numbers)', fr: 'Quel est ... ? (pour les chiffres)' },
+      example: 'WiFi密码是多少？',
+      audio: '/audio/order-food/pattern-04.mp3',
+      explanation: {
+        en: 'Use …是多少 to ask for a password, price, or room number.',
+        fr: 'Utilise …是多少 pour demander un mot de passe, un prix ou un numéro de chambre.',
+      },
+    },
+    {
+      id: 'order-food-pattern-5',
+      pattern: '需要……吗？',
+      meaning: { en: 'Is ... needed? / Do I need ...?', fr: 'Est-ce que ... est nécessaire ?' },
+      example: '需要押金吗？',
+      audio: '/audio/order-food/pattern-05.mp3',
+      explanation: {
+        en: 'Use 需要…吗 to ask whether a deposit, passport, or other item is required.',
+        fr: 'Utilise 需要…吗 pour demander si une caution, un passeport ou autre est nécessaire.',
+      },
+    },
   ],
   vocabulary: [
     {
@@ -164,7 +231,7 @@ export const orderFoodLesson: LessonContent = {
       },
       explanation: {
         en: 'The key word for hotel and apartment booking check-in.',
-        fr: 'Le mot clé pour une réservation d’hôtel ou d’appartement.',
+        fr: 'Le mot clé pour une réservation d\'hôtel ou d\'appartement.',
       },
     },
     {
@@ -206,7 +273,7 @@ export const orderFoodLesson: LessonContent = {
       },
       explanation: {
         en: 'The card you use to enter your hotel room.',
-        fr: 'La carte utilisée pour entrer dans la chambre d’hôtel.',
+        fr: 'La carte utilisée pour entrer dans la chambre d\'hôtel.',
       },
     },
     {
@@ -220,8 +287,33 @@ export const orderFoodLesson: LessonContent = {
       },
       explanation: {
         en: 'The place where hotel check-in happens.',
-        fr: 'L’endroit où se fait le check-in à l’hôtel.',
+        fr: 'L\'endroit où se fait le check-in à l\'hôtel.',
       },
+    },
+    {
+      id: 'order-food-vocab-6', hanzi: 'WiFi密码', pinyin: 'WiFi mìmǎ', audio: '/audio/order-food/vocab-06.mp3',
+      meaning: { en: 'WiFi password', fr: 'mot de passe WiFi' },
+      explanation: { en: 'The first thing to ask after check-in.', fr: 'La première chose à demander après le check-in.' },
+    },
+    {
+      id: 'order-food-vocab-7', hanzi: '早餐', pinyin: 'zǎocān', audio: '/audio/order-food/vocab-07.mp3',
+      meaning: { en: 'breakfast', fr: 'petit-déjeuner' },
+      explanation: { en: 'Ask about breakfast time and location at check-in.', fr: 'Demande l\'heure et le lieu du petit-déjeuner au check-in.' },
+    },
+    {
+      id: 'order-food-vocab-8', hanzi: '押金', pinyin: 'yājīn', audio: '/audio/order-food/vocab-08.mp3',
+      meaning: { en: 'deposit', fr: 'caution' },
+      explanation: { en: 'Many hotels in China ask for a deposit during check-in.', fr: 'Beaucoup d\'hôtels en Chine demandent une caution au check-in.' },
+    },
+    {
+      id: 'order-food-vocab-9', hanzi: '退房', pinyin: 'tuìfáng', audio: '/audio/order-food/vocab-09.mp3',
+      meaning: { en: 'check out', fr: 'check-out / libérer la chambre' },
+      explanation: { en: 'Know your 退房 time to avoid extra charges.', fr: 'Connais ton heure de 退房 pour éviter des frais supplémentaires.' },
+    },
+    {
+      id: 'order-food-vocab-10', hanzi: '电梯', pinyin: 'diàntī', audio: '/audio/order-food/vocab-10.mp3',
+      meaning: { en: 'elevator', fr: 'ascenseur' },
+      explanation: { en: 'Ask 电梯在哪里？ to find the elevator to your room.', fr: 'Demande 电梯在哪里？ pour trouver l\'ascenseur vers ta chambre.' },
     },
   ],
   pronunciation: [
@@ -242,6 +334,20 @@ export const orderFoodLesson: LessonContent = {
         fr: 'Cela garde la compétence du nom, mais la déplace dans la tâche de check-in.',
       },
     },
+    {
+      id: 'order-food-pronunciation-2',
+      focus: { en: 'Second vs fourth tone: 房 vs 放', fr: '2e vs 4e ton : 房 vs 放' },
+      audioText: '房卡，退房，放在这里',
+      audio: '/audio/order-food/pronunciation-02.mp3',
+      tip: {
+        en: '房 (fáng) rises gently; 放 (fàng) drops sharply. Mixing them may confuse the front desk.',
+        fr: '房 (fáng) monte doucement ; 放 (fàng) descend brusquement. Les confondre peut troubler la réception.',
+      },
+      explanation: {
+        en: '房 and 放 appear often at hotels — getting the tone right avoids misunderstandings.',
+        fr: '房 et 放 apparaissent souvent à l\'hôtel — maîtriser le ton évite les malentendus.',
+      },
+    },
   ],
   hanziRecognition: [
     {
@@ -250,7 +356,7 @@ export const orderFoodLesson: LessonContent = {
       pinyin: 'yù',
       meaning: {
         en: 'in advance; first character of reservation',
-        fr: 'à l’avance ; premier caractère de réservation',
+        fr: 'à l\'avance ; premier caractère de réservation',
       },
       explanation: {
         en: 'Recognize 预 as part of 预订.',
@@ -296,6 +402,16 @@ export const orderFoodLesson: LessonContent = {
         fr: '卡 complète 房卡, la carte de chambre.',
       },
     },
+    {
+      id: 'order-food-hanzi-5', hanzi: '早', pinyin: 'zǎo',
+      meaning: { en: 'morning / early', fr: 'matin / tôt' },
+      explanation: { en: 'Recognize 早 in 早餐 on hotel signs.', fr: 'Reconnais 早 dans 早餐 sur les panneaux de l\'hôtel.' },
+    },
+    {
+      id: 'order-food-hanzi-6', hanzi: '金', pinyin: 'jīn',
+      meaning: { en: 'money / gold', fr: 'argent / or' },
+      explanation: { en: 'Recognize 金 in 押金, the deposit word.', fr: 'Reconnais 金 dans 押金, le mot pour caution.' },
+    },
   ],
   practice: {
     listening: [
@@ -303,7 +419,7 @@ export const orderFoodLesson: LessonContent = {
         id: 'order-food-listening-1',
         prompt: {
           en: 'Which phrase starts a hotel check-in?',
-          fr: 'Quelle phrase commence un check-in à l’hôtel ?',
+          fr: 'Quelle phrase commence un check-in à l\'hôtel ?',
         },
         target: '你好，我有预订。',
         audio: '/audio/order-food/practice-listening-01.mp3',
@@ -311,6 +427,12 @@ export const orderFoodLesson: LessonContent = {
           en: 'This tells the front desk to look for your booking.',
           fr: 'Cette phrase indique à la réception de chercher ta réservation.',
         },
+      },
+      {
+        id: 'order-food-listening-2',
+        prompt: { en: 'Which phrase asks for the WiFi password?', fr: 'Quelle phrase demande le mot de passe WiFi ?' },
+        target: 'WiFi密码是多少？', audio: '/audio/order-food/practice-listening-02.mp3',
+        explanation: { en: 'WiFi密码是多少 is the first follow-up after receiving your room card.', fr: 'WiFi密码是多少 est la première question après avoir reçu ta carte de chambre.' },
       },
     ],
     speaking: [
@@ -327,20 +449,32 @@ export const orderFoodLesson: LessonContent = {
           fr: 'Utilise 我叫 suivi du nom de la réservation.',
         },
       },
+      {
+        id: 'order-food-speaking-2',
+        prompt: { en: 'Ask the front desk what time checkout is.', fr: 'Demande à la réception à quelle heure est le check-out.' },
+        target: '几点退房？', audio: '/audio/order-food/practice-speaking-02.mp3',
+        explanation: { en: '几点退房 is a short, practical checkout question.', fr: '几点退房 est une question courte et pratique pour le check-out.' },
+      },
     ],
     reading: [
       {
         id: 'order-food-reading-1',
         prompt: {
           en: 'Match the item you receive after check-in.',
-          fr: 'Associe l’objet reçu après le check-in.',
+          fr: 'Associe l\'objet reçu après le check-in.',
         },
         target: '房卡',
         audio: '/audio/order-food/practice-reading-01.mp3',
         explanation: {
           en: '房卡 is the room card for entering the hotel room.',
-          fr: '房卡 est la carte pour entrer dans la chambre d’hôtel.',
+          fr: '房卡 est la carte pour entrer dans la chambre d\'hôtel.',
         },
+      },
+      {
+        id: 'order-food-reading-2',
+        prompt: { en: 'Match the hotel word for deposit.', fr: 'Associe le mot d\'hôtel pour caution.' },
+        target: '押金', audio: '/audio/order-food/practice-reading-02.mp3',
+        explanation: { en: '押金 is the deposit you may need to pay at check-in.', fr: '押金 est la caution que tu pourrais devoir payer au check-in.' },
       },
     ],
   },
@@ -350,11 +484,11 @@ export const orderFoodLesson: LessonContent = {
       front: '我有预订',
       back: {
         en: 'I have a reservation.',
-        fr: 'J’ai une réservation.',
+        fr: 'J\'ai une réservation.',
       },
       explanation: {
         en: 'Your opening sentence at the front desk.',
-        fr: 'Ta phrase d’ouverture à la réception.',
+        fr: 'Ta phrase d\'ouverture à la réception.',
       },
     },
     {
@@ -378,9 +512,12 @@ export const orderFoodLesson: LessonContent = {
       },
       explanation: {
         en: 'The key card for your hotel room.',
-        fr: 'La carte clé de ta chambre d’hôtel.',
+        fr: 'La carte clé de ta chambre d\'hôtel.',
       },
     },
+    { id: 'order-food-review-4', front: 'WiFi密码', back: { en: 'WiFi password', fr: 'mot de passe WiFi' }, explanation: { en: 'Ask this right after check-in.', fr: 'Demande ceci juste après le check-in.' } },
+    { id: 'order-food-review-5', front: '退房', back: { en: 'check out', fr: 'check-out' }, explanation: { en: 'Know your checkout time.', fr: 'Connais ton heure de check-out.' } },
+    { id: 'order-food-review-6', front: '押金', back: { en: 'deposit', fr: 'caution' }, explanation: { en: 'You may need to pay this at the front desk.', fr: 'Tu pourrais devoir payer ceci à la réception.' } },
   ],
   shortInput: {
     id: 'order-food-short-input-01',
@@ -391,7 +528,7 @@ export const orderFoodLesson: LessonContent = {
     target: '你好，我有预订。',
     explanation: {
       en: 'This is the first sentence for a basic check-in.',
-      fr: 'C’est la première phrase pour un check-in simple.',
+      fr: 'C\'est la première phrase pour un check-in simple.',
     },
     audio: '/audio/order-food/short-input-01.mp3',
   },
