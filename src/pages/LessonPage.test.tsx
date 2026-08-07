@@ -194,10 +194,11 @@ describe('LessonPage', () => {
       expect(steps).toHaveLength(3)
       expect(steps.map((step) => step.textContent)).toEqual(
         language === 'en'
-          ? ['1Dialogue', '2Useful patterns', '3Vocabulary']
-          : ['1Dialogue', '2Structures utiles', '3Vocabulaire'],
+          ? ['Dialogue', 'Useful patterns', 'Vocabulary']
+          : ['Dialogue', 'Structures utiles', 'Vocabulaire'],
       )
-      expect(steps[0]).toHaveClass('is-current')
+      expect(steps[0]).toHaveClass('pinyin-lesson-tab--selected')
+      expect(steps[1]).toHaveClass('pinyin-lesson-tab')
       expect(preview).not.toHaveTextContent(removed)
       const retainedHeadings =
         language === 'en'

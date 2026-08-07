@@ -84,14 +84,6 @@ function hasMediaRuleWithDeclaration(query: string, selector: string, declaratio
   return false
 }
 
-function backgroundVariableFor(selector: string) {
-  const match = ruleBlock(selector).match(/background:\s*var\((--[a-z-]+)\)/)
-  if (!match) {
-    throw new Error(`Missing background variable for ${selector}`)
-  }
-  return match[1]
-}
-
 describe('global color accessibility tokens', () => {
   it('keeps text-facing accent tokens readable on white and tinted surfaces', () => {
     const muted = cssVariable('--color-muted')
@@ -109,12 +101,23 @@ describe('global color accessibility tokens', () => {
     expect(contrastRatio(cinnabarDark, '#ffffff')).toBeGreaterThanOrEqual(4.5)
   })
 
-  it('keeps small current-step markers readable against their accent fill', () => {
-    const currentStepBackground = cssVariable(
-      backgroundVariableFor('.lesson-progress-preview__rail li.is-current span'),
-    )
+  it('keeps the lesson layer rail styled with pinyin pill tabs', () => {
+    const railBlock = ruleBlock('.lesson-progress-preview__rail')
+    const tabsBlock = ruleBlock('.pinyin-lesson-tabs')
+    const tabBlock = ruleBlock('.pinyin-lesson-tab')
+    const selectedBlock = ruleBlock('.pinyin-lesson-tab--selected')
 
-    expect(contrastRatio('#ffffff', currentStepBackground)).toBeGreaterThanOrEqual(4.5)
+    expect(railBlock).toContain('list-style: none;')
+    expect(tabsBlock).toContain('display: flex;')
+    expect(tabsBlock).toContain('flex-wrap: wrap;')
+    expect(tabsBlock).toContain('gap: 0.5rem;')
+    expect(tabBlock).toContain('border-radius: 999px;')
+    expect(tabBlock).toContain('cursor: pointer;')
+    expect(selectedBlock).toContain('background: #eef4ff;')
+    expect(selectedBlock).toContain('color: var(--color-sky-ink);')
+
+    const skyInk = cssVariable('--color-sky-ink')
+    expect(contrastRatio(skyInk, '#eef4ff')).toBeGreaterThanOrEqual(4.5)
   })
 
   it('keeps Home-only journey card polish scoped away from Progress journey nodes', () => {
@@ -356,13 +359,13 @@ describe('global color accessibility tokens', () => {
       expect(ruleBlock(selector)).toContain(declaration)
     }
 
-    expect(ruleBlock('.lesson-progress-preview__rail')).toContain('display: flex;')
-    expect(ruleBlock('.lesson-progress-preview__rail')).toContain('flex-wrap: wrap;')
+    expect(ruleBlock('.lesson-progress-preview__rail')).toContain('list-style: none;')
     expect(ruleBlock('.lesson-progress-preview__rail')).not.toContain('grid-template-columns')
-    expect(ruleBlock('.lesson-progress-preview__rail li')).toContain('border-radius: 999px;')
-    expect(ruleBlock('.lesson-progress-preview__rail li.is-current')).toContain(
-      'background: #eef4ff;',
-    )
+    expect(ruleBlock('.lesson-progress-preview__rail')).not.toContain('display: flex;')
+    expect(ruleBlock('.pinyin-lesson-tabs')).toContain('display: flex;')
+    expect(ruleBlock('.pinyin-lesson-tabs')).toContain('flex-wrap: wrap;')
+    expect(ruleBlock('.pinyin-lesson-tab')).toContain('border-radius: 999px;')
+    expect(ruleBlock('.pinyin-lesson-tab--selected')).toContain('background: #eef4ff;')
     expect(ruleBlock('.lesson-header-card,\n.review-card')).not.toContain(
       'gap: clamp(0.9rem, 2vw, 1.25rem);',
     )

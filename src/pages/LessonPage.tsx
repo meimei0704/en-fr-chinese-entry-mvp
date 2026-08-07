@@ -75,13 +75,13 @@ export function LessonPage() {
             <strong>{copy.lessonPage.studyLayersCount(studyLayers.length)}</strong>
             <span>{copy.lessonPage.practiceNext}</span>
           </div>
-          <ol className="lesson-progress-preview__rail">
+          <ol className="pinyin-lesson-tabs lesson-progress-preview__rail">
             {studyLayers.map((layer, index) => (
-              <li key={layer.id} className={index === 0 ? 'is-current' : undefined}>
-                <a className="lesson-progress-preview__rail-link" href={`#${layer.id}`}>
-                  <span>{index + 1}</span>
-                  {layer.label}
-                </a>
+              <li
+                key={layer.id}
+                className={`pinyin-lesson-tab ${index === 0 ? 'pinyin-lesson-tab--selected' : ''}`}
+              >
+                <a href={`#${layer.id}`}>{layer.label}</a>
               </li>
             ))}
           </ol>

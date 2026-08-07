@@ -1145,66 +1145,15 @@ h2 {
 }
 
 .lesson-progress-preview__rail {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.lesson-progress-preview__rail li {
-  min-width: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  color: var(--color-muted);
-  background: var(--color-surface);
-  transition: all 150ms ease;
-}
-
-.lesson-progress-preview__rail li:hover,
-.lesson-progress-preview__rail li:focus-within {
-  border-color: rgba(95, 143, 247, 0.35);
-}
-
 .lesson-progress-preview__rail li a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-width: 0;
-  padding: 0.55rem 1.05rem;
+  display: block;
   color: inherit;
-  font-size: 0.88rem;
-  font-weight: 700;
   text-decoration: none;
-}
-
-.lesson-progress-preview__rail li a:hover,
-.lesson-progress-preview__rail li a:focus-visible {
-  color: var(--color-ink);
-}
-
-.lesson-progress-preview__rail li span {
-  display: grid;
-  place-items: center;
-  width: 1.4rem;
-  aspect-ratio: 1;
-  border-radius: 999px;
-  color: var(--color-muted);
-  background: #ffffff;
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.lesson-progress-preview__rail li.is-current {
-  background: #eef4ff;
-  border-color: rgba(95, 143, 247, 0.42);
-  color: var(--color-sky-ink);
-}
-
-.lesson-progress-preview__rail li.is-current span {
-  color: #ffffff;
-  background: var(--color-sky-ink);
 }
 
 .lesson-page .lesson-header-card {
@@ -2880,10 +2829,6 @@ h2 {
   .lesson-progress-preview__summary > span:last-child {
     width: 100%;
     margin-left: 0;
-  }
-
-  .lesson-page .lesson-progress-preview__rail {
-    grid-template-columns: 1fr;
   }
 
   .lesson-action-dock {
