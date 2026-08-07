@@ -51,14 +51,16 @@ export function PracticePage() {
   }
 
   return (
-    <main className="page-shell" style={{ placeItems: 'start center' }}>
-      <section className="hero-card" style={{ display: 'grid', gap: '1.5rem' }}>
-        <header>
+    <main className="page-shell page-shell--wide practice-page">
+      <section className="hero-card lesson-header-card practice-page__header">
+        <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.practicePage.eyebrow}</p>
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
           <p className="lede">{copy.practicePage.lede}</p>
         </header>
+      </section>
 
+      <section className="page-grid practice-page__body">
         <PracticeChallenge
           lesson={lesson}
           language={selectedLanguage}

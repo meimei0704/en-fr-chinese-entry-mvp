@@ -54,9 +54,9 @@ describe('PracticeChallenge', () => {
     )
 
     expect(screen.getByText('Question 1 of 5')).toBeVisible()
-    expect(screen.getByText('Score 0')).toBeVisible()
-    expect(screen.getByText('Streak 0')).toBeVisible()
-    expect(screen.getByText('Lives 3')).toBeVisible()
+    expect(screen.getByLabelText('Score 0')).toBeVisible()
+    expect(screen.getByLabelText('Streak 0')).toBeVisible()
+    expect(screen.getByLabelText('Lives 3')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play the audio for question 1' })).toBeVisible()
   })
 
@@ -122,7 +122,7 @@ describe('PracticeChallenge', () => {
 
     expect(screen.getByText(copy.incorrectFeedback)).toBeVisible()
     expect(screen.getByText(copy.correctAnswer(firstQuestion.target))).toBeVisible()
-    expect(screen.getByText('Lives 2')).toBeVisible()
+    expect(screen.getByLabelText('Lives 2')).toBeVisible()
   })
 
   it('shows the result page early when all lives are lost', async () => {
@@ -236,7 +236,7 @@ describe('PracticeChallenge', () => {
     await user.click(screen.getByRole('button', { name: copy.playAgain }))
 
     expect(screen.getByText('Question 1 of 5')).toBeVisible()
-    expect(screen.getByText('Score 0')).toBeVisible()
-    expect(screen.getByText('Lives 3')).toBeVisible()
+    expect(screen.getByLabelText('Score 0')).toBeVisible()
+    expect(screen.getByLabelText('Lives 3')).toBeVisible()
   })
 })
