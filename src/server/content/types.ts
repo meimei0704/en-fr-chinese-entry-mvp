@@ -5,8 +5,6 @@ export const contentModuleTypes = [
   'dialogue',
   'sentencePatterns',
   'vocabulary',
-  'pronunciation',
-  'hanziRecognition',
   'practice',
   'reviewCards',
   'shortInput',
@@ -27,8 +25,6 @@ export type ModulePayload =
   | LessonContent['dialogue']
   | LessonContent['sentencePatterns']
   | LessonContent['vocabulary']
-  | LessonContent['pronunciation']
-  | LessonContent['hanziRecognition']
   | LessonContent['practice']
   | LessonContent['reviewCards']
   | LessonContent['shortInput']

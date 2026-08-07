@@ -61,8 +61,6 @@ export function buildLessonFromPublishedModuleRows(rows: PublishedModuleRow[]): 
     dialogue: byModule.get('dialogue')?.payload as LessonContent['dialogue'],
     sentencePatterns: byModule.get('sentencePatterns')?.payload as LessonContent['sentencePatterns'],
     vocabulary: byModule.get('vocabulary')?.payload as LessonContent['vocabulary'],
-    pronunciation: byModule.get('pronunciation')?.payload as LessonContent['pronunciation'],
-    hanziRecognition: byModule.get('hanziRecognition')?.payload as LessonContent['hanziRecognition'],
     practice: byModule.get('practice')?.payload as LessonContent['practice'],
     reviewCards: byModule.get('reviewCards')?.payload as LessonContent['reviewCards'],
     shortInput: byModule.get('shortInput')?.payload as LessonContent['shortInput'],

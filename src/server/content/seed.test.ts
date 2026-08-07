@@ -24,7 +24,6 @@ describe('initial content admin seed', () => {
       ...lesson.dialogue.lines.map((line) => line.audio),
       ...lesson.sentencePatterns.map((pattern) => pattern.audio),
       ...lesson.vocabulary.map((item) => item.audio),
-      ...lesson.pronunciation.map((tip) => tip.audio),
       ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
       lesson.shortInput.audio,
     ])

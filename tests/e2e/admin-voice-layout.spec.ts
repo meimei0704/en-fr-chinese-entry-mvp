@@ -26,8 +26,6 @@ function lessonSnapshot(lesson: LessonContent) {
       'dialogue',
       'sentencePatterns',
       'vocabulary',
-      'pronunciation',
-      'hanziRecognition',
       'practice',
       'reviewCards',
       'shortInput',
@@ -42,8 +40,6 @@ function lessonSnapshot(lesson: LessonContent) {
       dialogue: [],
       sentencePatterns: [],
       vocabulary: [],
-      pronunciation: [],
-      hanziRecognition: [],
       practice: [],
       reviewCards: [],
       shortInput: [],
@@ -75,7 +71,7 @@ async function installVoiceAdminRoutes(page: Page) {
 }
 
 async function expectVoiceLayoutPolish(page: Page) {
-  await expect(page.getByRole('heading', { name: /172 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /303 audio targets/i })).toBeVisible()
 
   const consentField = page.locator('.admin-voice-consent-field').first()
   const consentCheckbox = page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i)

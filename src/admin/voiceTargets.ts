@@ -3,7 +3,6 @@ import type {
   LessonContent,
   LessonId,
   PracticePrompt,
-  PronunciationTip,
   SentencePattern,
   ShortInputPrompt,
   VocabularyItem,
@@ -15,8 +14,6 @@ import type {
   VoiceAudioTargetId,
   VoiceGenerationApprovedResult,
   VoiceGenerationBatchPatch,
-  VoiceReplacementPatch,
-  VoiceReplacementTarget,
 } from './voiceTypes.js'
 
 const practiceSections: readonly VoiceAudioPracticeSection[] = ['listening', 'speaking', 'reading']
@@ -24,7 +21,6 @@ const moduleOrder: readonly VoiceAudioModuleType[] = [
   'dialogue',
   'sentencePatterns',
   'vocabulary',
-  'pronunciation',
   'practice',
   'shortInput',
 ]
@@ -164,17 +160,6 @@ export function collectLessonVoiceAudioTargets(lesson: LessonContent): VoiceAudi
         item,
       }),
     ),
-    ...lesson.pronunciation.map((tip, index) =>
-      createTarget({
-        lessonId: lesson.id,
-        targetId: targetId(`pronunciation:${tip.id}`),
-        moduleType: 'pronunciation',
-        itemId: tip.id,
-        label: `${lesson.id} · Pronunciation ${index + 1}`,
-        text: tip.audioText,
-        item: tip,
-      }),
-    ),
     ...collectPracticeTargets(lesson),
     createTarget({
       lessonId: lesson.id,
@@ -227,7 +212,6 @@ function parseTargetId(target: string) {
     moduleType === 'dialogue' ||
     moduleType === 'sentencePatterns' ||
     moduleType === 'vocabulary' ||
-    moduleType === 'pronunciation' ||
     moduleType === 'shortInput'
   ) {
     if (!maybeSection || maybeItemId) {
@@ -311,12 +295,6 @@ export function applyVoiceGenerationBatchToLesson(
           payload: replaceManyById<VocabularyItem>(lesson.vocabulary, replacementsByModule.get(moduleType)!),
         })
         break
-      case 'pronunciation':
-        patches.push({
-          moduleType,
-          payload: replaceManyById<PronunciationTip>(lesson.pronunciation, replacementsByModule.get(moduleType)!),
-        })
-        break
       case 'practice': {
         const nextPractice = {
           ...lesson.practice,
@@ -348,32 +326,4 @@ export function applyVoiceGenerationBatchToLesson(
   }
 
   return patches
-}
-
-export function collectVoiceReplacementTargets(lesson: LessonContent): VoiceReplacementTarget[] {
-  return collectLessonVoiceAudioTargets(lesson).map((target) => ({
-    id: target.targetId,
-    moduleType: target.moduleType,
-    itemId: target.itemId,
-    label: target.label,
-    text: target.text,
-    audio: target.currentAudio,
-  }))
-}
-
-export function applyVoiceReplacementToModule(
-  lesson: LessonContent,
-  target: string,
-  nextAudioUrl: string,
-): VoiceReplacementPatch {
-  const patches = applyVoiceGenerationBatchToLesson(lesson, [
-    { lessonId: lesson.id, targetId: target, generatedAudioUrl: nextAudioUrl },
-  ])
-  const [patch] = patches
-
-  if (!patch) {
-    throw new Error(`Voice replacement target not found: ${target}`)
-  }
-
-  return patch
 }

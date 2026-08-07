@@ -7,7 +7,6 @@ export type VoiceAudioTargetId =
   | `dialogue:${string}`
   | `sentencePatterns:${string}`
   | `vocabulary:${string}`
-  | `pronunciation:${string}`
   | `practice:listening:${string}`
   | `practice:speaking:${string}`
   | `practice:reading:${string}`
@@ -15,7 +14,7 @@ export type VoiceAudioTargetId =
 
 export type VoiceAudioPracticeSection = 'listening' | 'speaking' | 'reading'
 
-export type VoiceAudioModuleType = Exclude<ContentModuleType, 'lessonMeta' | 'hanziRecognition' | 'reviewCards'>
+export type VoiceAudioModuleType = Exclude<ContentModuleType, 'lessonMeta' | 'reviewCards'>
 
 export interface VoiceAudioTarget {
   targetId: VoiceAudioTargetId
@@ -42,24 +41,9 @@ export interface VoiceGenerationBatchPatch {
     | LessonContent['dialogue']
     | LessonContent['sentencePatterns']
     | LessonContent['vocabulary']
-    | LessonContent['pronunciation']
     | LessonContent['practice']
     | LessonContent['shortInput']
 }
-
-export type VoiceReplacementTargetId = VoiceAudioTargetId
-export type VoiceReplacementPracticeSection = VoiceAudioPracticeSection
-
-export interface VoiceReplacementTarget {
-  id: VoiceReplacementTargetId
-  moduleType: VoiceAudioModuleType
-  itemId: string
-  label: string
-  text: string
-  audio: string
-}
-
-export type VoiceReplacementPatch = VoiceGenerationBatchPatch
 
 export interface CreateAdminVoiceSampleProfileInput {
   consentConfirmed: boolean

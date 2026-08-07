@@ -1,7 +1,5 @@
 import type {
-  HanziRecognitionItem,
   PracticePrompt,
-  PronunciationTip,
   ReviewCard,
   SentencePattern,
   ShortInputPrompt,
@@ -27,21 +25,6 @@ export const vocabularyFields: readonly StructuredFieldConfig<VocabularyItem>[] 
   { key: 'hanzi', label: 'Hanzi', kind: 'text' },
   { key: 'pinyin', label: 'Pinyin', kind: 'text' },
   { key: 'audio', label: 'Audio URL', kind: 'text' },
-  { key: 'meaning', label: 'Meaning', kind: 'localized', multiline: true },
-  { key: 'explanation', label: 'Explanation', kind: 'localized', multiline: true },
-]
-
-export const pronunciationFields: readonly StructuredFieldConfig<PronunciationTip>[] = [
-  { key: 'focus', label: 'Focus', kind: 'localized' },
-  { key: 'audioText', label: 'Audio text', kind: 'text', multiline: true },
-  { key: 'audio', label: 'Audio URL', kind: 'text' },
-  { key: 'tip', label: 'Tip', kind: 'localized', multiline: true },
-  { key: 'explanation', label: 'Explanation', kind: 'localized', multiline: true },
-]
-
-export const hanziRecognitionFields: readonly StructuredFieldConfig<HanziRecognitionItem>[] = [
-  { key: 'hanzi', label: 'Hanzi', kind: 'text' },
-  { key: 'pinyin', label: 'Pinyin', kind: 'text' },
   { key: 'meaning', label: 'Meaning', kind: 'localized', multiline: true },
   { key: 'explanation', label: 'Explanation', kind: 'localized', multiline: true },
 ]

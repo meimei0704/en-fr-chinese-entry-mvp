@@ -31,8 +31,6 @@ function modulePayloadsForLesson(lesson: LessonContent) {
     ['dialogue', clone(lesson.dialogue)],
     ['sentencePatterns', clone(lesson.sentencePatterns)],
     ['vocabulary', clone(lesson.vocabulary)],
-    ['pronunciation', clone(lesson.pronunciation)],
-    ['hanziRecognition', clone(lesson.hanziRecognition)],
     ['practice', clone(lesson.practice)],
     ['reviewCards', clone(lesson.reviewCards)],
     ['shortInput', clone(lesson.shortInput)],
