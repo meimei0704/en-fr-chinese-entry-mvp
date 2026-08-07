@@ -41,10 +41,8 @@ function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
     publishedLesson: course.lessons.find((item) => item.id === draftLesson.id) ?? draftLesson,
     modules: [
       { moduleType: 'dialogue', draftRevisionId: 104, publishedRevisionId: 103, hasUnpublishedChanges: false },
-      { moduleType: 'hanziRecognition', draftRevisionId: 112, publishedRevisionId: 111, hasUnpublishedChanges: true },
       { moduleType: 'lessonMeta', draftRevisionId: 102, publishedRevisionId: 101, hasUnpublishedChanges: true },
       { moduleType: 'practice', draftRevisionId: 114, publishedRevisionId: 113, hasUnpublishedChanges: false },
-      { moduleType: 'pronunciation', draftRevisionId: 110, publishedRevisionId: 109, hasUnpublishedChanges: true },
       { moduleType: 'reviewCards', draftRevisionId: 116, publishedRevisionId: 115, hasUnpublishedChanges: false },
       { moduleType: 'sentencePatterns', draftRevisionId: 106, publishedRevisionId: 105, hasUnpublishedChanges: false },
       { moduleType: 'shortInput', draftRevisionId: 118, publishedRevisionId: 117, hasUnpublishedChanges: false },
@@ -70,8 +68,6 @@ function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
       dialogue: [],
       sentencePatterns: [],
       vocabulary: [],
-      pronunciation: [],
-      hanziRecognition: [],
       practice: [],
       reviewCards: [],
       shortInput: [],
@@ -321,7 +317,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(page).toHaveURL(/\/admin\/voice$/)
   await expect(page.getByRole('heading', { name: /original pronunciation is active/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /172 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /303 audio targets/i })).toBeVisible()
   await expect(page.locator('[data-testid^="voice-target-row-pronunciation:"]')).toHaveCount(0)
   await expect(page.getByText(/^pronunciation · zh-CN$/i)).toHaveCount(0)
   for (const targetId of [
@@ -356,8 +352,8 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/172 generated/i).first()).toBeVisible({ timeout: 15_000 })
-  expect(generatedTargets).toHaveLength(172)
+  await expect(page.getByText(/303 generated/i).first()).toBeVisible({ timeout: 15_000 })
+  expect(generatedTargets).toHaveLength(303)
   expect(new Set(generatedTargets.map((target) => target.moduleType))).toEqual(
     new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice', 'shortInput']),
   )

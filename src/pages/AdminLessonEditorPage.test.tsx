@@ -42,10 +42,8 @@ function lessonSnapshot(): AdminLessonSnapshot {
     // Deliberately mirrors MySQL alphabetical module_type order, not UI order.
     modules: [
       { moduleType: 'dialogue', draftRevisionId: 104, publishedRevisionId: 103, hasUnpublishedChanges: false },
-      { moduleType: 'hanziRecognition', draftRevisionId: 112, publishedRevisionId: 111, hasUnpublishedChanges: false },
       { moduleType: 'lessonMeta', draftRevisionId: 102, publishedRevisionId: 101, hasUnpublishedChanges: true },
       { moduleType: 'practice', draftRevisionId: 114, publishedRevisionId: 113, hasUnpublishedChanges: false },
-      { moduleType: 'pronunciation', draftRevisionId: 110, publishedRevisionId: 109, hasUnpublishedChanges: false },
       { moduleType: 'reviewCards', draftRevisionId: 116, publishedRevisionId: 115, hasUnpublishedChanges: false },
       { moduleType: 'sentencePatterns', draftRevisionId: 106, publishedRevisionId: 105, hasUnpublishedChanges: false },
       { moduleType: 'shortInput', draftRevisionId: 118, publishedRevisionId: 117, hasUnpublishedChanges: false },
@@ -56,8 +54,6 @@ function lessonSnapshot(): AdminLessonSnapshot {
       dialogue: [],
       sentencePatterns: [],
       vocabulary: [],
-      pronunciation: [],
-      hanziRecognition: [],
       practice: [],
       reviewCards: [],
       shortInput: [],
@@ -631,12 +627,6 @@ describe('AdminLessonEditorPage', () => {
 
   it('uses the editable whitelist order and leaks no hidden module UI from a full shuffled snapshot', async () => {
     const snapshot = lessonSnapshot()
-    snapshot.publishedHistory.pronunciation = [
-      historyEntry('pronunciation', 109, 'Hidden pronunciation history', lesson.pronunciation),
-    ]
-    snapshot.publishedHistory.hanziRecognition = [
-      historyEntry('hanziRecognition', 111, 'Hidden hanzi history', lesson.hanziRecognition),
-    ]
     vi.mocked(fetch).mockResolvedValue(jsonResponse(snapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
@@ -647,14 +637,6 @@ describe('AdminLessonEditorPage', () => {
     expect(directory.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)).toEqual(editableModuleLabels)
     expect(directory.getAllByRole('button', { name: /^edit /i })).toHaveLength(7)
     expect(history.getAllByRole('heading', { level: 3 }).map((node) => node.textContent)).toEqual(editableModuleLabels)
-    expect(screen.queryByTestId('admin-module-card-pronunciation')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('admin-module-card-hanziRecognition')).not.toBeInTheDocument()
-    expect(screen.queryByText(/^Pronunciation$/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/^Hanzi Recognition$/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/hidden pronunciation history/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/hidden hanzi history/i)).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /(edit|publish|rollback).*pronunciation/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /(edit|publish|rollback).*hanzi recognition/i })).not.toBeInTheDocument()
     expect(directory.getByRole('button', { name: /edit short input/i })).toBeVisible()
   })
 
@@ -687,11 +669,9 @@ describe('AdminLessonEditorPage', () => {
     expect(await screen.findByDisplayValue('Ask where baggage claim is.')).toBeVisible()
   })
 
-  it('reports editable modules in sync when only hidden modules are pending', async () => {
+  it('reports editable modules in sync when nothing is pending publish', async () => {
     const snapshot = lessonSnapshot()
     snapshot.modules.forEach((module) => { module.hasUnpublishedChanges = false })
-    setModuleSnapshot(snapshot, 'pronunciation', { hasUnpublishedChanges: true })
-    setModuleSnapshot(snapshot, 'hanziRecognition', { hasUnpublishedChanges: true })
     vi.mocked(fetch).mockResolvedValue(jsonResponse(snapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
@@ -700,7 +680,6 @@ describe('AdminLessonEditorPage', () => {
     expect(screen.getByText('All editable modules published')).toBeVisible()
     expect(screen.getByText('Editable modules in sync')).toBeVisible()
     expect(screen.queryByText(/2 modules pending publish/i)).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /publish (pronunciation|hanzi recognition)/i })).not.toBeInTheDocument()
   })
 
   it('uses plural scoped copy for multiple editable pending modules', async () => {
@@ -722,13 +701,9 @@ describe('AdminLessonEditorPage', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     const pendingSnapshot = lessonSnapshot()
     pendingSnapshot.modules.forEach((module) => { module.hasUnpublishedChanges = false })
-    for (const moduleType of ['shortInput', 'pronunciation', 'hanziRecognition'] as const) {
-      setModuleSnapshot(pendingSnapshot, moduleType, { hasUnpublishedChanges: true })
-    }
+    setModuleSnapshot(pendingSnapshot, 'shortInput', { hasUnpublishedChanges: true })
     const publishedSnapshot = lessonSnapshot()
     publishedSnapshot.modules.forEach((module) => { module.hasUnpublishedChanges = false })
-    setModuleSnapshot(publishedSnapshot, 'pronunciation', { hasUnpublishedChanges: true })
-    setModuleSnapshot(publishedSnapshot, 'hanziRecognition', { hasUnpublishedChanges: true })
     setModuleSnapshot(publishedSnapshot, 'shortInput', {
       hasUnpublishedChanges: false,
       draftRevisionId: 202,
@@ -753,11 +728,9 @@ describe('AdminLessonEditorPage', () => {
     expect(await screen.findByText('All editable modules published')).toBeVisible()
     expect(screen.getByText('Editable modules in sync')).toBeVisible()
     expect(screen.getByText(/short input published successfully/i)).toBeVisible()
-    expect(screen.queryByText(/^Pronunciation$/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/^Hanzi Recognition$/i)).not.toBeInTheDocument()
   })
 
-  it('keeps Short Input history and rollback while excluding hidden histories', async () => {
+  it('keeps Short Input history and rollback', async () => {
     const user = userEvent.setup()
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     const snapshot = lessonSnapshot()
@@ -765,20 +738,12 @@ describe('AdminLessonEditorPage', () => {
       historyEntry('shortInput', 117, 'Current Short Input', lesson.shortInput),
       historyEntry('shortInput', 77, 'Older Short Input', { ...lesson.shortInput, target: '出口在哪里？' }),
     ]
-    snapshot.publishedHistory.pronunciation = [
-      historyEntry('pronunciation', 109, 'Hidden pronunciation history', lesson.pronunciation),
-    ]
-    snapshot.publishedHistory.hanziRecognition = [
-      historyEntry('hanziRecognition', 111, 'Hidden hanzi history', lesson.hanziRecognition),
-    ]
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(snapshot))
       .mockResolvedValueOnce(jsonResponse(lessonSnapshot()))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
     await screen.findByText('Older Short Input')
-    expect(screen.queryByText(/hidden pronunciation history/i)).not.toBeInTheDocument()
-    expect(screen.queryByText(/hidden hanzi history/i)).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /rollback short input to revision 77/i }))
 
     expect(parsedRequestBody(1)).toEqual({

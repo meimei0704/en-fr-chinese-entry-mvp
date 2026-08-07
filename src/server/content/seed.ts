@@ -24,8 +24,6 @@ export function lessonToModulePayloads(lesson: LessonContent): LessonModulePaylo
     { moduleType: 'dialogue', payload: lesson.dialogue },
     { moduleType: 'sentencePatterns', payload: lesson.sentencePatterns },
     { moduleType: 'vocabulary', payload: lesson.vocabulary },
-    { moduleType: 'pronunciation', payload: lesson.pronunciation },
-    { moduleType: 'hanziRecognition', payload: lesson.hanziRecognition },
     { moduleType: 'practice', payload: lesson.practice },
     { moduleType: 'reviewCards', payload: lesson.reviewCards },
     { moduleType: 'shortInput', payload: lesson.shortInput },

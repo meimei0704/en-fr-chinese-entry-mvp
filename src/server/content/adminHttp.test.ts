@@ -47,8 +47,6 @@ describe('content admin HTTP handlers', () => {
         dialogue: [],
         sentencePatterns: [],
         vocabulary: [],
-        pronunciation: [],
-        hanziRecognition: [],
         practice: [],
         reviewCards: [],
         shortInput: [],

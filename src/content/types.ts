@@ -72,24 +72,6 @@ export interface VocabularyItem {
   explanation: BilingualExplanation
 }
 
-export interface PronunciationTip {
-  id: string
-  focus: LocalizedField
-  audioText: string
-  audio: string
-  audioFallback?: string
-  tip: LocalizedField
-  explanation: BilingualExplanation
-}
-
-export interface HanziRecognitionItem {
-  id: string
-  hanzi: string
-  pinyin: string
-  meaning: LocalizedField
-  explanation: BilingualExplanation
-}
-
 export interface PracticePrompt {
   id: string
   prompt: LocalizedField
@@ -128,8 +110,6 @@ export interface LessonContent {
   dialogue: DialogueSection
   sentencePatterns: SentencePattern[]
   vocabulary: VocabularyItem[]
-  pronunciation: PronunciationTip[]
-  hanziRecognition: HanziRecognitionItem[]
   practice: LessonPractice
   reviewCards: ReviewCard[]
   shortInput: ShortInputPrompt

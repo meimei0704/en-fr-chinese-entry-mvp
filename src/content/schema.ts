@@ -1,7 +1,6 @@
 import { z } from 'zod'
 
 import type { ContentModuleType, ModulePayload } from '../server/content/types.js'
-import type { LessonContent } from './types.js'
 
 const localizedTextSchema = z.object({
   en: z.string(),
@@ -43,24 +42,6 @@ const vocabularyItemSchema = z.object({
   pinyin: z.string(),
   audio: z.string(),
   audioFallback: z.string().optional(),
-  meaning: localizedFieldSchema,
-  explanation: bilingualExplanationSchema,
-})
-
-const pronunciationTipSchema = z.object({
-  id: z.string(),
-  focus: localizedFieldSchema,
-  audioText: z.string(),
-  audio: z.string(),
-  audioFallback: z.string().optional(),
-  tip: localizedFieldSchema,
-  explanation: bilingualExplanationSchema,
-})
-
-const hanziRecognitionItemSchema = z.object({
-  id: z.string(),
-  hanzi: z.string(),
-  pinyin: z.string(),
   meaning: localizedFieldSchema,
   explanation: bilingualExplanationSchema,
 })
@@ -107,8 +88,6 @@ const modulePayloadSchemas: Record<ContentModuleType, z.ZodType<unknown>> = {
   dialogue: dialogueSectionSchema,
   sentencePatterns: z.array(sentencePatternSchema),
   vocabulary: z.array(vocabularyItemSchema),
-  pronunciation: z.array(pronunciationTipSchema),
-  hanziRecognition: z.array(hanziRecognitionItemSchema),
   practice: lessonPracticeSchema,
   reviewCards: z.array(reviewCardSchema),
   shortInput: shortInputPromptSchema,
@@ -121,8 +100,6 @@ export const lessonContentSchema = z.object({
   dialogue: dialogueSectionSchema,
   sentencePatterns: z.array(sentencePatternSchema),
   vocabulary: z.array(vocabularyItemSchema),
-  pronunciation: z.array(pronunciationTipSchema),
-  hanziRecognition: z.array(hanziRecognitionItemSchema),
   practice: lessonPracticeSchema,
   reviewCards: z.array(reviewCardSchema),
   shortInput: shortInputPromptSchema,
@@ -130,8 +107,4 @@ export const lessonContentSchema = z.object({
 
 export function parseModulePayload(moduleType: ContentModuleType, payload: unknown): ModulePayload {
   return modulePayloadSchemas[moduleType].parse(payload) as ModulePayload
-}
-
-export function parseLessonContent(payload: unknown): LessonContent {
-  return lessonContentSchema.parse(payload) as LessonContent
 }
