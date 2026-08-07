@@ -9,9 +9,9 @@ const correctToneChoices = [
   /Third tone: low dipping/,
   /Fourth tone: sharp falling/,
   /First tone: high and level/,
+  /Third tone: low dipping/,
   /Second tone: rising/,
   /Third tone: low dipping/,
-  /Fourth tone: sharp falling/,
 ]
 
 async function installPinyinBrowserMocks(page: Page) {
@@ -228,8 +228,8 @@ test('renders four lesson tabs and switches between lessons preserving progress'
   await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'false')
 
-  await page.getByRole('radio', { name: correctToneChoices[0] }).check()
-  await page.getByRole('button', { name: 'Submit answer' }).click()
+  await page.getByRole('button', { name: 'Play bo' }).click()
+  await expect(page.getByText('1 of 3 sections complete')).toBeVisible()
 
   await tabs.nth(1).click()
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true')
@@ -246,7 +246,7 @@ test('renders four lesson tabs and switches between lessons preserving progress'
     }
   }, pinyinProgressStorageKey)
 
-  expect(browserState.completedSections).toContain('tone-game')
+  expect(browserState.completedSections).toContain('reference')
   expect(browserState.lessonProgress).toBeDefined()
   expect(browserState.lessonProgress?.['pinyin-foundations-1']).toBeDefined()
 })
