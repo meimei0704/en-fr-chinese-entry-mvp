@@ -7,8 +7,8 @@ export const askDirectionsLesson: LessonContent = {
     fr: 'Prendre un taxi jusqu\'à son hôtel',
   },
   scenario: {
-    en: 'Get into a taxi, show the address, and ask roughly how long the ride will take.',
-    fr: 'Monter dans un taxi, montrer l\'adresse et demander environ combien de temps prendra le trajet.',
+    en: 'Get into a taxi, show the address, ask for the meter, check how long the ride will take, and pay at the end.',
+    fr: 'Monter dans un taxi, montrer l\'adresse, demander le compteur, vérifier la durée du trajet et payer à la fin.',
   },
   dialogue: {
     title: {
