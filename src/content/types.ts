@@ -167,11 +167,29 @@ export interface JourneyNode {
   previewDetails?: JourneyNodePreviewDetails
 }
 
-export type PinyinLessonId = 'pinyin-foundations-1'
+export type PinyinLessonId =
+  | 'pinyin-foundations-1'
+  | 'pinyin-sibilants-2'
+  | 'pinyin-compound-finals-3'
+  | 'pinyin-spelling-rules-4'
 
 export type PinyinModuleId = 'reference' | 'tone-game' | 'shadowing'
 
-export type PinyinReferenceGroupId = 'initials' | 'finals' | 'tones'
+export type PinyinReferenceGroupId =
+  | 'initials'
+  | 'finals'
+  | 'tones'
+  | 'initials-aspirated'
+  | 'finals-single'
+  | 'initials-retroflex'
+  | 'initials-alveolar'
+  | 'initials-palatal'
+  | 'finals-compound'
+  | 'finals-nasal-n'
+  | 'finals-nasal-ng'
+  | 'spelling-u'
+  | 'spelling-abbrev'
+  | 'sandhi-rules'
 
 export interface PinyinReferenceItem {
   id: string
@@ -233,15 +251,25 @@ export interface PinyinLessonContent {
 }
 
 export interface PinyinCourseContent {
-  lesson: PinyinLessonContent
+  lessons: PinyinLessonContent[]
 }
 
-export interface PinyinProgress {
-  schemaVersion: 1
+export interface PinyinLessonProgress {
   visited: boolean
   completedSections: PinyinModuleId[]
   toneGameLastScore: number | null
   toneGameBestScore: number | null
   shadowingCompletedPromptIds: string[]
   lastVisitedPromptId: string | null
+}
+
+export interface PinyinProgress {
+  schemaVersion: 2
+  visited: boolean
+  completedSections: PinyinModuleId[]
+  toneGameLastScore: number | null
+  toneGameBestScore: number | null
+  shadowingCompletedPromptIds: string[]
+  lastVisitedPromptId: string | null
+  lessonProgress: Partial<Record<PinyinLessonId, PinyinLessonProgress>>
 }
