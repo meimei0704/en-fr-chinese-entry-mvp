@@ -190,6 +190,9 @@ describe('learner progress', () => {
       'restaurant-order-review-1',
       'restaurant-order-review-2',
       'restaurant-order-review-3',
+      'restaurant-order-review-4',
+      'restaurant-order-review-5',
+      'restaurant-order-review-6',
     ])
     expect(afterRestaurant.lessonStepProgress['restaurant-order']).toEqual({
       completedSections: [],
@@ -204,6 +207,9 @@ describe('learner progress', () => {
       'restaurant-order-review-1',
       'restaurant-order-review-2',
       'restaurant-order-review-3',
+      'restaurant-order-review-4',
+      'restaurant-order-review-5',
+      'restaurant-order-review-6',
       'ask-for-help-problem-review-1',
       'ask-for-help-problem-review-2',
       'ask-for-help-problem-review-3',

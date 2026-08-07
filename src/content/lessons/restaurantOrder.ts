@@ -7,8 +7,8 @@ export const restaurantOrderLesson: LessonContent = {
     fr: 'Commander un repas simple',
   },
   scenario: {
-    en: 'Ask for a menu, order beef noodles without spice, request water and chopsticks, and ask the total price.',
-    fr: 'Demander le menu, commander des nouilles au bœuf sans piment, demander de l’eau et des baguettes, puis demander le total.',
+    en: 'Ask for a menu, order beef noodles without spice, request water and chopsticks, choose a drink, confirm portion size, ask the total, and ask for takeaway.',
+    fr: 'Demander le menu, commander des nouilles au bœuf sans piment, demander de l\'eau et des baguettes, choisir une boisson, confirmer la taille de la portion, demander le total et demander à emporter.',
   },
   dialogue: {
     title: {
@@ -80,11 +80,11 @@ export const restaurantOrderLesson: LessonContent = {
         pinyin: 'Hái yào yì bēi shuǐ hé kuàizi.',
         translation: {
           en: 'I also want a cup of water and chopsticks.',
-          fr: 'Je voudrais aussi un verre d’eau et des baguettes.',
+          fr: 'Je voudrais aussi un verre d\'eau et des baguettes.',
         },
         explanation: {
           en: 'This keeps the extra request short: water plus chopsticks.',
-          fr: 'La demande supplémentaire reste courte : de l’eau et des baguettes.',
+          fr: 'La demande supplémentaire reste courte : de l\'eau et des baguettes.',
         },
         audio: '/audio/restaurant-order/line-04.mp3',
       },
@@ -105,6 +105,51 @@ export const restaurantOrderLesson: LessonContent = {
           fr: 'Réutilise 一共多少钱 quand tu es prêt à payer.',
         },
         audio: '/audio/restaurant-order/line-05.mp3',
+      },
+      {
+        id: 'restaurant-order-line-06',
+        speaker: { en: 'Server', fr: 'Serveur' },
+        hanzi: '大份还是小份？',
+        pinyin: 'Dà fèn háishì xiǎo fèn?',
+        translation: {
+          en: 'Large or small portion?',
+          fr: 'Grande ou petite portion ?',
+        },
+        explanation: {
+          en: '大份还是小份 is a common question about portion size in small restaurants.',
+          fr: '大份还是小份 est une question courante sur la taille des portions dans les petits restaurants.',
+        },
+        audio: '/audio/restaurant-order/line-06.mp3',
+      },
+      {
+        id: 'restaurant-order-line-07',
+        speaker: { en: 'Customer', fr: 'Client' },
+        hanzi: '小份。还有可乐吗？',
+        pinyin: 'Xiǎo fèn. Hái yǒu kělè ma?',
+        translation: {
+          en: 'Small portion. And do you have cola?',
+          fr: 'Petite portion. Et avez-vous du cola ?',
+        },
+        explanation: {
+          en: 'Confirm the size, then use 还有…吗 to ask about a drink.',
+          fr: 'Confirme la taille, puis utilise 还有…吗 pour demander une boisson.',
+        },
+        audio: '/audio/restaurant-order/line-07.mp3',
+      },
+      {
+        id: 'restaurant-order-line-08',
+        speaker: { en: 'Server', fr: 'Serveur' },
+        hanzi: '可以。在这儿吃还是带走？',
+        pinyin: 'Kěyǐ. Zài zhèr chī háishì dàizǒu?',
+        translation: {
+          en: 'Sure. Eat here or take away?',
+          fr: 'D\'accord. Sur place ou à emporter ?',
+        },
+        explanation: {
+          en: '在这儿吃 means eat here; 带走 means take away.',
+          fr: '在这儿吃 signifie manger sur place ; 带走 signifie à emporter.',
+        },
+        audio: '/audio/restaurant-order/line-08.mp3',
       },
     ],
   },
@@ -149,6 +194,28 @@ export const restaurantOrderLesson: LessonContent = {
       explanation: {
         en: 'Ask this before you choose or request something.',
         fr: 'Demande cela avant de choisir ou de demander quelque chose.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-4',
+      pattern: '…还是…？',
+      meaning: { en: '... or ...?', fr: '... ou ... ?' },
+      example: '大份还是小份？',
+      audio: '/audio/restaurant-order/pattern-04.mp3',
+      explanation: {
+        en: 'Use 还是 for a choice between two options in a question.',
+        fr: 'Utilise 还是 pour proposer un choix entre deux options dans une question.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-5',
+      pattern: '在这儿……还是……？',
+      meaning: { en: 'Here ... or ...? (for location choices)', fr: 'Sur place ... ou ... ? (pour les choix de lieu)' },
+      example: '在这儿吃还是带走？',
+      audio: '/audio/restaurant-order/pattern-05.mp3',
+      explanation: {
+        en: 'Use this pattern when the server asks if you want to eat in or take away.',
+        fr: 'Utilise cette structure quand le serveur demande si tu manges sur place ou à emporter.',
       },
     },
   ],
@@ -223,6 +290,11 @@ export const restaurantOrderLesson: LessonContent = {
         fr: 'Un objet utile à demander avec le repas.',
       },
     },
+    { id: 'restaurant-order-vocab-6', hanzi: '大份', pinyin: 'dà fèn', audio: '/audio/restaurant-order/vocab-06.mp3', meaning: { en: 'large portion', fr: 'grande portion' }, explanation: { en: 'Choose 大份 for a bigger serving.', fr: 'Choisis 大份 pour une plus grande portion.' } },
+    { id: 'restaurant-order-vocab-7', hanzi: '小份', pinyin: 'xiǎo fèn', audio: '/audio/restaurant-order/vocab-07.mp3', meaning: { en: 'small portion', fr: 'petite portion' }, explanation: { en: 'Choose 小份 for a smaller serving.', fr: 'Choisis 小份 pour une plus petite portion.' } },
+    { id: 'restaurant-order-vocab-8', hanzi: '可乐', pinyin: 'kělè', audio: '/audio/restaurant-order/vocab-08.mp3', meaning: { en: 'cola', fr: 'cola' }, explanation: { en: 'A common drink to order in restaurants.', fr: 'Une boisson courante à commander au restaurant.' } },
+    { id: 'restaurant-order-vocab-9', hanzi: '带走', pinyin: 'dàizǒu', audio: '/audio/restaurant-order/vocab-09.mp3', meaning: { en: 'take away', fr: 'à emporter' }, explanation: { en: 'Use it when you want to take the food with you.', fr: 'Utilise-le quand tu veux emporter la nourriture.' } },
+    { id: 'restaurant-order-vocab-10', hanzi: '买单', pinyin: 'mǎidān', audio: '/audio/restaurant-order/vocab-10.mp3', meaning: { en: 'pay the bill', fr: 'payer l\'addition' }, explanation: { en: 'Say 买单 to ask for the bill at the end of a meal.', fr: 'Dis 买单 pour demander l\'addition à la fin du repas.' } },
   ],
   pronunciation: [
     {
@@ -240,6 +312,20 @@ export const restaurantOrderLesson: LessonContent = {
       explanation: {
         en: 'Restaurant orders repeat measure words often, so 一 needs extra listening practice.',
         fr: 'Les commandes au restaurant répètent souvent les classificateurs, donc 一 mérite une écoute spéciale.',
+      },
+    },
+    {
+      id: 'restaurant-order-pronunciation-2',
+      focus: { en: 'r vs l contrast: 辣 vs 拉', fr: 'Contraste r vs l : 辣 vs 拉' },
+      audioText: '不要辣，不是不要拉',
+      audio: '/audio/restaurant-order/pronunciation-02.mp3',
+      tip: {
+        en: '辣 (là spicy) has a clear L sound; 拉 (lā pull) is different. Avoid accidental 拉 when asking for no spice.',
+        fr: '辣 (là pimenté) a un son L net ; 拉 (lā tirer) est différent. Évite 拉 par erreur en disant sans piment.',
+      },
+      explanation: {
+        en: 'Getting 辣 right makes your spice preference crystal clear.',
+        fr: 'Bien prononcer 辣 rend ta préférence de piment parfaitement claire.',
       },
     },
   ],
@@ -296,6 +382,8 @@ export const restaurantOrderLesson: LessonContent = {
         fr: 'Un classificateur et un objet que tu vois dans 一碗.',
       },
     },
+    { id: 'restaurant-order-hanzi-5', hanzi: '份', pinyin: 'fèn', meaning: { en: 'portion / share', fr: 'portion / part' }, explanation: { en: 'Recognize 份 in 大份 and 小份 for portion sizes.', fr: 'Reconnais 份 dans 大份 et 小份 pour les tailles de portion.' } },
+    { id: 'restaurant-order-hanzi-6', hanzi: '买', pinyin: 'mǎi', meaning: { en: 'buy', fr: 'acheter' }, explanation: { en: 'Recognize 买 in 买单, the phrase for paying the bill.', fr: 'Reconnais 买 dans 买单, la phrase pour payer l\'addition.' } },
   ],
   practice: {
     listening: [
@@ -312,6 +400,7 @@ export const restaurantOrderLesson: LessonContent = {
           fr: 'La cible combine la question du menu avec une commande simple.',
         },
       },
+      { id: 'restaurant-order-listening-2', prompt: { en: 'Which phrase means take away?', fr: 'Quelle phrase signifie à emporter ?' }, target: '带走', audio: '/audio/restaurant-order/practice-listening-02.mp3', explanation: { en: '带走 is the word for taking food to go.', fr: '带走 est le mot pour emporter la nourriture.' } },
     ],
     speaking: [
       {
@@ -324,9 +413,10 @@ export const restaurantOrderLesson: LessonContent = {
         audio: '/audio/restaurant-order/practice-speaking-01.mp3',
         explanation: {
           en: 'This is the core safe ordering sentence.',
-          fr: 'C’est la phrase principale pour commander sans risque.',
+          fr: 'C\'est la phrase principale pour commander sans risque.',
         },
       },
+      { id: 'restaurant-order-speaking-2', prompt: { en: 'Ask if they have cola.', fr: 'Demande s\'ils ont du cola.' }, target: '有可乐吗？', audio: '/audio/restaurant-order/practice-speaking-02.mp3', explanation: { en: 'A quick drink question after ordering food.', fr: 'Une question rapide sur les boissons après avoir commandé.' } },
     ],
     reading: [
       {
@@ -342,6 +432,7 @@ export const restaurantOrderLesson: LessonContent = {
           fr: 'Utilise cela quand les articles sont prêts et que tu veux le total.',
         },
       },
+      { id: 'restaurant-order-reading-2', prompt: { en: 'Match the word for paying the bill.', fr: 'Associe le mot pour payer l\'addition.' }, target: '买单', audio: '/audio/restaurant-order/practice-reading-02.mp3', explanation: { en: '买单 is how you ask for the check.', fr: '买单 est la façon de demander l\'addition.' } },
     ],
   },
   reviewCards: [
@@ -381,6 +472,9 @@ export const restaurantOrderLesson: LessonContent = {
         fr: 'Une préférence alimentaire concise.',
       },
     },
+    { id: 'restaurant-order-review-4', front: '大份 / 小份', back: { en: 'large / small portion', fr: 'grande / petite portion' }, explanation: { en: 'Choose your portion size when ordering.', fr: 'Choisis la taille de ta portion en commandant.' } },
+    { id: 'restaurant-order-review-5', front: '带走', back: { en: 'take away', fr: 'à emporter' }, explanation: { en: 'Say this to take the food with you.', fr: 'Dis ceci pour emporter la nourriture.' } },
+    { id: 'restaurant-order-review-6', front: '买单', back: { en: 'pay the bill', fr: 'payer l\'addition' }, explanation: { en: 'Ask the server for the check.', fr: 'Demande l\'addition au serveur.' } },
   ],
   shortInput: {
     id: 'restaurant-order-short-input-01',

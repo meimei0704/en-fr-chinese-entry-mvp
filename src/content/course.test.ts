@@ -14,19 +14,15 @@ const expectedLessonIds = [
   'train-station-ticket',
 ] as const
 
-const newLessonIds = expectedLessonIds.slice(5)
+const newLessonIds = expectedLessonIds.slice(7)
 
 const expectedReviewFrontsByNewLesson = {
-  'restaurant-order': ['菜单', '牛肉面', '不要辣'],
-  'metro-ticket': ['地铁', '二号线', '要几站？'],
   'pharmacy-help': ['药店', '头疼', '一天两次'],
   'ask-for-help-problem': ['帮我一下', '有问题', '慢一点'],
   'train-station-ticket': ['火车站', '车票', '三点出发'],
 } as const
 
 const expectedKeyChineseByNewLesson = {
-  'restaurant-order': /菜单|牛肉面|不要辣|一共多少钱/,
-  'metro-ticket': /人民广场|二号线|一张去人民广场的票|三站/,
   'pharmacy-help': /头疼|发烧|一天两次|多少钱/,
   'ask-for-help-problem': /帮我一下|手机有问题|不能支付|慢一点/,
   'train-station-ticket': /上海|今天下午|护照|三点出发/,
@@ -134,6 +130,9 @@ describe('course content', () => {
       'ask-directions': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
       'order-food': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
       'phone-and-payment': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'convenience-store-run': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'restaurant-order': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
+      'metro-ticket': { dialogue: 8, patterns: 5, vocab: 10, pronunciation: 2, hanzi: 6, practice: 2, cards: 6 },
     }
 
     for (const lesson of course.lessons) {
@@ -355,7 +354,7 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(239)
+    expect(audioPaths).toHaveLength(281)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     const newAudioPaths = new Set([
@@ -386,6 +385,24 @@ describe('course content', () => {
       '/audio/phone-and-payment/vocab-09.mp3', '/audio/phone-and-payment/vocab-10.mp3',
       '/audio/phone-and-payment/pronunciation-02.mp3',
       '/audio/phone-and-payment/practice-listening-02.mp3', '/audio/phone-and-payment/practice-speaking-02.mp3', '/audio/phone-and-payment/practice-reading-02.mp3',
+      '/audio/convenience-store-run/line-06.mp3', '/audio/convenience-store-run/line-07.mp3', '/audio/convenience-store-run/line-08.mp3',
+      '/audio/convenience-store-run/pattern-04.mp3', '/audio/convenience-store-run/pattern-05.mp3',
+      '/audio/convenience-store-run/vocab-06.mp3', '/audio/convenience-store-run/vocab-07.mp3', '/audio/convenience-store-run/vocab-08.mp3',
+      '/audio/convenience-store-run/vocab-09.mp3', '/audio/convenience-store-run/vocab-10.mp3',
+      '/audio/convenience-store-run/pronunciation-02.mp3',
+      '/audio/convenience-store-run/practice-listening-02.mp3', '/audio/convenience-store-run/practice-speaking-02.mp3', '/audio/convenience-store-run/practice-reading-02.mp3',
+      '/audio/restaurant-order/line-06.mp3', '/audio/restaurant-order/line-07.mp3', '/audio/restaurant-order/line-08.mp3',
+      '/audio/restaurant-order/pattern-04.mp3', '/audio/restaurant-order/pattern-05.mp3',
+      '/audio/restaurant-order/vocab-06.mp3', '/audio/restaurant-order/vocab-07.mp3', '/audio/restaurant-order/vocab-08.mp3',
+      '/audio/restaurant-order/vocab-09.mp3', '/audio/restaurant-order/vocab-10.mp3',
+      '/audio/restaurant-order/pronunciation-02.mp3',
+      '/audio/restaurant-order/practice-listening-02.mp3', '/audio/restaurant-order/practice-speaking-02.mp3', '/audio/restaurant-order/practice-reading-02.mp3',
+      '/audio/metro-ticket/line-06.mp3', '/audio/metro-ticket/line-07.mp3', '/audio/metro-ticket/line-08.mp3',
+      '/audio/metro-ticket/pattern-04.mp3', '/audio/metro-ticket/pattern-05.mp3',
+      '/audio/metro-ticket/vocab-06.mp3', '/audio/metro-ticket/vocab-07.mp3', '/audio/metro-ticket/vocab-08.mp3',
+      '/audio/metro-ticket/vocab-09.mp3', '/audio/metro-ticket/vocab-10.mp3',
+      '/audio/metro-ticket/pronunciation-02.mp3',
+      '/audio/metro-ticket/practice-listening-02.mp3', '/audio/metro-ticket/practice-speaking-02.mp3', '/audio/metro-ticket/practice-reading-02.mp3',
     ])
 
     for (const audioPath of audioPaths) {

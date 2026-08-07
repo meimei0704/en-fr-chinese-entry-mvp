@@ -7,8 +7,8 @@ export const metroTicketLesson: LessonContent = {
     fr: 'Acheter un ticket de métro',
   },
   scenario: {
-    en: 'Ask how to get to People’s Square, confirm line two, buy one metro ticket, and ask how many stops.',
-    fr: 'Demander comment aller à la Place du Peuple, confirmer la ligne 2, acheter un ticket de métro et demander le nombre de stations.',
+    en: 'Ask how to get to People\'s Square, confirm line two, buy one metro ticket, ask how many stops, check for a transfer, ask the price, and confirm the exit.',
+    fr: 'Demander comment aller à la Place du Peuple, confirmer la ligne 2, acheter un ticket de métro, demander le nombre de stations, vérifier une correspondance, demander le prix et confirmer la sortie.',
   },
   dialogue: {
     title: {
@@ -25,7 +25,7 @@ export const metroTicketLesson: LessonContent = {
         hanzi: '去人民广场怎么走？',
         pinyin: 'Qù Rénmín Guǎngchǎng zěnme zǒu?',
         translation: {
-          en: 'How do I get to People’s Square?',
+          en: 'How do I get to People\'s Square?',
           fr: 'Comment aller à la Place du Peuple ?',
         },
         explanation: {
@@ -61,7 +61,7 @@ export const metroTicketLesson: LessonContent = {
         hanzi: '我要一张去人民广场的票。',
         pinyin: 'Wǒ yào yì zhāng qù Rénmín Guǎngchǎng de piào.',
         translation: {
-          en: 'I want one ticket to People’s Square.',
+          en: 'I want one ticket to People\'s Square.',
           fr: 'Je voudrais un ticket pour la Place du Peuple.',
         },
         explanation: {
@@ -102,9 +102,54 @@ export const metroTicketLesson: LessonContent = {
         },
         explanation: {
           en: 'Listen for a number plus 站 when someone answers.',
-          fr: 'Écoute un nombre suivi de 站 quand quelqu’un répond.',
+          fr: 'Écoute un nombre suivi de 站 quand quelqu\'un répond.',
         },
         audio: '/audio/metro-ticket/line-05.mp3',
+      },
+      {
+        id: 'metro-ticket-line-06',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '需要换乘吗？',
+        pinyin: 'Xūyào huànchéng ma?',
+        translation: {
+          en: 'Do I need to transfer?',
+          fr: 'Dois-je faire une correspondance ?',
+        },
+        explanation: {
+          en: 'Ask 需要换乘吗 to confirm if the route needs a transfer.',
+          fr: 'Demande 需要换乘吗 pour confirmer si le trajet nécessite une correspondance.',
+        },
+        audio: '/audio/metro-ticket/line-06.mp3',
+      },
+      {
+        id: 'metro-ticket-line-07',
+        speaker: { en: 'Clerk', fr: 'Employé' },
+        hanzi: '不需要，一共三块钱。',
+        pinyin: 'Bù xūyào, yígòng sān kuài qián.',
+        translation: {
+          en: 'No transfer needed, three yuan in total.',
+          fr: 'Pas de correspondance, trois yuans au total.',
+        },
+        explanation: {
+          en: 'The clerk confirms no transfer and gives the fare price.',
+          fr: 'L\'employé confirme qu\'il n\'y a pas de correspondance et donne le prix.',
+        },
+        audio: '/audio/metro-ticket/line-07.mp3',
+      },
+      {
+        id: 'metro-ticket-line-08',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '哪个出口出去？',
+        pinyin: 'Nǎge chūkǒu chūqù?',
+        translation: {
+          en: 'Which exit should I take?',
+          fr: 'Quelle sortie dois-je prendre ?',
+        },
+        explanation: {
+          en: 'Ask 哪个出口 when you arrive and need the right exit for your destination.',
+          fr: 'Demande 哪个出口 à l\'arrivée pour trouver la bonne sortie vers ta destination.',
+        },
+        audio: '/audio/metro-ticket/line-08.mp3',
       },
     ],
   },
@@ -120,7 +165,7 @@ export const metroTicketLesson: LessonContent = {
       audio: '/audio/metro-ticket/pattern-01.mp3',
       explanation: {
         en: 'Use it before buying a ticket if you need the route.',
-        fr: 'Utilise cette structure avant d’acheter un ticket si tu as besoin de l’itinéraire.',
+        fr: 'Utilise cette structure avant d\'acheter un ticket si tu as besoin de l\'itinéraire.',
       },
     },
     {
@@ -149,6 +194,28 @@ export const metroTicketLesson: LessonContent = {
       explanation: {
         en: 'Ask it after you know the metro line.',
         fr: 'Pose cette question après connaître la ligne de métro.',
+      },
+    },
+    {
+      id: 'metro-ticket-pattern-4',
+      pattern: '需要……吗？',
+      meaning: { en: 'Do I need ...? / Is ... needed?', fr: 'Dois-je ... ? / ... est-il nécessaire ?' },
+      example: '需要换乘吗？',
+      audio: '/audio/metro-ticket/pattern-04.mp3',
+      explanation: {
+        en: 'Use 需要…吗 to confirm if something is required.',
+        fr: 'Utilise 需要…吗 pour confirmer si quelque chose est nécessaire.',
+      },
+    },
+    {
+      id: 'metro-ticket-pattern-5',
+      pattern: '哪个……？',
+      meaning: { en: 'Which ...?', fr: 'Quel / Quelle ... ?' },
+      example: '哪个出口出去？',
+      audio: '/audio/metro-ticket/pattern-05.mp3',
+      explanation: {
+        en: 'Use 哪个 to ask which one among visible options like exits or platforms.',
+        fr: 'Utilise 哪个 pour demander lequel parmi des options visibles comme les sorties ou les quais.',
       },
     },
   ],
@@ -223,6 +290,11 @@ export const metroTicketLesson: LessonContent = {
         fr: 'Reconnais-le sur les panneaux même si ce premier trajet reste simple.',
       },
     },
+    { id: 'metro-ticket-vocab-6', hanzi: '出口', pinyin: 'chūkǒu', audio: '/audio/metro-ticket/vocab-06.mp3', meaning: { en: 'exit', fr: 'sortie' }, explanation: { en: 'Look for 出口 signs to leave the station.', fr: 'Cherche les panneaux 出口 pour sortir de la station.' } },
+    { id: 'metro-ticket-vocab-7', hanzi: '公交卡', pinyin: 'gōngjiāokǎ', audio: '/audio/metro-ticket/vocab-07.mp3', meaning: { en: 'transit card', fr: 'carte de transport' }, explanation: { en: 'A rechargeable card for bus and metro rides.', fr: 'Une carte rechargeable pour les trajets en bus et métro.' } },
+    { id: 'metro-ticket-vocab-8', hanzi: '一张', pinyin: 'yì zhāng', audio: '/audio/metro-ticket/vocab-08.mp3', meaning: { en: 'one (for flat items like tickets)', fr: 'un (pour les objets plats comme les tickets)' }, explanation: { en: 'Use 张 for tickets, paper, and flat objects.', fr: 'Utilise 张 pour les tickets, le papier et les objets plats.' } },
+    { id: 'metro-ticket-vocab-9', hanzi: '充值', pinyin: 'chōngzhí', audio: '/audio/metro-ticket/vocab-09.mp3', meaning: { en: 'top up / recharge', fr: 'recharger' }, explanation: { en: 'Use 充值 to add money to your transit card.', fr: 'Utilise 充值 pour ajouter de l\'argent à ta carte de transport.' } },
+    { id: 'metro-ticket-vocab-10', hanzi: '方向', pinyin: 'fāngxiàng', audio: '/audio/metro-ticket/vocab-10.mp3', meaning: { en: 'direction', fr: 'direction' }, explanation: { en: 'Check 方向 on metro signs to know which platform to take.', fr: 'Vérifie 方向 sur les panneaux de métro pour savoir quel quai prendre.' } },
   ],
   pronunciation: [
     {
@@ -235,11 +307,25 @@ export const metroTicketLesson: LessonContent = {
       audio: '/audio/metro-ticket/pronunciation-01.mp3',
       tip: {
         en: 'Keep the number clear before 号线 and 站 so the route is not confused.',
-        fr: 'Garde le nombre clair devant 号线 et 站 pour éviter de confondre l’itinéraire.',
+        fr: 'Garde le nombre clair devant 号线 et 站 pour éviter de confondre l\'itinéraire.',
       },
       explanation: {
         en: 'Metro answers often compress to a number plus line or stops.',
         fr: 'Les réponses dans le métro se réduisent souvent à un nombre plus une ligne ou des stations.',
+      },
+    },
+    {
+      id: 'metro-ticket-pronunciation-2',
+      focus: { en: 'zh vs j contrast: 站 vs 见', fr: 'Contraste zh vs j : 站 vs 见' },
+      audioText: '三站，不是三见',
+      audio: '/audio/metro-ticket/pronunciation-02.mp3',
+      tip: {
+        en: '站 (zhàn stop) curls your tongue back; 见 (jiàn see) keeps your tongue flat. Practice the difference.',
+        fr: '站 (zhàn station) recourbe ta langue ; 见 (jiàn voir) garde la langue plate. Entraîne-toi à la différence.',
+      },
+      explanation: {
+        en: 'zh vs j is a common confusion point when listening to station announcements.',
+        fr: 'zh vs j est un point de confusion fréquent à l\'écoute des annonces de station.',
       },
     },
   ],
@@ -296,13 +382,15 @@ export const metroTicketLesson: LessonContent = {
         fr: 'Il indique les arrêts et les noms de station.',
       },
     },
+    { id: 'metro-ticket-hanzi-5', hanzi: '换', pinyin: 'huàn', meaning: { en: 'change / exchange', fr: 'changer / échanger' }, explanation: { en: 'Recognize 换 in 换乘 on transfer signs.', fr: 'Reconnais 换 dans 换乘 sur les panneaux de correspondance.' } },
+    { id: 'metro-ticket-hanzi-6', hanzi: '出', pinyin: 'chū', meaning: { en: 'go out / exit', fr: 'sortir' }, explanation: { en: 'Recognize 出 in 出口 when leaving the station.', fr: 'Reconnais 出 dans 出口 en quittant la station.' } },
   ],
   practice: {
     listening: [
       {
         id: 'metro-ticket-listening-1',
         prompt: {
-          en: "Listen for the metro ticket to People's Square.",
+          en: 'Listen for the metro ticket to People\'s Square.',
           fr: 'Écoute le ticket de métro pour la Place du Peuple.',
         },
         target: '我要一张去人民广场的票。',
@@ -312,21 +400,23 @@ export const metroTicketLesson: LessonContent = {
           fr: 'La destination se place entre 去 et 的票.',
         },
       },
+      { id: 'metro-ticket-listening-2', prompt: { en: 'Which phrase asks about a transfer?', fr: 'Quelle phrase demande une correspondance ?' }, target: '需要换乘吗？', audio: '/audio/metro-ticket/practice-listening-02.mp3', explanation: { en: '需要换乘吗 confirms if you need to change lines.', fr: '需要换乘吗 confirme si tu dois changer de ligne.' } },
     ],
     speaking: [
       {
         id: 'metro-ticket-speaking-1',
         prompt: {
-          en: 'Ask how to get to People’s Square.',
+          en: 'Ask how to get to People\'s Square.',
           fr: 'Demande comment aller à la Place du Peuple.',
         },
         target: '去人民广场怎么走？',
         audio: '/audio/metro-ticket/practice-speaking-01.mp3',
         explanation: {
           en: 'This is the route question before the ticket request.',
-          fr: 'C’est la question d’itinéraire avant la demande de ticket.',
+          fr: 'C\'est la question d\'itinéraire avant la demande de ticket.',
         },
       },
+      { id: 'metro-ticket-speaking-2', prompt: { en: 'Ask which exit to take.', fr: 'Demande quelle sortie prendre.' }, target: '哪个出口出去？', audio: '/audio/metro-ticket/practice-speaking-02.mp3', explanation: { en: 'Ask this when you arrive at the destination station.', fr: 'Demande ceci en arrivant à la station de destination.' } },
     ],
     reading: [
       {
@@ -342,6 +432,7 @@ export const metroTicketLesson: LessonContent = {
           fr: 'Cette phrase aide à suivre la distance du trajet.',
         },
       },
+      { id: 'metro-ticket-reading-2', prompt: { en: 'Match the word for transit card.', fr: 'Associe le mot pour carte de transport.' }, target: '公交卡', audio: '/audio/metro-ticket/practice-reading-02.mp3', explanation: { en: '公交卡 is a reusable card for buses and metro.', fr: '公交卡 est une carte réutilisable pour les bus et le métro.' } },
     ],
   },
   reviewCards: [
@@ -381,6 +472,9 @@ export const metroTicketLesson: LessonContent = {
         fr: 'Demande cela après avoir entendu la ligne.',
       },
     },
+    { id: 'metro-ticket-review-4', front: '换乘', back: { en: 'transfer', fr: 'correspondance' }, explanation: { en: 'Look for this on signs when changing lines.', fr: 'Cherche ceci sur les panneaux en changeant de ligne.' } },
+    { id: 'metro-ticket-review-5', front: '出口', back: { en: 'exit', fr: 'sortie' }, explanation: { en: 'Follow this sign to leave the station.', fr: 'Suis ce panneau pour quitter la station.' } },
+    { id: 'metro-ticket-review-6', front: '公交卡', back: { en: 'transit card', fr: 'carte de transport' }, explanation: { en: 'A card for bus and metro rides.', fr: 'Une carte pour les trajets en bus et métro.' } },
   ],
   shortInput: {
     id: 'metro-ticket-short-input-01',

@@ -68,7 +68,7 @@ describe('ReviewPage', () => {
       'phone-and-payment',
       'convenience-store-run',
     ])
-    expect(screen.getByText(/cards due today: 9/i)).toBeVisible()
+    expect(screen.getByText(/cards due today: 12/i)).toBeVisible()
     expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('手机卡')
 
     await user.click(screen.getByRole('button', { name: /mark complete/i }))
@@ -83,6 +83,9 @@ describe('ReviewPage', () => {
       'convenience-store-run-review-1',
       'convenience-store-run-review-2',
       'convenience-store-run-review-3',
+      'convenience-store-run-review-4',
+      'convenience-store-run-review-5',
+      'convenience-store-run-review-6',
     ])
   })
 
@@ -98,9 +101,12 @@ describe('ReviewPage', () => {
       'restaurant-order',
       'train-station-ticket',
     ])
-    expect(screen.getByText(/cards due today: 6/i)).toBeVisible()
+    expect(screen.getByText(/cards due today: 9/i)).toBeVisible()
     expect(screen.getByRole('region', { name: /flashcard front/i })).toHaveTextContent('菜单')
 
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
+    await user.click(screen.getByRole('button', { name: /mark complete/i }))
     await user.click(screen.getByRole('button', { name: /mark complete/i }))
     await user.click(screen.getByRole('button', { name: /mark complete/i }))
     await user.click(screen.getByRole('button', { name: /mark complete/i }))
