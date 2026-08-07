@@ -3129,3 +3129,32 @@ h2 {
 .pinyin-placeholder-section .muted-text {
   margin: 0;
 }
+
+.pinyin-lesson-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pinyin-lesson-tab {
+  padding: 0.55rem 1.05rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.pinyin-lesson-tab:hover {
+  border-color: rgba(95, 143, 247, 0.35);
+  color: var(--color-ink);
+}
+
+.pinyin-lesson-tab--selected {
+  background: #eef4ff;
+  border-color: rgba(95, 143, 247, 0.42);
+  color: var(--color-sky-ink);
+}

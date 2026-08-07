@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getLocalizedText } from '../../content/copy'
 import type {
   ExplanationLanguage,
+  PinyinLessonId,
   PinyinProgress,
   PinyinShadowing,
 } from '../../content/types'
@@ -43,6 +44,7 @@ interface ShadowingPracticeSectionProps {
   language: ExplanationLanguage
   progress: PinyinProgress
   copy: ShadowingPracticeCopy
+  lessonId: PinyinLessonId
   onProgressChange: (progress: PinyinProgress) => void
 }
 
@@ -51,6 +53,7 @@ export function ShadowingPracticeSection({
   language,
   progress,
   copy,
+  lessonId,
   onProgressChange,
 }: ShadowingPracticeSectionProps) {
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0)
@@ -117,6 +120,7 @@ export function ShadowingPracticeSection({
   function markCurrentPromptComplete() {
     const nextProgress = recordPinyinShadowingPromptComplete(
       loadPinyinProgress(),
+      lessonId,
       currentPrompt.id,
       promptIds,
     )

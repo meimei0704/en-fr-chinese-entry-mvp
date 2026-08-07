@@ -184,7 +184,7 @@ export const uiCopy = {
       shadowingNav: 'Shadowing',
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
-      lessonEyebrow: 'Lesson 1',
+      lessonEyebrow: (n: number) => `Lesson ${n}`,
       referenceHeading: 'Reference',
       referenceSummary: 'Build a first sound map from initials, finals, and Mandarin tones.',
       playReferenceAudio: (label: string) => `Play ${label}`,
@@ -390,7 +390,7 @@ export const uiCopy = {
       shadowingNav: 'Répétition',
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
-      lessonEyebrow: 'Leçon 1',
+      lessonEyebrow: (n: number) => `Leçon ${n}`,
       referenceHeading: 'Référence',
       referenceSummary: 'Construisez une première carte sonore à partir des initiales, finales et tons du mandarin.',
       playReferenceAudio: (label: string) => `Écouter ${label}`,

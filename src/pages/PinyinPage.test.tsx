@@ -143,7 +143,7 @@ describe('PinyinPage', () => {
 
   it('finishes the fixed eight-question tone game and records the score', async () => {
     const user = userEvent.setup()
-    const questions = pinyinCourse.lesson.toneGame.questions
+    const questions = pinyinCourse.lessons[0].toneGame.questions
 
     renderRoute('/pinyin')
 
@@ -362,7 +362,7 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('button', { name: 'Écouter l’extrait de ton 1' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Valider la réponse' })).toBeVisible()
     expect(screen.getByRole('heading', { level: 2, name: 'Répéter de courtes phrases' })).toBeVisible()
-    expect(screen.getByText('Phrase 1 sur 4')).toBeVisible()
+    expect(screen.getByText('Phrase 1 sur 5')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Commencer l’enregistrement' })).toBeVisible()
 
     expect(screen.queryByText('Reference')).not.toBeInTheDocument()
