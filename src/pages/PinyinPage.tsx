@@ -19,6 +19,7 @@ export function PinyinPage() {
   const pinyinCopy = copy.pinyinPage
   const [progress, setProgress] = useState(() => loadPinyinProgress())
   const lesson = pinyinCourse.lesson
+  const lessonId = lesson.id
   const navItems = [
     { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
     { href: '#pinyin-tone-game', label: pinyinCopy.toneGameNav },
@@ -26,7 +27,7 @@ export function PinyinPage() {
   ] as const
 
   function handleReferenceAudioPlay() {
-    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress())
+    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), lessonId)
 
     savePinyinProgress(nextProgress)
     setProgress(nextProgress)
@@ -57,6 +58,7 @@ export function PinyinPage() {
         <ToneGameSection
           toneGame={lesson.toneGame}
           language={language}
+          lessonId={lessonId}
           copy={{
             lessonEyebrow: pinyinCopy.lessonEyebrow(1),
             questionProgress: pinyinCopy.toneGameQuestionProgress,
@@ -75,6 +77,7 @@ export function PinyinPage() {
           shadowing={lesson.shadowing}
           language={language}
           progress={progress}
+          lessonId={lessonId}
           copy={{
             lessonEyebrow: pinyinCopy.lessonEyebrow(1),
             promptProgress: pinyinCopy.shadowingPromptProgress,

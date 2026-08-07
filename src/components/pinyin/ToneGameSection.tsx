@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { getLocalizedText } from '../../content/copy'
 import type {
   ExplanationLanguage,
+  PinyinLessonId,
   PinyinProgress,
   PinyinToneGame,
 } from '../../content/types'
@@ -29,6 +30,7 @@ interface ToneGameSectionProps {
   toneGame: PinyinToneGame
   language: ExplanationLanguage
   copy: ToneGameCopy
+  lessonId: PinyinLessonId
   onProgressChange: (progress: PinyinProgress) => void
 }
 
@@ -36,6 +38,7 @@ export function ToneGameSection({
   toneGame,
   language,
   copy,
+  lessonId,
   onProgressChange,
 }: ToneGameSectionProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -59,7 +62,7 @@ export function ToneGameSection({
     const isFinalQuestion = currentQuestionIndex === questions.length - 1
 
     if (isFinalQuestion) {
-      const nextProgress = recordPinyinToneGameScore(loadPinyinProgress(), nextCorrectCount)
+      const nextProgress = recordPinyinToneGameScore(loadPinyinProgress(), lessonId, nextCorrectCount)
 
       savePinyinProgress(nextProgress)
       onProgressChange(nextProgress)
