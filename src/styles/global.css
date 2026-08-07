@@ -3114,6 +3114,7 @@ h2 {
 }
 
 .practice-page .practice-page__header {
+  width: min(100%, 72rem);
   gap: clamp(0.9rem, 2vw, 1.25rem);
   padding: clamp(1.25rem, 3vw, 2rem);
 }
