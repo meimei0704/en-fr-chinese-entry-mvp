@@ -42,11 +42,6 @@ export function PinyinPage() {
   const lessonNumber = lessonIndex >= 0 ? lessonIndex + 1 : 1
   const sectionProgressDone = progress.lessonProgress[lesson.id]?.completedSections?.length ?? 0
 
-  const navItems = [
-    { href: '#pinyin-reference', label: pinyinCopy.referenceNav },
-    { href: '#pinyin-tone-game', label: pinyinCopy.toneGameNav },
-  ] as const
-
   function handleReferenceAudioPlay() {
     const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), selectedLessonId)
 
@@ -62,8 +57,6 @@ export function PinyinPage() {
           heading={pinyinCopy.heading}
           summary={getLocalizedText(lesson.summary, language)}
           sectionProgress={pinyinCopy.sectionProgress(sectionProgressDone, 2)}
-          sectionsNavLabel={pinyinCopy.sectionsNavLabel}
-          navItems={navItems}
         />
 
         <nav role="tablist" aria-label="Pinyin lessons" className="pinyin-lesson-tabs">
