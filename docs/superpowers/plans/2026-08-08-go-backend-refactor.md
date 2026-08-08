@@ -16,11 +16,13 @@
 
 - **契约基准**：TS 现状即真理。Go 行为以 `src/server/content/http.ts`、`adminHttp.ts`、`adminRepository.ts`、`adminStoreMysql.ts`、`repository.ts`、`publicContent.ts` 为蓝本，逐行移植。
 - **错误体统一**：`{ "error": "<message>" }`；状态码对照表见各任务。
-- **JSON 保真**：`payload` 列以 `[]byte`/`json.RawMessage` 存取，组装课程时原样输出，避免字段顺序/格式漂移。
+- **JSON 保真（强制）**：`payload` 列以 `json.RawMessage` 直通存取，组装课程时 `Marshal(RawMessage)` 原样输出，**禁止** map 重建后重新序列化（Go map 按 key 排序，会破坏字节保真）。契约验收用**规范化 deep-equal 忽略键序**（见 M6 脚本）。
 - **环境变量**：`MYSQL_DATABASE_URL` / `MYSQL_URL` / `DATABASE_URL`、`MYSQL_SSL=required`、`MYSQL_CONNECT_TIMEOUT_MS`、`CONTENT_ADMIN_USERNAME` / `CONTENT_ADMIN_PASSWORD`。
 - **测试命令**：`go test ./...`、`go vet ./...`；前端 `npm run test -- --run`、`npx playwright test`、`npm run lint`、`npm run build`。
 - **提交粒度**：每任务一 commit，message 前缀 `feat(go):` / `test(go):` / `refactor(frontend):` 等。
 - **Go module**：`module github.com/meimei0704/en-fr-chinese-entry-mvp/backend`，或 `module en-fr-chinese-entry-mvp`。采用后者（简短、Vercel 无需网络）。
+- **Vercel Go Functions 架构（默认）**：同一目录多个 `.go` 文件同属一个 package，多个 `func Handler` 必然编译冲突。**默认采用单入口 mux**：`api/content/index.go`（路由 `/api/content/course` 与 `/api/content/lessons`）、`api/admin/content/index.go`（路由 4 个 admin 端点）。这同时解决多 handler 共享 `store` 变量的问题。
+- **Go 版本 spike**：M1 先确认 Vercel Go Runtime 支持的 Go 版本上限；本机 1.26.3，若 Vercel 上限低于 1.26 需在 `go.mod` 声明可用版本并本地降级验证。
 
 ---
 
@@ -40,6 +42,8 @@ go mod init en-fr-chinese-entry-mvp
 go get github.com/go-sql-driver/mysql@latest
 go get github.com/DATA-DOG/go-sqlmock@latest
 ```
+
+> **版本 spike（M1 必做）**：Vercel 从 `go.mod` 的 `go` 指令读取 Go 版本（`toolchain` 指令优先），超上限会构建失败。本机 1.26.3；确认 Vercel Go Runtime 支持版本，若不支持 1.26 则在 `go.mod` 声明可用版本并本地降级验证。
 
 - [ ] **Step 2: 验证**
 
@@ -328,8 +332,10 @@ git commit -m "feat(go): add basic auth matching adminAuth.ts semantics"
 - Create: `internal/contentstore/store.go`（连接 + 2 读查询）
 - Create: `internal/contentstore/store_test.go`（go-sqlmock）
 - Create: `internal/contentbuild/build.go` + `internal/contentbuild/build_test.go`
-- Create: `api/content/course.go`
-- Create: `api/content/lessons.go`
+- Create: `internal/contentenv/env.go`（共享 store/env）
+- Create: `api/content/index.go`（单入口 mux）
+- Create: `api/content/index_test.go`
+- Create: `cmd/contentseed/` + `internal/seedgen/`（M2.5）
 
 ### Task 2.1: contentstore — MySQL 连接 + 公开读查询
 
@@ -338,6 +344,14 @@ git commit -m "feat(go): add basic auth matching adminAuth.ts semantics"
 - Create: `internal/contentstore/store_test.go`
 
 对应 TS：`src/server/content/repository.ts`（`createMysqlPoolOptions`、`resolveDatabaseUrl`、`ContentMysqlRepository.listPublishedCourseModules` / `listPublishedLessonModules`）。
+
+- [ ] **Step 0: DSN 格式 spike（M2 开头必做）**
+
+确认 `MYSQL_DATABASE_URL` 线上实际格式：
+- 若是 `mysql://user:pass@host:port/db`（URI scheme），go-sql-driver 的 `sql.Open("mysql", dsn)` **不认 URI**，需用 `mysql.ParseDSN` 或从 URI 拆出 host/db/user/pass 再拼 DSN（`user:pass@tcp(host:port)/db?tls=true&timeout=...`）。
+- `MYSQL_SSL=required` 的 `tls=true` 拼接只在 cfg 已是 query 格式时成立（`?a=b&tls=true`）；若 DSN 无 query，需拼 `?tls=true`。
+
+结论写入本任务实现与 M6 契约脚本的白名单/配置。
 
 - [ ] **Step 1: 写失败测试（用 go-sqlmock）**
 
@@ -371,8 +385,8 @@ func TestListPublishedCourseModules(t *testing.T) {
 	if len(result) != 1 || result[0].LessonID != "self-intro" || result[0].Enabled != true {
 		t.Fatalf("result = %+v", result)
 	}
-	if result[0].Payload == nil || len(result[0].Payload) == 0 {
-		t.Fatal("payload should be raw bytes")
+	if result[0].Payload == nil {
+		t.Fatal("payload should be json.RawMessage")
 	}
 }
 
@@ -408,21 +422,21 @@ package contentstore
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 var ErrMissingDatabaseURL = errors.New("missing MySQL connection env. Expected MYSQL_DATABASE_URL, MYSQL_URL, or DATABASE_URL")
 
 type Env struct {
-	MYSQLDatabaseURL string
-	MYSQLURL         string
-	DatabaseURL      string
-	MYSQLSSL         string
+	MYSQLDatabaseURL     string
+	MYSQLURL             string
+	DatabaseURL          string
+	MYSQLSSL             string
 	MYSQLConnectTimeoutMS string
 }
 
@@ -438,36 +452,38 @@ func ResolveDatabaseURL(env Env) string {
 
 func EnvFromMap(v map[string]string) Env {
 	return Env{
-		MYSQLDatabaseURL: v["MYSQL_DATABASE_URL"],
-		MYSQLURL:         v["MYSQL_URL"],
-		DatabaseURL:      v["DATABASE_URL"],
-		MYSQLSSL:         v["MYSQL_SSL"],
+		MYSQLDatabaseURL:     v["MYSQL_DATABASE_URL"],
+		MYSQLURL:             v["MYSQL_URL"],
+		DatabaseURL:          v["DATABASE_URL"],
+		MYSQLSSL:             v["MYSQL_SSL"],
 		MYSQLConnectTimeoutMS: v["MYSQL_CONNECT_TIMEOUT_MS"],
 	}
 }
 
+// Open builds a go-sql-driver DSN from env. Handles mysql:// URI form
+// (M2 spike) and MYSQL_SSL=required (appends ?tls=true or &tls=true).
 func Open(env Env) (*sql.DB, error) {
-	dsn := ResolveDatabaseURL(env)
-	if dsn == "" {
+	raw := ResolveDatabaseURL(env)
+	if raw == "" {
 		return nil, ErrMissingDatabaseURL
 	}
-	timeout := 20000
-	if v := env.MYSQLConnectTimeoutMS; v != "" {
-		if n, err := fmt.Sscanf(v, "%d", &timeout); err != nil || n != 1 {
-			timeout = 20000
-		}
+	dsn, err := normalizeDSN(raw, env)
+	if err != nil {
+		return nil, err
 	}
-	cfg := dsn
-	if env.MYSQLSSL == "required" {
-		cfg = cfg + "&tls=true"
-	}
-	db, err := sql.Open("mysql", cfg)
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	}
 	db.SetMaxOpenConns(4)
 	db.SetConnMaxLifetime(5 * time.Minute)
 	return db, nil
+}
+
+// normalizeDSN is implemented during the M2 spike based on the real env
+// format. Placeholder returns raw as-is until then.
+func normalizeDSN(raw string, env Env) (string, error) {
+	return raw, fmt.Errorf("normalizeDSN: TODO per M2 DSN spike; raw=%q", raw)
 }
 
 type Store struct {
@@ -477,80 +493,22 @@ type Store struct {
 func New(db *sql.DB) *Store { return &Store{db: db} }
 
 type PublishedModuleRow struct {
-	LessonID    string
-	Slug        string
+	LessonID     string
+	Slug         string
 	DisplayOrder int
-	Enabled     bool
-	ModuleType  string
-	RevisionID  int64
-	Payload     []byte
+	Enabled      bool
+	ModuleType   string
+	RevisionID   int64
+	Payload      json.RawMessage
 }
-
-const publishedModuleQuery = `
-select
-  l.lesson_id as lessonId,
-  l.slug as slug,
-  l.display_order as displayOrder,
-  l.enabled as enabled,
-  lm.module_type as moduleType,
-  mr.revision_id as revisionId,
-  mr.payload as payload
-from lessons l
-join lesson_modules lm on lm.lesson_id = l.lesson_id
-join module_revisions mr
-  on mr.revision_id = lm.current_published_revision_id
-  and mr.revision_kind = 'published'
-  and mr.lesson_id = lm.lesson_id
-  and mr.module_type = lm.module_type
-where l.enabled = true`
-
-func scanPublishedModuleRow(rows *sql.Rows) (PublishedModuleRow, error) {
-	var row PublishedModuleRow
-	if err := rows.Scan(&row.LessonID, &row.Slug, &row.DisplayOrder, &row.Enabled, &row.ModuleType, &row.RevisionID, &row.Payload); err != nil {
-		return row, err
-	}
-	return row, nil
-}
-
-func (s *Store) ListPublishedCourseModules() ([]PublishedModuleRow, error) {
-	query := publishedModuleQuery + " order by l.display_order asc, l.lesson_id asc, lm.module_type asc"
-	rows, err := s.db.QueryContext(context.Background(), query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	return collectRows(rows)
-}
-
-func (s *Store) ListPublishedLessonModules(lessonID string) ([]PublishedModuleRow, error) {
-	query := publishedModuleQuery + " and l.lesson_id = ? order by l.display_order asc, l.lesson_id asc, lm.module_type asc"
-	rows, err := s.db.QueryContext(context.Background(), query, lessonID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	return collectRows(rows)
-}
-
-func collectRows(rows *sql.Rows) ([]PublishedModuleRow, error) {
-	var out []PublishedModuleRow
-	for rows.Next() {
-		row, err := scanPublishedModuleRow(rows)
-		if err != nil {
-			return nil, err
-		}
-		out = append(out, row)
-	}
-	return out, rows.Err()
-}
-
-var _ = os.Getenv
 ```
+
+> 完整 SQL 查询与 `collectRows` 沿用原计划；`Payload` 类型改为 `json.RawMessage`（保真直通）。
 
 - [ ] **Step 4: 运行确认通过**
 
 Run: `go test ./internal/contentstore/`
-Expected: PASS。
+Expected: PASS（`normalizeDSN` spike 完成后）。
 
 - [ ] **Step 5: Commit**
 
@@ -584,9 +542,9 @@ import (
 )
 
 func fixtureRows() []contentstore.PublishedModuleRow {
-	payload := func(v any) []byte {
+	payload := func(v any) json.RawMessage {
 		b, _ := json.Marshal(v)
-		return b
+		return json.RawMessage(b)
 	}
 	meta := map[string]any{"id": "self-intro", "title": map[string]string{"en": "Intro", "fr": "Intro"}, "scenario": map[string]string{"en": "S", "fr": "S"}}
 	return []contentstore.PublishedModuleRow{
@@ -642,7 +600,6 @@ Expected: FAIL（`undefined: BuildLessonFromRows`）。
 package contentbuild
 
 import (
-	"bytes"
 	"encoding/json"
 
 	"en-fr-chinese-entry-mvp/internal/contentstore"
@@ -680,26 +637,20 @@ func BuildLessonFromRows(rows []contentstore.PublishedModuleRow) (map[string]any
 		return nil, false
 	}
 	lesson := map[string]any{
-		"id":              id,
-		"title":           title,
-		"scenario":        scenario,
-		"dialogue":        rawJSON(byModule["dialogue"].Payload),
-		"sentencePatterns": rawJSON(byModule["sentencePatterns"].Payload),
-		"vocabulary":      rawJSON(byModule["vocabulary"].Payload),
-		"practice":        rawJSON(byModule["practice"].Payload),
-		"reviewCards":     rawJSON(byModule["reviewCards"].Payload),
+		"id":               id,
+		"title":            title,
+		"scenario":         scenario,
+		"dialogue":         byModule["dialogue"].Payload,          // json.RawMessage passthrough
+		"sentencePatterns": byModule["sentencePatterns"].Payload,  // json.RawMessage passthrough
+		"vocabulary":       byModule["vocabulary"].Payload,        // json.RawMessage passthrough
+		"practice":         byModule["practice"].Payload,          // json.RawMessage passthrough
+		"reviewCards":      byModule["reviewCards"].Payload,       // json.RawMessage passthrough
 	}
 	return lesson, true
 }
 
-// rawJSON returns the parsed JSON value preserving the original encoding.
-func rawJSON(b []byte) any {
-	var v any
-	if err := json.Unmarshal(b, &v); err != nil {
-		return nil
-	}
-	return v
-}
+// json.RawMessage in a map marshals back to the ORIGINAL bytes (no map
+// re-encoding, no key reordering). This is the byte-fidelity guarantee.
 
 func groupByLesson(rows []contentstore.PublishedModuleRow) [][]contentstore.PublishedModuleRow {
 	groups := map[string][]contentstore.PublishedModuleRow{}
@@ -734,8 +685,6 @@ func BuildCourseFromRows(rows []contentstore.PublishedModuleRow) (map[string]any
 	}
 	return course, nil
 }
-
-var _ = bytes.Equal
 ```
 
 - [ ] **Step 4: 运行确认通过**
@@ -745,7 +694,7 @@ Expected: PASS。
 
 - [ ] **Step 5: 契约对比（临时脚本）**
 
-在 M2 末统一做 TS↔Go 字节对比，此处仅保证单测通过。
+在 M2 末统一做 TS↔Go 规范化对比（deep-equal 忽略键序），此处仅保证单测通过。
 
 - [ ] **Step 6: Commit**
 
@@ -754,47 +703,100 @@ git add internal/contentbuild/
 git commit -m "feat(go): add published content assembler ported from publicContent.ts"
 ```
 
-### Task 2.3: api/content/course.go + lessons.go
+### Task 2.3: api/content — 单入口 mux（course + lessons）
 
 **Files:**
-- Create: `api/content/course.go`
-- Create: `api/content/lessons.go`
+- Create: `api/content/index.go`（单入口，按 `r.URL.Path` 路由 course/lessons）
+- Create: `internal/contentenv/env.go`（env 读取 + store 懒初始化，公开读/admin 复用）
+- Create: `api/content/index_test.go`（假 store table-driven）
 
 对应 TS：`api/content/course.ts` / `api/content/lessons.ts` + `src/server/content/http.ts` 的 course/lesson handler。
 
-- [ ] **Step 1: 写 handler（含错误映射）**
+> **架构决定（planner 修正 #1）**：同一目录多个 `.go` 文件同属一个 package，多个 `func Handler` **必然编译失败**。采用**单入口 mux**：`api/content/index.go` 一个 `Handler`，按 `r.URL.Path` 分发。这同时解决共享 `store` 变量问题。
 
-`api/content/course.go`:
+- [ ] **Step 1: 共享 env/store 初始化**
+
+`internal/contentenv/env.go`:
+
+```go
+package contentenv
+
+import (
+	"os"
+	"sync"
+
+	"en-fr-chinese-entry-mvp/internal/contentstore"
+)
+
+var (
+	storeOnce sync.Once
+	storeVal  *contentstore.Store
+)
+
+// Store lazily initializes the shared content store from env.
+func Store() *contentstore.Store {
+	storeOnce.Do(func() {
+		env := contentstore.EnvFromMap(EnvMap())
+		db, err := contentstore.Open(env)
+		if err != nil {
+			return
+		}
+		storeVal = contentstore.New(db)
+	})
+	return storeVal
+}
+
+func EnvMap() map[string]string {
+	m := map[string]string{}
+	for _, k := range []string{"MYSQL_DATABASE_URL", "MYSQL_URL", "DATABASE_URL", "MYSQL_SSL", "MYSQL_CONNECT_TIMEOUT_MS"} {
+		if v := os.Getenv(k); v != "" {
+			m[k] = v
+		}
+	}
+	return m
+}
+```
+
+- [ ] **Step 2: 写 handler（单入口 mux）**
+
+`api/content/index.go`:
 
 ```go
 package handler
 
 import (
-	"errors"
 	"net/http"
+	"strings"
 
-	"en-fr-chinese-entry-mvp/internal/contentbuild"
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/internal/contentenv"
 	"en-fr-chinese-entry-mvp/internal/httpx"
 )
 
-var store = openStore()
-
-func openStore() *contentstore.Store {
-	env := contentstore.EnvFromMap(envMap())
-	db, err := contentstore.Open(env)
-	if err != nil {
-		return nil
+func Handler(w http.ResponseWriter, r *http.Request) {
+	switch strings.TrimSuffix(r.URL.Path, "/") {
+	case "/api/content/course":
+		handleCourse(w, r)
+	case "/api/content/lessons":
+		handleLesson(w, r)
+	default:
+		_ = httpx.WriteError(w, http.StatusNotFound, "Not found")
 	}
-	return contentstore.New(db)
 }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+func requireGet(w http.ResponseWriter, r *http.Request) bool {
 	if r.Method != http.MethodGet {
 		w.Header().Set("Allow", "GET")
 		_ = httpx.WriteError(w, http.StatusMethodNotAllowed, "Method not allowed")
+		return false
+	}
+	return true
+}
+
+func handleCourse(w http.ResponseWriter, r *http.Request) {
+	if !requireGet(w, r) {
 		return
 	}
+	store := contentenv.Store()
 	if store == nil {
 		_ = httpx.WriteError(w, http.StatusServiceUnavailable, "Published content database is not configured")
 		return
@@ -813,53 +815,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	_ = httpx.WriteJSON(w, http.StatusOK, course)
 }
 
-func envMap() map[string]string {
-	m := map[string]string{}
-	for _, k := range []string{"MYSQL_DATABASE_URL", "MYSQL_URL", "DATABASE_URL", "MYSQL_SSL", "MYSQL_CONNECT_TIMEOUT_MS"} {
-		if v := os.Getenv(k); v != "" {
-			m[k] = v
-		}
-	}
-	return m
-}
-```
-
-> 需要 `import "os"`。`envMap` 在两个 handler 间复用 → 抽到 `internal/contentstore/env.go`。
-
-`internal/contentstore/env.go`（新增）：
-
-```go
-package contentstore
-
-import "os"
-
-func EnvMap() map[string]string {
-	m := map[string]string{}
-	for _, k := range []string{"MYSQL_DATABASE_URL", "MYSQL_URL", "DATABASE_URL", "MYSQL_SSL", "MYSQL_CONNECT_TIMEOUT_MS"} {
-		if v := os.Getenv(k); v != "" {
-			m[k] = v
-		}
-	}
-	return m
-}
-```
-
-`api/content/lessons.go`:
-
-```go
-package handler
-
-import (
-	"net/http"
-
-	"en-fr-chinese-entry-mvp/internal/contentbuild"
-	"en-fr-chinese-entry-mvp/internal/httpx"
-)
-
-func Handler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		w.Header().Set("Allow", "GET")
-		_ = httpx.WriteError(w, http.StatusMethodNotAllowed, "Method not allowed")
+func handleLesson(w http.ResponseWriter, r *http.Request) {
+	if !requireGet(w, r) {
 		return
 	}
 	lessonID := r.URL.Query().Get("lessonId")
@@ -867,6 +824,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		_ = httpx.WriteError(w, http.StatusBadRequest, "Missing lessonId")
 		return
 	}
+	store := contentenv.Store()
 	if store == nil {
 		_ = httpx.WriteError(w, http.StatusServiceUnavailable, "Published content database is not configured")
 		return
@@ -886,22 +844,20 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-> ⚠️ Vercel Go Functions 以文件为单位编译；两个 `api/content/*.go` 各有 `package handler` 且各导出一个 `Handler` 是允许的（Vercel 将每个文件作为独立函数）。但若 Go 编译器把同目录两文件当同一 package 处理 `Handler` 重定义，则需改用**单一入口**方案：`api/content.go` 内根据 `r.URL.Path` 路由 `/api/content/course` 与 `/api/content/lessons`。**实施时以 `go build` 实际结果为准**；如冲突，采用单入口 mux 方案（下方 Step 4 备选）。
+- [ ] **Step 3: 写契约单测（注入假 store）**
 
-- [ ] **Step 2: 本地编译验证**
+为可测性，handler 逻辑抽到可注入依赖的函数（`NewCourseHandler(store)` / `NewLessonHandler(store)` 返回 `http.HandlerFunc`，`index.go` 的 `Handler` 调用它们并传入 `contentenv.Store()`）。`api/content/index_test.go` 用假 store（或接口）table-driven 断言：方法/状态码/错误体/`Allow` 头/`Cache-Control`、缺 lessonId 400、不存在 404、DB 未配置 503。对标 TS `publicContent.test.ts` + `http.ts` 语义。
+
+- [ ] **Step 4: 本地编译验证**
 
 Run: `go build ./... && go vet ./...`
-Expected: 通过（若遇 `Handler` 重定义，改单入口方案）。
-
-- [ ] **Step 3: 契约单测（handler 注入假 store）**
-
-为可测性，handler 应接受注入的 `store`。将 `course.go`/`lessons.go` 改为 `api/content/handlers.go` 导出 `NewCourseHandler(s *contentstore.Store)`、`NewLessonHandler(s *contentstore.Store)`，两个入口文件调用。写 `internal/httpx` + 假 store 的 table-driven 测试（M2 末尾随契约对比一起）。
+Expected: 通过（单入口无 `Handler` 冲突）。
 
 - [ ] **Step 4: 双实现契约对比**
 
-临时脚本：本地起 TS（`npm run dev`）与 Go（`go run` 本地模拟 handler 或 `vercel dev`），对比 `/api/content/course` 与 `/api/content/lessons/self-intro` 响应字节。提交为 `scripts/compare-content-api.mjs`（见 M6）。
+临时脚本：本地起 TS（`npm run dev`）与 Go（`go run` 本地模拟 handler 或 `vercel dev`），对比 `/api/content/course` 与 `/api/content/lessons/self-intro` 响应（规范化 deep-equal 忽略键序）。提交为 `scripts/compare-content-api.mjs`（见 M6）。
 
-Expected: 字节一致（除 `estimatedDailyMinutes` 等常量外）。
+Expected: 规范化 deep-equal 一致（忽略键序；白名单字段如 `estimatedDailyMinutes` 若 TS/Go 实现有常量差异则归一处理）。
 
 - [ ] **Step 5: Commit**
 
@@ -912,9 +868,9 @@ git commit -m "feat(go): add public content read functions matching TS contract"
 
 ### Task 2.4: M2 风险与文档更新
 
-- [ ] **Step 1: 记录 DSN 兼容性结论**
+- [ ] **Step 1: 记录 DSN spike 结论**
 
-在实施时确认 `MYSQL_DATABASE_URL` 实际格式；若为 URI scheme，go-sql-driver 需 `mysql.Config` 解析或改 DSN。结论写入设计文档"风险"节并在 PR 说明。
+Task 2.1 Step 0 的 DSN spike 结论写入 `normalizeDSN` 实现，并在设计文档"风险"节更新（若 `MYSQL_DATABASE_URL` 为 URI scheme 则记录转换方式）。
 
 - [ ] **Step 2: 更新设计文档**（如契约有任何偏差）
 
@@ -958,7 +914,7 @@ git commit -m "feat(go): add seed SQL regeneration tool ported from seed.ts"
 **Files:**
 - Create: `internal/pinyincontent/pinyin.go`（嵌入数据 + 暴露 course）
 - Create: `internal/pinyincontent/pinyin_test.go`
-- Create: `api/content/pinyin/course.go`（若沿用 /api/content/pinyin/course 路径）
+- Modify: `api/content/index.go`（并入 `/api/content/pinyin/course` 路由）
 
 ### Task 3.1: pinyin 静态数据嵌入
 
@@ -1006,14 +962,16 @@ git add internal/pinyincontent/ scripts/export-pinyin-json.mjs
 git commit -m "feat(go): embed pinyin course as static JSON (plan A)"
 ```
 
-### Task 3.2: api/content/pinyin/course.go
+### Task 3.2: /api/content/pinyin/course 路由
 
 **Files:**
-- Create: `api/content/pinyin/course.go`
+- Modify: `api/content/index.go`（并入 `/api/content/pinyin/course` 路由）
 
 - [ ] **Step 1: handler**
 
 GET → 200 pinyin course，`Cache-Control: s-maxage=60, stale-while-revalidate=300`；非 GET → 405。无 DB 依赖，`store` 为空也正常返回。
+
+> **架构决定**：为避免同目录多 `Handler` 冲突，pinyin 路由并入 `api/content/index.go` 的 mux（`/api/content/pinyin/course`）。不新增独立 `.go` 入口文件。
 
 - [ ] **Step 2: 编译 + 测试**
 
@@ -1023,8 +981,8 @@ Expected: 通过。
 - [ ] **Step 3: Commit**
 
 ```bash
-git add api/content/pinyin/course.go
-git commit -m "feat(go): add pinyin course read function"
+git add api/content/index.go internal/pinyincontent/
+git commit -m "feat(go): add pinyin course read route"
 ```
 
 ---
@@ -1034,10 +992,7 @@ git commit -m "feat(go): add pinyin course read function"
 **Files:**
 - Create: `internal/contentstore/admin_store.go` + `internal/contentstore/admin_store_test.go`
 - Create: `internal/contentstore/admin_repo.go` + `internal/contentstore/admin_repo_test.go`
-- Create: `api/admin/content/lessons.go`
-- Create: `api/admin/content/draft.go`
-- Create: `api/admin/content/publish.go`
-- Create: `api/admin/content/rollback.go`
+- Create: `api/admin/content/index.go`（单入口 mux）
 - Create: `internal/adminhttp/adminhttp.go` + `internal/adminhttp/adminhttp_test.go`
 
 ### Task 4.1: admin store（SQL 层）
@@ -1121,17 +1076,16 @@ git add internal/contentstore/admin_repo.go internal/contentstore/admin_repo_tes
 git commit -m "feat(go): add admin repository orchestration ported from adminRepository.ts"
 ```
 
-### Task 4.3: admin HTTP handlers + 4 个 Vercel 入口
+### Task 4.3: admin HTTP handlers + 单入口 Vercel Function
 
 **Files:**
 - Create: `internal/adminhttp/adminhttp.go`
 - Create: `internal/adminhttp/adminhttp_test.go`
-- Create: `api/admin/content/lessons.go`
-- Create: `api/admin/content/draft.go`
-- Create: `api/admin/content/publish.go`
-- Create: `api/admin/content/rollback.go`
+- Create: `api/admin/content/index.go`（单入口 mux，路由 4 个 admin 端点）
 
 对应 TS：`src/server/content/adminHttp.ts`（356 行）+ 4 个 `api/admin/content/*.ts`。
+
+> **架构决定（planner 修正 #1）**：同 M2，`api/admin/content/` 采用**单入口 mux** `index.go`，一个 `Handler` 按 `r.URL.Path`（`/api/admin/content/lessons|draft|publish|rollback`）分发，复用 `contentenv` 共享 store。
 
 - [ ] **Step 1: 写 handler（含错误映射、鉴权、重试、脱敏）**
 
@@ -1163,14 +1117,14 @@ git commit -m "feat(go): add admin repository orchestration ported from adminRep
 Run: `go test ./internal/adminhttp/`
 Expected: PASS。
 
-- [ ] **Step 4: 创建 4 个 Vercel 入口**
+- [ ] **Step 4: 创建单入口 Vercel Function**
 
-每个入口文件复用 `contentstore.EnvFromMap` + `auth.Env`（从 `CONTENT_ADMIN_USERNAME/PASSWORD`），懒初始化共享 repo。
+`api/admin/content/index.go`：`Handler` 按 `r.URL.Path` 路由 4 端点；复用 `contentenv` store + `auth.Env`（从 `CONTENT_ADMIN_USERNAME/PASSWORD`）。
 
 - [ ] **Step 5: 编译验证**
 
 Run: `go build ./... && go vet ./...`
-Expected: 通过（若 `Handler` 跨文件重定义冲突，同 M2 用单入口 mux 方案）。
+Expected: 通过（单入口无 `Handler` 冲突）。
 
 - [ ] **Step 6: Commit**
 
@@ -1194,6 +1148,8 @@ git commit -am "test(go): record admin contract comparison"
 ---
 
 ## M5：前端异步化改造
+
+> **Step 0（开工前必做）**：以 origin/main（105e5c9）重跑 `npm run test -- --run` 确认基线（plan 声称 41 文件/278 用例；本地旧 main 实测 40/268）。若与 41/278 不符，以重测为准并同步更新 M6/验收基线表述，防验收漂移。
 
 **Files:**
 - Create: `src/lib/contentApi.ts`
@@ -1574,7 +1530,7 @@ git commit -am "docs: mark go backend refactor complete and update README"
 | 里程碑 | 验证 |
 |--------|------|
 | M1 | `go build ./... && go vet ./...`、`go test ./internal/httpx/ ./internal/auth/` |
-| M2 | `go test ./...`；TS↔Go 字节对比一致（course/lessons）；`cmd/contentseed` 再生成 seed 与现文件一致 |
+| M2 | `go test ./...`；TS↔Go 规范化 deep-equal 一致（course/lessons，忽略键序）；`cmd/contentseed` 再生成 seed 与现文件一致 |
 | M3 | `go test ./internal/pinyincontent/`；`/api/content/pinyin/course` 返回 3 课 |
 | M4 | `go test ./...`；admin 往返（draft→publish→rollback）契约一致 |
 | M5 | `npm run test -- --run`、`npm run build`、`npm run lint`、`npx playwright test` |
@@ -1583,9 +1539,10 @@ git commit -am "docs: mark go backend refactor complete and update README"
 
 ## 风险与实施注意
 
-1. **Vercel Go Functions 同目录 `Handler` 冲突**：`api/content/course.go` + `lessons.go` 若被当作同 package 编译会重定义。实施先试；冲突则改单入口 mux（`api/content/index.go` 按 path 路由）。
-2. **DSN 兼容**：确认 `MYSQL_DATABASE_URL` 格式；URI scheme 需转换为 go-sql-driver DSN。
+1. **Vercel Go Functions 同目录 `Handler` 冲突**：**已默认采用单入口 mux**（`api/content/index.go`、`api/admin/content/index.go`），pinyin 路由并入 `api/content/index.go`，无同目录多 `Handler`。`api/content/pinyin/` 若建子目录需确认独立包；当前设计不建子目录。
+2. **DSN 兼容（M2 Step 0 spike）**：确认 `MYSQL_DATABASE_URL` 格式；URI scheme 需转 go-sql-driver DSN；`MYSQL_SSL=required` 的 `tls=true` 拼接需按 query 格式处理。
 3. **`apiEntrypoints.test.ts`**：M7 删 TS 端点时同步更新该测试。
 4. **前端时序**：页面测试由同步改异步，用 `findBy*`；避免时序敏感断言。
-5. **字节保真**：`payload` 保持 `[]byte` 直通，禁止 map 重建后重新序列化（会导致键序变化）。
+5. **字节保真**：`payload` 以 `json.RawMessage` 直通，禁止 map 重建后重新序列化（会导致键序变化）。契约验收用**规范化 deep-equal 忽略键序**（M6 脚本），不用字字节比对。
 6. **语音依赖**：`src/server/voice/adminHttp.ts` 顶层 import 静态 course，删除静态内容前必须确认 voice 已下线或改数据源。
+7. **vitest 基线（M5 开工前）**：以 origin/main（105e5c9）重测确认 41 文件/278 用例；本地旧 main 实测 40/268，防验收漂移。计划文档中的基线数值以 M5 开工前重测为准。
