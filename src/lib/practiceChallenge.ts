@@ -303,19 +303,18 @@ export function buildPracticeChallenge(
     pickIndex += 1
   }
 
-  const maxScore = selected.reduce((total, _question, index) => {
-    const streakBefore = Math.min(index, 2)
-    return total + (streakBefore >= 2 ? 15 : 10)
-  }, 0)
-
   return {
     questions: shuffle(selected, rng),
-    maxScore,
+    maxScore: 100,
   }
 }
 
-export function pointsForCorrect(streakBefore: number): number {
-  return streakBefore >= 2 ? 15 : 10
+export function pointsForCorrect(questionCount: number): number {
+  return Math.round(100 / questionCount)
+}
+
+export function remainingPoints(questionCount: number): number {
+  return 100 - pointsForCorrect(questionCount) * questionCount
 }
 
 export function computeRating(score: number, maxScore: number): ChallengeRating {
