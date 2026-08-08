@@ -3,11 +3,6 @@ interface PinyinHeroProps {
   heading: string
   summary: string
   sectionProgress: string
-  sectionsNavLabel: string
-  navItems: readonly {
-    href: string
-    label: string
-  }[]
 }
 
 export function PinyinHero({
@@ -15,8 +10,6 @@ export function PinyinHero({
   heading,
   summary,
   sectionProgress,
-  sectionsNavLabel,
-  navItems,
 }: PinyinHeroProps) {
   return (
     <section className="hero-card pinyin-hero">
@@ -24,13 +17,6 @@ export function PinyinHero({
       <h1>{heading}</h1>
       <p className="lede">{summary}</p>
       <p className="pinyin-hero__progress">{sectionProgress}</p>
-      <nav className="button-row pinyin-hero__nav" aria-label={sectionsNavLabel}>
-        {navItems.map((item) => (
-          <a key={item.href} className="secondary-link" href={item.href}>
-            {item.label}
-          </a>
-        ))}
-      </nav>
     </section>
   )
 }
