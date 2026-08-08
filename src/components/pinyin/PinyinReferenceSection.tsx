@@ -1,13 +1,11 @@
 import { SpeechButton } from '../SpeechButton'
 import { getLocalizedText } from '../../content/copy'
 import type { ExplanationLanguage, PinyinReferenceGroup } from '../../content/types'
+import { TonePitchVisual } from './TonePitchVisual'
 
 interface PinyinReferenceSectionProps {
   groups: PinyinReferenceGroup[]
   language: ExplanationLanguage
-  eyebrow: string
-  heading: string
-  summary: string
   playAudioLabel: (label: string) => string
   onReferenceAudioPlay: () => void
 }
@@ -15,34 +13,45 @@ interface PinyinReferenceSectionProps {
 export function PinyinReferenceSection({
   groups,
   language,
-  eyebrow,
-  heading,
-  summary,
   playAudioLabel,
   onReferenceAudioPlay,
 }: PinyinReferenceSectionProps) {
   return (
     <section id="pinyin-reference" className="surface-card pinyin-reference-section">
-      <div className="pinyin-section-heading">
-        <p className="eyebrow">{eyebrow}</p>
-        <h2>{heading}</h2>
-        <p className="muted-text">{summary}</p>
-      </div>
-
       <div className="pinyin-reference-section__groups">
         {groups.map((group) => (
-          <article key={group.id} className="pinyin-reference-group">
+          <article key={group.id} className={`pinyin-reference-group pinyin-reference-group--${group.id}`}>
             <header>
-              <h3>{getLocalizedText(group.title, language)}</h3>
+              <h2>{getLocalizedText(group.title, language)}</h2>
               <p className="muted-text">{getLocalizedText(group.summary, language)}</p>
             </header>
 
             <div className="pinyin-reference-group__items">
               {group.items.map((item) => (
                 <article key={item.id} className="study-item pinyin-reference-card">
-                  <div>
-                    <p className="pinyin-reference-card__label">{getLocalizedText(item.label, language)}</p>
-                    <p className="pinyin-line">{item.pinyin}</p>
+                  <div className="pinyin-reference-card__main">
+                    {item.hanzi ? (
+                      <span className="pinyin-reference-card__hanzi" aria-hidden="true">
+                        {item.hanzi}
+                      </span>
+                    ) : null}
+                    {item.emoji ? (
+                      <span className="pinyin-reference-card__emoji" aria-hidden="true">
+                        {item.emoji}
+                      </span>
+                    ) : null}
+                    <div>
+                      <p className="pinyin-reference-card__label">
+                        {getLocalizedText(item.label, language)}
+                      </p>
+                      <p className="pinyin-line">{item.pinyin}</p>
+                      {item.tone !== undefined ? (
+                        <TonePitchVisual
+                          tone={item.tone}
+                          label={getLocalizedText(item.label, language)}
+                        />
+                      ) : null}
+                    </div>
                   </div>
                   <SpeechButton
                     label={playAudioLabel(item.pinyin)}

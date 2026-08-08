@@ -3,7 +3,7 @@ import type {
   ExplanationLanguage,
   LessonContent,
   LocalizedField,
-  PinyinLessonContent,
+  PinyinModuleContent,
   ToneGameQuestion,
 } from '../content/types'
 import { getLocalizedText } from '../content/copy'
@@ -287,17 +287,17 @@ function pinyinToneListenQuestion(
 }
 
 export function buildPinyinPracticeChallenge(
-  pinyinLesson: PinyinLessonContent,
+  pinyinModule: PinyinModuleContent,
   language: ExplanationLanguage,
   count: number,
   seed: number,
 ): PracticeChallenge {
   const rng = createSeededRandom(seed)
-  const referenceItems = pinyinLesson.reference.flatMap((group) => group.items)
+  const referenceItems = pinyinModule.reference.flatMap((group) => group.items)
   const pinyinPool = referenceItems.map((item) => item.pinyin)
 
-  const toneQuestions: PracticeChallengeQuestion[] = pinyinLesson.toneGame.questions.map((question) =>
-    pinyinToneListenQuestion(question, language),
+  const toneQuestions: PracticeChallengeQuestion[] = (pinyinModule.toneGame?.questions ?? []).map(
+    (question) => pinyinToneListenQuestion(question, language),
   )
 
   const referenceListen: PracticeChallengeQuestion[] = referenceItems.map((item) =>

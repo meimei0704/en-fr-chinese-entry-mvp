@@ -11,6 +11,7 @@ import {
 } from '../lib/practiceChallenge'
 import { playPracticeSound } from '../lib/practiceSound'
 import { ExplanationBlock } from './ExplanationBlock'
+import { RecordingButton } from './RecordingButton'
 import { SpeechButton } from './SpeechButton'
 
 export interface PracticeChallengeCopy {
@@ -25,11 +26,16 @@ export interface PracticeChallengeCopy {
   incorrectFeedback: string
   correctAnswer: (answer: string) => string
   nextQuestion: string
+  recordStart: string
+  recordStop: string
+  recordReplay: string
+  recordUnsupported: string
+  recordDenied: string
+  recordError: string
   resultHeading: string
   finalScore: (score: number) => string
   ratingLabel: string
   ratingValue: (rating: string) => string
-  outOfLivesMessage: string
   playAgain: string
   completeLesson: string
   lessonCompleted: string
@@ -54,8 +60,6 @@ interface AnswerRecord {
   correct: boolean
 }
 
-const startingLives = 3
-
 export function PracticeChallenge({
   buildChallenge,
   language,
@@ -69,7 +73,6 @@ export function PracticeChallenge({
   const [questionIndex, setQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
-  const [lives, setLives] = useState(startingLives)
   const [answers, setAnswers] = useState<AnswerRecord[]>([])
   const [feedback, setFeedback] = useState<{
     correct: boolean
@@ -100,12 +103,10 @@ export function PracticeChallenge({
       ? pointsForCorrect(questions.length) + (isLastQuestion ? remainingPoints(questions.length) : 0)
       : 0
     const nextStreak = isCorrect ? streak + 1 : 0
-    const nextLives = isCorrect ? lives : lives - 1
     const nextScore = score + gained
 
     setScore(nextScore)
     setStreak(nextStreak)
-    setLives(nextLives)
     setAnswers((current) => [...current, { question: currentQuestion, correct: isCorrect }])
     setFeedback({ correct: isCorrect, points: gained, reveal })
 
@@ -117,7 +118,7 @@ export function PracticeChallenge({
       playPracticeSound('incorrect')
     }
 
-    if (isLastQuestion || nextLives <= 0) {
+    if (isLastQuestion) {
       playPracticeSound('complete')
       setFinished(true)
     }
@@ -136,7 +137,6 @@ export function PracticeChallenge({
     setQuestionIndex(0)
     setScore(0)
     setStreak(0)
-    setLives(startingLives)
     setAnswers([])
     setFeedback(null)
     setFinished(false)
@@ -204,7 +204,6 @@ export function PracticeChallenge({
               ))}
             </div>
             <p className="muted-text">{copy.encouragement(rating)}</p>
-            {lives <= 0 ? <p className="muted-text">{copy.outOfLivesMessage}</p> : null}
           </div>
 
           <div className="practice-challenge__result-actions">
@@ -265,6 +264,16 @@ export function PracticeChallenge({
             fallbackAudioSrc={currentQuestion.audioFallback}
           />
         </div>
+
+        <RecordingButton
+          label={copy.recordStart}
+          recordLabel={copy.recordStart}
+          stopLabel={copy.recordStop}
+          replayLabel={copy.recordReplay}
+          unsupportedLabel={copy.recordUnsupported}
+          deniedLabel={copy.recordDenied}
+          errorLabel={copy.recordError}
+        />
 
         {currentQuestion.kind === 'speak' ? (
           <div className="practice-challenge__options" role="group" aria-label={copy.speakOptions}>

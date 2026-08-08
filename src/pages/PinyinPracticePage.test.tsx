@@ -52,9 +52,9 @@ describe('PinyinPracticePage', () => {
   })
 
   it('renders the pinyin practice challenge with tone and reference questions', () => {
-    renderRoute('/pinyin/practice?lesson=pinyin-foundations-1')
+    renderRoute('/pinyin/practice?module=initials')
 
-    expect(screen.getByRole('heading', { level: 1, name: 'Pinyin Foundations' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: 'Initials' })).toBeVisible()
     expect(screen.queryByText(/question 1 of 5/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/^score 0$/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/^streak 0$/i)).not.toBeInTheDocument()
@@ -73,7 +73,7 @@ describe('PinyinPracticePage', () => {
   it('marks the practice section complete after finishing a challenge', async () => {
     const user = userEvent.setup()
 
-    renderRoute('/pinyin/practice?lesson=pinyin-foundations-1')
+    renderRoute('/pinyin/practice?module=initials')
 
     for (let questionNumber = 1; questionNumber <= 5; questionNumber += 1) {
       if (screen.queryByText(/challenge complete/i)) {
@@ -96,8 +96,6 @@ describe('PinyinPracticePage', () => {
     expect(screen.getByText(/challenge complete/i)).toBeVisible()
 
     const progress = loadPinyinProgress()
-    expect(progress.lessonProgress['pinyin-foundations-1']?.completedSections).toContain(
-      'practice',
-    )
+    expect(progress.moduleProgress['initials']?.completedSections).toContain('practice')
   })
 })

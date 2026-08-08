@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
+import type { PinyinModuleKey } from '../content/types'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
+import { PinyinWholeSyllablesSection } from '../components/pinyin/PinyinWholeSyllablesSection'
 import {
   loadPinyinProgress,
   recordPinyinReferenceComplete,
@@ -12,19 +14,21 @@ import {
 } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
 
-const courseLessonIds = pinyinCourse.lessons.map((l) => l.id)
+const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'tones', 'whole-syllables']
 
-function findDefaultLesson(): (typeof courseLessonIds)[number] {
+function findDefaultModuleKey(): PinyinModuleKey {
   const progress = loadPinyinProgress()
 
-  for (const lesson of pinyinCourse.lessons) {
-    const lp = progress.lessonProgress[lesson.id]
-    if (!lp || lp.completedSections.length < 2) {
-      return lesson.id
+  for (const moduleId of moduleKeys) {
+    if (moduleId === 'whole-syllables') {
+      continue
+    }
+    if (!progress.completedSections.includes('reference')) {
+      return moduleId
     }
   }
 
-  return pinyinCourse.lessons[0].id
+  return moduleKeys[0]
 }
 
 export function PinyinPage() {
@@ -32,17 +36,16 @@ export function PinyinPage() {
   const copy = getUiCopy(language)
   const pinyinCopy = copy.pinyinPage
   const [, setProgress] = useState(() => loadPinyinProgress())
-  const [selectedLessonId, setSelectedLessonId] = useState(findDefaultLesson)
+  const [selectedModuleKey, setSelectedModuleKey] = useState<PinyinModuleKey>(findDefaultModuleKey)
 
-  const lesson = useMemo(
-    () => pinyinCourse.lessons.find((l) => l.id === selectedLessonId) ?? pinyinCourse.lessons[0],
-    [selectedLessonId],
+  const module = useMemo(
+    () =>
+      pinyinCourse.modules.find((m) => m.id === selectedModuleKey) ?? pinyinCourse.modules[0],
+    [selectedModuleKey],
   )
-  const lessonIndex = pinyinCourse.lessons.findIndex((l) => l.id === selectedLessonId)
-  const lessonNumber = lessonIndex >= 0 ? lessonIndex + 1 : 1
 
   function handleReferenceAudioPlay() {
-    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), selectedLessonId)
+    const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), selectedModuleKey)
 
     savePinyinProgress(nextProgress)
     setProgress(nextProgress)
@@ -53,39 +56,51 @@ export function PinyinPage() {
       <div className="pinyin-page__content">
         <PinyinHero eyebrow={pinyinCopy.eyebrow} heading={pinyinCopy.heading} />
 
-        <nav role="tablist" aria-label="Pinyin lessons" className="pinyin-lesson-tabs">
-          {pinyinCourse.lessons.map((l, index) => (
+        <nav role="tablist" aria-label="Pinyin modules" className="pinyin-lesson-tabs">
+          {pinyinCourse.modules.map((m) => (
             <button
-              key={l.id}
+              key={m.id}
               type="button"
               role="tab"
-              className={`pinyin-lesson-tab ${l.id === selectedLessonId ? 'pinyin-lesson-tab--selected' : ''}`}
-              aria-selected={l.id === selectedLessonId}
+              className={`pinyin-lesson-tab pinyin-lesson-tab--${m.id} ${
+                m.id === selectedModuleKey ? 'pinyin-lesson-tab--selected' : ''
+              }`}
+              aria-selected={m.id === selectedModuleKey}
               onClick={() => {
                 setProgress(loadPinyinProgress())
-                setSelectedLessonId(l.id)
+                setSelectedModuleKey(m.id)
               }}
             >
-              <span>{index + 1}</span>
-              {getLocalizedText(l.title, language)}
+              <span className="pinyin-lesson-tab__badge" aria-hidden="true">
+                {getModuleBadge(m.id)}
+              </span>
+              {getLocalizedText(m.title, language)}
             </button>
           ))}
         </nav>
 
-        <PinyinReferenceSection
-          groups={lesson.reference}
-          language={language}
-          eyebrow={pinyinCopy.lessonEyebrow(lessonNumber)}
-          heading={pinyinCopy.referenceHeading}
-          summary={pinyinCopy.referenceSummary}
-          playAudioLabel={pinyinCopy.playReferenceAudio}
-          onReferenceAudioPlay={handleReferenceAudioPlay}
-        />
+        {module.id === 'whole-syllables' && module.wholeSyllables ? (
+          <PinyinWholeSyllablesSection
+            items={module.wholeSyllables}
+            language={language}
+            playAudioLabel={pinyinCopy.playReferenceAudio}
+            onReferenceAudioPlay={handleReferenceAudioPlay}
+          />
+        ) : (
+          <PinyinReferenceSection
+            groups={module.reference}
+            language={language}
+            playAudioLabel={pinyinCopy.playReferenceAudio}
+            onReferenceAudioPlay={handleReferenceAudioPlay}
+          />
+        )}
 
         <nav className="button-row lesson-actions lesson-action-dock" aria-label={pinyinCopy.lessonActions}>
-          <Link className="primary-button" to={`/pinyin/practice?lesson=${selectedLessonId}`}>
-            {pinyinCopy.goToPractice}
-          </Link>
+          {module.toneGame ? (
+            <Link className="primary-button" to={`/pinyin/practice?module=${selectedModuleKey}`}>
+              {pinyinCopy.goToPractice}
+            </Link>
+          ) : null}
           <Link className="secondary-link" to="/home">
             {pinyinCopy.backToHome}
           </Link>
@@ -93,4 +108,14 @@ export function PinyinPage() {
       </div>
     </main>
   )
+}
+
+function getModuleBadge(moduleKey: PinyinModuleKey): string {
+  const badges: Record<PinyinModuleKey, string> = {
+    initials: '①',
+    finals: '②',
+    tones: '③',
+    'whole-syllables': '④',
+  }
+  return badges[moduleKey]
 }

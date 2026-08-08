@@ -3,7 +3,6 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { pinyinCourse } from '../content/pinyin/course'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import { speakChinese } from '../lib/speech'
@@ -33,23 +32,45 @@ describe('PinyinPage', () => {
     ).toBeVisible()
   })
 
-  it('renders numbered lesson tab badges for every pinyin lesson', () => {
+  it('renders four numbered module tab badges', () => {
     renderRoute('/pinyin')
 
     const tabs = screen.getAllByRole('tab')
-    expect(tabs).toHaveLength(pinyinCourse.lessons.length)
-    expect(tabs.map((tab) => tab.querySelector('span')?.textContent)).toEqual(
-      pinyinCourse.lessons.map((_, index) => String(index + 1)),
-    )
+    expect(tabs).toHaveLength(4)
+    expect(tabs.map((tab) => tab.querySelector('span')?.textContent)).toEqual([
+      '①',
+      '②',
+      '③',
+      '④',
+    ])
+    expect(tabs.map((tab) => tab.textContent)).toEqual([
+      '①Initials',
+      '②Finals',
+      '③Tones',
+      '④Whole Syllables',
+    ])
   })
 
-  it('renders reference cards with audio playback entry points', () => {
+  it('renders reference cards with audio playback entry points for the default module', () => {
     renderRoute('/pinyin')
 
-    expect(screen.getByRole('heading', { level: 2, name: 'Reference' })).toBeVisible()
-    expect(screen.getByRole('heading', { level: 3, name: 'Initials' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Initials' })).toBeVisible()
     expect(screen.getByText('bo')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play bo' })).toBeVisible()
+  })
+
+  it('switches to the whole syllables module and renders all sixteen cards', async () => {
+    const user = userEvent.setup()
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('tab', { name: 'Whole Syllables' }))
+
+    expect(screen.getByText('zhī')).toBeVisible()
+    expect(screen.getByText('yīng')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Play zhī' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Play yīng' })).toBeVisible()
+    expect(screen.getByText('知')).toBeVisible()
+    expect(screen.getByText('英')).toBeVisible()
   })
 
   it('marks the reference section complete after the learner plays a reference audio sample', async () => {
@@ -73,18 +94,33 @@ describe('PinyinPage', () => {
     })
     expect(loadPinyinProgress()).toMatchObject({
       completedSections: ['reference'],
+      moduleProgress: {
+        initials: {
+          visited: true,
+          completedSections: ['reference'],
+        },
+      },
     })
     expect(localStorage.getItem(courseProgressStorageKey)).toBe(existingCourseProgress)
   })
 
-  it('links to the practice page for the selected lesson', () => {
+  it('links to the practice page for the selected module', () => {
     renderRoute('/pinyin')
 
     expect(screen.getByRole('link', { name: 'Go to practice' })).toHaveAttribute(
       'href',
-      '/pinyin/practice?lesson=pinyin-foundations-1',
+      '/pinyin/practice?module=initials',
     )
     expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/home')
+  })
+
+  it('does not offer practice for the whole-syllables module', async () => {
+    const user = userEvent.setup()
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('tab', { name: 'Whole Syllables' }))
+
+    expect(screen.queryByRole('link', { name: 'Go to practice' })).not.toBeInTheDocument()
   })
 
   it('localizes Pinyin page chrome and audio labels for French learners', () => {
@@ -95,13 +131,11 @@ describe('PinyinPage', () => {
 
     renderRoute('/pinyin')
 
-    expect(screen.getByRole('heading', { level: 2, name: 'Référence' })).toBeVisible()
-    expect(screen.getByText(/Construisez une première carte sonore/i)).toBeVisible()
-    expect(screen.getByText('Premier ton')).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Initiales' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter bo' })).toBeVisible()
     expect(screen.getByRole('link', { name: 'Passer à la pratique' })).toHaveAttribute(
       'href',
-      '/pinyin/practice?lesson=pinyin-foundations-1',
+      '/pinyin/practice?module=initials',
     )
 
     expect(screen.queryByText('Reference')).not.toBeInTheDocument()

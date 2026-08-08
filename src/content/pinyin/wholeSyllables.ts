@@ -1,0 +1,182 @@
+import type { PinyinWholeSyllable } from '../types.js'
+
+const audioBase = '/audio/pinyin/whole-syllables'
+
+export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
+  {
+    id: 'whole-zhi',
+    hanzi: '知',
+    pinyin: 'zhī',
+    emoji: '🧠',
+    description: {
+      en: 'zhi: retroflex zh with an i, like "jr" with a curled tongue.',
+      fr: 'zhi : rétroflexe zh avec un i, comme « dj » avec la langue recourbée.',
+    },
+    audio: `${audioBase}/reference-whole-zhi.mp3`,
+  },
+  {
+    id: 'whole-chi',
+    hanzi: '吃',
+    pinyin: 'chī',
+    emoji: '🍚',
+    description: {
+      en: 'chi: aspirated retroflex, the sound of "chīfàn" (to eat).',
+      fr: 'chi : rétroflexe aspirée, le son de « chīfàn » (manger).',
+    },
+    audio: `${audioBase}/reference-whole-chi.mp3`,
+  },
+  {
+    id: 'whole-shi',
+    hanzi: '十',
+    pinyin: 'shí',
+    emoji: '🔟',
+    description: {
+      en: 'shi: retroflex fricative, meaning ten in "shí".',
+      fr: 'shi : fricative rétroflexe, qui signifie dix dans « shí ».',
+    },
+    audio: `${audioBase}/reference-whole-shi.mp3`,
+  },
+  {
+    id: 'whole-ri',
+    hanzi: '日',
+    pinyin: 'rì',
+    emoji: '☀️',
+    description: {
+      en: 'ri: voiced retroflex, the word for sun/day in "rì".',
+      fr: 'ri : rétroflexe voisée, le mot pour soleil/jour dans « rì ».',
+    },
+    audio: `${audioBase}/reference-whole-ri.mp3`,
+  },
+  {
+    id: 'whole-zi',
+    hanzi: '子',
+    pinyin: 'zǐ',
+    emoji: '📝',
+    description: {
+      en: 'zi: alveolar unaspirated, a suffix meaning child as in "zǐ".',
+      fr: 'zi : alvéolaire non aspirée, un suffixe signifiant enfant comme dans « zǐ ».',
+    },
+    audio: `${audioBase}/reference-whole-zi.mp3`,
+  },
+  {
+    id: 'whole-ci',
+    hanzi: '词',
+    pinyin: 'cí',
+    emoji: '📖',
+    description: {
+      en: 'ci: aspirated alveolar, the word for word in "cí".',
+      fr: 'ci : alvéolaire aspirée, le mot pour mot dans « cí ».',
+    },
+    audio: `${audioBase}/reference-whole-ci.mp3`,
+  },
+  {
+    id: 'whole-si',
+    hanzi: '四',
+    pinyin: 'sì',
+    emoji: '4️⃣',
+    description: {
+      en: 'si: alveolar fricative, meaning four in "sì".',
+      fr: 'si : fricative alvéolaire, qui signifie quatre dans « sì ».',
+    },
+    audio: `${audioBase}/reference-whole-si.mp3`,
+  },
+  {
+    id: 'whole-yi',
+    hanzi: '一',
+    pinyin: 'yī',
+    emoji: '1️⃣',
+    description: {
+      en: 'yi: a whole syllable starting with y, meaning one in "yī".',
+      fr: 'yi : une syllabe complète commençant par y, qui signifie un dans « yī ».',
+    },
+    audio: `${audioBase}/reference-whole-yi.mp3`,
+  },
+  {
+    id: 'whole-wu',
+    hanzi: '五',
+    pinyin: 'wǔ',
+    emoji: '5️⃣',
+    description: {
+      en: 'wu: a whole syllable starting with w, meaning five in "wǔ".',
+      fr: 'wu : une syllabe complète commençant par w, qui signifie cinq dans « wǔ ».',
+    },
+    audio: `${audioBase}/reference-whole-wu.mp3`,
+  },
+  {
+    id: 'whole-yu',
+    hanzi: '鱼',
+    pinyin: 'yú',
+    emoji: '🐟',
+    description: {
+      en: 'yu: the ü vowel written as yu, meaning fish in "yú".',
+      fr: 'yu : la voyelle ü écrite yu, qui signifie poisson dans « yú ».',
+    },
+    audio: `${audioBase}/reference-whole-yu.mp3`,
+  },
+  {
+    id: 'whole-ye',
+    hanzi: '夜',
+    pinyin: 'yè',
+    emoji: '🌙',
+    description: {
+      en: 'ye: a whole syllable gliding from y to e, meaning night in "yè".',
+      fr: 'ye : une syllabe complète glissant de y à e, qui signifie nuit dans « yè ».',
+    },
+    audio: `${audioBase}/reference-whole-ye.mp3`,
+  },
+  {
+    id: 'whole-yue',
+    hanzi: '月',
+    pinyin: 'yuè',
+    emoji: '🌕',
+    description: {
+      en: 'yue: a whole syllable with the üe final, meaning moon in "yuè".',
+      fr: 'yue : une syllabe complète avec la finale üe, qui signifie lune dans « yuè ».',
+    },
+    audio: `${audioBase}/reference-whole-yue.mp3`,
+  },
+  {
+    id: 'whole-yuan',
+    hanzi: '圆',
+    pinyin: 'yuán',
+    emoji: '⭕',
+    description: {
+      en: 'yuan: a whole syllable with the üan final, meaning round in "yuán".',
+      fr: 'yuan : une syllabe complète avec la finale üan, qui signifie rond dans « yuán ».',
+    },
+    audio: `${audioBase}/reference-whole-yuan.mp3`,
+  },
+  {
+    id: 'whole-yin',
+    hanzi: '音',
+    pinyin: 'yīn',
+    emoji: '🎵',
+    description: {
+      en: 'yin: a whole syllable ending in n, meaning sound in "yīn".',
+      fr: 'yin : une syllabe complète se terminant par n, qui signifie son dans « yīn ».',
+    },
+    audio: `${audioBase}/reference-whole-yin.mp3`,
+  },
+  {
+    id: 'whole-yun',
+    hanzi: '云',
+    pinyin: 'yún',
+    emoji: '☁️',
+    description: {
+      en: 'yun: a whole syllable with the ün final, meaning cloud in "yún".',
+      fr: 'yun : une syllabe complète avec la finale ün, qui signifie nuage dans « yún ».',
+    },
+    audio: `${audioBase}/reference-whole-yun.mp3`,
+  },
+  {
+    id: 'whole-ying',
+    hanzi: '英',
+    pinyin: 'yīng',
+    emoji: '🇬🇧',
+    description: {
+      en: 'ying: a whole syllable ending in ng, meaning hero as in "yīng".',
+      fr: 'ying : une syllabe complète se terminant par ng, qui signifie héros comme dans « yīng ».',
+    },
+    audio: `${audioBase}/reference-whole-ying.mp3`,
+  },
+]

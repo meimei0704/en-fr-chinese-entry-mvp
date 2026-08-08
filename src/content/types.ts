@@ -144,6 +144,12 @@ export type PinyinLessonId =
 
 export type PinyinModuleId = 'reference' | 'practice' | 'shadowing'
 
+export type PinyinModuleKey =
+  | 'initials'
+  | 'finals'
+  | 'tones'
+  | 'whole-syllables'
+
 export type PinyinReferenceGroupId =
   | 'initials'
   | 'finals'
@@ -163,6 +169,9 @@ export interface PinyinReferenceItem {
   pinyin: string
   description: LocalizedField
   audio: string
+  hanzi?: string
+  emoji?: string
+  tone?: number
 }
 
 export interface PinyinReferenceGroup {
@@ -170,6 +179,15 @@ export interface PinyinReferenceGroup {
   title: LocalizedField
   summary: LocalizedField
   items: PinyinReferenceItem[]
+}
+
+export interface PinyinWholeSyllable {
+  id: string
+  hanzi: string
+  pinyin: string
+  emoji: string
+  description: LocalizedField
+  audio: string
 }
 
 export interface ToneGameChoice {
@@ -201,8 +219,17 @@ export interface PinyinLessonContent {
   toneGame: PinyinToneGame
 }
 
+export interface PinyinModuleContent {
+  id: PinyinModuleKey
+  title: LocalizedField
+  summary: LocalizedField
+  reference: PinyinReferenceGroup[]
+  wholeSyllables?: PinyinWholeSyllable[]
+  toneGame?: PinyinToneGame
+}
+
 export interface PinyinCourseContent {
-  lessons: PinyinLessonContent[]
+  modules: PinyinModuleContent[]
 }
 
 export interface PinyinLessonProgress {
@@ -215,12 +242,12 @@ export interface PinyinLessonProgress {
 }
 
 export interface PinyinProgress {
-  schemaVersion: 3
+  schemaVersion: 4
   visited: boolean
   completedSections: PinyinModuleId[]
   practiceLastScore: number | null
   practiceBestScore: number | null
   shadowingCompletedPromptIds: string[]
   lastVisitedPromptId: string | null
-  lessonProgress: Partial<Record<PinyinLessonId, PinyinLessonProgress>>
+  moduleProgress: Partial<Record<PinyinModuleKey, PinyinLessonProgress>>
 }

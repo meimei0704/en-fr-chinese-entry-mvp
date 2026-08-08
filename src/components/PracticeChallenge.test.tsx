@@ -21,11 +21,16 @@ const copy: PracticeChallengeCopy = {
   incorrectFeedback: 'Not quite.',
   correctAnswer: (answer: string) => `Answer: ${answer}`,
   nextQuestion: 'Next question',
+  recordStart: 'Record',
+  recordStop: 'Stop',
+  recordReplay: 'Play back',
+  recordUnsupported: 'Recording is not supported in this browser.',
+  recordDenied: 'Microphone access was denied. Recording is unavailable.',
+  recordError: 'Recording could not start. Please try again.',
   resultHeading: 'Challenge complete',
   finalScore: (score: number) => `Final score: ${score}`,
   ratingLabel: 'Rating',
   ratingValue: (rating: string) => `${rating}`,
-  outOfLivesMessage: 'You ran out of lives.',
   playAgain: 'Play again',
   answerReview: 'Your answers',
   answerReviewCorrect: 'Correct',
@@ -120,7 +125,7 @@ describe('PracticeChallenge', () => {
     expect(screen.getByText(copy.correctAnswer(firstQuestion.target))).toBeVisible()
   })
 
-  it('shows the result page early when all lives are lost', async () => {
+  it('does not finish early when every answer is wrong; result only after all questions', async () => {
     const user = userEvent.setup()
     const onComplete = vi.fn()
 
@@ -137,9 +142,7 @@ describe('PracticeChallenge', () => {
     const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 11)
 
     for (const question of challenge.questions) {
-      if (screen.queryByText(copy.resultHeading)) {
-        break
-      }
+      expect(screen.queryByText(copy.resultHeading)).not.toBeInTheDocument()
 
       const wrongLabel =
         question.kind === 'speak'
@@ -155,7 +158,6 @@ describe('PracticeChallenge', () => {
     }
 
     expect(screen.getByText(copy.resultHeading)).toBeVisible()
-    expect(screen.getByText(copy.outOfLivesMessage)).toBeVisible()
     expect(onComplete).toHaveBeenCalledTimes(1)
   })
 

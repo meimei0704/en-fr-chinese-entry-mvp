@@ -70,6 +70,8 @@ export const pinyinLesson3: PinyinLessonContent = {
       items: [
         {
           id: 'final-ai',
+          hanzi: '爱',
+          emoji: '❤️',
           label: 'ai',
           pinyin: 'ai',
           description: { en: 'Like "eye".', fr: 'Comme « aïe ».', },
@@ -77,6 +79,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ei',
+          hanzi: '嘿',
+          emoji: '👋',
           label: 'ei',
           pinyin: 'ei',
           description: { en: 'Like "ay" in "say".', fr: 'Comme « eille ».', },
@@ -84,6 +88,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ao',
+          hanzi: '好',
+          emoji: '👍',
           label: 'ao',
           pinyin: 'ao',
           description: { en: 'Like "ow" in "now".', fr: 'Comme « a-o ».', },
@@ -91,6 +97,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ou',
+          hanzi: '欧',
+          emoji: '🌍',
           label: 'ou',
           pinyin: 'ou',
           description: { en: 'Like "oh" with rounded lips.', fr: 'Comme « o » avec lèvres arrondies.', },
@@ -98,6 +106,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ia',
+          hanzi: '呀',
+          emoji: '😲',
           label: 'ia',
           pinyin: 'ia',
           description: { en: 'Glide from "ee" to "ah".', fr: 'Glissez de « i » vers « a ».', },
@@ -105,6 +115,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ie',
+          hanzi: '叶',
+          emoji: '🍃',
           label: 'ie',
           pinyin: 'ie',
           description: { en: 'Like "yeah".', fr: 'Comme « yé ».', },
@@ -112,6 +124,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ua',
+          hanzi: '瓜',
+          emoji: '🍉',
           label: 'ua',
           pinyin: 'ua',
           description: { en: 'Glide from "oo" to "ah".', fr: 'Glissez de « ou » vers « a ».', },
@@ -119,6 +133,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-uo',
+          hanzi: '我',
+          emoji: '🙋',
           label: 'uo',
           pinyin: 'uo',
           description: { en: 'Like "war" without the r.', fr: 'Comme « ouo ».', },
@@ -126,6 +142,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ue',
+          hanzi: '月',
+          emoji: '🌙',
           label: 'üe',
           pinyin: 'üe',
           description: { en: 'Round lips for ü, then open to e.', fr: 'Arrondissez pour ü, puis ouvrez vers e.', },
@@ -146,6 +164,8 @@ export const pinyinLesson3: PinyinLessonContent = {
       items: [
         {
           id: 'final-an',
+          hanzi: '安',
+          emoji: '🛡️',
           label: 'an',
           pinyin: 'an',
           description: { en: 'Open "ah" + n.', fr: '« a » ouvert + n.', },
@@ -153,6 +173,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-en',
+          hanzi: '恩',
+          emoji: '🙏',
           label: 'en',
           pinyin: 'en',
           description: { en: 'Relaxed "uh" + n.', fr: '« eu » relâché + n.', },
@@ -160,6 +182,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-in',
+          hanzi: '音',
+          emoji: '🎵',
           label: 'in',
           pinyin: 'in',
           description: { en: '"ee" + n.', fr: '« i » + n.', },
@@ -167,6 +191,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-un',
+          hanzi: '温',
+          emoji: '🌡️',
           label: 'un',
           pinyin: 'un',
           description: { en: '"oo" + n.', fr: '« ou » + n.', },
@@ -174,6 +200,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-uen',
+          hanzi: '云',
+          emoji: '☁️',
           label: 'ün',
           pinyin: 'ün',
           description: { en: 'Round-lip ü + n.', fr: 'ü à lèvres arrondies + n.', },
@@ -194,6 +222,8 @@ export const pinyinLesson3: PinyinLessonContent = {
       items: [
         {
           id: 'final-ang',
+          hanzi: '昂',
+          emoji: '🆙',
           label: 'ang',
           pinyin: 'ang',
           description: { en: 'Open "ah" + ng.', fr: '« a » ouvert + ng.', },
@@ -201,6 +231,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-eng',
+          hanzi: '灯',
+          emoji: '💡',
           label: 'eng',
           pinyin: 'eng',
           description: { en: 'Relaxed "uh" + ng.', fr: '« eu » relâché + ng.', },
@@ -208,6 +240,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ing',
+          hanzi: '英',
+          emoji: '🇬🇧',
           label: 'ing',
           pinyin: 'ing',
           description: { en: '"ee" + ng.', fr: '« i » + ng.', },
@@ -215,6 +249,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ong',
+          hanzi: '龙',
+          emoji: '🐉',
           label: 'ong',
           pinyin: 'ong',
           description: { en: 'Rounded "oo" + ng.', fr: '« ou » arrondi + ng.', },

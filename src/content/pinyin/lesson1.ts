@@ -82,6 +82,8 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'initial-b',
+          hanzi: '波',
+          emoji: '🌊',
           label: 'b',
           pinyin: 'bo',
           description: {
@@ -92,6 +94,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-p',
+          hanzi: '婆',
+          emoji: '👵',
           label: 'p',
           pinyin: 'po',
           description: {
@@ -102,6 +106,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-m',
+          hanzi: '摸',
+          emoji: '🤲',
           label: 'm',
           pinyin: 'mo',
           description: {
@@ -112,6 +118,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-f',
+          hanzi: '发',
+          emoji: '📤',
           label: 'f',
           pinyin: 'fo',
           description: {
@@ -122,6 +130,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-d',
+          hanzi: '大',
+          emoji: '🐻',
           label: 'd',
           pinyin: 'de',
           description: {
@@ -132,6 +142,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-t',
+          hanzi: '特',
+          emoji: '⭐',
           label: 't',
           pinyin: 'te',
           description: {
@@ -142,6 +154,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-n',
+          hanzi: '拿',
+          emoji: '✊',
           label: 'n',
           pinyin: 'ne',
           description: {
@@ -152,6 +166,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-l',
+          hanzi: '拉',
+          emoji: '🪢',
           label: 'l',
           pinyin: 'le',
           description: {
@@ -162,6 +178,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-g',
+          hanzi: '哥',
+          emoji: '👦',
           label: 'g',
           pinyin: 'ge',
           description: {
@@ -172,6 +190,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-k',
+          hanzi: '看',
+          emoji: '👀',
           label: 'k',
           pinyin: 'ke',
           description: {
@@ -182,6 +202,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-h',
+          hanzi: '喝',
+          emoji: '🥤',
           label: 'h',
           pinyin: 'he',
           description: {
@@ -205,6 +227,8 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'final-a',
+          hanzi: '啊',
+          emoji: '😮',
           label: 'a',
           pinyin: 'a',
           description: {
@@ -215,6 +239,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-o',
+          hanzi: '哦',
+          emoji: '🤔',
           label: 'o',
           pinyin: 'o',
           description: {
@@ -225,6 +251,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-e',
+          hanzi: '鹅',
+          emoji: '🦢',
           label: 'e',
           pinyin: 'e',
           description: {
@@ -235,6 +263,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-i',
+          hanzi: '衣',
+          emoji: '👕',
           label: 'i',
           pinyin: 'yi',
           description: {
@@ -245,6 +275,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-u',
+          hanzi: '乌',
+          emoji: '🐦',
           label: 'u',
           pinyin: 'wu',
           description: {
@@ -255,6 +287,8 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-ue',
+          hanzi: '鱼',
+          emoji: '🐟',
           label: 'ü',
           pinyin: 'yu',
           description: {
@@ -283,6 +317,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             fr: 'Premier ton',
           },
           pinyin: 'mā',
+          tone: 1,
           description: {
             en: 'High and level.',
             fr: 'Haut et plat.',
@@ -296,6 +331,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             fr: 'Deuxième ton',
           },
           pinyin: 'má',
+          tone: 2,
           description: {
             en: 'Rising, like asking a short question.',
             fr: 'Montant, comme une courte question.',
@@ -309,6 +345,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             fr: 'Troisième ton',
           },
           pinyin: 'mǎ',
+          tone: 3,
           description: {
             en: 'Low dipping tone.',
             fr: 'Ton bas avec un creux.',
@@ -322,11 +359,26 @@ export const pinyinLesson1: PinyinLessonContent = {
             fr: 'Quatrième ton',
           },
           pinyin: 'mà',
+          tone: 4,
           description: {
             en: 'Falling, short, and decisive.',
             fr: 'Descendant, court et décidé.',
           },
           audio: `${lessonAudioBase}/reference-tone-4.mp3`,
+        },
+        {
+          id: 'tone-neutral',
+          label: {
+            en: 'Neutral tone',
+            fr: 'Ton neutre',
+          },
+          pinyin: 'ma',
+          tone: 0,
+          description: {
+            en: 'Light, short, and unmarked — a soft "ma" with no contour.',
+            fr: 'Léger, court et sans marque — un « ma » doux sans contour.',
+          },
+          audio: `${lessonAudioBase}/reference-tone-neutral.mp3`,
         },
       ],
     },

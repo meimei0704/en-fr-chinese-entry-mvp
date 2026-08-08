@@ -300,8 +300,8 @@ describe('ProgressPage', () => {
 
   it('keeps 2-of-3 Pinyin and 1-of-10 Basic progress inside independent anchors', () => {
     let progress = createDefaultPinyinProgress()
-    progress = recordPinyinReferenceComplete(progress, 'pinyin-foundations-1')
-    progress = recordPinyinPracticeScore(progress, 'pinyin-foundations-1', 6)
+    progress = recordPinyinReferenceComplete(progress, 'initials')
+    progress = recordPinyinPracticeScore(progress, 'initials', 6)
     savePinyinProgress(progress)
     saveProgress({
       ...createDefaultProgress(),

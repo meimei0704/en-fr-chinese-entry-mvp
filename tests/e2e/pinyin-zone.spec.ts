@@ -80,7 +80,7 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
 
   await page.getByRole('link', { name: 'Go to practice' }).click()
   await expect(page).toHaveURL(/\/pinyin\/practice/)
-  await expect(page.getByRole('heading', { level: 1, name: 'Pinyin Foundations' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Initials' })).toBeVisible()
 
   await finishPracticeChallenge(page)
 
@@ -90,7 +90,7 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
         courseProgress: localStorage.getItem(courseKey),
         pinyinProgress: JSON.parse(localStorage.getItem(pinyinKey) ?? '{}') as {
           completedSections?: string[]
-          lessonProgress?: Record<string, unknown>
+          moduleProgress?: Record<string, unknown>
         },
       }
     },
@@ -99,24 +99,24 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
 
   expect(browserState.pinyinProgress.completedSections).toContain('reference')
   expect(browserState.pinyinProgress.completedSections).toContain('practice')
-  expect(browserState.pinyinProgress.lessonProgress?.['pinyin-foundations-1']).toBeDefined()
+  expect(browserState.pinyinProgress.moduleProgress?.['initials']).toBeDefined()
   expect(browserState.courseProgress).toBeNull()
 })
 
-test('renders three lesson tabs and switches between lessons preserving progress', async ({ page }) => {
+test('renders four module tabs and switches between modules preserving progress', async ({ page }) => {
   await installPinyinBrowserMocks(page)
   await page.goto('/pinyin')
 
   const tabs = page.getByRole('tab')
-  await expect(tabs).toHaveCount(3)
+  await expect(tabs).toHaveCount(4)
   await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'false')
 
   await page.getByRole('button', { name: 'Play bo' }).click()
 
-  await tabs.nth(1).click()
-  await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true')
-  await expect(page.getByRole('heading', { level: 3, name: 'Retroflex' })).toBeVisible()
+  await tabs.nth(2).click()
+  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true')
+  await expect(page.getByRole('heading', { level: 2, name: 'Tones' })).toBeVisible()
 
   await tabs.first().click()
   await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
@@ -124,11 +124,11 @@ test('renders three lesson tabs and switches between lessons preserving progress
   const browserState = await page.evaluate((key) => {
     return JSON.parse(localStorage.getItem(key) ?? '{}') as {
       completedSections?: string[]
-      lessonProgress?: Record<string, unknown>
+      moduleProgress?: Record<string, unknown>
     }
   }, pinyinProgressStorageKey)
 
   expect(browserState.completedSections).toContain('reference')
-  expect(browserState.lessonProgress).toBeDefined()
-  expect(browserState.lessonProgress?.['pinyin-foundations-1']).toBeDefined()
+  expect(browserState.moduleProgress).toBeDefined()
+  expect(browserState.moduleProgress?.['initials']).toBeDefined()
 })

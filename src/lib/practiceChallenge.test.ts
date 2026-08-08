@@ -147,8 +147,8 @@ describe('buildPracticeChallenge', () => {
 
 describe('buildPinyinPracticeChallenge', () => {
   it('produces five listen/read questions from tone game and reference content', () => {
-    const lesson = pinyinCourse.lessons[0]
-    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 5, 2024)
+    const module = pinyinCourse.modules[2]
+    const challenge = buildPinyinPracticeChallenge(module, 'en', 5, 2024)
 
     expect(challenge.questions).toHaveLength(5)
     expect(challenge.maxScore).toBe(100)
@@ -159,17 +159,17 @@ describe('buildPinyinPracticeChallenge', () => {
   })
 
   it('is deterministic for the same seed', () => {
-    const lesson = pinyinCourse.lessons[0]
-    const first = buildPinyinPracticeChallenge(lesson, 'en', 5, 99)
-    const second = buildPinyinPracticeChallenge(lesson, 'en', 5, 99)
+    const module = pinyinCourse.modules[2]
+    const first = buildPinyinPracticeChallenge(module, 'en', 5, 99)
+    const second = buildPinyinPracticeChallenge(module, 'en', 5, 99)
     expect(first.questions.map((question) => question.id)).toEqual(
       second.questions.map((question) => question.id),
     )
   })
 
   it('always includes the correct option among the choices', () => {
-    const lesson = pinyinCourse.lessons[0]
-    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 5, 555)
+    const module = pinyinCourse.modules[2]
+    const challenge = buildPinyinPracticeChallenge(module, 'en', 5, 555)
 
     for (const question of challenge.questions) {
       const correct = question.options.find(
@@ -182,8 +182,8 @@ describe('buildPinyinPracticeChallenge', () => {
   })
 
   it('wires tone questions to their prompt audio and tone labels', () => {
-    const lesson = pinyinCourse.lessons[0]
-    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 8, 7)
+    const module = pinyinCourse.modules[2]
+    const challenge = buildPinyinPracticeChallenge(module, 'en', 26, 7)
     const toneQuestion = challenge.questions.find((question) =>
       question.id.startsWith('tone-'),
     )
@@ -193,8 +193,8 @@ describe('buildPinyinPracticeChallenge', () => {
   })
 
   it('derives listen and read questions from reference pinyin content', () => {
-    const lesson = pinyinCourse.lessons[0]
-    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 8, 8080)
+    const module = pinyinCourse.modules[2]
+    const challenge = buildPinyinPracticeChallenge(module, 'en', 8, 8080)
     const referenceListen = challenge.questions.find((question) =>
       question.id.endsWith('-listen'),
     )

@@ -80,6 +80,8 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-zh',
+          hanzi: '知',
+          emoji: '🧠',
           label: 'zh',
           pinyin: 'zhi',
           description: {
@@ -90,6 +92,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-ch',
+          hanzi: '吃',
+          emoji: '🍚',
           label: 'ch',
           pinyin: 'chi',
           description: {
@@ -100,6 +104,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-sh',
+          hanzi: '是',
+          emoji: '✅',
           label: 'sh',
           pinyin: 'shi',
           description: {
@@ -110,6 +116,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-r',
+          hanzi: '日',
+          emoji: '☀️',
           label: 'r',
           pinyin: 'ri',
           description: {
@@ -133,6 +141,8 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-z',
+          hanzi: '字',
+          emoji: '📝',
           label: 'z',
           pinyin: 'zi',
           description: {
@@ -143,6 +153,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-c',
+          hanzi: '词',
+          emoji: '📖',
           label: 'c',
           pinyin: 'ci',
           description: {
@@ -153,6 +165,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-s',
+          hanzi: '四',
+          emoji: '4️⃣',
           label: 's',
           pinyin: 'si',
           description: {
@@ -176,6 +190,8 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-j',
+          hanzi: '家',
+          emoji: '🏠',
           label: 'j',
           pinyin: 'ji',
           description: {
@@ -186,6 +202,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-q',
+          hanzi: '七',
+          emoji: '7️⃣',
           label: 'q',
           pinyin: 'qi',
           description: {
@@ -196,6 +214,8 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-x',
+          hanzi: '西',
+          emoji: '🌅',
           label: 'x',
           pinyin: 'xi',
           description: {
