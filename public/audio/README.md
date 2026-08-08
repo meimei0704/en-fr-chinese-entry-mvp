@@ -14,5 +14,6 @@ Pinyin course (`public/audio/pinyin/`):
 - Regenerated on 2026-08-07 to fix pronunciation: each MP3 is synthesized from the hanzi whose reading matches the intended pinyin syllable (e.g. `reference-initial-b.mp3` = 波, `reference-tone-1.mp3` = 妈), so the default TTS voice never reads Latin pinyin as English.
 - Covers all 73 referenced paths across `src/content/pinyin/lesson1.ts`, `lesson2.ts`, and `lesson3.ts`.
 - Orphaned files (old `shadow-*` and legacy `tone-game-*` assets no longer referenced by course content) were removed.
+- On 2026-08-09, the 16 whole-recognition syllables (整体认读音节) were added under `whole-syllables/`: each MP3 is synthesized from its example hanzi (zhi→知, chi→吃, shi→十, ri→日, zi→子, ci→词, si→四, yi→一, wu→五, yu→鱼, ye→夜, yue→月, yuan→圆, yin→音, yun→云, ying→英) with the same `zh-CN-XiaoxiaoNeural` voice and `-8%` rate.
 
 If these assets are regenerated, keep the existing content paths unless a coordinated content/test update changes the naming convention.
