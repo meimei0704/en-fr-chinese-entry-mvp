@@ -389,7 +389,7 @@ describe('course content', () => {
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(
-        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|short-input|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
+        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
       )
 
       if (newAudioPaths.has(audioPath)) {

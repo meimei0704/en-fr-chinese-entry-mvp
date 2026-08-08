@@ -73,7 +73,7 @@ describe('LessonPage', () => {
       before.reviewQueue = ['self-intro-review-1']
       before.lastVisitedLesson = 'self-intro'
       before.lessonStepProgress = {
-        'self-intro': { completedSections: ['dialogue'], shortInputComplete: true },
+        'self-intro': { completedSections: ['dialogue'] },
       }
       saveProgress(before)
 
@@ -92,7 +92,7 @@ describe('LessonPage', () => {
     before.reviewQueue = ['self-intro-review-1']
     before.lastVisitedLesson = 'self-intro'
     before.lessonStepProgress = {
-      'self-intro': { completedSections: ['dialogue'], shortInputComplete: true },
+      'self-intro': { completedSections: ['dialogue'] },
     }
     saveProgress(before)
 
