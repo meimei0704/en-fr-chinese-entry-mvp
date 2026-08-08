@@ -31,7 +31,7 @@ export function PinyinPage() {
   const language = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(language)
   const pinyinCopy = copy.pinyinPage
-  const [progress, setProgress] = useState(() => loadPinyinProgress())
+  const [, setProgress] = useState(() => loadPinyinProgress())
   const [selectedLessonId, setSelectedLessonId] = useState(findDefaultLesson)
 
   const lesson = useMemo(
@@ -40,7 +40,6 @@ export function PinyinPage() {
   )
   const lessonIndex = pinyinCourse.lessons.findIndex((l) => l.id === selectedLessonId)
   const lessonNumber = lessonIndex >= 0 ? lessonIndex + 1 : 1
-  const sectionProgressDone = progress.lessonProgress[lesson.id]?.completedSections?.length ?? 0
 
   function handleReferenceAudioPlay() {
     const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), selectedLessonId)
@@ -55,8 +54,6 @@ export function PinyinPage() {
         <PinyinHero
           eyebrow={pinyinCopy.eyebrow}
           heading={pinyinCopy.heading}
-          summary={getLocalizedText(lesson.summary, language)}
-          sectionProgress={pinyinCopy.sectionProgress(sectionProgressDone, 2)}
         />
 
         <nav role="tablist" aria-label="Pinyin lessons" className="pinyin-lesson-tabs">

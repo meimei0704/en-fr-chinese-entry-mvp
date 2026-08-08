@@ -69,7 +69,6 @@ test('completes Pinyin Zone from the course entry with reference audio and tone 
       }),
     )
     .toContain('/audio/pinyin/lesson-1/reference-initial-b.mp3')
-  await expect(page.getByText('1 of 2 sections complete')).toBeVisible()
 
   for (const [index, choiceName] of correctToneChoices.entries()) {
     await expect(page.getByText(`Question ${index + 1} of ${correctToneChoices.length}`)).toBeVisible()
@@ -79,7 +78,6 @@ test('completes Pinyin Zone from the course entry with reference audio and tone 
 
   await expect(page.getByRole('heading', { name: 'Tone game result' })).toBeVisible()
   await expect(page.getByText('8/8')).toBeVisible()
-  await expect(page.getByText('2 of 2 sections complete')).toBeVisible()
 
   const browserState = await page.evaluate(
     ([pinyinKey, courseKey]) => {
@@ -114,7 +112,6 @@ test('renders three lesson tabs and switches between lessons preserving progress
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'false')
 
   await page.getByRole('button', { name: 'Play bo' }).click()
-  await expect(page.getByText('1 of 2 sections complete')).toBeVisible()
 
   await tabs.nth(1).click()
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true')
@@ -122,7 +119,6 @@ test('renders three lesson tabs and switches between lessons preserving progress
 
   await tabs.first().click()
   await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
-  await expect(page.getByText('1 of 2 sections complete')).toBeVisible()
 
   const browserState = await page.evaluate((key) => {
     return JSON.parse(localStorage.getItem(key) ?? '{}') as {

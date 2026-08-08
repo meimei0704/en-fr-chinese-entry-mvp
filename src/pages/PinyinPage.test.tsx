@@ -72,7 +72,6 @@ describe('PinyinPage', () => {
       text: 'bo',
       audioSrc: '/audio/pinyin/lesson-1/reference-initial-b.mp3',
     })
-    expect(screen.getByText('1 of 2 sections complete')).toBeVisible()
     expect(loadPinyinProgress()).toMatchObject({
       completedSections: ['reference'],
     })
@@ -102,7 +101,6 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('heading', { level: 3, name: 'Tone game result' })).toBeVisible()
     expect(screen.getByText('Correct rate')).toBeVisible()
     expect(screen.getByText('8/8')).toBeVisible()
-    expect(screen.getByText('1 of 2 sections complete')).toBeVisible()
     expect(loadPinyinProgress()).toMatchObject({
       toneGameLastScore: 8,
       toneGameBestScore: 8,
@@ -118,7 +116,6 @@ describe('PinyinPage', () => {
 
     renderRoute('/pinyin')
 
-    expect(screen.getByText('0 section sur 2 terminée')).toBeVisible()
     expect(screen.getAllByText('Leçon 1')).toHaveLength(2)
     expect(screen.getByRole('heading', { level: 2, name: 'Référence' })).toBeVisible()
     expect(screen.getByText(/Construisez une première carte sonore/i)).toBeVisible()
