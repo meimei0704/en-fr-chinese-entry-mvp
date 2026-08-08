@@ -263,17 +263,16 @@ export function PracticeChallenge({
             audioSrc={currentQuestion.audio}
             fallbackAudioSrc={currentQuestion.audioFallback}
           />
+          <RecordingButton
+            label={copy.recordStart}
+            recordLabel={copy.recordStart}
+            stopLabel={copy.recordStop}
+            replayLabel={copy.recordReplay}
+            unsupportedLabel={copy.recordUnsupported}
+            deniedLabel={copy.recordDenied}
+            errorLabel={copy.recordError}
+          />
         </div>
-
-        <RecordingButton
-          label={copy.recordStart}
-          recordLabel={copy.recordStart}
-          stopLabel={copy.recordStop}
-          replayLabel={copy.recordReplay}
-          unsupportedLabel={copy.recordUnsupported}
-          deniedLabel={copy.recordDenied}
-          errorLabel={copy.recordError}
-        />
 
         {currentQuestion.kind === 'speak' ? (
           <div className="practice-challenge__options" role="group" aria-label={copy.speakOptions}>

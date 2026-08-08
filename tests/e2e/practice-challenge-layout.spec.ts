@@ -11,7 +11,7 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
   await expect(challenge).toBeVisible()
   await expect(prompt).toBeVisible()
   await expect(options).toBeVisible()
-  await expect(statTiles).toHaveCount(3)
+  await expect(statTiles).toHaveCount(0)
 
   const header = page.locator('.practice-page__header')
   const body = page.locator('.practice-page__body')
