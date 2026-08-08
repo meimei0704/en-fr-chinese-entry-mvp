@@ -2967,23 +2967,6 @@ h2 {
     rgba(255, 255, 255, 0.94);
 }
 
-.pinyin-hero .lede {
-  max-width: 46rem;
-  margin-top: 0;
-}
-
-.pinyin-hero__progress {
-  width: fit-content;
-  margin: 0;
-  padding: 0.45rem 0.75rem;
-  border: 1px solid rgba(47, 143, 107, 0.2);
-  border-radius: 999px;
-  color: var(--color-jade-ink);
-  background: #ebf6f1;
-  font-size: 0.82rem;
-  font-weight: 850;
-}
-
 .pinyin-section-heading {
   display: grid;
   gap: 0.25rem;
