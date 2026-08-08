@@ -55,10 +55,10 @@ describe('PinyinPracticePage', () => {
     renderRoute('/pinyin/practice?lesson=pinyin-foundations-1')
 
     expect(screen.getByRole('heading', { level: 1, name: 'Pinyin Foundations' })).toBeVisible()
-    expect(screen.getByText(/question 1 of 5/i)).toBeVisible()
-    expect(screen.getByLabelText(/^score 0$/i)).toBeVisible()
-    expect(screen.getByLabelText(/^streak 0$/i)).toBeVisible()
-    expect(screen.getByLabelText(/^lives 3$/i)).toBeVisible()
+    expect(screen.queryByText(/question 1 of 5/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^score 0$/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^streak 0$/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^lives 3$/i)).not.toBeInTheDocument()
   })
 
   it('keeps the navigation back to the pinyin lesson page', () => {

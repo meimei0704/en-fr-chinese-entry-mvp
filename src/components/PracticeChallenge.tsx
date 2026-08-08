@@ -14,11 +14,9 @@ import { ExplanationBlock } from './ExplanationBlock'
 import { SpeechButton } from './SpeechButton'
 
 export interface PracticeChallengeCopy {
-  scoreLabel: string
-  streakLabel: string
-  livesLabel: string
-  questionProgress: (current: number, total: number) => string
   playPromptAudio: (current: number) => string
+  speakOptions: string
+  answerOptions: string
   fluentOption: string
   needsPracticeOption: string
   showMeOption: string
@@ -257,26 +255,6 @@ export function PracticeChallenge({
 
   return (
     <section className="surface-card practice-challenge">
-      <div className="practice-challenge__status">
-        <p className="eyebrow">
-          {copy.questionProgress(questionNumber, questions.length)}
-        </p>
-        <div className="practice-challenge__stats">
-          <div className="practice-challenge__stat" aria-label={`${copy.scoreLabel} ${score}`}>
-            <span className="practice-challenge__stat-label">{copy.scoreLabel}</span>
-            <strong className="practice-challenge__stat-value">{score}</strong>
-          </div>
-          <div className="practice-challenge__stat" aria-label={`${copy.streakLabel} ${streak}`}>
-            <span className="practice-challenge__stat-label">{copy.streakLabel}</span>
-            <strong className="practice-challenge__stat-value">{streak}</strong>
-          </div>
-          <div className="practice-challenge__stat" aria-label={`${copy.livesLabel} ${lives}`}>
-            <span className="practice-challenge__stat-label">{copy.livesLabel}</span>
-            <strong className="practice-challenge__stat-value">{lives}</strong>
-          </div>
-        </div>
-      </div>
-
       <div className="practice-challenge__question">
         <div className="practice-challenge__prompt">
           <p>{getLocalizedText(currentQuestion.prompt, language)}</p>
@@ -289,7 +267,7 @@ export function PracticeChallenge({
         </div>
 
         {currentQuestion.kind === 'speak' ? (
-          <div className="practice-challenge__options" role="group" aria-label={copy.streakLabel}>
+          <div className="practice-challenge__options" role="group" aria-label={copy.speakOptions}>
             <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'fluent')}>
               {copy.fluentOption}
             </button>
@@ -301,7 +279,7 @@ export function PracticeChallenge({
             </button>
           </div>
         ) : (
-          <div className="practice-challenge__options" role="group" aria-label={copy.scoreLabel}>
+          <div className="practice-challenge__options" role="group" aria-label={copy.answerOptions}>
             {currentQuestion.options.map((option) => (
               <button
                 key={option.id}

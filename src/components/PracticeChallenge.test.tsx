@@ -12,10 +12,6 @@ vi.mock('../lib/speech', () => ({
 }))
 
 const copy: PracticeChallengeCopy = {
-  scoreLabel: 'Score',
-  streakLabel: 'Streak',
-  livesLabel: 'Lives',
-  questionProgress: (current: number, total: number) => `Question ${current} of ${total}`,
   playPromptAudio: (current: number) => `Play the audio for question ${current}`,
   fluentOption: 'I can say it fluently',
   needsPracticeOption: 'I need to practice more',
@@ -42,7 +38,7 @@ describe('PracticeChallenge', () => {
     vi.clearAllMocks()
   })
 
-  it('renders the first question with progress, score, streak, and lives', () => {
+  it('renders the first question without score, streak, lives, or question progress', () => {
     render(
       <PracticeChallenge
         buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
@@ -53,11 +49,11 @@ describe('PracticeChallenge', () => {
       />,
     )
 
-    expect(screen.getByText('Question 1 of 5')).toBeVisible()
-    expect(screen.getByLabelText('Score 0')).toBeVisible()
-    expect(screen.getByLabelText('Streak 0')).toBeVisible()
-    expect(screen.getByLabelText('Lives 3')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play the audio for question 1' })).toBeVisible()
+    expect(screen.queryByText(/Question 1 of 5/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Score$/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Streak$/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Lives$/)).not.toBeInTheDocument()
   })
 
   it('advances through choice questions and reports completion once finished', async () => {
@@ -122,7 +118,6 @@ describe('PracticeChallenge', () => {
 
     expect(screen.getByText(copy.incorrectFeedback)).toBeVisible()
     expect(screen.getByText(copy.correctAnswer(firstQuestion.target))).toBeVisible()
-    expect(screen.getByLabelText('Lives 2')).toBeVisible()
   })
 
   it('shows the result page early when all lives are lost', async () => {
@@ -235,8 +230,7 @@ describe('PracticeChallenge', () => {
 
     await user.click(screen.getByRole('button', { name: copy.playAgain }))
 
-    expect(screen.getByText('Question 1 of 5')).toBeVisible()
-    expect(screen.getByLabelText('Score 0')).toBeVisible()
-    expect(screen.getByLabelText('Lives 3')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Play the audio for question 1' })).toBeVisible()
+    expect(screen.queryByText(/Question 1 of 5/)).not.toBeInTheDocument()
   })
 })

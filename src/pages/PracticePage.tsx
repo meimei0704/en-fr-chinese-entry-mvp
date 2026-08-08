@@ -66,7 +66,6 @@ export function PracticePage() {
         <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.practicePage.eyebrow}</p>
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
-          <p className="lede">{copy.practicePage.lede}</p>
         </header>
       </section>
 

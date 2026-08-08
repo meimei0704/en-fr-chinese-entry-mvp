@@ -56,10 +56,10 @@ describe('PracticePage', () => {
     renderRoute('/lesson/self-intro/practice')
 
     expect(screen.getByRole('heading', { name: /到达机场/i })).toBeVisible()
-    expect(screen.getByText(/question 1 of 5/i)).toBeVisible()
-    expect(screen.getByLabelText(/^score 0$/i)).toBeVisible()
-    expect(screen.getByLabelText(/^streak 0$/i)).toBeVisible()
-    expect(screen.getByLabelText(/^lives 3$/i)).toBeVisible()
+    expect(screen.queryByText(/question 1 of 5/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^score 0$/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^streak 0$/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^lives 3$/i)).not.toBeInTheDocument()
   })
 
   it('keeps the navigation back to lesson', () => {

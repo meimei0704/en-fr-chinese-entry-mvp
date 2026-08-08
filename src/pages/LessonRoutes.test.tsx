@@ -45,8 +45,8 @@ describe('expanded lesson routes', () => {
     cleanup()
     renderRoute(`/lesson/${lesson.id}/practice`)
 
-    expect(screen.getByText(/question 1 of 5/i)).toBeVisible()
-    expect(screen.getByLabelText(/^score 0$/i)).toBeVisible()
+    expect(screen.queryByText(/question 1 of 5/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/^score 0$/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/we couldn’t find that practice set/i)).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /back to lesson/i })).toHaveAttribute(
       'href',

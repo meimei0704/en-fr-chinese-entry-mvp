@@ -36,7 +36,6 @@ export function PinyinPracticePage() {
         <header className="lesson-header-card__title">
           <p className="eyebrow">{copy.practicePage.eyebrow}</p>
           <h1>{getLocalizedText(lesson.title, selectedLanguage)}</h1>
-          <p className="lede">{copy.practicePage.lede}</p>
         </header>
       </section>
 
