@@ -6,6 +6,7 @@ import {
   computeRating,
   createSeededRandom,
   pointsForCorrect,
+  remainingPoints,
   shuffle,
 } from './practiceChallenge'
 
@@ -43,21 +44,33 @@ describe('shuffle', () => {
 })
 
 describe('pointsForCorrect', () => {
-  it('awards base points early and bonus once streak reaches three', () => {
-    expect(pointsForCorrect(0)).toBe(10)
-    expect(pointsForCorrect(1)).toBe(10)
-    expect(pointsForCorrect(2)).toBe(15)
-    expect(pointsForCorrect(5)).toBe(15)
+  it('splits a flat 100-point total across all questions', () => {
+    expect(pointsForCorrect(5)).toBe(20)
+    expect(pointsForCorrect(10)).toBe(10)
+    expect(pointsForCorrect(1)).toBe(100)
+  })
+})
+
+describe('remainingPoints', () => {
+  it('is zero for counts that divide 100 evenly', () => {
+    expect(remainingPoints(5)).toBe(0)
+    expect(remainingPoints(10)).toBe(0)
+  })
+
+  it('tops up non-divisible counts so the total stays exactly 100', () => {
+    expect(pointsForCorrect(3) * 3 + remainingPoints(3)).toBe(100)
+    expect(pointsForCorrect(6) * 6 + remainingPoints(6)).toBe(100)
+    expect(pointsForCorrect(7) * 7 + remainingPoints(7)).toBe(100)
   })
 })
 
 describe('computeRating', () => {
   it('maps score ratios to S/A/B/C bands', () => {
-    expect(computeRating(65, 65)).toBe('S')
-    expect(computeRating(59, 65)).toBe('S')
-    expect(computeRating(50, 65)).toBe('A')
-    expect(computeRating(35, 65)).toBe('B')
-    expect(computeRating(10, 65)).toBe('C')
+    expect(computeRating(100, 100)).toBe('S')
+    expect(computeRating(90, 100)).toBe('S')
+    expect(computeRating(75, 100)).toBe('A')
+    expect(computeRating(60, 100)).toBe('B')
+    expect(computeRating(10, 100)).toBe('C')
   })
 
   it('treats an empty challenge as C', () => {
@@ -71,6 +84,7 @@ describe('buildPracticeChallenge', () => {
 
     expect(challenge.questions).toHaveLength(5)
     expect(new Set(challenge.questions.map((question) => question.id)).size).toBe(5)
+    expect(challenge.maxScore).toBe(100)
 
     const kinds = new Set(challenge.questions.map((question) => question.kind))
     expect(kinds.has('listen')).toBe(true)

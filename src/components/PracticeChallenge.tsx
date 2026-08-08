@@ -6,6 +6,7 @@ import {
   buildPracticeChallenge,
   computeRating,
   pointsForCorrect,
+  remainingPoints,
   type PracticeChallengeQuestion,
 } from '../lib/practiceChallenge'
 import { playPracticeSound } from '../lib/practiceSound'
@@ -100,7 +101,9 @@ export function PracticeChallenge({
   }, [finished, reported, onComplete])
 
   function submitAnswer(isCorrect: boolean, reveal: string) {
-    const gained = isCorrect ? pointsForCorrect(streak) : 0
+    const gained = isCorrect
+      ? pointsForCorrect(questions.length) + (isLastQuestion ? remainingPoints(questions.length) : 0)
+      : 0
     const nextStreak = isCorrect ? streak + 1 : 0
     const nextLives = isCorrect ? lives : lives - 1
     const nextScore = score + gained
