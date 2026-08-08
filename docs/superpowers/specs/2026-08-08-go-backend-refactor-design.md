@@ -238,4 +238,4 @@ pinyin 内容结构与主课程不同（`reference` / `toneGame` 模块，无 di
 3. **Vercel Go Functions 冷启动**：读 API 需维护 DB pool，Go 冷启动快于 Node；连接超时重试逻辑移植自 `adminHttp.ts`。
 4. **静态 `course.ts` 去留**：语音 manifest 依赖它，故保留；后续若语音下线可再评估删除。
 5. **`vercel.json` 新增 `/api/content/pinyin/course` rewrite**：无 path 参数则不需要；若走 `/api/content/pinyin/:courseId` 才需加 rewrite。
-6. **node 运维工具**（`runMysqlContentAdmin.ts`）：seed 应用继续用 Node 脚本还是迁 Go，不影响生产；保留现状减少风险。
+6. **node 运维工具**（`runMysqlContentAdmin.ts`）：**已确认保留 Node 脚本**应用迁移/seed，不迁 Go。
