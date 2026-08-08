@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
 import { journeyNodes } from '../content/journey'
-import { createDefaultPinyinProgress, recordPinyinReferenceComplete, recordPinyinToneGameScore, savePinyinProgress } from '../lib/pinyinProgress'
+import { createDefaultPinyinProgress, recordPinyinPracticeScore, recordPinyinReferenceComplete, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import {
   expectedLessonTopic,
@@ -301,7 +301,7 @@ describe('ProgressPage', () => {
   it('keeps 2-of-3 Pinyin and 1-of-10 Basic progress inside independent anchors', () => {
     let progress = createDefaultPinyinProgress()
     progress = recordPinyinReferenceComplete(progress, 'pinyin-foundations-1')
-    progress = recordPinyinToneGameScore(progress, 'pinyin-foundations-1', 6)
+    progress = recordPinyinPracticeScore(progress, 'pinyin-foundations-1', 6)
     savePinyinProgress(progress)
     saveProgress({
       ...createDefaultProgress(),

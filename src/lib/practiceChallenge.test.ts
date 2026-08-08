@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
 import { selfIntroLesson } from '../content/lessons/selfIntro'
+import { pinyinCourse } from '../content/pinyin/course'
 import {
+  buildPinyinPracticeChallenge,
   buildPracticeChallenge,
   computeRating,
   createSeededRandom,
@@ -140,5 +142,66 @@ describe('buildPracticeChallenge', () => {
     const speak = challenge.questions.find((question) => question.kind === 'speak')
     expect(speak).toBeDefined()
     expect(speak?.correctOptionId).toBe('fluent')
+  })
+})
+
+describe('buildPinyinPracticeChallenge', () => {
+  it('produces five listen/read questions from tone game and reference content', () => {
+    const lesson = pinyinCourse.lessons[0]
+    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 5, 2024)
+
+    expect(challenge.questions).toHaveLength(5)
+    expect(challenge.maxScore).toBe(100)
+
+    const kinds = new Set(challenge.questions.map((question) => question.kind))
+    expect(kinds.has('listen')).toBe(true)
+    expect(kinds.has('read')).toBe(true)
+  })
+
+  it('is deterministic for the same seed', () => {
+    const lesson = pinyinCourse.lessons[0]
+    const first = buildPinyinPracticeChallenge(lesson, 'en', 5, 99)
+    const second = buildPinyinPracticeChallenge(lesson, 'en', 5, 99)
+    expect(first.questions.map((question) => question.id)).toEqual(
+      second.questions.map((question) => question.id),
+    )
+  })
+
+  it('always includes the correct option among the choices', () => {
+    const lesson = pinyinCourse.lessons[0]
+    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 5, 555)
+
+    for (const question of challenge.questions) {
+      const correct = question.options.find(
+        (option) => option.id === question.correctOptionId,
+      )
+      expect(correct).toBeDefined()
+      expect(correct?.label).toBe(question.target)
+      expect(question.options.length).toBeGreaterThanOrEqual(2)
+    }
+  })
+
+  it('wires tone questions to their prompt audio and tone labels', () => {
+    const lesson = pinyinCourse.lessons[0]
+    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 8, 7)
+    const toneQuestion = challenge.questions.find((question) =>
+      question.id.startsWith('tone-'),
+    )
+    expect(toneQuestion).toBeDefined()
+    expect(toneQuestion?.audio).toMatch(/^\/audio\/pinyin\/lesson-1\/tone-game-/)
+    expect(toneQuestion?.options.length).toBe(4)
+  })
+
+  it('derives listen and read questions from reference pinyin content', () => {
+    const lesson = pinyinCourse.lessons[0]
+    const challenge = buildPinyinPracticeChallenge(lesson, 'en', 8, 8080)
+    const referenceListen = challenge.questions.find((question) =>
+      question.id.endsWith('-listen'),
+    )
+    expect(referenceListen).toBeDefined()
+    expect(referenceListen?.audio).toMatch(/\/audio\/pinyin\/lesson-1\//)
+    expect(
+      challenge.questions.some((question) => question.kind === 'read' && question.prompt),
+    ).toBe(true)
   })
 })

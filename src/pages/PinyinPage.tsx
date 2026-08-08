@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { pinyinCourse } from '../content/pinyin/course'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
-import { ToneGameSection } from '../components/pinyin/ToneGameSection'
 import {
   loadPinyinProgress,
   recordPinyinReferenceComplete,
@@ -51,10 +51,7 @@ export function PinyinPage() {
   return (
     <main className="page-shell page-shell--wide pinyin-page">
       <div className="pinyin-page__content">
-        <PinyinHero
-          eyebrow={pinyinCopy.eyebrow}
-          heading={pinyinCopy.heading}
-        />
+        <PinyinHero eyebrow={pinyinCopy.eyebrow} heading={pinyinCopy.heading} />
 
         <nav role="tablist" aria-label="Pinyin lessons" className="pinyin-lesson-tabs">
           {pinyinCourse.lessons.map((l, index) => (
@@ -85,23 +82,14 @@ export function PinyinPage() {
           onReferenceAudioPlay={handleReferenceAudioPlay}
         />
 
-        <ToneGameSection
-          toneGame={lesson.toneGame}
-          language={language}
-          lessonId={lesson.id}
-          copy={{
-            lessonEyebrow: pinyinCopy.lessonEyebrow(lessonNumber),
-            questionProgress: pinyinCopy.toneGameQuestionProgress,
-            playPromptAudio: pinyinCopy.playTonePromptAudio,
-            choicesLegend: pinyinCopy.toneGameChoicesLegend,
-            submitAnswer: pinyinCopy.submitToneAnswer,
-            resultHeading: pinyinCopy.toneGameResultHeading,
-            correctRate: pinyinCopy.toneGameCorrectRate,
-            completedMessage: pinyinCopy.toneGameCompletedMessage,
-            keepPracticingMessage: pinyinCopy.toneGameKeepPracticingMessage,
-          }}
-          onProgressChange={setProgress}
-        />
+        <nav className="button-row lesson-actions lesson-action-dock" aria-label={pinyinCopy.lessonActions}>
+          <Link className="primary-button" to={`/pinyin/practice?lesson=${selectedLessonId}`}>
+            {pinyinCopy.goToPractice}
+          </Link>
+          <Link className="secondary-link" to="/home">
+            {pinyinCopy.backToHome}
+          </Link>
+        </nav>
       </div>
     </main>
   )

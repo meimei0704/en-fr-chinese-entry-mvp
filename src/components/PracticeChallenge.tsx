@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { getLocalizedText } from '../content/copy'
-import type { ExplanationLanguage, LessonContent } from '../content/types'
+import type { ExplanationLanguage } from '../content/types'
 import {
-  buildPracticeChallenge,
   computeRating,
   pointsForCorrect,
   remainingPoints,
+  type PracticeChallenge,
   type PracticeChallengeQuestion,
 } from '../lib/practiceChallenge'
 import { playPracticeSound } from '../lib/practiceSound'
@@ -42,7 +42,7 @@ export interface PracticeChallengeCopy {
 }
 
 interface PracticeChallengeProps {
-  lesson: LessonContent
+  buildChallenge: (seed: number) => PracticeChallenge
   language: ExplanationLanguage
   copy: PracticeChallengeCopy
   seed: number
@@ -59,7 +59,7 @@ interface AnswerRecord {
 const startingLives = 3
 
 export function PracticeChallenge({
-  lesson,
+  buildChallenge,
   language,
   copy,
   seed: initialSeed,
@@ -82,10 +82,7 @@ export function PracticeChallenge({
   const [reported, setReported] = useState(false)
   const [lessonCompleted, setLessonCompleted] = useState(false)
 
-  const challenge = useMemo(
-    () => buildPracticeChallenge(lesson, language, 5, seed),
-    [lesson, language, seed],
-  )
+  const challenge = useMemo(() => buildChallenge(seed), [buildChallenge, seed])
 
   const questions = challenge.questions
   const currentQuestion = questions[questionIndex]

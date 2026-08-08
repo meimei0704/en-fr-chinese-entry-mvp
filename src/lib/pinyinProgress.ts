@@ -2,15 +2,14 @@ import type { PinyinLessonId, PinyinLessonProgress, PinyinModuleId, PinyinProgre
 import { loadJsonFromStorage, saveJsonToStorage } from './storage'
 
 const pinyinProgressStorageKey = 'en-fr-chinese-entry-mvp.pinyin-progress.v1'
-const toneGameCompletionThreshold = 6
 
 export function createDefaultPinyinProgress(): PinyinProgress {
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     visited: false,
     completedSections: [],
-    toneGameLastScore: null,
-    toneGameBestScore: null,
+    practiceLastScore: null,
+    practiceBestScore: null,
     shadowingCompletedPromptIds: [],
     lastVisitedPromptId: null,
     lessonProgress: {},
@@ -21,8 +20,8 @@ export function createDefaultLessonProgress(): PinyinLessonProgress {
   return {
     visited: false,
     completedSections: [],
-    toneGameLastScore: null,
-    toneGameBestScore: null,
+    practiceLastScore: null,
+    practiceBestScore: null,
     shadowingCompletedPromptIds: [],
     lastVisitedPromptId: null,
   }
@@ -54,22 +53,22 @@ function deriveLegacyFields(progress: PinyinProgress): PinyinProgress {
   completedSections.push(...allSections)
 
   const scores = entries
-    .map((lp) => lp.toneGameLastScore)
+    .map((lp) => lp.practiceLastScore)
     .filter((s): s is number => s !== null)
   const scoresForBest = entries
-    .map((lp) => lp.toneGameBestScore)
+    .map((lp) => lp.practiceBestScore)
     .filter((s): s is number => s !== null)
 
   return {
     ...progress,
     completedSections,
-    toneGameLastScore: scores.length > 0 ? scores[scores.length - 1] : null,
-    toneGameBestScore: scoresForBest.length > 0 ? Math.max(...scoresForBest) : null,
+    practiceLastScore: scores.length > 0 ? scores[scores.length - 1] : null,
+    practiceBestScore: scoresForBest.length > 0 ? Math.max(...scoresForBest) : null,
   }
 }
 
 function isPinyinModuleId(value: unknown): value is PinyinModuleId {
-  return value === 'reference' || value === 'tone-game' || value === 'shadowing'
+  return value === 'reference' || value === 'tone-game' || value === 'practice' || value === 'shadowing'
 }
 
 function isPinyinModuleIdArray(value: unknown): value is PinyinModuleId[] {
@@ -94,8 +93,8 @@ function isPinyinLessonProgress(value: unknown): value is PinyinLessonProgress {
   return (
     typeof lp.visited === 'boolean' &&
     isPinyinModuleIdArray(lp.completedSections) &&
-    isScore(lp.toneGameLastScore) &&
-    isScore(lp.toneGameBestScore) &&
+    isScore(lp.practiceLastScore) &&
+    isScore(lp.practiceBestScore) &&
     isStringArray(lp.shadowingCompletedPromptIds) &&
     (lp.lastVisitedPromptId === null || typeof lp.lastVisitedPromptId === 'string')
   )
@@ -112,7 +111,52 @@ function isLessonProgressRecord(
   return Object.values(record).every((entry) => isPinyinLessonProgress(entry))
 }
 
-function isPinyinProgressV2(value: unknown): value is PinyinProgress {
+function isPinyinProgressV3(value: unknown): value is PinyinProgress {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const progress = value as Record<string, unknown>
+
+  return (
+    progress.schemaVersion === 3 &&
+    typeof progress.visited === 'boolean' &&
+    isPinyinModuleIdArray(progress.completedSections) &&
+    isScore(progress.practiceLastScore) &&
+    isScore(progress.practiceBestScore) &&
+    isStringArray(progress.shadowingCompletedPromptIds) &&
+    (progress.lastVisitedPromptId === null || typeof progress.lastVisitedPromptId === 'string') &&
+    isLessonProgressRecord(progress.lessonProgress)
+  )
+}
+
+function isV2LessonProgress(value: unknown): boolean {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const lp = value as Record<string, unknown>
+
+  return (
+    typeof lp.visited === 'boolean' &&
+    isPinyinModuleIdArray(lp.completedSections) &&
+    isScore(lp.toneGameLastScore) &&
+    isScore(lp.toneGameBestScore) &&
+    isStringArray(lp.shadowingCompletedPromptIds) &&
+    (lp.lastVisitedPromptId === null || typeof lp.lastVisitedPromptId === 'string')
+  )
+}
+
+function isV2LessonProgressRecord(value: unknown): boolean {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const record = value as Record<string, unknown>
+  return Object.values(record).every((entry) => isV2LessonProgress(entry))
+}
+
+function isPinyinProgressV2(value: unknown): boolean {
   if (typeof value !== 'object' || value === null) {
     return false
   }
@@ -127,7 +171,7 @@ function isPinyinProgressV2(value: unknown): value is PinyinProgress {
     isScore(progress.toneGameBestScore) &&
     isStringArray(progress.shadowingCompletedPromptIds) &&
     (progress.lastVisitedPromptId === null || typeof progress.lastVisitedPromptId === 'string') &&
-    isLessonProgressRecord(progress.lessonProgress)
+    isV2LessonProgressRecord(progress.lessonProgress)
   )
 }
 
@@ -149,9 +193,48 @@ function isPinyinProgressV1(value: unknown): boolean {
   )
 }
 
+function migrateModuleId(value: string): PinyinModuleId {
+  return value === 'tone-game' ? 'practice' : (value as PinyinModuleId)
+}
+
+function migrateV2ToV3(raw: Record<string, unknown>): PinyinProgress {
+  const lessonProgress: Partial<Record<PinyinLessonId, PinyinLessonProgress>> = {}
+
+  const rawLessonProgress = raw.lessonProgress as Record<string, Record<string, unknown>> | undefined
+  if (rawLessonProgress) {
+    for (const [lessonId, lp] of Object.entries(rawLessonProgress)) {
+      if (!lp) {
+        continue
+      }
+      lessonProgress[lessonId as PinyinLessonId] = {
+        visited: typeof lp.visited === 'boolean' ? lp.visited : false,
+        completedSections: (lp.completedSections as string[]).map(migrateModuleId),
+        practiceLastScore: isScore(lp.toneGameLastScore) ? lp.toneGameLastScore : null,
+        practiceBestScore: isScore(lp.toneGameBestScore) ? lp.toneGameBestScore : null,
+        shadowingCompletedPromptIds: Array.isArray(lp.shadowingCompletedPromptIds)
+          ? (lp.shadowingCompletedPromptIds as string[])
+          : [],
+        lastVisitedPromptId:
+          lp.lastVisitedPromptId !== null && typeof lp.lastVisitedPromptId === 'string'
+            ? lp.lastVisitedPromptId
+            : null,
+      }
+    }
+  }
+
+  const base = createDefaultPinyinProgress()
+  const migrated: PinyinProgress = {
+    ...base,
+    visited: typeof raw.visited === 'boolean' ? raw.visited : false,
+    lessonProgress,
+  }
+
+  return deriveLegacyFields(migrated)
+}
+
 function migrateV1ToV2(raw: Record<string, unknown>): PinyinProgress {
   const legacyCompletedSections = Array.isArray(raw.completedSections)
-    ? (raw.completedSections as PinyinModuleId[])
+    ? (raw.completedSections as string[]).map(migrateModuleId)
     : []
   const lessonProgress: PinyinProgress['lessonProgress'] = {}
 
@@ -159,11 +242,11 @@ function migrateV1ToV2(raw: Record<string, unknown>): PinyinProgress {
     lessonProgress['pinyin-foundations-1'] = {
       visited: typeof raw.visited === 'boolean' ? raw.visited : false,
       completedSections: legacyCompletedSections,
-      toneGameLastScore:
+      practiceLastScore:
         raw.toneGameLastScore !== null && typeof raw.toneGameLastScore === 'number'
           ? raw.toneGameLastScore
           : null,
-      toneGameBestScore:
+      practiceBestScore:
         raw.toneGameBestScore !== null && typeof raw.toneGameBestScore === 'number'
           ? raw.toneGameBestScore
           : null,
@@ -196,8 +279,12 @@ export function loadPinyinProgress(): PinyinProgress {
 
   const raw = savedProgress as Record<string, unknown>
 
-  if (isPinyinProgressV2(savedProgress)) {
+  if (isPinyinProgressV3(savedProgress)) {
     return deriveLegacyFields(savedProgress as PinyinProgress)
+  }
+
+  if (isPinyinProgressV2(savedProgress)) {
+    return migrateV2ToV3(raw)
   }
 
   if (isPinyinProgressV1(savedProgress)) {
@@ -244,17 +331,16 @@ export function recordPinyinReferenceComplete(
   return recordPinyinSectionComplete(progress, lessonId, 'reference')
 }
 
-export function recordPinyinToneGameScore(
+export function recordPinyinPracticeScore(
   progress: PinyinProgress,
   lessonId: PinyinLessonId,
   score: number,
 ): PinyinProgress {
   const lp = progress.lessonProgress[lessonId] ?? createDefaultLessonProgress()
 
-  const completedSections: PinyinModuleId[] =
-    score >= toneGameCompletionThreshold && !lp.completedSections.includes('tone-game')
-      ? [...lp.completedSections, 'tone-game']
-      : lp.completedSections
+  const completedSections: PinyinModuleId[] = lp.completedSections.includes('practice')
+    ? lp.completedSections
+    : [...lp.completedSections, 'practice']
 
   const updated: PinyinProgress = {
     ...progress,
@@ -264,12 +350,19 @@ export function recordPinyinToneGameScore(
         ...lp,
         visited: true,
         completedSections,
-        toneGameLastScore: score,
-        toneGameBestScore:
-          lp.toneGameBestScore === null ? score : Math.max(lp.toneGameBestScore, score),
+        practiceLastScore: score,
+        practiceBestScore:
+          lp.practiceBestScore === null ? score : Math.max(lp.practiceBestScore, score),
       },
     },
   }
 
   return deriveLegacyFields(updated)
+}
+
+export function recordPinyinPracticeComplete(
+  progress: PinyinProgress,
+  lessonId: PinyinLessonId,
+): PinyinProgress {
+  return recordPinyinSectionComplete(progress, lessonId, 'practice')
 }
