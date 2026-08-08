@@ -26,21 +26,15 @@ describe('PinyinPage', () => {
     vi.unstubAllGlobals()
   })
 
-  it('renders the Pinyin lesson hero with stable section navigation', () => {
+  it('renders the Pinyin lesson hero without section quick links', () => {
     renderRoute('/pinyin')
 
     expect(
       screen.getByRole('heading', { level: 1, name: 'Pinyin（零基础第一课）' }),
     ).toBeVisible()
 
-    expect(screen.getByRole('link', { name: 'Reference' })).toHaveAttribute(
-      'href',
-      '#pinyin-reference',
-    )
-    expect(screen.getByRole('link', { name: 'Tone game' })).toHaveAttribute(
-      'href',
-      '#pinyin-tone-game',
-    )
+    expect(screen.queryByRole('link', { name: 'Reference' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Tone game' })).not.toBeInTheDocument()
   })
 
   it('renders numbered lesson tab badges for every pinyin lesson', () => {
@@ -126,15 +120,6 @@ describe('PinyinPage', () => {
     })
 
     renderRoute('/pinyin')
-
-    expect(screen.getByRole('link', { name: 'Référence' })).toHaveAttribute(
-      'href',
-      '#pinyin-reference',
-    )
-    expect(screen.getByRole('link', { name: 'Jeu des tons' })).toHaveAttribute(
-      'href',
-      '#pinyin-tone-game',
-    )
 
     expect(screen.getByText('0 section sur 2 terminée')).toBeVisible()
     expect(screen.getAllByText('Leçon 1')).toHaveLength(2)

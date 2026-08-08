@@ -169,9 +169,6 @@ export const uiCopy = {
     pinyinPage: {
       eyebrow: 'Pinyin',
       heading: 'Pinyin（零基础第一课）',
-      sectionsNavLabel: 'Pinyin lesson sections',
-      referenceNav: 'Reference',
-      toneGameNav: 'Tone game',
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
       lessonEyebrow: (n: number) => `Lesson ${n}`,
@@ -348,9 +345,6 @@ export const uiCopy = {
     pinyinPage: {
       eyebrow: 'Pinyin',
       heading: 'Pinyin（零基础第一课）',
-      sectionsNavLabel: 'Sections de la leçon de pinyin',
-      referenceNav: 'Référence',
-      toneGameNav: 'Jeu des tons',
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       lessonEyebrow: (n: number) => `Leçon ${n}`,
