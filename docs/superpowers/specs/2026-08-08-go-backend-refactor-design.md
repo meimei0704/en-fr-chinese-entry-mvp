@@ -16,8 +16,8 @@
 | 内容来源 | 课程内容迁走后端（MySQL + Go API），前端纯 API 访问（方案 A，必须联网） |
 | @vercel/blob | 保留 TS 侧不动（语音模块随之保留） |
 | 语音克隆 provider | 本期不动（`src/server/voice/*` + `api/admin/voice/*` 保持 TS） |
-| 主课程 | 10 课 + pinyin 3 课全部 seed 入库 |
-| 前端 | 9 个页面 + `src/lib/progress.ts` 从静态 import 改异步 fetch |
+| 主课程 | 10 课 seed 入库（沿用现有模型）；pinyin 3 课嵌入 Go 二进制（方案 A） |
+| 前端 | 7 个页面 + `src/lib/progress.ts` / `src/content/journey.ts` 从静态 import 改异步 fetch |
 | 工作量 | 约 11~15 个工作日（2.5~3 周） |
 
 ## 当前基线（代码现状）
@@ -53,10 +53,13 @@ DB：`db/migrations/0001_content_admin.sql`（`lessons`、`lesson_modules`、`mo
 静态 import 位置：
 
 - `src/lib/progress.ts` — 依赖 `course.lessons` 校验/推进。
-- `src/pages/{LessonPage,PracticePage,ProgressPage,ReviewPage,HomePage}.tsx` — 主课程。
-- `src/pages/{PinyinPage,PinyinPracticePage}.tsx` + `src/content/pinyin/course.ts` — pinyin 课程（pinyin 内容未入 admin，走独立 read API）。
-- `src/content/journey.ts` — 由 `course` 派生 journey 节点。
-- `src/components/voiceTargets`/`src/server/voice/adminHttp.ts` — 语音 manifest 依赖静态 `course`（**语音模块不动，继续 import 静态内容**，故静态 `course.ts` 需保留为 seed 源 + 语音 manifest 依赖）。
+- `src/pages/{LessonPage,PracticePage,ProgressPage,ReviewPage}.tsx` — 直接 import 主课程。
+- `src/pages/{PinyinPage,PinyinPracticePage}.tsx` — 直接 import pinyin 课程。
+- `src/pages/HomePage.tsx` — 经 `journey` 间接依赖主课程（不直接 import `course`）。
+- `src/content/journey.ts` — 由 `course` 派生 journey 节点（顶层 `import { course }`）。
+- `src/server/voice/adminHttp.ts` — 语音 manifest 依赖静态 `course`（**语音模块不动，继续 import 静态内容**，故静态 `course.ts` 需保留为 seed 源 + 语音 manifest 依赖）。
+
+> 前端静态依赖方共 **7 页 + `progress.ts` / `journey.ts` 两个库文件**；`HomePage` 通过 `journey.ts` 间接依赖。
 
 ## 目标架构
 
@@ -194,11 +197,11 @@ pinyin 内容结构与主课程不同（`reference` / `toneGame` 模块，无 di
 | `api` handler | 路由/方法/状态码/错误映射（handler 注入假 store） | 对标现有 `adminHttp.test.ts`/`http.test.ts` 用例 |
 | `cmd/contentseed` | 输出 SQL 与现有 seed 文件 diff（幂等、可重复） | golden file |
 
-**验收基线**：现有 TS 测试用例（`src/server/content/*.test.ts`，2,417 行）的行为断言逐步迁移到 Go 测试，保证契约一致。
+**验收基线**：现有 TS 测试用例（`src/server/content/*.test.ts`，合计 1,498 行）的行为断言逐步迁移到 Go 测试，保证契约一致。
 
 ### 前端（改造）
 
-- 现有 41 个单测文件 / 271 个用例：`progress`、`journey`、页面测试改为注入 mock 内容；`LessonPage`、`PracticePage`、`HomePage` 等用 `mockContentProvider`。
+- 现有 41 个单测文件 / 278 个用例（`vitest --run` 实测，含 `it.each` 展开）：`progress`、`journey`、页面测试改为注入 mock 内容；`LessonPage`、`PracticePage`、`HomePage` 等用 `mockContentProvider`。
 - Playwright e2e（`tests/e2e/*.spec.ts`）：API 层用真实部署/本地 mock 均可；重点回归 course/lesson 渲染、practice、pinyin、admin smoke。
 
 ### 验证命令
