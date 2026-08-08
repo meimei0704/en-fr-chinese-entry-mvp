@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getUiCopy } from '../content/copy'
@@ -6,6 +6,7 @@ import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { PracticeChallenge } from '../components/PracticeChallenge'
 import { course } from '../content/course'
 import type { LessonContent } from '../content/types'
+import { buildPracticeChallenge } from '../lib/practiceChallenge'
 import { loadProgress, markPracticeSection, saveProgress, completeLesson } from '../lib/progress'
 
 function findLesson(lessonId?: string): LessonContent | undefined {
@@ -19,6 +20,14 @@ export function PracticePage() {
   const [lessonCompleted, setLessonCompleted] = useState(false)
   const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
+
+  const buildChallenge = useCallback(
+    (nextSeed: number) =>
+      lesson
+        ? buildPracticeChallenge(lesson, selectedLanguage, 5, nextSeed)
+        : { questions: [], maxScore: 0 },
+    [lesson, selectedLanguage],
+  )
 
   useEffect(() => {
     if (!lesson) {
@@ -63,7 +72,7 @@ export function PracticePage() {
 
       <section className="page-grid practice-page__body">
         <PracticeChallenge
-          lesson={lesson}
+          buildChallenge={buildChallenge}
           language={selectedLanguage}
           copy={copy.practiceChallenge}
           seed={seed}

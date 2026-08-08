@@ -4,11 +4,11 @@ const pinyinProgressStorageKey = 'en-fr-chinese-entry-mvp.pinyin-progress.v1'
 const existingCourseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 
 const expectedDefaultProgress = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   visited: false,
   completedSections: [],
-  toneGameLastScore: null,
-  toneGameBestScore: null,
+  practiceLastScore: null,
+  practiceBestScore: null,
   shadowingCompletedPromptIds: [],
   lastVisitedPromptId: null,
   lessonProgress: {},
@@ -35,19 +35,19 @@ describe('pinyin progress storage', () => {
     const existingCourseProgress = JSON.stringify({ completedLessons: ['self-intro'] })
 
     const updatedProgress = {
-      schemaVersion: 2 as const,
+      schemaVersion: 3 as const,
       visited: true,
-      completedSections: ['reference', 'tone-game'] as const,
-      toneGameLastScore: 6,
-      toneGameBestScore: 7,
+      completedSections: ['reference', 'practice'] as const,
+      practiceLastScore: 6,
+      practiceBestScore: 7,
       shadowingCompletedPromptIds: ['shadow-ni-hao', 'shadow-xie-xie'],
       lastVisitedPromptId: 'shadow-xie-xie',
       lessonProgress: {
         'pinyin-foundations-1': {
           visited: true,
-          completedSections: ['reference', 'tone-game'] as const,
-          toneGameLastScore: 6,
-          toneGameBestScore: 7,
+          completedSections: ['reference', 'practice'] as const,
+          practiceLastScore: 6,
+          practiceBestScore: 7,
           shadowingCompletedPromptIds: ['shadow-ni-hao', 'shadow-xie-xie'],
           lastVisitedPromptId: 'shadow-xie-xie',
         },
@@ -65,44 +65,56 @@ describe('pinyin progress storage', () => {
     expect(loadPinyinProgress()).toEqual(updatedProgress)
   })
 
-  it('records tone game scores, best score, and completion threshold', async () => {
+  it('records practice scores, best score, and completion', async () => {
     const {
       createDefaultPinyinProgress,
       loadPinyinProgress,
-      recordPinyinToneGameScore,
+      recordPinyinPracticeScore,
       savePinyinProgress,
     } = await importPinyinProgressModule()
     const lessonId = 'pinyin-foundations-1'
 
-    const progressAfterPractice = recordPinyinToneGameScore(createDefaultPinyinProgress(), lessonId, 5)
+    const progressAfterPractice = recordPinyinPracticeScore(createDefaultPinyinProgress(), lessonId, 5)
 
     expect(progressAfterPractice.lessonProgress[lessonId]).toMatchObject({
-      completedSections: [],
-      toneGameLastScore: 5,
-      toneGameBestScore: 5,
+      completedSections: ['practice'],
+      practiceLastScore: 5,
+      practiceBestScore: 5,
     })
-    expect(progressAfterPractice.completedSections).toEqual([])
+    expect(progressAfterPractice.completedSections).toEqual(['practice'])
 
-    const progressAfterPassingScore = recordPinyinToneGameScore(progressAfterPractice, lessonId, 6)
+    const progressAfterHigherRetake = recordPinyinPracticeScore(progressAfterPractice, lessonId, 9)
 
-    expect(progressAfterPassingScore.lessonProgress[lessonId]).toMatchObject({
-      completedSections: ['tone-game'],
-      toneGameLastScore: 6,
-      toneGameBestScore: 6,
+    expect(progressAfterHigherRetake.lessonProgress[lessonId]).toMatchObject({
+      completedSections: ['practice'],
+      practiceLastScore: 9,
+      practiceBestScore: 9,
     })
-    expect(progressAfterPassingScore.completedSections).toEqual(['tone-game'])
 
-    const progressAfterLowerRetake = recordPinyinToneGameScore(progressAfterPassingScore, lessonId, 4)
+    const progressAfterLowerRetake = recordPinyinPracticeScore(progressAfterHigherRetake, lessonId, 4)
 
     expect(progressAfterLowerRetake.lessonProgress[lessonId]).toMatchObject({
-      completedSections: ['tone-game'],
-      toneGameLastScore: 4,
-      toneGameBestScore: 6,
+      completedSections: ['practice'],
+      practiceLastScore: 4,
+      practiceBestScore: 9,
     })
-    expect(progressAfterLowerRetake.completedSections).toEqual(['tone-game'])
 
     savePinyinProgress(progressAfterLowerRetake)
     expect(loadPinyinProgress()).toEqual(progressAfterLowerRetake)
+  })
+
+  it('records practice completion without a score', async () => {
+    const { createDefaultPinyinProgress, recordPinyinPracticeComplete } =
+      await importPinyinProgressModule()
+    const lessonId = 'pinyin-foundations-1'
+
+    const progress = recordPinyinPracticeComplete(createDefaultPinyinProgress(), lessonId)
+
+    expect(progress.lessonProgress[lessonId]).toMatchObject({
+      visited: true,
+      completedSections: ['practice'],
+    })
+    expect(progress.completedSections).toEqual(['practice'])
   })
 
   it('records reference completion and reflects in derived legacy fields', async () => {
@@ -125,14 +137,14 @@ describe('pinyin progress storage', () => {
   it('deriveLegacyFields aggregates across multiple lessons', async () => {
     const {
       createDefaultPinyinProgress,
+      recordPinyinPracticeScore,
       recordPinyinReferenceComplete,
-      recordPinyinToneGameScore,
       savePinyinProgress,
     } = await importPinyinProgressModule()
 
     let progress = createDefaultPinyinProgress()
     progress = recordPinyinReferenceComplete(progress, 'pinyin-foundations-1')
-    progress = recordPinyinToneGameScore(progress, 'pinyin-foundations-1', 6)
+    progress = recordPinyinPracticeScore(progress, 'pinyin-foundations-1', 6)
 
     const multiLesson = {
       ...progress,
@@ -141,8 +153,8 @@ describe('pinyin progress storage', () => {
         'pinyin-sibilants-2': {
           visited: true,
           completedSections: ['reference'] as const,
-          toneGameLastScore: 5,
-          toneGameBestScore: 7,
+          practiceLastScore: 5,
+          practiceBestScore: 7,
           shadowingCompletedPromptIds: [],
           lastVisitedPromptId: null,
         },
@@ -154,12 +166,50 @@ describe('pinyin progress storage', () => {
     const { loadPinyinProgress } = await importPinyinProgressModule()
     const result = loadPinyinProgress()
 
-    expect(result.completedSections.sort()).toEqual(['reference', 'tone-game'])
-    expect(result.toneGameLastScore).toBe(5)
-    expect(result.toneGameBestScore).toBe(7)
+    expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
+    expect(result.practiceLastScore).toBe(5)
+    expect(result.practiceBestScore).toBe(7)
   })
 
-  it('migrates v1 progress to v2 with lessonProgress and derived fields', async () => {
+  it('migrates v2 progress to v3 with tone-game remapped to practice', async () => {
+    const v2Progress = {
+      schemaVersion: 2,
+      visited: true,
+      completedSections: ['reference', 'tone-game'],
+      toneGameLastScore: 6,
+      toneGameBestScore: 7,
+      shadowingCompletedPromptIds: ['shadow-ni-hao'],
+      lastVisitedPromptId: 'shadow-ni-hao',
+      lessonProgress: {
+        'pinyin-foundations-1': {
+          visited: true,
+          completedSections: ['reference', 'tone-game'],
+          toneGameLastScore: 6,
+          toneGameBestScore: 7,
+          shadowingCompletedPromptIds: ['shadow-ni-hao'],
+          lastVisitedPromptId: 'shadow-ni-hao',
+        },
+      },
+    }
+
+    localStorage.setItem(pinyinProgressStorageKey, JSON.stringify(v2Progress))
+
+    const { loadPinyinProgress } = await importPinyinProgressModule()
+    const result = loadPinyinProgress()
+
+    expect(result.schemaVersion).toBe(3)
+    expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
+    expect(result.practiceLastScore).toBe(6)
+    expect(result.practiceBestScore).toBe(7)
+    expect(result.lessonProgress['pinyin-foundations-1']).toMatchObject({
+      visited: true,
+      completedSections: ['reference', 'practice'],
+      practiceLastScore: 6,
+      practiceBestScore: 7,
+    })
+  })
+
+  it('migrates v1 progress to v3 with tone-game remapped to practice', async () => {
     const v1Progress = {
       schemaVersion: 1,
       visited: true,
@@ -175,45 +225,45 @@ describe('pinyin progress storage', () => {
     const { loadPinyinProgress } = await importPinyinProgressModule()
     const result = loadPinyinProgress()
 
-    expect(result.schemaVersion).toBe(2)
-    expect(result.completedSections.sort()).toEqual(['reference', 'tone-game'])
-    expect(result.toneGameLastScore).toBe(6)
-    expect(result.toneGameBestScore).toBe(7)
+    expect(result.schemaVersion).toBe(3)
+    expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
+    expect(result.practiceLastScore).toBe(6)
+    expect(result.practiceBestScore).toBe(7)
     expect(result.lessonProgress['pinyin-foundations-1']).toMatchObject({
       visited: true,
-      completedSections: ['reference', 'tone-game'],
-      toneGameLastScore: 6,
-      toneGameBestScore: 7,
+      completedSections: ['reference', 'practice'],
+      practiceLastScore: 6,
+      practiceBestScore: 7,
     })
   })
 
-  it('does not re-migrate already-v2 progress', async () => {
-    const v2Progress = {
-      schemaVersion: 2,
+  it('does not re-migrate already-v3 progress', async () => {
+    const v3Progress = {
+      schemaVersion: 3,
       visited: true,
       completedSections: ['reference'],
-      toneGameLastScore: null,
-      toneGameBestScore: null,
+      practiceLastScore: null,
+      practiceBestScore: null,
       shadowingCompletedPromptIds: [],
       lastVisitedPromptId: null,
       lessonProgress: {
         'pinyin-foundations-1': {
           visited: true,
           completedSections: ['reference'],
-          toneGameLastScore: null,
-          toneGameBestScore: null,
+          practiceLastScore: null,
+          practiceBestScore: null,
           shadowingCompletedPromptIds: [],
           lastVisitedPromptId: null,
         },
       },
     }
 
-    localStorage.setItem(pinyinProgressStorageKey, JSON.stringify(v2Progress))
+    localStorage.setItem(pinyinProgressStorageKey, JSON.stringify(v3Progress))
 
     const { loadPinyinProgress } = await importPinyinProgressModule()
     const result = loadPinyinProgress()
 
-    expect(result.schemaVersion).toBe(2)
+    expect(result.schemaVersion).toBe(3)
     expect(result.completedSections).toEqual(['reference'])
     expect(result.lessonProgress['pinyin-foundations-1']).toMatchObject({
       visited: true,
@@ -227,7 +277,7 @@ describe('pinyin progress storage', () => {
     localStorage.setItem(pinyinProgressStorageKey, '{not-valid-json')
     expect(loadPinyinProgress()).toEqual(expectedDefaultProgress)
 
-    localStorage.setItem(pinyinProgressStorageKey, JSON.stringify({ schemaVersion: 3 }))
+    localStorage.setItem(pinyinProgressStorageKey, JSON.stringify({ schemaVersion: 99 }))
     expect(loadPinyinProgress()).toEqual(expectedDefaultProgress)
   })
 })

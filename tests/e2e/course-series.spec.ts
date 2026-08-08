@@ -60,7 +60,7 @@ const lessonHrefs = [
 const twoSectionPinyinProgress = {
   schemaVersion: 1,
   visited: true,
-  completedSections: ['reference', 'tone-game'],
+  completedSections: ['reference', 'practice'],
   toneGameLastScore: 8,
   toneGameBestScore: 8,
   shadowingCompletedPromptIds: [],

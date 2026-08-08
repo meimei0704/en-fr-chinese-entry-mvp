@@ -148,7 +148,7 @@ describe('HomePage', () => {
     savePinyinProgress({
       ...createDefaultPinyinProgress(),
       visited: true,
-      completedSections: ['reference', 'tone-game'],
+      completedSections: ['reference', 'practice'],
     })
     saveProgress({
       ...createDefaultProgress(),

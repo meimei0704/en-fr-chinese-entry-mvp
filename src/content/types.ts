@@ -142,7 +142,7 @@ export type PinyinLessonId =
   | 'pinyin-sibilants-2'
   | 'pinyin-compound-finals-3'
 
-export type PinyinModuleId = 'reference' | 'tone-game' | 'shadowing'
+export type PinyinModuleId = 'reference' | 'practice' | 'shadowing'
 
 export type PinyinReferenceGroupId =
   | 'initials'
@@ -208,18 +208,18 @@ export interface PinyinCourseContent {
 export interface PinyinLessonProgress {
   visited: boolean
   completedSections: PinyinModuleId[]
-  toneGameLastScore: number | null
-  toneGameBestScore: number | null
+  practiceLastScore: number | null
+  practiceBestScore: number | null
   shadowingCompletedPromptIds: string[]
   lastVisitedPromptId: string | null
 }
 
 export interface PinyinProgress {
-  schemaVersion: 2
+  schemaVersion: 3
   visited: boolean
   completedSections: PinyinModuleId[]
-  toneGameLastScore: number | null
-  toneGameBestScore: number | null
+  practiceLastScore: number | null
+  practiceBestScore: number | null
   shadowingCompletedPromptIds: string[]
   lastVisitedPromptId: string | null
   lessonProgress: Partial<Record<PinyinLessonId, PinyinLessonProgress>>

@@ -45,7 +45,7 @@ describe('PracticeChallenge', () => {
   it('renders the first question with progress, score, streak, and lives', () => {
     render(
       <PracticeChallenge
-        lesson={selfIntroLesson}
+        buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
         language="en"
         copy={copy}
         seed={11}
@@ -66,7 +66,7 @@ describe('PracticeChallenge', () => {
 
     render(
       <PracticeChallenge
-        lesson={selfIntroLesson}
+        buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
         language="en"
         copy={copy}
         seed={11}
@@ -102,7 +102,7 @@ describe('PracticeChallenge', () => {
 
     render(
       <PracticeChallenge
-        lesson={selfIntroLesson}
+        buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
         language="en"
         copy={copy}
         seed={11}
@@ -131,7 +131,7 @@ describe('PracticeChallenge', () => {
 
     render(
       <PracticeChallenge
-        lesson={selfIntroLesson}
+        buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
         language="en"
         copy={copy}
         seed={11}
@@ -169,7 +169,7 @@ describe('PracticeChallenge', () => {
 
     render(
       <PracticeChallenge
-        lesson={selfIntroLesson}
+        buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
         language="en"
         copy={copy}
         seed={11}
@@ -208,7 +208,7 @@ describe('PracticeChallenge', () => {
 
     render(
       <PracticeChallenge
-        lesson={selfIntroLesson}
+        buildChallenge={(nextSeed) => buildPracticeChallenge(selfIntroLesson, 'en', 5, nextSeed)}
         language="en"
         copy={copy}
         seed={11}
