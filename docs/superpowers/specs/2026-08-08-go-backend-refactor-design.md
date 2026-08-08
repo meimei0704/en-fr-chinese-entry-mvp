@@ -128,11 +128,11 @@ tools/
 
 鉴权语义保留：`X-Content-Admin-Client: spa` 时 401 不发送 `WWW-Authenticate: Basic` challenge；否则发送 `WWW-Authenticate: Basic realm="Content Admin"`。
 
-### 新增 pinyin 读 API（设计决策，见"开放项"）
+### 新增 pinyin 读 API（已确认：方案 A，嵌入 Go 二进制）
 
 | 端点 | 方法 | 说明 |
 |------|------|------|
-| `/api/content/pinyin/course` | GET | 200 `PinyinCourseContent` |
+| `/api/content/pinyin/course` | GET | 200 `PinyinCourseContent`（来自 `internal/pinyincontent` 嵌入静态 JSON，不走 DB） |
 
 ## 内容数据模型与迁移路径
 
@@ -141,14 +141,9 @@ tools/
 - 现状 `db/seeds/0001_initial_content_admin.sql` 已含 10 课六类模块 seed，`module_type` 枚举：`lessonMeta | dialogue | sentencePatterns | vocabulary | practice | reviewCards`。
 - **seed 再生**：`cmd/contentseed` 读取静态内容 JSON 快照（由现有 `src/content/lessons/*.ts` 序列化产出），复用 `seed.ts` 的生成逻辑产出相同 SQL；内容有更新时重新生成 seed 并入库。
 
-### pinyin 课程（3 课）— 设计决策
+### pinyin 课程（3 课）— 已确认：方案 A
 
-pinyin 内容结构与主课程不同（`reference` / `toneGame` 模块，无 dialogue/vocabulary/practice/reviewCards），且不在 admin 编辑范围。两个方案：
-
-- **方案 A（推荐）**：pinyin 内容编译进 Go 二进制（`internal/pinyincontent` 嵌入静态 JSON），走 `/api/content/pinyin/course`。不动 `module_revisions` 表结构、不加 admin 支持。与"语音不动"同理，pinyin 近期不改动则无需入库。
-- 方案 B：扩 `lessons` 加 `course_id` 判别列、扩 `module_type` 枚举加 `pinyinReference|pinyinToneGame`、admin UI 加 pinyin 支持。改动面大，本期不推荐。
-
-> 需要 崔秋 在 A/B 中确认。估算按方案 A 计。
+pinyin 内容结构与主课程不同（`reference` / `toneGame` 模块，无 dialogue/vocabulary/practice/reviewCards），且不在 admin 编辑范围。**崔秋 已确认采用方案 A**：pinyin 内容编译进 Go 二进制（`internal/pinyincontent` 嵌入静态 JSON），走 `/api/content/pinyin/course`。不动 `module_revisions` 表结构、不加 admin 支持。
 
 ### 迁移步骤（上线）
 
@@ -238,7 +233,7 @@ pinyin 内容结构与主课程不同（`reference` / `toneGame` 模块，无 di
 
 ## 风险与开放项
 
-1. **pinyin 数据源（方案 A/B）**：需崔秋确认。默认方案 A（嵌入 Go 二进制），不动 DB 表结构。
+1. ~~pinyin 数据源（方案 A/B）~~ **已确认：方案 A**（嵌入 Go 二进制，不动 DB 表结构）。
 2. **Go-sqlmock vs 真实 MySQL**：CI 无 DB，store 层用 `go-sqlmock`；若 Vercel 提供测试库则用真实库更稳。
 3. **Vercel Go Functions 冷启动**：读 API 需维护 DB pool，Go 冷启动快于 Node；连接超时重试逻辑移植自 `adminHttp.ts`。
 4. **静态 `course.ts` 去留**：语音 manifest 依赖它，故保留；后续若语音下线可再评估删除。
