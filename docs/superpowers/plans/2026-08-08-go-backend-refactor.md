@@ -1525,6 +1525,34 @@ git commit -am "docs: mark go backend refactor complete and update README"
 
 ---
 
+## M8：Vercel 路由对齐（单入口 mux → 每端点独立 Function）
+
+**背景**：方案 A（`internal/`→`pkg/`，`fb554e9`+`4fca4d6`）修复了 Vercel 构建失败（preview `state=success`），但实测暴露路由层缺口：Vercel Go Functions 按**文件路径**路由（`api/content/index.go` → 仅 `/api/content`），不把 `/api/content/*` 子路径转发给该函数；vercel.json 的 catch-all `/(.*) → /index.html` 吞掉所有子路径，导致 4 个 API 子端点全部返回 SPA HTML。
+
+**结论**：计划风险 1 的备选单入口 mux 与 Vercel 路由模型不兼容，回退为**每端点独立 .go 文件**（对齐原 TS 端点布局）。
+
+### Task 8.1: content 侧拆分
+
+- [ ] `api/content/course.go` → `Handler` 调 `NewCourseHandler().ServeHTTP(w,r)`
+- [ ] `api/content/lessons.go` → `Handler` 调 `NewLessonHandler().ServeHTTP(w,r)`
+- [ ] `api/content/pinyin/course.go`（目录层级 → 路由 `/api/content/pinyin/course`）→ `NewPinyinCourseHandler().ServeHTTP(w,r)`
+- [ ] 删除 `api/content/index.go`（保留或迁移 index_test.go 到各端点 *_test.go）
+- [ ] 保留 vercel.json lessons rewrite（`/api/content/lessons/:lessonId → /api/content/lessons?lessonId=:lessonId`，拆分后依然成立）
+
+### Task 8.2: admin 侧拆分
+
+- [ ] `api/admin/content/lessons.go`、`draft.go`、`publish.go`、`rollback.go`：各自 `package handler` + `func Handler(w,r)` 内 `adminhttp.New(repo,env).ServeHTTP(w,r)`（Vercel 路由到精确路径后 `r.URL.Path` 恰为对应端点，内部 switch 直接命中）
+- [ ] 删除 `api/admin/content/index.go`
+
+**无需改动 pkg/adminhttp / pkg/contentbuild 等**（handler 内部 switch 依赖 r.URL.Path，拆分后各文件收到精确路径，天然命中）。
+
+### Task 8.3: 复验与验收
+
+- [ ] 本地全量：`gofmt -l` 干净；`go build/vet ./...` exit 0；`go test -count=1 ./...` 13 包全绿；vitest 45/302；tsc/lint/build 0 错误；compare 16/16
+- [ ] 提交拆分 commit
+- [ ] 一次 Vercel preview，实测 4 端点全部返回 Go JSON：`/api/content/course`、`/api/content/lessons`、`/api/content/pinyin/course`、`/api/admin/content/lessons`（无需登录端点）
+- [ ] reviewer + planner 独立复验（preview 实测 + 本地全量）
+
 ## 验证清单（每个里程碑必须满足）
 
 | 里程碑 | 验证 |
@@ -1536,10 +1564,13 @@ git commit -am "docs: mark go backend refactor complete and update README"
 | M5 | `npm run test -- --run`、`npm run build`、`npm run lint`、`npx playwright test` |
 | M6 | `go test ./... -cover`；`node scripts/compare-content-api.mjs` 一致 |
 | M7 | 稳定 URL 生产验证 course/lessons/pinyin/admin |
+| M8 | 拆分后本地全量复验绿 + preview 4 端点返回 Go JSON |
+
+> 注：方案 A 已将 `internal/` 重命名为 `pkg/`，M1–M4 验证路径同步改为 `./pkg/...`。
 
 ## 风险与实施注意
 
-1. **Vercel Go Functions 同目录 `Handler` 冲突**：**已默认采用单入口 mux**（`api/content/index.go`、`api/admin/content/index.go`），pinyin 路由并入 `api/content/index.go`，无同目录多 `Handler`。`api/content/pinyin/` 若建子目录需确认独立包；当前设计不建子目录。
+1. **Vercel Go Functions 路由语义（M8 已实测定案）**：初始采用单入口 mux（`api/content/index.go`、`api/admin/content/index.go` 按 path 路由），但经 Vercel 实测不兼容——Vercel 按**文件路径**路由，`index.go` 仅映射 `/api/content`，不转发 `/api/content/*` 子路径，catch-all `/(.*)` rewrite 吞掉所有子路径（全返回 SPA HTML）。**M8 定案：每端点独立 .go 文件**（`api/content/course.go`、`lessons.go`、`pinyin/course.go`；`api/admin/content/lessons.go`、`draft.go`、`publish.go`、`rollback.go`），对齐原 TS 端点布局；本地 `go build ./api/...` 验证同目录多 Handler 编译。
 2. **DSN 兼容（M2 Step 0 spike）**：确认 `MYSQL_DATABASE_URL` 格式；URI scheme 需转 go-sql-driver DSN；`MYSQL_SSL=required` 的 `tls=true` 拼接需按 query 格式处理。
 3. **`apiEntrypoints.test.ts`**：M7 删 TS 端点时同步更新该测试。
 4. **前端时序**：页面测试由同步改异步，用 `findBy*`；避免时序敏感断言。
