@@ -107,16 +107,25 @@ func groupByLesson(rows []contentstore.PublishedModuleRow) [][]contentstore.Publ
 	return out
 }
 
-func BuildCourseFromRows(rows []contentstore.PublishedModuleRow) (map[string]any, error) {
-	var lessons []any
+// CourseContent mirrors the TS PublishedCourseContent field order exactly
+// (supportedExplanationLanguages, estimatedDailyMinutes, lessons) so the
+// assembled JSON matches the TS output key-for-key.
+type CourseContent struct {
+	SupportedExplanationLanguages []string         `json:"supportedExplanationLanguages"`
+	EstimatedDailyMinutes         int              `json:"estimatedDailyMinutes"`
+	Lessons                       []*LessonContent `json:"lessons"`
+}
+
+func BuildCourseFromRows(rows []contentstore.PublishedModuleRow) (*CourseContent, error) {
+	var lessons []*LessonContent
 	for _, group := range groupByLesson(rows) {
 		if lesson, ok := BuildLessonFromRows(group); ok {
 			lessons = append(lessons, lesson)
 		}
 	}
-	return map[string]any{
-		"supportedExplanationLanguages": supportedExplanationLanguages,
-		"estimatedDailyMinutes":         estimatedDailyMinutes,
-		"lessons":                       lessons,
+	return &CourseContent{
+		SupportedExplanationLanguages: supportedExplanationLanguages,
+		EstimatedDailyMinutes:         estimatedDailyMinutes,
+		Lessons:                       lessons,
 	}, nil
 }

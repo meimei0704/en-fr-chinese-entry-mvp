@@ -46,9 +46,8 @@ func TestBuildCourseSkipsDisabled(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
-	lessons, _ := course["lessons"].([]any)
-	if len(lessons) != 1 {
-		t.Fatalf("lessons = %d, want 1 (disabled skipped)", len(lessons))
+	if len(course.Lessons) != 1 {
+		t.Fatalf("lessons = %d, want 1 (disabled skipped)", len(course.Lessons))
 	}
 }
 
@@ -77,11 +76,11 @@ func TestBuildCourseSortsByDisplayOrder(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
-	lessons, _ := course["lessons"].([]any)
+	lessons := course.Lessons
 	if len(lessons) != 2 {
 		t.Fatalf("lessons = %d, want 2", len(lessons))
 	}
-	first := lessons[0].(*LessonContent)
+	first := lessons[0]
 	if first.ID != "b" {
 		t.Fatalf("first lesson id = %v, want b (displayOrder 1)", first.ID)
 	}
