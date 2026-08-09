@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from './copy'
 import { course } from './course'
-import { journeyNodeIcons, journeyNodes, journeyStages } from './journey'
+import { buildJourney, journeyNodeIcons } from './journey'
+
+const { stages: journeyStages, nodes: journeyNodes } = buildJourney(course)
 
 const expectedJourneyNodeIds = [
   'daily-greetings',
