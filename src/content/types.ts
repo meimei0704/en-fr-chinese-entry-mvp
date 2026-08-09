@@ -9,6 +9,7 @@ export type LocalizedField = string | LocalizedText
 export type BilingualExplanation = LocalizedText
 
 export type LessonId =
+  | 'daily-greetings'
   | 'self-intro'
   | 'ask-directions'
   | 'order-food'
@@ -19,10 +20,12 @@ export type LessonId =
   | 'pharmacy-help'
   | 'ask-for-help-problem'
   | 'train-station-ticket'
+  | 'small-talk'
 
 export type JourneyStageId = 'arrival-in-china'
 
 export type JourneyNodeId =
+  | 'daily-greetings'
   | 'airport-immigration'
   | 'taxi-to-stay'
   | 'hotel-check-in'
@@ -33,6 +36,7 @@ export type JourneyNodeId =
   | 'pharmacy-help'
   | 'ask-for-help-problem'
   | 'train-station-ticket'
+  | 'small-talk'
 
 export type JourneyNodeKind = 'lesson' | 'preview'
 
@@ -76,6 +80,7 @@ export interface PracticePrompt {
   id: string
   prompt: LocalizedField
   target: string
+  pinyin?: string
   audio: string
   audioFallback?: string
   explanation: BilingualExplanation

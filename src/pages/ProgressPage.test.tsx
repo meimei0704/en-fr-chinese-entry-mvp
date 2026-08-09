@@ -15,23 +15,25 @@ import { renderRoute } from '../test/renderRoute'
 
 const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
 const expectedJourneyLessonHrefs = [
+  '/lesson/daily-greetings',
   '/lesson/self-intro',
   '/lesson/ask-directions',
   '/lesson/order-food',
   '/lesson/phone-and-payment',
-  '/lesson/convenience-store-run',
   '/lesson/restaurant-order',
-  '/lesson/metro-ticket',
-  '/lesson/pharmacy-help',
-  '/lesson/ask-for-help-problem',
   '/lesson/train-station-ticket',
+  '/lesson/metro-ticket',
+  '/lesson/convenience-store-run',
+  '/lesson/ask-for-help-problem',
+  '/lesson/pharmacy-help',
+  '/lesson/small-talk',
 ]
 
 const expectedSeriesCopy = {
   en: {
     label: 'Course series',
     pinyin: 'Mandarin tones and pinyin',
-    journey: 'Basic Chinese expressions for a stress-free journey',
+    journey: 'Useful sentences, expressions and Hanzi recognition',
   },
   fr: {
     label: 'Séries de cours',
@@ -121,23 +123,23 @@ describe('ProgressPage', () => {
     renderRoute('/progress')
 
     expect(screen.getByRole('heading', { level: 1, name: /progression/i })).toBeVisible()
-    expect(screen.getAllByText(/1 leçon sur 10 terminée/i)[0]).toBeVisible()
+    expect(screen.getAllByText(/1 leçon sur 12 terminée/i)[0]).toBeVisible()
 
     const summary = screen.getByRole('region', { name: /résumé du parcours/i })
     expect(within(summary).getByRole('heading', { name: /leçon en cours/i })).toBeVisible()
-    expect(within(summary).getByText('酒店或公寓入住')).toHaveClass('lesson-topic-title__primary')
-    expect(within(summary).getByText('Arrivée à l’hôtel ou à l’appartement')).toHaveClass(
+    expect(within(summary).getByText('酒店入住')).toHaveClass('lesson-topic-title__primary')
+    expect(within(summary).getByText('À l’hôtel')).toHaveClass(
       'lesson-topic-title__secondary',
     )
     expect(summary).not.toHaveTextContent(' / ')
 
     const stats = screen.getByRole('region', { name: /indicateurs d’apprentissage/i })
     expect(within(stats).getByText(/leçons terminées/i)).toBeVisible()
-    expect(within(stats).getByText(/1 leçon sur 10 terminée/i)).toBeVisible()
+    expect(within(stats).getByText(/1 leçon sur 12 terminée/i)).toBeVisible()
     expect(within(stats).getByText(/file de révision/i)).toBeVisible()
     expect(within(stats).getByText(/2 cartes en attente/i)).toBeVisible()
     expect(within(stats).getByText(/maîtrise du parcours/i)).toBeVisible()
-    expect(within(stats).getByText('10%')).toBeVisible()
+    expect(within(stats).getByText('8%')).toBeVisible()
 
     const courseSeries = getProgressCourseSeries('fr')
     const pinyinSeries = getPinyinProgressSeries('fr')
@@ -163,7 +165,7 @@ describe('ProgressPage', () => {
     }
     expect(within(journeyMap).getByText('Terminée')).toBeVisible()
     expect(within(journeyMap).getByText('En cours')).toBeVisible()
-    expect(within(journeyMap).getAllByText('À venir')).toHaveLength(8)
+    expect(within(journeyMap).getAllByText('À venir')).toHaveLength(10)
     expect(within(journeyMap).queryAllByText('Aperçu')).toHaveLength(0)
   })
 
@@ -204,7 +206,7 @@ describe('ProgressPage', () => {
     expect(journeyEntry).toHaveAttribute('href', '#progress-basic-expressions-path')
     expect(journeyEntry).toHaveClass('course-series__entry-card', 'course-series__journey-link')
     expect(journeyEntry).toHaveAccessibleName(expectedSeriesCopy.en.journey)
-    expect(journeyEntry).toHaveTextContent('0 of 10 lessons completed')
+    expect(journeyEntry).toHaveTextContent('0 of 12 lessons completed')
     expect(journeyPath).toHaveClass(
       'surface-card',
       'progress-journey-card',
@@ -239,7 +241,7 @@ describe('ProgressPage', () => {
       'true',
     )
 
-    expect(cards).toHaveLength(10)
+    expect(cards).toHaveLength(12)
     expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(
       orderedJourneyNodes.map((node) => node.id),
     )
@@ -251,17 +253,17 @@ describe('ProgressPage', () => {
     )
     expect(journeySection).not.toHaveTextContent(' / ')
     expect(within(journeyPath).queryAllByText('Preview')).toHaveLength(0)
-    expect(within(journeyPath).getAllByText('Upcoming')).toHaveLength(10)
+    expect(within(journeyPath).getAllByText('Upcoming')).toHaveLength(12)
   })
 
   it('reuses the Home hand-drawn/kawaii journey card visual hooks on Progress', () => {
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
-    const taxiCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[1]))
+    const taxiCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[2]))
     const restaurantCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[5]))
 
-    expect(journeyMap.querySelectorAll('.journey-node')).toHaveLength(10)
+    expect(journeyMap.querySelectorAll('.journey-node')).toHaveLength(12)
     expect(taxiCard).toHaveClass(
       'journey-node',
       'journey-node--lesson',
@@ -281,7 +283,7 @@ describe('ProgressPage', () => {
     expect(within(restaurantCard).queryAllByText(/coming soon/i)).toHaveLength(0)
   })
 
-  it('counts mastery from all ten complete lesson nodes', () => {
+  it('counts mastery from all twelve complete lesson nodes', () => {
     saveProgress({
       ...createDefaultProgress(),
       completedLessons: ['self-intro'],
@@ -291,14 +293,14 @@ describe('ProgressPage', () => {
     renderRoute('/progress')
 
     const stats = screen.getByRole('region', { name: /learning indicators/i })
-    expect(within(stats).getByText('1/10')).toBeVisible()
-    expect(within(stats).getByText('10%')).toBeVisible()
-    expect(screen.getAllByText(/1 of 10 lessons completed/i)[0]).toBeVisible()
-    expect(screen.queryByText(/1 of 11/i)).not.toBeInTheDocument()
+    expect(within(stats).getByText('1/12')).toBeVisible()
+    expect(within(stats).getByText('8%')).toBeVisible()
+    expect(screen.getAllByText(/1 of 12 lessons completed/i)[0]).toBeVisible()
+    expect(screen.queryByText(/1 of 13/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
   })
 
-  it('keeps 2-of-3 Pinyin and 1-of-10 Basic progress inside independent anchors', () => {
+  it('keeps 2-of-3 Pinyin and 1-of-12 Basic progress inside independent anchors', () => {
     let progress = createDefaultPinyinProgress()
     progress = recordPinyinReferenceComplete(progress, 'initials')
     progress = recordPinyinPracticeScore(progress, 'initials', 6)
@@ -324,14 +326,14 @@ describe('ProgressPage', () => {
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(pinyinEntry).toHaveAccessibleName(expectedSeriesCopy.en.pinyin)
     expect(within(pinyinEntry).getByText('2 of 3 sections complete')).toBeVisible()
-    expect(pinyinEntry).not.toHaveTextContent('1 of 10 lessons completed')
+    expect(pinyinEntry).not.toHaveTextContent('1 of 12 lessons completed')
     expect(journeyEntry).toHaveAttribute('href', '#progress-basic-expressions-path')
     expect(journeyEntry).toHaveAccessibleName(expectedSeriesCopy.en.journey)
-    expect(within(journeyEntry).getByText('1 of 10 lessons completed')).toBeVisible()
+    expect(within(journeyEntry).getByText('1 of 12 lessons completed')).toBeVisible()
     expect(journeyEntry).not.toHaveTextContent('2 of 3 sections complete')
-    expect(within(stats).getByText('1/10')).toBeVisible()
-    expect(within(stats).getByText('10%')).toBeVisible()
-    expect(screen.queryByText(/1 of 11/i)).not.toBeInTheDocument()
+    expect(within(stats).getByText('1/12')).toBeVisible()
+    expect(within(stats).getByText('8%')).toBeVisible()
+    expect(screen.queryByText(/1 of 13/i)).not.toBeInTheDocument()
   })
 
   it('keeps the peer Pinyin entry outside Journey mastery totals', () => {
@@ -347,8 +349,8 @@ describe('ProgressPage', () => {
 
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(within(getJourneyMap()).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
-    expect(screen.getAllByText(/1 of 10 lessons completed/i)[0]).toBeVisible()
-    expect(screen.queryByText(/1 of 11/i)).not.toBeInTheDocument()
+    expect(screen.getAllByText(/1 of 12 lessons completed/i)[0]).toBeVisible()
+    expect(screen.queryByText(/1 of 13/i)).not.toBeInTheDocument()
   })
 
   it('maps learner progress to completed, current, and upcoming journey statuses only', () => {
@@ -360,11 +362,11 @@ describe('ProgressPage', () => {
 
     renderRoute('/progress')
 
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[0]))).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[0]))).getByText('Upcoming')).toBeVisible()
     expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[1]))).getByText('Complete')).toBeVisible()
     expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[2]))).getByText('Complete')).toBeVisible()
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[3]))).getByText('Current')).toBeVisible()
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[4]))).getByText('Upcoming')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[3]))).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[4]))).getByText('Current')).toBeVisible()
     expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[5]))).getByText('Upcoming')).toBeVisible()
     expect(within(getJourneyMap()).queryAllByText('Preview')).toHaveLength(0)
   })
@@ -379,37 +381,41 @@ describe('ProgressPage', () => {
     renderRoute('/progress')
 
     expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[2]))).getByText('Complete')).toBeVisible()
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[3]))).getByText('Current')).toBeVisible()
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[4]))).getByText('Upcoming')).toBeVisible()
-    expect(within(getProgressSummary()).getByText('手机号码和移动支付')).toHaveClass(
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[3]))).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[4]))).getByText('Current')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[5]))).getByText('Upcoming')).toBeVisible()
+    expect(within(getProgressSummary()).getByText('中国电话卡')).toHaveClass(
       'lesson-topic-title__primary',
     )
   })
 
-  it('uses lesson six as current after completing lesson five', () => {
+  it('uses lesson nine as current after completing lesson eight', () => {
     saveProgress({
       ...createDefaultProgress(),
       completedLessons: [
+        'daily-greetings',
         'self-intro',
         'ask-directions',
         'order-food',
         'phone-and-payment',
-        'convenience-store-run',
+        'restaurant-order',
+        'train-station-ticket',
+        'metro-ticket',
       ],
-      lastVisitedLesson: 'convenience-store-run',
+      lastVisitedLesson: 'metro-ticket',
     })
 
     renderRoute('/progress')
 
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[4]))).getByText('Complete')).toBeVisible()
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[5]))).getByText('Current')).toBeVisible()
-    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[6]))).getByText('Upcoming')).toBeVisible()
-    expect(within(getProgressSummary()).getByText('点一份简单的饭')).toHaveClass(
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[7]))).getByText('Complete')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[8]))).getByText('Current')).toBeVisible()
+    expect(within(getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[9]))).getByText('Upcoming')).toBeVisible()
+    expect(within(getProgressSummary()).getByText('购物')).toHaveClass(
       'lesson-topic-title__primary',
     )
   })
 
-  it('makes all ten Journey cards and the peer Pinyin entry whole-card links', () => {
+  it('makes all twelve Journey cards and the peer Pinyin entry whole-card links', () => {
     renderRoute('/progress')
 
     const journeyMap = getJourneyMap()
@@ -418,7 +424,7 @@ describe('ProgressPage', () => {
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
     const pinyinEntry = screen.getByRole('link', { name: expectedSeriesCopy.en.pinyin })
 
-    expect(lessonLinks).toHaveLength(10)
+    expect(lessonLinks).toHaveLength(12)
     expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedJourneyLessonHrefs)
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(within(journeyMap).queryByRole('link', { name: /pinyin/i })).not.toBeInTheDocument()
@@ -447,15 +453,15 @@ describe('ProgressPage', () => {
 
     const journeyMap = getJourneyMap()
     const restaurantCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[5]))
-    const trainCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[9]))
+    const trainCard = getJourneyNodeCard(journeyTitlePattern(orderedJourneyNodes[6]))
 
     expect(within(journeyMap).queryAllByRole('note')).toHaveLength(0)
     expect(restaurantCard).toHaveRole('link')
     expect(trainCard).toHaveRole('link')
     expect(within(restaurantCard).queryAllByText(/coming soon|peek inside|preview/i)).toHaveLength(0)
     expect(within(trainCard).queryAllByText(/coming soon|peek inside|preview/i)).toHaveLength(0)
-    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('1/10')
-    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('10%')
+    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('1/12')
+    expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent('8%')
     expect(screen.getByRole('region', { name: /learning indicators/i })).toHaveTextContent(
       /1 review item waiting/i,
     )

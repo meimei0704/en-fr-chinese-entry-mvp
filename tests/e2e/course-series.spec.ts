@@ -7,16 +7,16 @@ const seriesCopy = {
   en: {
     label: 'Course series',
     pinyin: 'Mandarin tones and pinyin',
-    journey: 'Basic Chinese expressions for a stress-free journey',
+    journey: 'Useful sentences, expressions and Hanzi recognition',
     pinyinProgress: '2 of 3 sections complete',
-    journeyProgress: '1 of 10 lessons completed',
+    journeyProgress: '1 of 12 lessons completed',
   },
   fr: {
     label: 'Séries de cours',
     pinyin: 'Tons et pinyin du mandarin',
     journey: 'Expressions chinoises essentielles pour voyager sereinement',
     pinyinProgress: '2 sections sur 3 terminées',
-    journeyProgress: '1 leçon sur 10 terminée',
+    journeyProgress: '1 leçon sur 12 terminée',
   },
 } as const
 
@@ -45,16 +45,18 @@ const viewports = [
 ] as const
 
 const lessonHrefs = [
+  '/lesson/daily-greetings',
   '/lesson/self-intro',
   '/lesson/ask-directions',
   '/lesson/order-food',
   '/lesson/phone-and-payment',
-  '/lesson/convenience-store-run',
   '/lesson/restaurant-order',
-  '/lesson/metro-ticket',
-  '/lesson/pharmacy-help',
-  '/lesson/ask-for-help-problem',
   '/lesson/train-station-ticket',
+  '/lesson/metro-ticket',
+  '/lesson/convenience-store-run',
+  '/lesson/ask-for-help-problem',
+  '/lesson/pharmacy-help',
+  '/lesson/small-talk',
 ] as const
 
 const twoSectionPinyinProgress = {
@@ -142,8 +144,8 @@ for (const pageCase of pageCases) {
         await expect(pinyinLink).toHaveAccessibleName(copy.pinyin)
         await expect(journeyLink).toHaveAccessibleName(copy.journey)
         await expect(path).toBeVisible()
-        await expect(journeyNodes).toHaveCount(10)
-        await expect(lessonLinks).toHaveCount(10)
+        await expect(journeyNodes).toHaveCount(12)
+        await expect(lessonLinks).toHaveCount(12)
         expect(await lessonLinks.evaluateAll((links) => links.map((link) => link.getAttribute('href'))))
           .toEqual(lessonHrefs)
 
@@ -280,13 +282,6 @@ for (const pageCase of pageCases) {
           expect(metrics.cardScrollHeight).toBeLessThanOrEqual(metrics.cardClientHeight + 1)
           expect(metrics.cardOverflow).toBe('visible')
           await expect(link).toHaveAccessibleName(title)
-
-          if (title.includes('stress-free')) {
-            expect(metrics.tokens.find(({ text }) => text === 'stress-free')).toEqual({
-              fragmentCount: 1,
-              text: 'stress-free',
-            })
-          }
         }
 
         await expectKeyboardFocusVisible(page, pinyinLink)
@@ -299,7 +294,7 @@ for (const pageCase of pageCases) {
           await expect(pinyinLink).toContainText(copy.pinyinProgress)
           await expect(journeyLink).toContainText(copy.journeyProgress)
           await expect(page.getByRole('region', { name: /learning indicators|indicateurs d’apprentissage/i }))
-            .toContainText('1/10')
+            .toContainText('1/12')
         }
 
         const [scrollWidth, clientWidth, supportsSubgrid] = await page.evaluate(() => [
@@ -336,7 +331,7 @@ for (const pageCase of pageCases) {
     const journeyLink = courses.getByRole('link', { name: copy.journey })
     const path = courses.locator(`#${pageCase.pathId}`)
 
-    await expect(path.locator(pageCase.nodeSelector)).toHaveCount(10)
+    await expect(path.locator(pageCase.nodeSelector)).toHaveCount(12)
     await expectKeyboardFocusVisible(page, journeyLink)
     await journeyLink.press('Enter')
 
@@ -344,7 +339,7 @@ for (const pageCase of pageCases) {
     await expect.poll(() => new URL(page.url()).hash).toBe(`#${pageCase.pathId}`)
     await expect(path).toBeVisible()
     await expect(path).not.toHaveAttribute('tabindex')
-    await expect(path.locator(pageCase.nodeSelector)).toHaveCount(10)
+    await expect(path.locator(pageCase.nodeSelector)).toHaveCount(12)
     expect(await journeyLink.getAttribute('aria-expanded')).toBeNull()
 
     await page.goto(pageCase.route)

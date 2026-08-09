@@ -7,7 +7,7 @@ describe('course-series UI copy', () => {
     expect(getUiCopy('en').courseSeries).toEqual({
       label: 'Course series',
       pinyinTitle: 'Mandarin tones and pinyin',
-      basicExpressionsTitle: 'Basic Chinese expressions for a stress-free journey',
+      basicExpressionsTitle: 'Useful sentences, expressions and Hanzi recognition',
     })
     expect(getUiCopy('fr').courseSeries).toEqual({
       label: 'Séries de cours',

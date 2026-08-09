@@ -108,10 +108,10 @@ describe('AdminLessonEditorPage', () => {
     renderRoute(`/admin/lesson/${lesson.id}`)
 
     expect(screen.getByTestId('admin-editor-loading-shell')).toBeVisible()
-    expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })).toBeVisible()
     const main = screen.getByRole('main')
     const adminHero = screen
-      .getByRole('heading', { level: 1, name: /edit self-intro/i })
+      .getByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
       .closest('.lesson-header-card')
     expect(main).toHaveClass('admin-page-shell')
     expect(main).not.toHaveClass('lesson-page')
@@ -137,7 +137,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })).toBeVisible()
     expect(screen.queryByRole('heading', { level: 2, name: /voice replacement/i })).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/i confirm this voice sample is mine or explicitly authorized/i)).not.toBeInTheDocument()
   })
@@ -149,7 +149,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
 
     const lessonMetaCard = screen.getByTestId('admin-module-card-lessonMeta')
@@ -187,7 +187,7 @@ describe('AdminLessonEditorPage', () => {
     await user.type(screen.getByLabelText(/admin password/i), 'secret')
     await user.click(screen.getByRole('button', { name: /unlock content admin/i }))
 
-    expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })).toBeVisible()
     expect(fetch).toHaveBeenNthCalledWith(
       2,
       `/api/admin/content/lessons?lessonId=${lesson.id}`,
@@ -206,7 +206,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    expect(await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })).toBeVisible()
 
     await user.click(screen.getByRole('button', { name: /sign out/i }))
 
@@ -221,7 +221,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
     const englishTitleInput = await screen.findByLabelText(/lesson title \(en\)/i)
     await user.type(englishTitleInput, ' updated')
@@ -229,7 +229,7 @@ describe('AdminLessonEditorPage', () => {
     await user.click(screen.getByRole('link', { name: /back to admin lesson list/i }))
 
     expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/unsaved changes/i))
-    expect(screen.getByRole('heading', { level: 1, name: /edit self-intro/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })).toBeVisible()
     expect(screen.getByDisplayValue(/updated/i)).toBeVisible()
   })
 
@@ -239,7 +239,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
     const englishTitleInput = await screen.findByLabelText(/lesson title \(en\)/i)
     await user.type(englishTitleInput, ' updated')
@@ -268,7 +268,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit lesson meta/i }))
 
     const englishTitleInput = await screen.findByLabelText(/lesson title \(en\)/i)
@@ -307,7 +307,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit vocabulary/i }))
 
     expect(screen.queryByLabelText(/vocabulary json/i)).not.toBeInTheDocument()
@@ -334,7 +334,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit practice/i }))
 
     expect(screen.queryByLabelText(/practice json/i)).not.toBeInTheDocument()
@@ -390,7 +390,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
 
     expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/publish lesson meta/i))
@@ -418,7 +418,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
 
     expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/publish lesson meta/i))
@@ -444,7 +444,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
 
     expect(screen.getByRole('button', { name: /publishing lesson meta/i })).toBeDisabled()
@@ -468,7 +468,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /publish lesson meta/i }))
 
     expect(await screen.findByText(/failed to publish lesson meta/i)).toBeVisible()
@@ -554,7 +554,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /rollback lesson meta to revision 88/i }))
 
     expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/revision 88/i))
@@ -615,7 +615,7 @@ describe('AdminLessonEditorPage', () => {
 
     renderRoute(`/admin/lesson/${lesson.id}`)
 
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /rollback lesson meta to revision 88/i }))
 
     expect(confirmSpy).toHaveBeenCalledWith(expect.stringMatching(/revision 88/i))
@@ -627,7 +627,7 @@ describe('AdminLessonEditorPage', () => {
     vi.mocked(fetch).mockResolvedValue(jsonResponse(snapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
 
     const directory = within(screen.getByTestId('admin-module-directory'))
     const history = within(screen.getByRole('region', { name: /module history/i }))
@@ -652,7 +652,7 @@ describe('AdminLessonEditorPage', () => {
       .mockResolvedValueOnce(jsonResponse(updatedSnapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
     await user.click(screen.getByRole('button', { name: /edit vocabulary/i }))
     const prompt = screen.getAllByLabelText(/meaning \(en\)/i)[0]!
     await user.clear(prompt)
@@ -674,7 +674,7 @@ describe('AdminLessonEditorPage', () => {
     vi.mocked(fetch).mockResolvedValue(jsonResponse(snapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
 
     expect(screen.getByText('All editable modules published')).toBeVisible()
     expect(screen.getByText('Editable modules in sync')).toBeVisible()
@@ -689,7 +689,7 @@ describe('AdminLessonEditorPage', () => {
     vi.mocked(fetch).mockResolvedValue(jsonResponse(snapshot))
 
     renderRoute(`/admin/lesson/${lesson.id}`)
-    await screen.findByRole('heading', { level: 1, name: /edit self-intro/i })
+    await screen.findByRole('heading', { level: 1, name: new RegExp(`edit ${lesson.id}`, 'i') })
 
     expect(screen.getByText('2 editable modules pending publish')).toBeVisible()
     expect(screen.getByText('2 editable modules pending')).toBeVisible()

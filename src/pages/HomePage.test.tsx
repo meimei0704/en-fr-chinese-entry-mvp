@@ -17,7 +17,7 @@ const expectedSeriesCopy = {
   en: {
     label: 'Course series',
     pinyin: 'Mandarin tones and pinyin',
-    journey: 'Basic Chinese expressions for a stress-free journey',
+    journey: 'Useful sentences, expressions and Hanzi recognition',
   },
   fr: {
     label: 'Séries de cours',
@@ -58,9 +58,9 @@ describe('HomePage', () => {
     renderRoute('/home')
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
-    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(screen.getByText('Basic Chinese expressions for a stress-free travel')).toBeVisible()
     expect(
-      screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
+      screen.queryByText('Apprenez les dialogues essentiels pour voyager en Chine'),
     ).not.toBeInTheDocument()
     expect(screen.queryByText('Real-life Mandarin')).not.toBeInTheDocument()
     expect(screen.queryByText('Mandarin en situation')).not.toBeInTheDocument()
@@ -129,7 +129,7 @@ describe('HomePage', () => {
       'true',
     )
 
-    expect(journeyLessonLinks).toHaveLength(10)
+    expect(journeyLessonLinks).toHaveLength(12)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)
     expect(within(journeyPath).queryAllByText(/coming soon/i)).toHaveLength(0)
     expect(journeySection).not.toHaveTextContent(' / ')
@@ -217,7 +217,7 @@ describe('HomePage', () => {
     expect(container.querySelectorAll('[data-home-hero-motif]')).toHaveLength(0)
     expect(within(hero).getByRole('group', { name: 'Explanation language' })).toBeVisible()
     expect(within(hero).getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
-    expect(within(hero).getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(within(hero).getByText('Basic Chinese expressions for a stress-free travel')).toBeVisible()
   })
 
   it('renders page-level French copy when the learner chooses French mode', () => {
@@ -250,9 +250,9 @@ describe('HomePage', () => {
     expect(screen.queryByText('Carte du parcours')).not.toBeInTheDocument()
     expect(screen.queryByText('Arriver en Chine étape par étape')).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
-    expect(screen.queryByText('Learn Mandarin in real life scenarios')).not.toBeInTheDocument()
+    expect(screen.queryByText('Basic Chinese expressions for a stress-free travel')).not.toBeInTheDocument()
     expect(
-      screen.getByText('Apprenez le mandarin dans la vie quotidienne'),
+      screen.getByText('Apprenez les dialogues essentiels pour voyager en Chine'),
     ).toBeVisible()
     expect(screen.queryByRole('link', { name: /continuer la leçon/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /réviser/i })).not.toBeInTheDocument()
@@ -281,12 +281,18 @@ describe('HomePage', () => {
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
 
+    expect(screen.getByText('Bonjour')).toBeVisible()
     expect(screen.getByText('Arrivée')).toBeVisible()
     expect(screen.getByText('Taxi')).toBeVisible()
-    expect(screen.getByText('Installation')).toBeVisible()
-    expect(screen.getByText('Supérette')).toBeVisible()
+    expect(screen.getByText('Hôtel')).toBeVisible()
+    expect(screen.getByText('Carte SIM')).toBeVisible()
     expect(screen.getByText('Restaurant')).toBeVisible()
+    expect(screen.getByText('Train')).toBeVisible()
     expect(screen.getByText('Métro')).toBeVisible()
+    expect(screen.getAllByText('Shopping').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Aide')).toBeVisible()
+    expect(screen.getByText('Pharmacie')).toBeVisible()
+    expect(screen.getByText('Conversation')).toBeVisible()
     expect(screen.queryAllByText(/bientôt/i)).toHaveLength(0)
     expect(screen.queryByText('10 lessons')).not.toBeInTheDocument()
     expect(screen.queryByText('Intro')).not.toBeInTheDocument()
@@ -317,8 +323,8 @@ describe('HomePage', () => {
 
     expect(loadProgress().selectedExplanationLanguage).toBe('fr')
     expect(frenchButton).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.queryByText('Learn Mandarin in real life scenarios')).not.toBeInTheDocument()
-    expect(screen.getByText('Apprenez le mandarin dans la vie quotidienne')).toBeVisible()
+    expect(screen.queryByText('Basic Chinese expressions for a stress-free travel')).not.toBeInTheDocument()
+    expect(screen.getByText('Apprenez les dialogues essentiels pour voyager en Chine')).toBeVisible()
     expect(getHomeJourneySeries('fr')).toBeVisible()
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
@@ -327,9 +333,9 @@ describe('HomePage', () => {
 
     expect(loadProgress().selectedExplanationLanguage).toBe('en')
     expect(englishButton).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(screen.getByText('Basic Chinese expressions for a stress-free travel')).toBeVisible()
     expect(
-      screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
+      screen.queryByText('Apprenez les dialogues essentiels pour voyager en Chine'),
     ).not.toBeInTheDocument()
     expect(getHomeJourneySeries()).toBeVisible()
     expect(screen.queryByRole('navigation', { name: /quick learning paths/i }))
@@ -355,7 +361,7 @@ describe('HomePage', () => {
       within(journeyMap).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
       }),
-    ).toHaveAttribute('href', '/lesson/self-intro')
+    ).toHaveAttribute('href', '/lesson/daily-greetings')
     expect(
       within(journeyMap).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[5], 'en'),

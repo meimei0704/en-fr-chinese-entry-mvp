@@ -69,13 +69,6 @@ export function LessonPage() {
           className="lesson-progress-preview"
           aria-label={copy.lessonPage.lessonProgressPreviewLabel}
         >
-          <div className="lesson-progress-preview__summary">
-            <span className="badge badge--sky">
-              {copy.homePage.lessonScenarioBadges[lesson.id]}
-            </span>
-            <strong>{copy.lessonPage.studyLayersCount(studyLayers.length)}</strong>
-            <span>{copy.lessonPage.practiceNext}</span>
-          </div>
           <ol className="lesson-progress-preview__rail">
             {studyLayers.map((layer, index) => (
               <li key={layer.id} className={layer.id === activeLayerId ? 'is-current' : undefined}>
@@ -124,23 +117,24 @@ export function LessonPage() {
 
           <section id="lesson-vocabulary" className="surface-card lesson-section-card">
             <h2>{copy.lessonPage.vocabulary}</h2>
-            <div className="card-grid card-grid--compact">
+            <ul className="vocabulary-list">
               {lesson.vocabulary.map((item) => (
-                <article key={item.id} className="study-item">
-                  <p className="study-item__title">
-                    {item.hanzi} <span>{item.pinyin}</span>
-                  </p>
-                  <SpeechButton
-                    label={copy.lessonPage.listenChinese}
-                    text={item.hanzi}
-                    audioSrc={item.audio}
-                    fallbackAudioSrc={item.audioFallback}
-                  />
+                <li key={item.id} className="vocabulary-list__item">
+                  <div className="vocabulary-list__hanzi-row">
+                    <p className="vocabulary-list__hanzi">{item.hanzi}</p>
+                    <SpeechButton
+                      label={copy.lessonPage.listenChinese}
+                      text={item.hanzi}
+                      audioSrc={item.audio}
+                      fallbackAudioSrc={item.audioFallback}
+                    />
+                  </div>
+                  <p className="vocabulary-list__pinyin">{item.pinyin}</p>
                   <p className="muted-text">{getLocalizedText(item.meaning, selectedLanguage)}</p>
                   <ExplanationBlock explanation={item.explanation} language={selectedLanguage} />
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           </section>
 
         </div>

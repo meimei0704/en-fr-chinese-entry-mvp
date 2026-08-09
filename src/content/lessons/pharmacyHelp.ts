@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const pharmacyHelpLesson: LessonContent = {
   id: 'pharmacy-help',
   title: {
-    en: 'Ask for help at a pharmacy',
-    fr: 'Demander de l’aide à la pharmacie',
+    en: '买药，看医生 / Hospital and pharmacy',
+    fr: '买药，看医生 / Hôpital et pharmacie',
   },
   scenario: {
     en: 'Describe a headache or stomach ache, answer fever questions, ask about allergies, understand medicine frequency and dosage, and pay.',

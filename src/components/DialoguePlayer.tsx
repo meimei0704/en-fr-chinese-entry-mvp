@@ -19,18 +19,17 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
           className="dialogue-card"
           aria-label={copy.lessonPage.dialogueLineLabel(getLocalizedText(line.speaker, language))}
         >
-          <p className="speaker-chip">
-            {copy.lessonPage.speakerPrefix} {getLocalizedText(line.speaker, language)}
-          </p>
-          <p className="hanzi-display hanzi-display--dialogue">{line.hanzi}</p>
+          <div className="dialogue-card__hanzi-row">
+            <p className="hanzi-display hanzi-display--dialogue">{line.hanzi}</p>
+            <SpeechButton
+              label={copy.lessonPage.listenChinese}
+              text={line.hanzi}
+              audioSrc={line.audio}
+              fallbackAudioSrc={line.audioFallback}
+            />
+          </div>
           <p className="pinyin-line">{line.pinyin}</p>
           <p className="muted-text">{getLocalizedText(line.translation, language)}</p>
-          <SpeechButton
-            label={copy.lessonPage.listenChinese}
-            text={line.hanzi}
-            audioSrc={line.audio}
-            fallbackAudioSrc={line.audioFallback}
-          />
           <ExplanationBlock explanation={line.explanation} language={language} />
         </article>
       ))}

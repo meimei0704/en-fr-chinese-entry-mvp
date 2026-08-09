@@ -257,6 +257,15 @@ export function PracticeChallenge({
       <div className="practice-challenge__question">
         <div className="practice-challenge__prompt">
           <p>{getLocalizedText(currentQuestion.prompt, language)}</p>
+          {currentQuestion.kind === 'speak' && currentQuestion.target ? (
+            <p className="practice-challenge__sentence">
+              <strong>{currentQuestion.target}</strong>
+              {currentQuestion.targetPinyin ? (
+                <span className="practice-challenge__sentence-pinyin">
+                  {currentQuestion.targetPinyin}
+                </span>
+              ) : null}
+            </p>          ) : null}
           <SpeechButton
             label={copy.playPromptAudio(questionNumber)}
             text={currentQuestion.target}
@@ -296,6 +305,11 @@ export function PracticeChallenge({
                 onClick={() => handleChoice(currentQuestion, option.id)}
               >
                 {option.label}
+                {option.pinyin ? (
+                  <span className="option-button__pinyin" aria-hidden="true">
+                    {option.pinyin}
+                  </span>
+                ) : null}
               </button>
             ))}
           </div>

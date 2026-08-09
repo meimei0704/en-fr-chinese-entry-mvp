@@ -100,57 +100,65 @@ describe('learner progress', () => {
     expect(loadProgress()).toEqual(updatedProgress)
   })
 
-  it('continues from lesson five to six, lesson nine to ten, and does not overflow after lesson ten', async () => {
+  it('continues from lesson nine to ten, lesson eleven to twelve, and does not overflow after lesson twelve', async () => {
     const { createDefaultProgress, getContinueLessonId } = await importProgressModule()
 
     expect(
       getContinueLessonId({
         ...createDefaultProgress(),
         completedLessons: [
+          'daily-greetings',
           'self-intro',
           'ask-directions',
           'order-food',
           'phone-and-payment',
+          'restaurant-order',
+          'train-station-ticket',
+          'metro-ticket',
           'convenience-store-run',
         ],
         lastVisitedLesson: 'convenience-store-run',
       }),
-    ).toBe('restaurant-order')
+    ).toBe('ask-for-help-problem')
     expect(
       getContinueLessonId({
         ...createDefaultProgress(),
         completedLessons: [
+          'daily-greetings',
           'self-intro',
           'ask-directions',
           'order-food',
           'phone-and-payment',
-          'convenience-store-run',
           'restaurant-order',
-          'metro-ticket',
-          'pharmacy-help',
-          'ask-for-help-problem',
-        ],
-        lastVisitedLesson: 'ask-for-help-problem',
-      }),
-    ).toBe('train-station-ticket')
-    expect(
-      getContinueLessonId({
-        ...createDefaultProgress(),
-        completedLessons: [
-          'self-intro',
-          'ask-directions',
-          'order-food',
-          'phone-and-payment',
-          'convenience-store-run',
-          'restaurant-order',
-          'metro-ticket',
-          'pharmacy-help',
-          'ask-for-help-problem',
           'train-station-ticket',
+          'metro-ticket',
+          'convenience-store-run',
+          'ask-for-help-problem',
+          'pharmacy-help',
         ],
-        lastVisitedLesson: 'train-station-ticket',
+        lastVisitedLesson: 'pharmacy-help',
       }),
-    ).toBe('train-station-ticket')
+    ).toBe('small-talk')
+    expect(
+      getContinueLessonId({
+        ...createDefaultProgress(),
+        completedLessons: [
+          'daily-greetings',
+          'self-intro',
+          'ask-directions',
+          'order-food',
+          'phone-and-payment',
+          'restaurant-order',
+          'train-station-ticket',
+          'metro-ticket',
+          'convenience-store-run',
+          'ask-for-help-problem',
+          'pharmacy-help',
+          'small-talk',
+        ],
+        lastVisitedLesson: 'small-talk',
+      }),
+    ).toBe('small-talk')
   })
 
   it('continues through the original fourth and fifth lessons in canonical course order', async () => {
@@ -169,7 +177,7 @@ describe('learner progress', () => {
         completedLessons: ['self-intro', 'ask-directions', 'order-food', 'phone-and-payment'],
         lastVisitedLesson: 'phone-and-payment',
       }),
-    ).toBe('convenience-store-run')
+    ).toBe('restaurant-order')
   })
 
   it('completes new formal lessons by queuing their review cards', async () => {

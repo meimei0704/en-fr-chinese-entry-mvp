@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const askDirectionsLesson: LessonContent = {
   id: 'ask-directions',
   title: {
-    en: 'Take a taxi to your hotel',
-    fr: 'Prendre un taxi jusqu\'à son hôtel',
+    en: '打车 / Take a taxi',
+    fr: '打车 / Prendre un taxi',
   },
   scenario: {
     en: 'Get into a taxi, show the address, ask for the meter, check how long the ride will take, and pay at the end.',

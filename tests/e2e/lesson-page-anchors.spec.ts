@@ -35,9 +35,9 @@ test('entering a lesson page scrolls to the very top after navigating from the h
   expect(homeScrollY).toBeGreaterThan(0)
 
   await lessonLink.click()
-  await page.waitForURL(/\/lesson\/self-intro$/)
+  await page.waitForURL(/\/lesson\/daily-greetings$/)
 
-  await expect(page).toHaveURL(/\/lesson\/self-intro$/)
+  await expect(page).toHaveURL(/\/lesson\/daily-greetings$/)
   await expect(page.locator('h1')).toBeVisible()
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
 })

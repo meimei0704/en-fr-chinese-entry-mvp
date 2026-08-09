@@ -2,19 +2,21 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const expectedLessonIds = [
+  'daily-greetings',
   'self-intro',
   'ask-directions',
   'order-food',
   'phone-and-payment',
-  'convenience-store-run',
   'restaurant-order',
-  'metro-ticket',
-  'pharmacy-help',
-  'ask-for-help-problem',
   'train-station-ticket',
+  'metro-ticket',
+  'convenience-store-run',
+  'ask-for-help-problem',
+  'pharmacy-help',
+  'small-talk',
 ] as const
 
-const newLessonIds = expectedLessonIds.slice(7)
+const newLessonIds = ['pharmacy-help', 'ask-for-help-problem', 'train-station-ticket'] as const
 
 const expectedReviewFrontsByNewLesson = {
   'pharmacy-help': ['药店', '头疼', '一天两次', '肚子疼', '过敏', '饭后'],
@@ -28,21 +30,37 @@ const expectedKeyChineseByNewLesson = {
   'train-station-ticket': /上海|今天下午|护照|硬座|站台|晚点|三点出发/,
 } as const
 
-const expectedArrivalChinese = [
+const expectedDailyGreetingsChinese = [
+  '你好。',
   '您好。',
-  '请问，您能帮我一下吗？',
+  '大家好。',
+  '早上好。',
+  '下午好。',
+  '晚上好。',
+  '晚安。',
+  '你好吗？',
+  '我很好，谢谢。',
+  '很高兴认识你。',
+  '谢谢。',
+  '不客气。',
+  '不好意思。',
+  '对不起。',
+  '是的。',
+  '不是。',
+  '再见。',
+] as const
+
+const expectedArrivalChinese = [
+  '请问您会说英语吗？',
+  '行李提取处在哪里？',
+  '您能帮我一下吗？',
   '这是我的护照。',
-  '请问行李提取处在哪里？',
-  '我的行李还没到。',
-  '请问出口在哪里？',
-  '请问问询台在哪里？',
-  '请问出租车在哪里？',
-  '我想去这个地址。',
-  '请到这里。',
-  '大概需要多久？',
-  '大概多少钱？',
-  '我听不懂。',
-  '可以帮我写下来吗？',
+  '我是来旅游的。',
+  '我大概呆两个星期。',
+  '地铁在哪里？',
+  '机场快线在哪里？',
+  '请问去哪里打车？',
+  '去这个酒店怎么走？',
 ] as const
 
 async function collectAudioPaths() {
@@ -93,47 +111,28 @@ function expectLocalizedField(value: unknown, fieldPath: string) {
   )
 }
 
-function numberedAudioPaths(lessonId: string, prefix: string, count: number) {
-  return Array.from(
-    { length: count },
-    (_, index) => `/audio/${lessonId}/${prefix}-${String(index + 1).padStart(2, '0')}.mp3`,
-  )
-}
-
-function expectedNewLessonAudioPaths(lessonId: string) {
-  return [
-    ...numberedAudioPaths(lessonId, 'line', 8),
-    ...numberedAudioPaths(lessonId, 'pattern', 5),
-    ...numberedAudioPaths(lessonId, 'vocab', 10),
-    `/audio/${lessonId}/practice-listening-01.mp3`,
-    `/audio/${lessonId}/practice-listening-02.mp3`,
-    `/audio/${lessonId}/practice-speaking-01.mp3`,
-    `/audio/${lessonId}/practice-speaking-02.mp3`,
-    `/audio/${lessonId}/practice-reading-01.mp3`,
-    `/audio/${lessonId}/practice-reading-02.mp3`,
-  ]
-}
-
 describe('course content', () => {
-  it('exposes ten formal survival lessons in canonical journey order with static audio paths', async () => {
+  it('exposes twelve lessons in canonical journey order with static audio paths', async () => {
     const { course } = await import('./course')
 
     expect(course.supportedExplanationLanguages).toEqual(['en', 'fr'])
     expect(course.estimatedDailyMinutes).toBe(10)
-    expect(course.lessons).toHaveLength(10)
+    expect(course.lessons).toHaveLength(12)
     expect(course.lessons.map((lesson) => lesson.id)).toEqual(expectedLessonIds)
 
     const expandedCounts: Record<string, Record<string, number>> = {
-      'self-intro': { dialogue: 10, patterns: 5, vocab: 11, practice: 2, cards: 6 },
+      'daily-greetings': { dialogue: 17, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'self-intro': { dialogue: 10, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'ask-directions': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'order-food': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'phone-and-payment': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'convenience-store-run': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'restaurant-order': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'metro-ticket': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'pharmacy-help': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'ask-for-help-problem': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'train-station-ticket': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'metro-ticket': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'convenience-store-run': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'ask-for-help-problem': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'pharmacy-help': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'small-talk': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
     }
 
     for (const lesson of course.lessons) {
@@ -158,73 +157,41 @@ describe('course content', () => {
     }
   })
 
-  it('adds complete lesson 6-10 content without renaming the first five lesson ids', async () => {
-    const { course } = await import('./course')
-    const byId = Object.fromEntries(course.lessons.map((lesson) => [lesson.id, lesson]))
-
-    expect(course.lessons.slice(0, 5).map((lesson) => lesson.id)).toEqual([
-      'self-intro',
-      'ask-directions',
-      'order-food',
-      'phone-and-payment',
-      'convenience-store-run',
-    ])
-    expect(byId['order-food'].title.en.toLowerCase()).toMatch(/hotel|apartment|check-in/)
-
-    for (const lessonId of newLessonIds) {
-      const lesson = byId[lessonId]
-      expect(lesson, `${lessonId} should be present`).toBeDefined()
-      expect(lesson.dialogue.lines).toHaveLength(8)
-      expect(lesson.sentencePatterns.map((pattern) => pattern.id)).toEqual([
-        `${lessonId}-pattern-1`,
-        `${lessonId}-pattern-2`,
-        `${lessonId}-pattern-3`,
-        `${lessonId}-pattern-4`,
-        `${lessonId}-pattern-5`,
-      ])
-      expect(lesson.vocabulary.map((item) => item.id)).toEqual([
-        `${lessonId}-vocab-1`,
-        `${lessonId}-vocab-2`,
-        `${lessonId}-vocab-3`,
-        `${lessonId}-vocab-4`,
-        `${lessonId}-vocab-5`,
-        `${lessonId}-vocab-6`,
-        `${lessonId}-vocab-7`,
-        `${lessonId}-vocab-8`,
-        `${lessonId}-vocab-9`,
-        `${lessonId}-vocab-10`,
-      ])
-      expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
-        Array.from({ length: 8 }, (_, index) => `${lessonId}-line-${String(index + 1).padStart(2, '0')}`),
-      )
-      expect(collectLessonAudioPaths(lesson)).toEqual(expectedNewLessonAudioPaths(lessonId))
-    }
-  })
-
-  it('locks the approved new key phrases and review fronts for lessons 6-10', async () => {
-    const { course } = await import('./course')
-    const byId = Object.fromEntries(course.lessons.map((lesson) => [lesson.id, lesson]))
-
-    for (const lessonId of newLessonIds) {
-      const lesson = byId[lessonId]
-      const chineseText = [
-        ...lesson.dialogue.lines.map((line) => line.hanzi),
-        ...lesson.sentencePatterns.map((pattern) => pattern.example),
-        ...lesson.vocabulary.map((item) => item.hanzi),
-        ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
-      ].join('\n')
-
-      expect(chineseText).toMatch(expectedKeyChineseByNewLesson[lessonId])
-      expect(lesson.reviewCards.map((card) => card.front)).toEqual(
-        expect.arrayContaining(expectedReviewFrontsByNewLesson[lessonId]),
-      )
-    }
-  })
-
-  it('uses lesson one as the expanded airport-arrival sample with immigration dialogue', async () => {
+  it('uses lesson one as the daily greetings lesson with all approved phrases', async () => {
     const { course } = await import('./course')
     const lesson = course.lessons[0]
-    const arrivalText = [
+    const text = [
+      lesson.title.en,
+      lesson.title.fr,
+      lesson.scenario.en,
+      lesson.scenario.fr,
+      lesson.dialogue.title.en,
+      lesson.dialogue.title.fr,
+      ...lesson.dialogue.lines.map((line) => line.hanzi),
+      ...lesson.sentencePatterns.map((pattern) => pattern.example),
+      ...lesson.vocabulary.map((item) => item.hanzi),
+      ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
+      ...lesson.reviewCards.map((card) => card.front),
+    ].join('\n')
+
+    expect(lesson.id).toBe('daily-greetings')
+    expect(lesson.title).toEqual({
+      en: '打招呼 / Daily greetings',
+      fr: '打招呼 / Salutations quotidiennes',
+    })
+    expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
+      Array.from({ length: 17 }, (_, index) => `daily-greetings-line-${String(index + 1).padStart(2, '0')}`),
+    )
+
+    for (const phrase of expectedDailyGreetingsChinese) {
+      expect(text).toContain(phrase)
+    }
+  })
+
+  it('uses lesson two as the arrival-at-the-airport lesson with the approved sentences', async () => {
+    const { course } = await import('./course')
+    const lesson = course.lessons[1]
+    const text = [
       lesson.title.en,
       lesson.title.fr,
       lesson.scenario.en,
@@ -248,29 +215,42 @@ describe('course content', () => {
     )
 
     for (const phrase of expectedArrivalChinese) {
-      expect(arrivalText).toContain(phrase)
+      expect(text).toContain(phrase)
     }
+  })
 
-    expect(arrivalText).toContain('请出示您的护照')
-    expect(arrivalText).toContain('您来中国做什么')
-    expect(arrivalText).toContain('我是来旅游的')
-    expect(arrivalText).toContain('大概两个星期')
-    expect(arrivalText).toContain('海关')
-    expect(arrivalText).toContain('入境')
-    expect(arrivalText).toContain('指纹')
+  it('keeps the new small-talk lesson as the final lesson', async () => {
+    const { course } = await import('./course')
+    const lesson = course.lessons[11]
 
-    expect(arrivalText).toContain('我是来旅游的')
-    expect(arrivalText).toContain('我打算停留两个星期')
-
-    const officerLines = lesson.dialogue.lines.filter(
-      (line) =>
-        (typeof line.speaker === 'object' && 'en' in line.speaker && line.speaker.en === 'Officer') ||
-        line.speaker === 'Officer',
+    expect(lesson.id).toBe('small-talk')
+    expect(lesson.title).toEqual({
+      en: '闲聊 / Small talk',
+      fr: '闲聊 / Petite conversation',
+    })
+    expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
+      Array.from({ length: 8 }, (_, index) => `small-talk-line-${String(index + 1).padStart(2, '0')}`),
     )
-    expect(officerLines.length).toBeGreaterThanOrEqual(2)
+  })
 
-    expect(arrivalText).not.toContain('你好')
-    expect(arrivalText).not.toContain('我住在这个酒店')
+  it('keeps the approved key phrases and review fronts for the later lessons', async () => {
+    const { course } = await import('./course')
+    const byId = Object.fromEntries(course.lessons.map((lesson) => [lesson.id, lesson]))
+
+    for (const lessonId of newLessonIds) {
+      const lesson = byId[lessonId]
+      const chineseText = [
+        ...lesson.dialogue.lines.map((line) => line.hanzi),
+        ...lesson.sentencePatterns.map((pattern) => pattern.example),
+        ...lesson.vocabulary.map((item) => item.hanzi),
+        ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
+      ].join('\n')
+
+      expect(chineseText).toMatch(expectedKeyChineseByNewLesson[lessonId])
+      expect(lesson.reviewCards.map((card) => card.front)).toEqual(
+        expect.arrayContaining(expectedReviewFrontsByNewLesson[lessonId]),
+      )
+    }
   })
 
   it('keeps all learner-facing copy consistently bilingual', async () => {
@@ -314,6 +294,9 @@ describe('course content', () => {
     const { course } = await import('./course')
     const byId = Object.fromEntries(course.lessons.map((lesson) => [lesson.id, lesson]))
 
+    expect(collectLocalizedStrings(byId['daily-greetings'], 'en').join('\n').toLowerCase()).toMatch(
+      /hello|goodbye|thank you|polite|greeting/,
+    )
     expect(collectLocalizedStrings(byId['restaurant-order'], 'en').join('\n').toLowerCase()).toMatch(
       /menu|beef noodles|spicy|water/,
     )
@@ -329,72 +312,21 @@ describe('course content', () => {
     expect(
       collectLocalizedStrings(byId['train-station-ticket'], 'en').join('\n').toLowerCase(),
     ).toMatch(/train station|ticket|shanghai|passport/)
+    expect(collectLocalizedStrings(byId['small-talk'], 'en').join('\n').toLowerCase()).toMatch(
+      /where are you from|weather|chat|small talk/,
+    )
   })
 
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(293)
+    expect(audioPaths).toHaveLength(359)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
-
-    const newAudioPaths = new Set([
-      '/audio/ask-directions/line-04.mp3', '/audio/ask-directions/line-05.mp3',
-      '/audio/ask-directions/line-06.mp3', '/audio/ask-directions/line-07.mp3', '/audio/ask-directions/line-08.mp3',
-      '/audio/ask-directions/pattern-04.mp3', '/audio/ask-directions/pattern-05.mp3',
-      '/audio/ask-directions/vocab-06.mp3', '/audio/ask-directions/vocab-07.mp3', '/audio/ask-directions/vocab-08.mp3',
-      '/audio/ask-directions/vocab-09.mp3', '/audio/ask-directions/vocab-10.mp3',
-      '/audio/ask-directions/practice-listening-02.mp3', '/audio/ask-directions/practice-speaking-02.mp3', '/audio/ask-directions/practice-reading-02.mp3',
-      '/audio/order-food/line-06.mp3', '/audio/order-food/line-07.mp3', '/audio/order-food/line-08.mp3',
-      '/audio/order-food/pattern-04.mp3', '/audio/order-food/pattern-05.mp3',
-      '/audio/order-food/vocab-06.mp3', '/audio/order-food/vocab-07.mp3', '/audio/order-food/vocab-08.mp3',
-      '/audio/order-food/vocab-09.mp3', '/audio/order-food/vocab-10.mp3',
-      '/audio/order-food/practice-listening-02.mp3', '/audio/order-food/practice-speaking-02.mp3', '/audio/order-food/practice-reading-02.mp3',
-      '/audio/phone-and-payment/line-05.mp3', '/audio/phone-and-payment/line-06.mp3',
-      '/audio/phone-and-payment/line-07.mp3', '/audio/phone-and-payment/line-08.mp3',
-      '/audio/phone-and-payment/pattern-04.mp3', '/audio/phone-and-payment/pattern-05.mp3',
-      '/audio/phone-and-payment/vocab-06.mp3', '/audio/phone-and-payment/vocab-07.mp3', '/audio/phone-and-payment/vocab-08.mp3',
-      '/audio/phone-and-payment/vocab-09.mp3', '/audio/phone-and-payment/vocab-10.mp3',
-      '/audio/phone-and-payment/practice-listening-02.mp3', '/audio/phone-and-payment/practice-speaking-02.mp3', '/audio/phone-and-payment/practice-reading-02.mp3',
-      '/audio/convenience-store-run/line-06.mp3', '/audio/convenience-store-run/line-07.mp3', '/audio/convenience-store-run/line-08.mp3',
-      '/audio/convenience-store-run/pattern-04.mp3', '/audio/convenience-store-run/pattern-05.mp3',
-      '/audio/convenience-store-run/vocab-06.mp3', '/audio/convenience-store-run/vocab-07.mp3', '/audio/convenience-store-run/vocab-08.mp3',
-      '/audio/convenience-store-run/vocab-09.mp3', '/audio/convenience-store-run/vocab-10.mp3',
-      '/audio/convenience-store-run/practice-listening-02.mp3', '/audio/convenience-store-run/practice-speaking-02.mp3', '/audio/convenience-store-run/practice-reading-02.mp3',
-      '/audio/restaurant-order/line-06.mp3', '/audio/restaurant-order/line-07.mp3', '/audio/restaurant-order/line-08.mp3',
-      '/audio/restaurant-order/pattern-04.mp3', '/audio/restaurant-order/pattern-05.mp3',
-      '/audio/restaurant-order/vocab-06.mp3', '/audio/restaurant-order/vocab-07.mp3', '/audio/restaurant-order/vocab-08.mp3',
-      '/audio/restaurant-order/vocab-09.mp3', '/audio/restaurant-order/vocab-10.mp3',
-      '/audio/restaurant-order/practice-listening-02.mp3', '/audio/restaurant-order/practice-speaking-02.mp3', '/audio/restaurant-order/practice-reading-02.mp3',
-      '/audio/metro-ticket/line-06.mp3', '/audio/metro-ticket/line-07.mp3', '/audio/metro-ticket/line-08.mp3',
-      '/audio/metro-ticket/pattern-04.mp3', '/audio/metro-ticket/pattern-05.mp3',
-      '/audio/metro-ticket/vocab-06.mp3', '/audio/metro-ticket/vocab-07.mp3', '/audio/metro-ticket/vocab-08.mp3',
-      '/audio/metro-ticket/vocab-09.mp3', '/audio/metro-ticket/vocab-10.mp3',
-      '/audio/metro-ticket/practice-listening-02.mp3', '/audio/metro-ticket/practice-speaking-02.mp3', '/audio/metro-ticket/practice-reading-02.mp3',
-      '/audio/pharmacy-help/line-06.mp3', '/audio/pharmacy-help/line-07.mp3', '/audio/pharmacy-help/line-08.mp3',
-      '/audio/pharmacy-help/pattern-04.mp3', '/audio/pharmacy-help/pattern-05.mp3',
-      '/audio/pharmacy-help/vocab-06.mp3', '/audio/pharmacy-help/vocab-07.mp3', '/audio/pharmacy-help/vocab-08.mp3',
-      '/audio/pharmacy-help/vocab-09.mp3', '/audio/pharmacy-help/vocab-10.mp3',
-      '/audio/pharmacy-help/practice-listening-02.mp3', '/audio/pharmacy-help/practice-speaking-02.mp3', '/audio/pharmacy-help/practice-reading-02.mp3',
-      '/audio/ask-for-help-problem/line-06.mp3', '/audio/ask-for-help-problem/line-07.mp3', '/audio/ask-for-help-problem/line-08.mp3',
-      '/audio/ask-for-help-problem/pattern-04.mp3', '/audio/ask-for-help-problem/pattern-05.mp3',
-      '/audio/ask-for-help-problem/vocab-06.mp3', '/audio/ask-for-help-problem/vocab-07.mp3', '/audio/ask-for-help-problem/vocab-08.mp3',
-      '/audio/ask-for-help-problem/vocab-09.mp3', '/audio/ask-for-help-problem/vocab-10.mp3',
-      '/audio/ask-for-help-problem/practice-listening-02.mp3', '/audio/ask-for-help-problem/practice-speaking-02.mp3', '/audio/ask-for-help-problem/practice-reading-02.mp3',
-      '/audio/train-station-ticket/line-06.mp3', '/audio/train-station-ticket/line-07.mp3', '/audio/train-station-ticket/line-08.mp3',
-      '/audio/train-station-ticket/pattern-04.mp3', '/audio/train-station-ticket/pattern-05.mp3',
-      '/audio/train-station-ticket/vocab-06.mp3', '/audio/train-station-ticket/vocab-07.mp3', '/audio/train-station-ticket/vocab-08.mp3',
-      '/audio/train-station-ticket/vocab-09.mp3', '/audio/train-station-ticket/vocab-10.mp3',
-      '/audio/train-station-ticket/practice-listening-02.mp3', '/audio/train-station-ticket/practice-speaking-02.mp3', '/audio/train-station-ticket/practice-reading-02.mp3',
-    ])
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(
         /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
       )
-
-      if (newAudioPaths.has(audioPath)) {
-        continue
-      }
 
       const publicPath = `${process.cwd()}/public${audioPath}`
       expect(existsSync(publicPath), `missing ${audioPath}`).toBe(true)
