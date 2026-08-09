@@ -1,11 +1,14 @@
 import '@testing-library/jest-dom/vitest'
-import { screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
+import { appRoutes } from '../app/router'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import { speakChinese } from '../lib/speech'
+import { MockCourseProvider, MockPinyinCourseProvider } from '../test/mockContentProvider'
 import { renderRoute } from '../test/renderRoute'
 
 vi.mock('../lib/speech', () => ({
@@ -142,5 +145,34 @@ describe('PinyinPage', () => {
     expect(screen.queryByText('First tone: high and level')).not.toBeInTheDocument()
     expect(screen.queryByText('Coming next')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Play Chinese' })).not.toBeInTheDocument()
+  })
+
+  it('shows the loading state while the pinyin course is being fetched', () => {
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/pinyin'] })
+
+    render(
+      <MockCourseProvider course={null}>
+        <MockPinyinCourseProvider course={null}>
+          <RouterProvider router={router} />
+        </MockPinyinCourseProvider>
+      </MockCourseProvider>,
+    )
+
+    expect(screen.getByRole('status')).toHaveTextContent('Loading the course…')
+  })
+
+  it('shows the error state with a retry button when the pinyin course fetch fails', () => {
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/pinyin'] })
+
+    render(
+      <MockCourseProvider course={null}>
+        <MockPinyinCourseProvider course={null} error={new Error('boom')}>
+          <RouterProvider router={router} />
+        </MockPinyinCourseProvider>
+      </MockCourseProvider>,
+    )
+
+    expect(screen.getByText("We couldn’t load the course.")).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeVisible()
   })
 })
