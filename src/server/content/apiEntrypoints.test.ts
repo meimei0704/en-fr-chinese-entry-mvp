@@ -17,17 +17,17 @@ function formatDiagnostics(diagnostics: readonly ts.Diagnostic[]) {
   })
 }
 
+// The TS content and admin entrypoints (api/content/course|lessons and
+// api/admin/content/lessons|draft|publish|rollback) have been removed — Go
+// Functions now serve those routes (api/content/index.go and
+// api/admin/content/index.go). Only the voice entrypoints remain as TS
+// Vercel Functions, so this emit smoke test covers those and records the Go
+// takeover of the content routes via vercel.json.
 async function emitContentApiEntrypoints(outDir: string) {
   const program = ts.createProgram(
     [
-      'api/admin/content/draft.ts',
-      'api/admin/content/lessons.ts',
-      'api/admin/content/publish.ts',
-      'api/admin/content/rollback.ts',
       'api/admin/voice/generate.ts',
       'api/admin/voice/samples.ts',
-      'api/content/course.ts',
-      'api/content/lessons.ts',
       'src/content/types.ts',
       'src/content/schema.ts',
       'src/server/content/adminHttp.ts',
@@ -105,31 +105,9 @@ describe('Vercel content API entrypoints', () => {
     try {
       await emitContentApiEntrypoints(outDir)
 
-      const adminLessons = await runEmittedApiHandlerImport(outDir, 'api/admin/content/lessons.js')
-      const adminDraft = await runEmittedApiHandlerImport(outDir, 'api/admin/content/draft.js')
-      const adminPublish = await runEmittedApiHandlerImport(outDir, 'api/admin/content/publish.js')
-      const adminRollback = await runEmittedApiHandlerImport(outDir, 'api/admin/content/rollback.js')
       const adminVoiceGenerate = await runEmittedApiHandlerImport(outDir, 'api/admin/voice/generate.js', 'POST')
       const adminVoiceSamples = await runEmittedApiHandlerImport(outDir, 'api/admin/voice/samples.js', 'POST')
-      const course = await runEmittedApiHandlerImport(outDir, 'api/content/course.js')
-      const lesson = await runEmittedApiHandlerImport(outDir, 'api/content/lessons.js')
 
-      expect(JSON.parse(adminLessons.stdout)).toMatchObject({
-        statusCode: 503,
-        body: { error: 'Content admin database is not configured' },
-      })
-      expect(JSON.parse(adminDraft.stdout)).toMatchObject({
-        statusCode: 503,
-        body: { error: 'Content admin database is not configured' },
-      })
-      expect(JSON.parse(adminPublish.stdout)).toMatchObject({
-        statusCode: 503,
-        body: { error: 'Content admin database is not configured' },
-      })
-      expect(JSON.parse(adminRollback.stdout)).toMatchObject({
-        statusCode: 503,
-        body: { error: 'Content admin database is not configured' },
-      })
       expect(JSON.parse(adminVoiceGenerate.stdout)).toMatchObject({
         statusCode: 503,
         body: { error: 'Content admin authentication is not configured' },
@@ -137,14 +115,6 @@ describe('Vercel content API entrypoints', () => {
       expect(JSON.parse(adminVoiceSamples.stdout)).toMatchObject({
         statusCode: 503,
         body: { error: 'Content admin authentication is not configured' },
-      })
-      expect(JSON.parse(course.stdout)).toMatchObject({
-        statusCode: 503,
-        body: { error: 'Published content database is not configured' },
-      })
-      expect(JSON.parse(lesson.stdout)).toMatchObject({
-        statusCode: 503,
-        body: { error: 'Published content database is not configured' },
       })
     } finally {
       await rm(outDir, { force: true, recursive: true })
