@@ -48,29 +48,29 @@ type RollbackModuleInput struct {
 }
 
 type AdminLessonSummary struct {
-	LessonID                string
-	Slug                    string
-	DisplayOrder            int
-	Enabled                 bool
-	DraftChangedModuleCount int
+	LessonID                string `json:"lessonId"`
+	Slug                    string `json:"slug"`
+	DisplayOrder            int    `json:"displayOrder"`
+	Enabled                 bool   `json:"enabled"`
+	DraftChangedModuleCount int    `json:"draftChangedModuleCount"`
 }
 
 type ModuleSnapshot struct {
-	ModuleType            string
-	DraftRevisionID       int64
-	PublishedRevisionID   int64
-	HasUnpublishedChanges bool
+	ModuleType            string `json:"moduleType"`
+	DraftRevisionID       int64  `json:"draftRevisionId"`
+	PublishedRevisionID   int64  `json:"publishedRevisionId"`
+	HasUnpublishedChanges bool   `json:"hasUnpublishedChanges"`
 }
 
 type AdminLessonSnapshot struct {
-	LessonID         string
-	Slug             string
-	DisplayOrder     int
-	Enabled          bool
-	DraftLesson      *contentbuild.LessonContent
-	PublishedLesson  *contentbuild.LessonContent
-	Modules          []ModuleSnapshot
-	PublishedHistory map[string][]contentstore.PublishedModuleHistoryEntry
+	LessonID         string                                                `json:"lessonId"`
+	Slug             string                                                `json:"slug"`
+	DisplayOrder     int                                                   `json:"displayOrder"`
+	Enabled          bool                                                  `json:"enabled"`
+	DraftLesson      *contentbuild.LessonContent                           `json:"draftLesson"`
+	PublishedLesson  *contentbuild.LessonContent                           `json:"publishedLesson"`
+	Modules          []ModuleSnapshot                                      `json:"modules"`
+	PublishedHistory map[string][]contentstore.PublishedModuleHistoryEntry `json:"publishedHistory"`
 }
 
 type Repository struct {
