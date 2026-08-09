@@ -35,14 +35,14 @@ type CurrentModuleState struct {
 
 // PublishedModuleHistoryEntry mirrors TS PublishedModuleHistoryEntry.
 type PublishedModuleHistoryEntry struct {
-	LessonID         string
-	ModuleType       string
-	RevisionID       int64
-	Payload          json.RawMessage
-	CreatedAt        string
-	CreatedBy        string
-	Note             *string
-	SourceRevisionID *int64
+	LessonID         string          `json:"lessonId"`
+	ModuleType       string          `json:"moduleType"`
+	RevisionID       int64           `json:"revisionId"`
+	Payload          json.RawMessage `json:"payload"`
+	CreatedAt        string          `json:"createdAt"`
+	CreatedBy        string          `json:"createdBy"`
+	Note             *string         `json:"note"`
+	SourceRevisionID *int64          `json:"sourceRevisionId"`
 }
 
 // InsertModuleRevisionInput mirrors TS InsertModuleRevisionInput.
@@ -296,7 +296,7 @@ insert into module_revisions (
 	return InsertedModuleRevision{
 		InsertModuleRevisionInput: input,
 		RevisionID:                revisionID,
-		CreatedAt:                 time.Now().UTC().Format(time.RFC3339),
+		CreatedAt:                 time.Now().UTC().Format("2006-01-02T15:04:05.000Z"),
 	}, nil
 }
 
