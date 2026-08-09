@@ -28,8 +28,8 @@ func loadSnapshot(t *testing.T) *CourseSnapshot {
 
 func TestRenderMatchesCommittedSeed(t *testing.T) {
 	snapshot := loadSnapshot(t)
-	if len(snapshot.Lessons) != 10 {
-		t.Fatalf("lessons = %d, want 10", len(snapshot.Lessons))
+	if len(snapshot.Lessons) != 12 {
+		t.Fatalf("lessons = %d, want 12", len(snapshot.Lessons))
 	}
 
 	got, err := RenderInitialContentSeedSql(snapshot)
@@ -51,14 +51,14 @@ func TestSeedStructure(t *testing.T) {
 	snapshot := loadSnapshot(t)
 	seed := CreateInitialContentSeed(snapshot)
 
-	if len(seed.Lessons) != 10 {
-		t.Fatalf("lessons = %d, want 10", len(seed.Lessons))
+	if len(seed.Lessons) != 12 {
+		t.Fatalf("lessons = %d, want 12", len(seed.Lessons))
 	}
-	if len(seed.LessonModules) != 10*6 {
-		t.Fatalf("lessonModules = %d, want 60", len(seed.LessonModules))
+	if len(seed.LessonModules) != 12*6 {
+		t.Fatalf("lessonModules = %d, want 72", len(seed.LessonModules))
 	}
-	if len(seed.Revisions) != 10*6*2 {
-		t.Fatalf("revisions = %d, want 120", len(seed.Revisions))
+	if len(seed.Revisions) != 12*6*2 {
+		t.Fatalf("revisions = %d, want 144", len(seed.Revisions))
 	}
 
 	// revision pointer self-consistency

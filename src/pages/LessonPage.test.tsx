@@ -323,7 +323,10 @@ describe('LessonPage', () => {
   })
 
   it('fetches the lesson from the API when it is missing from the course context', async () => {
-    const lesson = course.lessons[0]
+    const lesson = course.lessons.find((entry) => entry.id === 'self-intro')
+    if (!lesson) {
+      throw new Error('Expected self-intro lesson fixture')
+    }
     const courseWithoutLesson = { ...course, lessons: course.lessons.filter((l) => l.id !== lesson.id) }
     const fetchMock = vi.fn().mockResolvedValue(
       new Response(JSON.stringify(lesson), {
