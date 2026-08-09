@@ -311,8 +311,7 @@ h2 {
 }
 
 .badge,
-.success-chip,
-.speaker-chip {
+.success-chip {
   width: fit-content;
   display: inline-flex;
   align-items: center;
@@ -332,8 +331,7 @@ h2 {
   border-color: rgba(47, 143, 107, 0.22);
 }
 
-.badge--sky,
-.speaker-chip {
+.badge--sky {
   color: var(--color-sky-ink);
   background: #eef4ff;
   border-color: rgba(95, 143, 247, 0.2);
@@ -1162,25 +1160,6 @@ h2 {
   box-shadow: var(--shadow-card);
 }
 
-.lesson-progress-preview__summary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.lesson-progress-preview__summary strong {
-  color: var(--color-ink);
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
-}
-
-.lesson-progress-preview__summary > span:last-child {
-  margin-left: auto;
-  color: var(--color-jade-ink);
-  font-size: 0.86rem;
-  font-weight: 850;
-}
-
 .lesson-progress-preview__rail {
   display: flex;
   flex-wrap: wrap;
@@ -1260,10 +1239,6 @@ h2 {
 .lesson-page .lesson-progress-preview {
   gap: 0.75rem;
   padding: 0.85rem;
-}
-
-.lesson-page .lesson-progress-preview__summary {
-  gap: 0.5rem;
 }
 
 .section-stack {
@@ -2969,11 +2944,6 @@ h2 {
 
   .progress-summary-card .button-row {
     justify-content: stretch;
-  }
-
-  .lesson-progress-preview__summary > span:last-child {
-    width: 100%;
-    margin-left: 0;
   }
 
   .lesson-page .lesson-progress-preview__rail {
