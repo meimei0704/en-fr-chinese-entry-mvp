@@ -13,6 +13,7 @@ export type PracticeChallengeKind = 'listen' | 'read' | 'speak' | 'review'
 export interface PracticeChallengeOption {
   id: string
   label: string
+  pinyin?: string
 }
 
 export interface PracticeChallengeQuestion {
@@ -20,6 +21,7 @@ export interface PracticeChallengeQuestion {
   kind: PracticeChallengeKind
   prompt: LocalizedField
   target: string
+  targetPinyin?: string
   correctOptionId: string
   audio?: string
   audioFallback?: string
@@ -77,10 +79,12 @@ function buildChoiceOptions(
   correct: string,
   distractors: string[],
   rng: () => number,
+  pinyinMap?: ReadonlyMap<string, string>,
 ): PracticeChallengeOption[] {
   return shuffle([correct, ...distractors], rng).map((label, index) => ({
     id: `opt-${index}`,
     label,
+    pinyin: pinyinMap?.get(label),
   }))
 }
 
@@ -114,6 +118,48 @@ function hanziCandidates(lesson: LessonContent): string[] {
   }
 
   return candidates
+}
+
+function hanziToPinyinMap(lesson: LessonContent): Map<string, string> {
+  const map = new Map<string, string>()
+  const add = (hanzi: string, pinyin: string) => {
+    if (hanzi && !map.has(hanzi)) {
+      map.set(hanzi, pinyin)
+    }
+  }
+
+  for (const line of lesson.dialogue.lines) {
+    add(line.hanzi, line.pinyin)
+  }
+  for (const item of lesson.vocabulary) {
+    add(item.hanzi, item.pinyin)
+  }
+  for (const item of [...lesson.practice.listening, ...lesson.practice.speaking, ...lesson.practice.reading]) {
+    if (item.pinyin) {
+      add(item.target, item.pinyin)
+    }
+  }
+
+  return map
+}
+
+function looksLikeHanzi(value: string) {
+  return /[\u3400-\u9fff]/.test(value)
+}
+
+function attachPinyinToQuestions(
+  questions: PracticeChallengeQuestion[],
+  pinyinMap: ReadonlyMap<string, string>,
+): PracticeChallengeQuestion[] {
+  return questions.map((question) => ({
+    ...question,
+    targetPinyin: pinyinMap.get(question.target),
+    options: question.options.map((option) =>
+      looksLikeHanzi(option.label) && !option.pinyin
+        ? { ...option, pinyin: pinyinMap.get(option.label) }
+        : option,
+    ),
+  }))
 }
 
 function meaningCandidates(
@@ -369,6 +415,7 @@ export function buildPracticeChallenge(
   const rng = createSeededRandom(seed)
   const hanziPool = hanziCandidates(lesson)
   const meaningPool = meaningCandidates(lesson, language)
+  const pinyinMap = hanziToPinyinMap(lesson)
 
   const pairs: StructuredPair[] = lesson.vocabulary.map((item) => ({
     id: item.id,
@@ -421,7 +468,7 @@ export function buildPracticeChallenge(
   }
 
   return {
-    questions: shuffle(selected, rng),
+    questions: shuffle(attachPinyinToQuestions(selected, pinyinMap), rng),
     maxScore: 100,
   }
 }

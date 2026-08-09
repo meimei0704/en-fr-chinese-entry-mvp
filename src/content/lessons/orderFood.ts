@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const orderFoodLesson: LessonContent = {
   id: 'order-food',
   title: {
-    en: 'Hotel or apartment check-in',
-    fr: 'Arrivée à l\'hôtel ou à l\'appartement',
+    en: '酒店入住 / At the hotel',
+    fr: '酒店入住 / À l’hôtel',
   },
   scenario: {
     en: 'Complete the simplest front desk check-in: say you have a reservation, give your name, show your passport, receive the room card, ask about WiFi, breakfast, deposit, and checkout time.',

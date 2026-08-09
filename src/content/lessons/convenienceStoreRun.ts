@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const convenienceStoreRunLesson: LessonContent = {
   id: 'convenience-store-run',
   title: {
-    en: 'First convenience store run',
-    fr: 'Première course en supérette',
+    en: '购物 / Shopping',
+    fr: '购物 / Shopping',
   },
   scenario: {
     en: 'Buy a bottle of water and a snack, say you do not need anything else, ask the total, pay by phone, and ask for a bag.',

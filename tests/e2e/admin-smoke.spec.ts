@@ -246,29 +246,36 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await page.goto(adminSmokeBaseUrl ? new URL('/admin', adminSmokeBaseUrl).href : '/admin')
 
-  const unauthVoiceStatus = await page.evaluate(async () => {
-    const response = await fetch('/api/admin/voice/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Content-Admin-Client': 'spa',
-      },
-      body: JSON.stringify({
-        consentConfirmed: true,
-        profileId: 'missing',
-        text: '你好',
-        target: {
-          lessonId: 'self-intro',
-          targetId: 'dialogue:self-intro-line-01',
-          moduleType: 'dialogue',
-          originalAudio: '/audio/self-intro/line-01.mp3',
-          storageKey: 'audio/self-intro/line-01.mp3',
-          language: 'zh-CN',
+  const unauthVoiceStatus = await page.evaluate(
+    ({ lessonId, targetId, originalAudio, storageKey }) => {
+      return fetch('/api/admin/voice/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Content-Admin-Client': 'spa',
         },
-      }),
-    })
-    return response.status
-  })
+        body: JSON.stringify({
+          consentConfirmed: true,
+          profileId: 'missing',
+          text: '你好',
+          target: {
+            lessonId,
+            targetId,
+            moduleType: 'dialogue',
+            originalAudio,
+            storageKey,
+            language: 'zh-CN',
+          },
+        }),
+      }).then((response) => response.status)
+    },
+    {
+      lessonId: lesson.id,
+      targetId: `dialogue:${firstDialogueLine.id}`,
+      originalAudio: firstDialogueLine.audio,
+      storageKey: firstDialogueLine.audio.slice(1),
+    },
+  )
   expect(unauthVoiceStatus).toBe(401)
 
   await expect(page.getByRole('heading', { name: /admin sign in required/i })).toBeVisible()
@@ -278,13 +285,13 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   await page.getByLabel(/admin password/i).fill('secret')
   await page.getByRole('button', { name: /unlock content admin/i }).click()
 
-  await expect(page.getByRole('link', { name: /open self-intro editor/i })).toBeVisible()
+  await expect(page.getByRole('link', { name: new RegExp(`open ${lesson.id} editor`, 'i') })).toBeVisible()
   await expect(page.getByRole('link', { name: /batch voice generation/i })).toBeVisible()
   expect(dialogCount).toBe(0)
 
-  await page.getByRole('link', { name: /open self-intro editor/i }).click()
-  await expect(page).toHaveURL(/\/admin\/lesson\/self-intro$/)
-  await expect(page.getByRole('heading', { name: /edit self-intro/i })).toBeVisible()
+  await page.getByRole('link', { name: new RegExp(`open ${lesson.id} editor`, 'i') }).click()
+  await expect(page).toHaveURL(new RegExp(`/admin/lesson/${lesson.id}$`))
+  await expect(page.getByRole('heading', { name: new RegExp(`edit ${lesson.id}`, 'i') })).toBeVisible()
 
   const editor = page.getByRole('main')
   const directory = page.getByTestId('admin-module-directory')
@@ -314,14 +321,14 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(page).toHaveURL(/\/admin\/voice$/)
   await expect(page.getByRole('heading', { name: /original pronunciation is active/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /293 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /359 audio targets/i })).toBeVisible()
   await expect(page.locator('[data-testid^="voice-target-row-pronunciation:"]')).toHaveCount(0)
   await expect(page.getByText(/^pronunciation · zh-CN$/i)).toHaveCount(0)
   for (const targetId of [
-    'dialogue:self-intro-line-01',
-    'sentencePatterns:self-intro-pattern-1',
-    'vocabulary:self-intro-vocab-1',
-    'practice:listening:self-intro-listening-1',
+    `dialogue:${firstDialogueLine.id}`,
+    `sentencePatterns:${lesson.sentencePatterns[0]!.id}`,
+    `vocabulary:${lesson.vocabulary[0]!.id}`,
+    `practice:listening:${lesson.practice.listening[0]!.id}`,
   ]) {
     await expect(page.getByTestId(`voice-target-row-${targetId}`)).toBeVisible()
   }
@@ -348,8 +355,8 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/293 generated/i).first()).toBeVisible({ timeout: 15_000 })
-  expect(generatedTargets).toHaveLength(293)
+  await expect(page.getByText(/359 generated/i).first()).toBeVisible({ timeout: 60_000 })
+  expect(generatedTargets).toHaveLength(359)
   expect(new Set(generatedTargets.map((target) => target.moduleType))).toEqual(
     new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice']),
   )
@@ -360,7 +367,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   await expect(applyApprovedButton).toBeDisabled()
 
   const firstRow = page.getByTestId(`voice-target-row-dialogue:${firstDialogueLine.id}`)
-  const generatedFirstAudio = `/voice/generated/audio/self-intro/line-01.mp3`
+  const generatedFirstAudio = `/voice/generated${firstDialogueLine.audio}`
   await expect(firstRow.getByLabel(/preview generated audio/i)).toHaveAttribute('src', generatedFirstAudio)
   await firstRow.getByLabel(/previewed and approve/i).check()
   await expect(applyApprovedButton).toBeEnabled()
@@ -371,10 +378,10 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
   const dialogueDraftRequest = draftRequests.find((request) => request.moduleType === 'dialogue')
   expect(dialogueDraftRequest).toBeDefined()
   const dialoguePayload = dialogueDraftRequest!.payload as LessonContent['dialogue']
-  expect(dialogueDraftRequest!.lessonId).toBe('self-intro')
+  expect(dialogueDraftRequest!.lessonId).toBe(lesson.id)
   expect(dialoguePayload.lines[0]!.audio).toBe(generatedFirstAudio)
-  expect(dialoguePayload.lines[0]!.audioFallback).toBe('/audio/self-intro/line-01.mp3')
-  expect(dialoguePayload.lines[1]!.audio).toBe('/audio/self-intro/line-02.mp3')
+  expect(dialoguePayload.lines[0]!.audioFallback).toBe(firstDialogueLine.audio)
+  expect(dialoguePayload.lines[1]!.audio).toBe(lesson.dialogue.lines[1]!.audio)
   expect(draftRequests.some((request) => ['pronunciation', 'hanziRecognition'].includes(request.moduleType))).toBe(false)
 
   expect(dialogCount).toBe(0)

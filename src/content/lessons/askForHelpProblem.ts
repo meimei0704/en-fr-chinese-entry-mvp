@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const askForHelpProblemLesson: LessonContent = {
   id: 'ask-for-help-problem',
   title: {
-    en: 'Ask for help with a problem',
-    fr: 'Demander de l’aide pour un problème',
+    en: '寻求帮助 / Ask for help',
+    fr: '寻求帮助 / Demander de l’aide',
   },
   scenario: {
     en: 'Ask for help with a phone, payment, battery, or lost-item problem, explain what is wrong, ask to speak slowly, and request practical solutions like WiFi or a charger.',

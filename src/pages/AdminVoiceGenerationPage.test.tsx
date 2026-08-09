@@ -244,38 +244,38 @@ describe('AdminVoiceGenerationPage', () => {
     vi.restoreAllMocks()
   })
 
-  it('loads all course snapshots and shows the 293 visible zh-CN audio targets', async () => {
+  it('loads all course snapshots and shows the 359 visible zh-CN audio targets', async () => {
     installBatchFetchMock()
 
     renderRoute('/admin/voice')
 
     expect(screen.getByTestId('admin-voice-loading-shell')).toBeVisible()
     expect(await screen.findByRole('heading', { level: 1, name: /original pronunciation is active/i })).toBeVisible()
-    expect(screen.getByRole('heading', { level: 2, name: /293 audio targets/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: /359 audio targets/i })).toBeVisible()
     expect(screen.getByText(/current course audio uses original files/i)).toBeVisible()
     expect(screen.getByRole('button', { name: /generate all pending/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /apply approved to drafts/i })).toBeDisabled()
     expect(screen.getByText(/optional cloned voice tools/i)).toBeVisible()
   })
 
-  it('shows 293 targets from the five visible modules while retaining generic pronunciation copy', async () => {
+  it('shows 359 targets from the five visible modules while retaining generic pronunciation copy', async () => {
     installBatchFetchMock()
 
     renderRoute('/admin/voice')
 
-    expect(await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })).toBeVisible()
     const metrics = within(screen.getByTestId('admin-voice-metrics'))
     const targetGrid = screen.getByTestId('admin-voice-target-grid')
-    expect(metrics.getByText('293', { selector: 'strong' })).toBeVisible()
+    expect(metrics.getByText('359', { selector: 'strong' })).toBeVisible()
     expect(targetGrid.querySelector('[data-testid^="voice-target-row-pronunciation:"]')).toBeNull()
     expect(within(targetGrid).queryByText(/^pronunciation · zh-CN$/i)).not.toBeInTheDocument()
     expect(within(targetGrid).queryByText(/· Pronunciation \d+$/i)).not.toBeInTheDocument()
 
     for (const targetId of [
-      'dialogue:self-intro-line-01',
-      'sentencePatterns:self-intro-pattern-1',
-      'vocabulary:self-intro-vocab-1',
-      'practice:listening:self-intro-listening-1',
+      `dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`,
+      `sentencePatterns:${course.lessons[0]!.sentencePatterns[0]!.id}`,
+      `vocabulary:${course.lessons[0]!.vocabulary[0]!.id}`,
+      `practice:listening:${course.lessons[0]!.practice.listening[0]!.id}`,
     ]) {
       expect(screen.getByTestId(`voice-target-row-${targetId}`)).toBeVisible()
     }
@@ -289,7 +289,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     expect(screen.getByRole('heading', { level: 3, name: /record voice sample/i })).toBeVisible()
     expect(screen.getByText(/recommended mandarin prompt/i)).toBeVisible()
@@ -311,7 +311,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
@@ -332,7 +332,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
@@ -376,7 +376,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
@@ -393,7 +393,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
@@ -414,7 +414,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.click(screen.getByRole('button', { name: /start recording/i }))
@@ -444,7 +444,7 @@ describe('AdminVoiceGenerationPage', () => {
     await user.type(screen.getByLabelText(/admin password/i), 'secret')
     await user.click(screen.getByRole('button', { name: /unlock content admin/i }))
 
-    expect(await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })).toBeVisible()
+    expect(await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })).toBeVisible()
     expect(fetch).toHaveBeenNthCalledWith(
       2,
       '/api/admin/content/lessons',
@@ -460,7 +460,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
     expect(screen.getByRole('button', { name: /create voice profile/i })).toBeDisabled()
@@ -470,7 +470,7 @@ describe('AdminVoiceGenerationPage', () => {
     expect((await screen.findAllByText(/profile id: profile_batch_authorized/i))[0]).toBeVisible()
 
     await user.click(screen.getByRole('button', { name: /generate all pending/i }))
-    expect((await screen.findAllByText(/293 generated/i))[0]).toBeVisible()
+    expect((await screen.findAllByText(/359 generated/i))[0]).toBeVisible()
     expect(screen.getByRole('button', { name: /apply approved to drafts/i })).toBeDisabled()
 
     const generateBodies = vi.mocked(fetch).mock.calls
@@ -479,7 +479,7 @@ describe('AdminVoiceGenerationPage', () => {
         target: { targetId: string; moduleType: string }
       })
 
-    expect(generateBodies).toHaveLength(293)
+    expect(generateBodies).toHaveLength(359)
     expect(new Set(generateBodies.map((body) => body.target.moduleType))).toEqual(
       new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice']),
     )
@@ -487,10 +487,10 @@ describe('AdminVoiceGenerationPage', () => {
     expect(generateBodies.some((body) => ['pronunciation', 'hanziRecognition'].includes(body.target.moduleType))).toBe(false)
 
     const representativeTargetIds = [
-      'dialogue:self-intro-line-01',
-      'sentencePatterns:self-intro-pattern-1',
-      'vocabulary:self-intro-vocab-1',
-      'practice:listening:self-intro-listening-1',
+      `dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`,
+      `sentencePatterns:${course.lessons[0]!.sentencePatterns[0]!.id}`,
+      `vocabulary:${course.lessons[0]!.vocabulary[0]!.id}`,
+      `practice:listening:${course.lessons[0]!.practice.listening[0]!.id}`,
     ]
 
     for (const targetId of representativeTargetIds) {
@@ -519,6 +519,10 @@ describe('AdminVoiceGenerationPage', () => {
       audio: generatedAudioFor(item.audio),
       audioFallback: item.audio,
     })
+    const firstLineId = originalLesson.dialogue.lines[0]!.id
+    const firstPatternId = originalLesson.sentencePatterns[0]!.id
+    const firstVocabId = originalLesson.vocabulary[0]!.id
+    const firstListeningId = originalLesson.practice.listening[0]!.id
 
     expect(draftBodies).toEqual([
       {
@@ -528,7 +532,7 @@ describe('AdminVoiceGenerationPage', () => {
         payload: {
           ...originalLesson.dialogue,
           lines: originalLesson.dialogue.lines.map((line) =>
-            line.id === 'self-intro-line-01' ? withGeneratedAudio(line) : line,
+            line.id === firstLineId ? withGeneratedAudio(line) : line,
           ),
         },
       },
@@ -537,7 +541,7 @@ describe('AdminVoiceGenerationPage', () => {
         moduleType: 'sentencePatterns',
         note: 'Apply approved batch voice generation for sentencePatterns',
         payload: originalLesson.sentencePatterns.map((pattern) =>
-          pattern.id === 'self-intro-pattern-1' ? withGeneratedAudio(pattern) : pattern,
+          pattern.id === firstPatternId ? withGeneratedAudio(pattern) : pattern,
         ),
       },
       {
@@ -545,7 +549,7 @@ describe('AdminVoiceGenerationPage', () => {
         moduleType: 'vocabulary',
         note: 'Apply approved batch voice generation for vocabulary',
         payload: originalLesson.vocabulary.map((item) =>
-          item.id === 'self-intro-vocab-1' ? withGeneratedAudio(item) : item,
+          item.id === firstVocabId ? withGeneratedAudio(item) : item,
         ),
       },
       {
@@ -555,7 +559,7 @@ describe('AdminVoiceGenerationPage', () => {
         payload: {
           ...originalLesson.practice,
           listening: originalLesson.practice.listening.map((prompt) =>
-            prompt.id === 'self-intro-listening-1' ? withGeneratedAudio(prompt) : prompt,
+            prompt.id === firstListeningId ? withGeneratedAudio(prompt) : prompt,
           ),
         },
       },
@@ -570,7 +574,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     expect(screen.getByLabelText(/use existing profile id/i)).toHaveValue(existingProfileIdFixture)
 
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
@@ -594,7 +598,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await user.type(screen.getByLabelText(/use existing profile id/i), existingProfileIdFixture)
 
     expect(window.localStorage.getItem(profileIdStorageKey)).toBe(existingProfileIdFixture)
@@ -607,7 +611,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     expect(screen.getByLabelText(/use existing profile id/i)).toHaveValue(existingProfileIdFixture)
 
     await user.click(screen.getByRole('button', { name: /clear saved id/i }))
@@ -637,7 +641,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/another-sample.wav')
@@ -653,7 +657,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
 
     const firstTargetId = `dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`
     const firstRow = screen.getByTestId(`voice-target-row-${firstTargetId}`)
@@ -676,7 +680,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
@@ -689,7 +693,7 @@ describe('AdminVoiceGenerationPage', () => {
 
     expect(await within(firstRow).findByLabelText(/preview generated audio/i)).toHaveAttribute(
       'src',
-      '/voice/generated/audio/self-intro/line-01.mp3',
+      `/voice/generated${course.lessons[0]!.dialogue.lines[0]!.audio}`,
     )
     expect((await screen.findAllByText(/^1 generated$/i)).some((element) => element.className.includes('success'))).toBe(true)
 
@@ -719,14 +723,14 @@ describe('AdminVoiceGenerationPage', () => {
 
     renderRoute('/admin/voice')
 
-    await screen.findByRole('heading', { level: 2, name: /293 audio targets/i })
+    await screen.findByRole('heading', { level: 2, name: /359 audio targets/i })
     await openCreateProfilePanel(user)
     await user.click(screen.getByLabelText(/i confirm this voice sample is mine or explicitly authorized/i))
     await user.type(screen.getByLabelText(/voice sample url/i), 'https://storage.example/authorized-sample.wav')
     await user.click(screen.getByRole('button', { name: /create voice profile/i }))
     await user.click(await screen.findByRole('button', { name: /generate all pending/i }))
 
-    expect((await screen.findAllByText(/293 failed/i))[0]).toBeVisible()
+    expect((await screen.findAllByText(/359 failed/i))[0]).toBeVisible()
     const firstRow = screen.getByTestId(`voice-target-row-dialogue:${course.lessons[0]!.dialogue.lines[0]!.id}`)
     expect(within(firstRow).getByText(/voice cloning provider is not configured/i)).toBeVisible()
     expect(within(firstRow).getByText(/original audio fallback is preserved/i)).toBeVisible()

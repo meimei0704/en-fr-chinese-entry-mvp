@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const metroTicketLesson: LessonContent = {
   id: 'metro-ticket',
   title: {
-    en: 'Buy a metro ticket',
-    fr: 'Acheter un ticket de métro',
+    en: '坐地铁 / Subway ride',
+    fr: '坐地铁 / En métro',
   },
   scenario: {
     en: 'Ask how to get to People\'s Square, confirm line two, buy one metro ticket, ask how many stops, check for a transfer, ask the price, and confirm the exit.',

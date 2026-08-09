@@ -37,7 +37,7 @@ describe('admin batch voice audio targets', () => {
           text: lesson.dialogue.lines[0]!.hanzi,
           originalAudio: lesson.dialogue.lines[0]!.audio,
           language: 'zh-CN',
-          storageKey: 'audio/self-intro/line-01.mp3',
+          storageKey: `audio/${lesson.id}/line-01.mp3`,
         }),
         expect.objectContaining({
           targetId: `sentencePatterns:${lesson.sentencePatterns[0]!.id}`,
@@ -47,7 +47,7 @@ describe('admin batch voice audio targets', () => {
           text: lesson.sentencePatterns[0]!.example,
           originalAudio: lesson.sentencePatterns[0]!.audio,
           language: 'zh-CN',
-          storageKey: 'audio/self-intro/pattern-01.mp3',
+          storageKey: `audio/${lesson.id}/pattern-01.mp3`,
         }),
         expect.objectContaining({
           targetId: `vocabulary:${lesson.vocabulary[0]!.id}`,
@@ -57,7 +57,7 @@ describe('admin batch voice audio targets', () => {
           text: lesson.vocabulary[0]!.hanzi,
           originalAudio: lesson.vocabulary[0]!.audio,
           language: 'zh-CN',
-          storageKey: 'audio/self-intro/vocab-01.mp3',
+          storageKey: `audio/${lesson.id}/vocab-01.mp3`,
         }),
         expect.objectContaining({
           targetId: `practice:listening:${lesson.practice.listening[0]!.id}`,
@@ -67,17 +67,17 @@ describe('admin batch voice audio targets', () => {
           text: lesson.practice.listening[0]!.target,
           originalAudio: lesson.practice.listening[0]!.audio,
           language: 'zh-CN',
-          storageKey: 'audio/self-intro/practice-listening-01.mp3',
+          storageKey: `audio/${lesson.id}/practice-listening-01.mp3`,
         }),
       ]),
     )
   })
 
-  it('locks the course manifest to the 293 existing zh-CN audio targets only', () => {
+  it('locks the course manifest to the 359 existing zh-CN audio targets only', () => {
     const targets = collectCourseVoiceAudioTargets(course.lessons)
     const targetTexts = new Set(targets.map((target) => target.text))
 
-    expect(targets).toHaveLength(293)
+    expect(targets).toHaveLength(359)
     expect(targets.every((target) => target.language === 'zh-CN')).toBe(true)
     expect(targets.every((target) => target.originalAudio.startsWith('/audio/'))).toBe(true)
     expect(targets.every((target) => target.storageKey.startsWith('audio/'))).toBe(true)
@@ -89,7 +89,7 @@ describe('admin batch voice audio targets', () => {
     expect(targets.some((target) => target.moduleType === 'reviewCards')).toBe(false)
   })
 
-  it('derives the 293 Admin Voice targets from the 293-target manifest', () => {
+  it('derives the 359 Admin Voice targets from the 359-target manifest', () => {
     const completeTargets = collectCourseVoiceAudioTargets(course.lessons)
     const visibleTargets = collectAdminVoiceVisibleTargets(course.lessons)
     const visibleModuleTypes = new Set([
@@ -105,14 +105,14 @@ describe('admin batch voice audio targets', () => {
       ]),
     )
 
-    expect(completeTargets).toHaveLength(293)
+    expect(completeTargets).toHaveLength(359)
     expect(completeTargets.some((target) => target.moduleType === 'pronunciation')).toBe(false)
-    expect(visibleTargets).toHaveLength(293)
+    expect(visibleTargets).toHaveLength(359)
     expect(visibleCounts).toEqual({
-      dialogue: 82,
-      sentencePatterns: 50,
-      vocabulary: 101,
-      practice: 60,
+      dialogue: 107,
+      sentencePatterns: 60,
+      vocabulary: 120,
+      practice: 72,
     })
     expect(visibleTargets.every((target) => visibleModuleTypes.has(target.moduleType))).toBe(true)
     expect(visibleTargets.map((target) => target.targetId)).toEqual(
@@ -135,12 +135,12 @@ describe('admin batch voice audio targets', () => {
       {
         lessonId: lesson.id,
         targetId: `dialogue:${firstLine.id}`,
-        generatedAudioUrl: '/voice/generated/self-intro/line-01.mp3',
+        generatedAudioUrl: `/voice/generated/${lesson.id}/line-01.mp3`,
       },
       {
         lessonId: lesson.id,
         targetId: `dialogue:${secondLine.id}`,
-        generatedAudioUrl: '/voice/generated/self-intro/line-02.mp3',
+        generatedAudioUrl: `/voice/generated/${lesson.id}/line-02.mp3`,
       },
     ])
 
@@ -150,11 +150,11 @@ describe('admin batch voice audio targets', () => {
       ...lesson.dialogue,
       lines: lesson.dialogue.lines.map((line) => {
         if (line.id === firstLine.id) {
-          return { ...line, audio: '/voice/generated/self-intro/line-01.mp3', audioFallback: firstLine.audio }
+          return { ...line, audio: `/voice/generated/${lesson.id}/line-01.mp3`, audioFallback: firstLine.audio }
         }
 
         if (line.id === secondLine.id) {
-          return { ...line, audio: '/voice/generated/self-intro/line-02.mp3', audioFallback: secondLine.audio }
+          return { ...line, audio: `/voice/generated/${lesson.id}/line-02.mp3`, audioFallback: secondLine.audio }
         }
 
         return line

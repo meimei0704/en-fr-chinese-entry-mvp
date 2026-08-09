@@ -69,7 +69,7 @@ async function installVoiceAdminRoutes(page: Page) {
 }
 
 async function expectVoiceLayoutPolish(page: Page) {
-  await expect(page.getByRole('heading', { name: /293 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /359 audio targets/i })).toBeVisible()
 
   const consentField = page.locator('.admin-voice-consent-field').first()
   const consentCheckbox = page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i)

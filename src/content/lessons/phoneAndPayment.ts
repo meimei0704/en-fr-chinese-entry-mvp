@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const phoneAndPaymentLesson: LessonContent = {
   id: 'phone-and-payment',
   title: {
-    en: 'Phone number & mobile payment setup',
-    fr: 'Téléphone & paiement mobile',
+    en: '中国电话卡 / SIM card setup',
+    fr: '中国电话卡 / Configuration de la carte SIM',
   },
   scenario: {
     en: 'Ask for a SIM card, compare data plans, learn how to top up, and ask whether you can pay by phone or use cash first.',

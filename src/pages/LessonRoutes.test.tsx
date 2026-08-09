@@ -7,23 +7,23 @@ import { renderRoute } from '../test/renderRoute'
 const newLessons = [
   {
     id: 'restaurant-order',
-    lessonHeading: /order a simple meal/i,
+    lessonHeading: /点餐\s+Order a meal/i,
   },
   {
     id: 'metro-ticket',
-    lessonHeading: /buy a metro ticket/i,
+    lessonHeading: /坐地铁\s+Subway ride/i,
   },
   {
     id: 'pharmacy-help',
-    lessonHeading: /ask for help at a pharmacy/i,
+    lessonHeading: /买药，看医生\s+Hospital and pharmacy/i,
   },
   {
     id: 'ask-for-help-problem',
-    lessonHeading: /ask for help with a problem/i,
+    lessonHeading: /寻求帮助\s+Ask for help/i,
   },
   {
     id: 'train-station-ticket',
-    lessonHeading: /buy a train station ticket/i,
+    lessonHeading: /坐火车\s+Take the train/i,
   },
 ]
 

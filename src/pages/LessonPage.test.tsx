@@ -57,8 +57,12 @@ describe('LessonPage', () => {
     renderRoute('/lesson/self-intro')
 
     expect(screen.getByRole('region', { name: /dialogue practice/i })).toBeVisible()
-    expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent('您好')
-    expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent('Nín hǎo')
+    expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent(
+      '请问您会说英语吗？',
+    )
+    expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent(
+      'Qǐngwèn nín huì shuō Yīngyǔ ma?',
+    )
   })
 
   it.each([
@@ -118,7 +122,7 @@ describe('LessonPage', () => {
     expect(screen.getByRole('region', { name: /aperçu de progression de la leçon/i })).toBeVisible()
     expect(screen.getByRole('region', { name: /pratique du dialogue/i })).toBeVisible()
     expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur voyageur/i)[0]).toHaveTextContent(
-      '您好',
+      '请问您会说英语吗？',
     )
     expect(screen.getByRole('heading', { level: 2, name: /dialogue/i })).toBeVisible()
     expect(
@@ -167,19 +171,17 @@ describe('LessonPage', () => {
   it.each([
     {
       language: 'en',
-      count: '3 study layers',
       removed: /pronunciation|hanzi recognition/i,
-      dialogueTitle: 'Ask for help from baggage claim to the taxi pickup',
+      dialogueTitle: 'Asking for help at the airport',
     },
     {
       language: 'fr',
-      count: '3 étapes d’étude',
       removed: /prononciation|reconnaissance des hanzi|hanzi à reconnaître/i,
-      dialogueTitle: 'Demander de l’aide des bagages jusqu’au taxi',
+      dialogueTitle: 'Demander de l’aide à l’aéroport',
     },
   ] as const)(
     'shows only the three learner layers in $language',
-    ({ language, count, removed, dialogueTitle }) => {
+    ({ language, removed, dialogueTitle }) => {
       saveProgress({ ...createDefaultProgress(), selectedExplanationLanguage: language })
       renderRoute('/lesson/self-intro')
 
@@ -190,7 +192,6 @@ describe('LessonPage', () => {
             : /aperçu de progression/i,
       })
       const steps = within(preview).getAllByRole('listitem')
-      expect(preview).toHaveTextContent(count)
       expect(steps).toHaveLength(3)
       expect(steps.map((step) => step.textContent)).toEqual(
         language === 'en'
@@ -290,7 +291,7 @@ describe('LessonPage', () => {
     const user = userEvent.setup()
     const lesson = course.lessons[0]
 
-    renderRoute('/lesson/self-intro')
+    renderRoute(`/lesson/${lesson.id}`)
 
     const playbackButtons = screen.getAllByRole('button', { name: /play chinese/i })
     expect(playbackButtons).toHaveLength(
@@ -310,9 +311,9 @@ describe('LessonPage', () => {
       playbackButtons[lesson.dialogue.lines.length + lesson.sentencePatterns.length],
     )
 
-    expect(audioConstructor).toHaveBeenNthCalledWith(1, '/audio/self-intro/line-01.mp3')
-    expect(audioConstructor).toHaveBeenNthCalledWith(2, '/audio/self-intro/pattern-01.mp3')
-    expect(audioConstructor).toHaveBeenNthCalledWith(3, '/audio/self-intro/vocab-01.mp3')
+    expect(audioConstructor).toHaveBeenNthCalledWith(1, `/audio/${lesson.id}/line-01.mp3`)
+    expect(audioConstructor).toHaveBeenNthCalledWith(2, `/audio/${lesson.id}/pattern-01.mp3`)
+    expect(audioConstructor).toHaveBeenNthCalledWith(3, `/audio/${lesson.id}/vocab-01.mp3`)
     expect(audioPlay).toHaveBeenCalledTimes(3)
     expect(cancel).toHaveBeenCalledTimes(3)
     expect(speak).not.toHaveBeenCalled()

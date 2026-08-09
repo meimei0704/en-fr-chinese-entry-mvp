@@ -5,49 +5,55 @@ import { course } from './course'
 import { journeyNodeIcons, journeyNodes, journeyStages } from './journey'
 
 const expectedJourneyNodeIds = [
+  'daily-greetings',
   'airport-immigration',
   'taxi-to-stay',
   'hotel-check-in',
   'phone-and-payment',
-  'convenience-store-run',
   'restaurant-order',
-  'metro-ticket',
-  'pharmacy-help',
-  'ask-for-help-problem',
   'train-station-ticket',
+  'metro-ticket',
+  'convenience-store-run',
+  'ask-for-help-problem',
+  'pharmacy-help',
+  'small-talk',
 ] as const
 
 const expectedEnglishTitles = [
+  '打招呼 / Daily greetings',
   '到达机场 / Arrival at the airport',
-  'Taxi to your stay',
-  'Hotel / apartment check-in',
-  'Phone number & mobile payment',
-  'First convenience store run',
-  'Order a simple meal',
-  'Buy a metro ticket',
-  'Ask for help at a pharmacy',
-  'Ask for help with a problem',
-  'Buy a train station ticket',
+  '打车 / Take a taxi',
+  '酒店入住 / At the hotel',
+  '中国电话卡 / SIM card setup',
+  '点餐 / Order a meal',
+  '坐火车 / Take the train',
+  '坐地铁 / Subway ride',
+  '购物 / Shopping',
+  '寻求帮助 / Ask for help',
+  '买药，看医生 / Hospital and pharmacy',
+  '闲聊 / Small talk',
 ]
 
 const expectedFrenchTitles = [
+  '打招呼 / Salutations quotidiennes',
   '到达机场 / Arrivée à l’aéroport',
-  'Taxi vers son logement',
-  'Check-in hôtel / appartement',
-  'Téléphone & paiement mobile',
-  'Première course en supérette',
-  'Commander un repas simple',
-  'Acheter un ticket de métro',
-  'Demander de l’aide à la pharmacie',
-  'Demander de l’aide pour un problème',
-  'Acheter un billet en gare',
+  '打车 / Prendre un taxi',
+  '酒店入住 / À l’hôtel',
+  '中国电话卡 / Configuration de la carte SIM',
+  '点餐 / Commander un repas',
+  '坐火车 / Prendre le train',
+  '坐地铁 / En métro',
+  '购物 / Shopping',
+  '寻求帮助 / Demander de l’aide',
+  '买药，看医生 / Hôpital et pharmacie',
+  '闲聊 / Petite conversation',
 ]
 
 describe('journey content', () => {
-  it('exposes exactly ten ordered lesson nodes and no route node', () => {
+  it('exposes exactly twelve ordered lesson nodes and no route node', () => {
     expect(journeyStages.map((stage) => stage.id)).toEqual(['arrival-in-china'])
-    expect(journeyNodes).toHaveLength(10)
-    expect(journeyNodes.map((node) => node.pathOrder)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    expect(journeyNodes).toHaveLength(12)
+    expect(journeyNodes.map((node) => node.pathOrder)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
     expect(journeyNodes.map((node) => node.id)).toEqual(expectedJourneyNodeIds)
     expect(journeyNodes.every((node) => node.kind === 'lesson')).toBe(true)
     expect(journeyNodes.map((node) => node.lessonId)).toEqual(course.lessons.map((lesson) => lesson.id))
@@ -57,20 +63,22 @@ describe('journey content', () => {
     expect(JSON.stringify(journeyNodes)).not.toContain('pinyin-foundations')
   })
 
-  it('pins the EN/FR Journey copy and icons for the same ten lessons', () => {
+  it('pins the EN/FR Journey copy and icons for the same twelve lessons', () => {
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'en'))).toEqual(expectedEnglishTitles)
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'fr'))).toEqual(expectedFrenchTitles)
     expect(journeyNodeIcons).toEqual({
-      'airport-immigration': '🧳',
+      'daily-greetings': '👋',
+      'airport-immigration': '✈️',
       'taxi-to-stay': '🚕',
       'hotel-check-in': '🏨',
       'phone-and-payment': '📱',
-      'convenience-store-run': '🛒',
       'restaurant-order': '🍜',
-      'metro-ticket': '🚇',
-      'pharmacy-help': '💊',
-      'ask-for-help-problem': '🆘',
       'train-station-ticket': '🚄',
+      'metro-ticket': '🚇',
+      'convenience-store-run': '🛒',
+      'ask-for-help-problem': '🆘',
+      'pharmacy-help': '💊',
+      'small-talk': '💬',
     })
   })
 })

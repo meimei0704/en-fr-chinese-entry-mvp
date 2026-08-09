@@ -8,7 +8,7 @@ import { renderRoute } from '../test/renderRoute'
 const homeSeriesCopy = {
   label: 'Course series',
   pinyin: 'Mandarin tones and pinyin',
-  journey: 'Basic Chinese expressions for a stress-free journey',
+  journey: 'Useful sentences, expressions and Hanzi recognition',
 } as const
 
 describe('App shell', () => {
@@ -21,9 +21,9 @@ describe('App shell', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: '轻松学中文' })).toBeVisible()
     expect(screen.getByRole('region', { name: /home hero/i })).toHaveClass('home-hero--centered')
-    expect(screen.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+    expect(screen.getByText('Basic Chinese expressions for a stress-free travel')).toBeVisible()
     expect(
-      screen.queryByText('Apprenez le mandarin dans la vie quotidienne'),
+      screen.queryByText('Apprenez les dialogues essentiels pour voyager en Chine'),
     ).not.toBeInTheDocument()
     expect(screen.getByRole('group', { name: /explanation language/i })).toBeVisible()
     expect(screen.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true')
@@ -48,7 +48,7 @@ describe('App shell', () => {
       .getAllByRole('link')
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
-    expect(lessonLinks).toHaveLength(10)
+    expect(lessonLinks).toHaveLength(12)
     expect(within(pinyinSeries).getByRole('link', { name: homeSeriesCopy.pinyin })).toHaveAttribute(
       'href',
       '/pinyin',
@@ -57,7 +57,7 @@ describe('App shell', () => {
       within(journeySeries).getByRole('link', {
         name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
       }),
-    ).toHaveAttribute('href', '/lesson/self-intro')
+    ).toHaveAttribute('href', '/lesson/daily-greetings')
     expect(journeySeries).not.toHaveTextContent(' / ')
   })
 
@@ -68,6 +68,6 @@ describe('App shell', () => {
     expect(screen.queryByRole('link', { name: /continue learning/i })).not.toBeInTheDocument()
     expect(screen.getByRole('link', {
       name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
-    })).toHaveAttribute('href', '/lesson/self-intro')
+    })).toHaveAttribute('href', '/lesson/daily-greetings')
   })
 })

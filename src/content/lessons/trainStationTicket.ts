@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const trainStationTicketLesson: LessonContent = {
   id: 'train-station-ticket',
   title: {
-    en: 'Buy a train station ticket',
-    fr: 'Acheter un billet en gare',
+    en: '坐火车 / Take the train',
+    fr: '坐火车 / Prendre le train',
   },
   scenario: {
     en: 'Buy a train ticket to Shanghai, choose a date and seat type, show your passport, understand the platform and departure time, and ask about delays.',

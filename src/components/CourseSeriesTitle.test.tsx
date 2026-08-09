@@ -7,8 +7,8 @@ import { CourseSeriesTitle } from './CourseSeriesTitle'
 const titles = [
   {
     id: 'english-course-series-title',
-    title: 'Basic Chinese expressions for a stress-free journey',
-    tokens: ['Basic', 'Chinese', 'expressions', 'for', 'a', 'stress-free', 'journey'],
+    title: 'Useful sentences, expressions and Hanzi recognition',
+    tokens: ['Useful', 'sentences,', 'expressions', 'and', 'Hanzi', 'recognition'],
   },
   {
     id: 'french-course-series-title',

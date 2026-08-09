@@ -9,11 +9,11 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
-  await page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i }).click()
-  await expect(page.getByText(/到达机场 \/ Arrival at the airport/i)).toHaveCount(0)
-  await expect(page.locator('.lesson-header-card .lesson-topic-title__primary')).toHaveText('到达机场')
+  await page.getByRole('link', { name: /打招呼\s+Daily greetings/i }).click()
+  await expect(page.getByText(/打招呼 \/ Daily greetings/i)).toHaveCount(0)
+  await expect(page.locator('.lesson-header-card .lesson-topic-title__primary')).toHaveText('打招呼')
   await expect(page.locator('.lesson-header-card .lesson-topic-title__secondary')).toHaveText(
-    'Arrival at the airport',
+    'Daily greetings',
   )
   await page.getByRole('link', { name: /go to practice/i }).click()
 
@@ -35,24 +35,24 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
 
   await page.getByRole('link', { name: /go to review/i }).click()
   await expect(page.getByText(/cards due today/i)).toBeVisible()
-  await expect(page.getByRole('region', { name: /flashcard front/i })).toContainText('护照')
+  await expect(page.getByRole('region', { name: /flashcard front/i })).toContainText('你好')
 
   await page.getByRole('button', { name: /mark complete/i }).click()
   await expect(page.getByText(/1 card finished/i)).toBeVisible()
 
   await page.getByRole('link', { name: /view progress/i }).click()
   const learningIndicators = page.getByRole('region', { name: /learning indicators/i })
-  await expect(learningIndicators).toContainText('1 of 10 lessons completed')
+  await expect(learningIndicators).toContainText('1 of 12 lessons completed')
   await expect(learningIndicators).toContainText(
     `${expectedReviewItemsWaiting} review items waiting`,
   )
 
   await page.getByRole('link', { name: /back to home/i }).click()
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
-  await page.getByRole('link', { name: /打车去酒店\s+Take a taxi to your hotel/i }).click()
+  await page.getByRole('link', { name: /打车\s+Take a taxi/i }).click()
   await expect(page).toHaveURL(/\/lesson\/ask-directions$/)
   await expect(
-    page.getByRole('heading', { name: /打车去酒店\s+Take a taxi to your hotel/i }),
+    page.getByRole('heading', { name: /打车\s+Take a taxi/i }),
   ).toBeVisible()
 })
 

@@ -5,9 +5,9 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
   await expect(page.getByRole('region', { name: /home hero/i })).toHaveClass(/home-hero--centered/)
-  await expect(page.getByText('Learn Mandarin in real life scenarios')).toBeVisible()
+  await expect(page.getByText('Basic Chinese expressions for a stress-free travel')).toBeVisible()
   await expect(
-    page.getByText('Apprenez le mandarin dans la vie quotidienne'),
+    page.getByText('Apprenez les dialogues essentiels pour voyager en Chine'),
   ).toHaveCount(0)
   await expect(page.getByRole('group', { name: /explanation language/i })).toBeVisible()
   await expect(page.getByRole('button', { name: 'English' })).toHaveAttribute(
@@ -27,15 +27,15 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /go to review/i })).toHaveCount(0)
   await expect(page.getByRole('link', { name: /view progress/i })).toHaveCount(0)
-  await expect(page.getByRole('link', { name: /到达机场\s+Arrival at the airport/i })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /打招呼\s+Daily greetings/i })).toHaveAttribute(
     'href',
-    '/lesson/self-intro',
+    '/lesson/daily-greetings',
   )
-  await expect(page.getByText(/到达机场 \/ Arrival at the airport/i)).toHaveCount(0)
+  await expect(page.getByText(/打招呼 \/ Daily greetings/i)).toHaveCount(0)
   await page.getByRole('button', { name: 'Français' }).click()
-  await expect(page.getByText('Learn Mandarin in real life scenarios')).toHaveCount(0)
+  await expect(page.getByText('Basic Chinese expressions for a stress-free travel')).toHaveCount(0)
   await expect(
-    page.getByText('Apprenez le mandarin dans la vie quotidienne'),
+    page.getByText('Apprenez les dialogues essentiels pour voyager en Chine'),
   ).toBeVisible()
 
   await page.goto('/home')

@@ -3,8 +3,8 @@ import type { LessonContent } from '../types.js'
 export const restaurantOrderLesson: LessonContent = {
   id: 'restaurant-order',
   title: {
-    en: 'Order a simple meal',
-    fr: 'Commander un repas simple',
+    en: '点餐 / Order a meal',
+    fr: '点餐 / Commander un repas',
   },
   scenario: {
     en: 'Ask for a menu, order beef noodles without spice, request water and chopsticks, choose a drink, confirm portion size, ask the total, and ask for takeaway.',
