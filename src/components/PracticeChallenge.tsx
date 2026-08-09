@@ -11,7 +11,6 @@ import {
 } from '../lib/practiceChallenge'
 import { playPracticeSound } from '../lib/practiceSound'
 import { ExplanationBlock } from './ExplanationBlock'
-import { RecordingButton } from './RecordingButton'
 import { SpeechButton } from './SpeechButton'
 
 export interface PracticeChallengeCopy {
@@ -26,12 +25,6 @@ export interface PracticeChallengeCopy {
   incorrectFeedback: string
   correctAnswer: (answer: string) => string
   nextQuestion: string
-  recordStart: string
-  recordStop: string
-  recordReplay: string
-  recordUnsupported: string
-  recordDenied: string
-  recordError: string
   resultHeading: string
   finalScore: (score: number) => string
   ratingLabel: string
@@ -268,18 +261,9 @@ export function PracticeChallenge({
             </p>          ) : null}
           <SpeechButton
             label={copy.playPromptAudio(questionNumber)}
-            text={currentQuestion.target}
+            text={currentQuestion.speechText ?? currentQuestion.target}
             audioSrc={currentQuestion.audio}
             fallbackAudioSrc={currentQuestion.audioFallback}
-          />
-          <RecordingButton
-            label={copy.recordStart}
-            recordLabel={copy.recordStart}
-            stopLabel={copy.recordStop}
-            replayLabel={copy.recordReplay}
-            unsupportedLabel={copy.recordUnsupported}
-            deniedLabel={copy.recordDenied}
-            errorLabel={copy.recordError}
           />
         </div>
 

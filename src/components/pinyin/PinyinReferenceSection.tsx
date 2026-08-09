@@ -30,26 +30,37 @@ export function PinyinReferenceSection({
               {group.items.map((item) => (
                 <article key={item.id} className="study-item pinyin-reference-card">
                   <div className="pinyin-reference-card__main">
-                    {item.hanzi ? (
-                      <span className="pinyin-reference-card__hanzi" aria-hidden="true">
-                        {item.hanzi}
-                      </span>
-                    ) : null}
-                    {item.emoji ? (
-                      <span className="pinyin-reference-card__emoji" aria-hidden="true">
-                        {item.emoji}
-                      </span>
-                    ) : null}
-                    <div>
-                      <p className="pinyin-reference-card__label">
-                        {getLocalizedText(item.label, language)}
+                    <div className="pinyin-reference-card__target">
+                      <p className="pinyin-reference-card__phoneme">
+                        {item.tone !== undefined ? item.pinyin : getLocalizedText(item.label, language)}
                       </p>
-                      <p className="pinyin-line">{item.pinyin}</p>
+                    </div>
+                    <div className="pinyin-reference-card__example">
+                      {item.hanzi ? (
+                        <span className="pinyin-reference-card__hanzi" aria-hidden="true">
+                          {item.hanzi}
+                        </span>
+                      ) : null}
+                      {item.emoji ? (
+                        <span className="pinyin-reference-card__emoji" aria-hidden="true">
+                          {item.emoji}
+                        </span>
+                      ) : null}
                       {item.tone !== undefined ? (
-                        <TonePitchVisual
-                          tone={item.tone}
-                          label={getLocalizedText(item.label, language)}
-                        />
+                        <>
+                          <p className="pinyin-reference-card__example-label">
+                            {getLocalizedText(item.label, language)}
+                          </p>
+                          <TonePitchVisual
+                            tone={item.tone}
+                            label={getLocalizedText(item.label, language)}
+                          />
+                        </>
+                      ) : null}
+                      {item.tone === undefined ? (
+                        <p className="pinyin-reference-card__example-pinyin">
+                          {item.pinyin}
+                        </p>
                       ) : null}
                     </div>
                   </div>

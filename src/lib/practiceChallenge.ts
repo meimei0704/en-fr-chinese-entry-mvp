@@ -25,6 +25,8 @@ export interface PracticeChallengeQuestion {
   correctOptionId: string
   audio?: string
   audioFallback?: string
+  /** Text the pronunciation button should speak when it differs from `target` (e.g. a hanzi vs an English meaning). */
+  speechText?: string
   options: PracticeChallengeOption[]
   explanation: BilingualExplanation
 }
@@ -143,6 +145,36 @@ function hanziToPinyinMap(lesson: LessonContent): Map<string, string> {
   return map
 }
 
+function hanziToAudioMap(lesson: LessonContent): Map<string, string> {
+  const map = new Map<string, string>()
+  const add = (hanzi: string, audio: string) => {
+    if (hanzi && !map.has(hanzi)) {
+      map.set(hanzi, audio)
+    }
+  }
+
+  for (const line of lesson.dialogue.lines) {
+    add(line.hanzi, line.audio)
+    if (line.audioFallback) {
+      add(line.hanzi, line.audioFallback)
+    }
+  }
+  for (const item of lesson.vocabulary) {
+    add(item.hanzi, item.audio)
+    if (item.audioFallback) {
+      add(item.hanzi, item.audioFallback)
+    }
+  }
+  for (const item of [...lesson.practice.listening, ...lesson.practice.speaking, ...lesson.practice.reading]) {
+    add(item.target, item.audio)
+    if (item.audioFallback) {
+      add(item.target, item.audioFallback)
+    }
+  }
+
+  return map
+}
+
 function looksLikeHanzi(value: string) {
   return /[\u3400-\u9fff]/.test(value)
 }
@@ -222,8 +254,10 @@ function readQuestionFromPair(
   meaningCandidatesPool: string[],
   rng: () => number,
   kind: PracticeChallengeKind = 'read',
+  audioMap?: ReadonlyMap<string, string>,
 ): PracticeChallengeQuestion {
   const meaning = getLocalizedText(pair.meaning, language)
+  const hanziAudio = audioMap?.get(pair.hanzi)
 
   if (direction === 'hanzi-to-meaning') {
     const options = buildChoiceOptions(
@@ -237,6 +271,8 @@ function readQuestionFromPair(
       kind,
       prompt: { en: `What does ${pair.hanzi} mean?`, fr: `Que signifie ${pair.hanzi} ?` },
       target: meaning,
+      speechText: pair.hanzi,
+      audio: hanziAudio,
       correctOptionId: options.find((option) => option.label === meaning)?.id ?? options[0].id,
       options,
       explanation: pair.explanation,
@@ -254,6 +290,8 @@ function readQuestionFromPair(
     kind,
     prompt: { en: `Which hanzi means “${meaning}”?`, fr: `Quel hanzi signifie « ${meaning} » ?` },
     target: pair.hanzi,
+    speechText: pair.hanzi,
+    audio: hanziAudio,
     correctOptionId: options.find((option) => option.label === pair.hanzi)?.id ?? options[0].id,
     options,
     explanation: pair.explanation,
@@ -287,6 +325,7 @@ function reviewQuestionFromCard(
   hanziCandidatesPool: string[],
   meaningCandidatesPool: string[],
   rng: () => number,
+  audioMap?: ReadonlyMap<string, string>,
 ): PracticeChallengeQuestion {
   return readQuestionFromPair(
     card,
@@ -296,6 +335,7 @@ function reviewQuestionFromCard(
     meaningCandidatesPool,
     rng,
     'review',
+    audioMap,
   )
 }
 
@@ -372,6 +412,8 @@ export function buildPinyinPracticeChallenge(
       kind: 'read',
       prompt: item.description,
       target: item.pinyin,
+      speechText: item.pinyin,
+      audio: item.audio,
       correctOptionId: options.find((option) => option.label === item.pinyin)?.id ?? options[0].id,
       options,
       explanation: asBilingualExplanation(item.description),
@@ -416,6 +458,7 @@ export function buildPracticeChallenge(
   const hanziPool = hanziCandidates(lesson)
   const meaningPool = meaningCandidates(lesson, language)
   const pinyinMap = hanziToPinyinMap(lesson)
+  const audioMap = hanziToAudioMap(lesson)
 
   const pairs: StructuredPair[] = lesson.vocabulary.map((item) => ({
     id: item.id,
@@ -435,12 +478,12 @@ export function buildPracticeChallenge(
     listenQuestion(item, hanziPool, rng),
   )
   const readQuestions = pairs.map((pair) =>
-    readQuestionFromPair(pair, 'hanzi-to-meaning', language, hanziPool, meaningPool, rng),
+    readQuestionFromPair(pair, 'hanzi-to-meaning', language, hanziPool, meaningPool, rng, 'read', audioMap),
   )
   const speakQuestions = lesson.practice.speaking.map((item) => speakQuestion(item))
   const reviewQuestions = reviewPairs.flatMap((card, index) => {
     const direction: 'front-to-back' | 'back-to-front' = index % 2 === 0 ? 'front-to-back' : 'back-to-front'
-    return [reviewQuestionFromCard(card, direction, language, hanziPool, meaningPool, rng)]
+    return [reviewQuestionFromCard(card, direction, language, hanziPool, meaningPool, rng, audioMap)]
   })
 
   const groups: Record<PracticeChallengeKind, PracticeChallengeQuestion[]> = {

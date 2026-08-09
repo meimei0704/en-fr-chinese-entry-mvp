@@ -68,7 +68,7 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
   await expect(page).toHaveURL(/\/pinyin$/)
   await expect(page.getByRole('heading', { name: 'Pinyin（零基础第一课）' })).toBeVisible()
 
-  await page.getByRole('button', { name: 'Play bo' }).click()
+  await page.getByRole('button', { name: 'Play bā' }).click()
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -112,7 +112,7 @@ test('renders four module tabs and switches between modules preserving progress'
   await expect(tabs.first()).toHaveAttribute('aria-selected', 'true')
   await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'false')
 
-  await page.getByRole('button', { name: 'Play bo' }).click()
+  await page.getByRole('button', { name: 'Play bā' }).click()
 
   await tabs.nth(2).click()
   await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true')
