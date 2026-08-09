@@ -17,12 +17,12 @@ import (
 	"strings"
 
 	contentapi "en-fr-chinese-entry-mvp/api/content"
-	"en-fr-chinese-entry-mvp/internal/adminhttp"
-	"en-fr-chinese-entry-mvp/internal/adminrepo"
-	"en-fr-chinese-entry-mvp/internal/auth"
-	"en-fr-chinese-entry-mvp/internal/contentstore"
-	"en-fr-chinese-entry-mvp/internal/httpx"
-	"en-fr-chinese-entry-mvp/internal/seedgen"
+	"en-fr-chinese-entry-mvp/pkg/adminhttp"
+	"en-fr-chinese-entry-mvp/pkg/adminrepo"
+	"en-fr-chinese-entry-mvp/pkg/auth"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/httpx"
+	"en-fr-chinese-entry-mvp/pkg/seedgen"
 )
 
 // inMemoryStore implements the public content store from the committed seed
@@ -193,7 +193,7 @@ func loadSnapshot(path string) (*seedgen.CourseSnapshot, error) {
 
 func main() {
 	port := flag.String("port", "8790", "listen port")
-	courseJSON := flag.String("course-json", "internal/seedgen/data/course.json", "path to course snapshot JSON")
+	courseJSON := flag.String("course-json", "pkg/seedgen/data/course.json", "path to course snapshot JSON")
 	adminUser := flag.String("admin-user", "admin", "admin basic auth username")
 	adminPass := flag.String("admin-pass", "secret", "admin basic auth password")
 	flag.Parse()

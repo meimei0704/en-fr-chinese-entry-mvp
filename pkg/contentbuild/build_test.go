@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 func fixtureRows() []contentstore.PublishedModuleRow {

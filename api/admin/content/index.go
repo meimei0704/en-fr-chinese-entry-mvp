@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"en-fr-chinese-entry-mvp/internal/adminhttp"
-	"en-fr-chinese-entry-mvp/internal/adminrepo"
-	"en-fr-chinese-entry-mvp/internal/contentenv"
-	"en-fr-chinese-entry-mvp/internal/httpx"
+	"en-fr-chinese-entry-mvp/pkg/adminhttp"
+	"en-fr-chinese-entry-mvp/pkg/adminrepo"
+	"en-fr-chinese-entry-mvp/pkg/contentenv"
+	"en-fr-chinese-entry-mvp/pkg/httpx"
 )
 
 // Handler is the single-entry Vercel Function for the admin content API. It

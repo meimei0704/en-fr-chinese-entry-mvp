@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 var lessonMetaPayload = []byte(`{"id":"self-intro","title":{"en":"Intro","fr":"Intro"},"scenario":{"en":"Scenario","fr":"Scénario"}}`)

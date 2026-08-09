@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"sort"
 
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 const estimatedDailyMinutes = 10

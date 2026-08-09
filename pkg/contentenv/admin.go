@@ -4,8 +4,8 @@ import (
 	"os"
 	"sync"
 
-	"en-fr-chinese-entry-mvp/internal/auth"
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/auth"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 var (

@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"strings"
 
-	"en-fr-chinese-entry-mvp/internal/contentbuild"
-	"en-fr-chinese-entry-mvp/internal/contentenv"
-	"en-fr-chinese-entry-mvp/internal/contentstore"
-	"en-fr-chinese-entry-mvp/internal/httpx"
-	"en-fr-chinese-entry-mvp/internal/pinyincontent"
+	"en-fr-chinese-entry-mvp/pkg/contentbuild"
+	"en-fr-chinese-entry-mvp/pkg/contentenv"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/httpx"
+	"en-fr-chinese-entry-mvp/pkg/pinyincontent"
 )
 
 const publicCacheControl = "s-maxage=60, stale-while-revalidate=300"

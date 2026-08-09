@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 // TestPayloadByteFidelity asserts that module payloads pass through untouched:

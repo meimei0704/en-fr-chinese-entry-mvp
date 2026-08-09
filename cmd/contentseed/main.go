@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"en-fr-chinese-entry-mvp/internal/seedgen"
+	"en-fr-chinese-entry-mvp/pkg/seedgen"
 )
 
 func main() {
-	path := "internal/seedgen/data/course.json"
+	path := "pkg/seedgen/data/course.json"
 	if len(os.Args) > 1 {
 		path = os.Args[1]
 	}

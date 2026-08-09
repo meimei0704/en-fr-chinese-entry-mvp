@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 type fakeStore struct {

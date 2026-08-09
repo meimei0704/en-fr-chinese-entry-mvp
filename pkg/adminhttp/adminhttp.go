@@ -14,10 +14,10 @@ import (
 	"strings"
 	"time"
 
-	"en-fr-chinese-entry-mvp/internal/adminrepo"
-	"en-fr-chinese-entry-mvp/internal/auth"
-	"en-fr-chinese-entry-mvp/internal/contentstore"
-	"en-fr-chinese-entry-mvp/internal/httpx"
+	"en-fr-chinese-entry-mvp/pkg/adminrepo"
+	"en-fr-chinese-entry-mvp/pkg/auth"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/httpx"
 )
 
 // Repository is the subset of adminrepo.Repository needed by the admin HTTP

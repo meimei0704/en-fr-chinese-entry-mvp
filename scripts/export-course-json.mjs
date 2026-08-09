@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const outPath = resolve(root, 'internal/seedgen/data/course.json')
+const outPath = resolve(root, 'pkg/seedgen/data/course.json')
 
 const server = await createServer({
   root,

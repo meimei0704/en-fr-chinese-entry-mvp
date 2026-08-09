@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"sort"
 
-	"en-fr-chinese-entry-mvp/internal/contentbuild"
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentbuild"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 var ErrNoUnpublishedChanges = errors.New("no unpublished changes")

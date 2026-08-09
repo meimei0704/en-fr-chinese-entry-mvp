@@ -4,7 +4,7 @@ import (
 	"os"
 	"sync"
 
-	"en-fr-chinese-entry-mvp/internal/contentstore"
+	"en-fr-chinese-entry-mvp/pkg/contentstore"
 )
 
 // Store is the subset of contentstore.Store needed by content API handlers,
