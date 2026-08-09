@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const outPath = resolve(root, 'internal/pinyincontent/data/pinyin_course.json')
+const outPath = resolve(root, 'pkg/pinyincontent/data/pinyin_course.json')
 
 const server = await createServer({
   root,
