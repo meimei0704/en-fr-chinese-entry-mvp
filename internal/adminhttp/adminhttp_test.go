@@ -405,4 +405,3 @@ func TestIsTransientMysqlConnectTimeoutVariants(t *testing.T) {
 		t.Fatal("unrelated error should not be transient")
 	}
 }
-
