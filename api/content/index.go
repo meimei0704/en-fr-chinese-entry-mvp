@@ -8,6 +8,7 @@ import (
 	"en-fr-chinese-entry-mvp/internal/contentenv"
 	"en-fr-chinese-entry-mvp/internal/contentstore"
 	"en-fr-chinese-entry-mvp/internal/httpx"
+	"en-fr-chinese-entry-mvp/internal/pinyincontent"
 )
 
 const publicCacheControl = "s-maxage=60, stale-while-revalidate=300"
@@ -25,6 +26,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		NewCourseHandler(contentenv.Store()).ServeHTTP(w, r)
 	case "/api/content/lessons":
 		NewLessonHandler(contentenv.Store()).ServeHTTP(w, r)
+	case "/api/content/pinyin/course":
+		NewPinyinCourseHandler().ServeHTTP(w, r)
 	default:
 		_ = httpx.WriteError(w, http.StatusNotFound, "Not found")
 	}
@@ -89,5 +92,24 @@ func NewLessonHandler(store PublishedStore) http.Handler {
 		}
 		httpx.SetCacheControl(w, publicCacheControl)
 		_ = httpx.WriteJSON(w, http.StatusOK, lesson)
+	})
+}
+
+// NewPinyinCourseHandler serves the pinyin course from the embedded static
+// JSON (no DB dependency).
+func NewPinyinCourseHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !requireGet(w, r) {
+			return
+		}
+		raw, err := pinyincontent.PinyinCourseJSON()
+		if err != nil {
+			_ = httpx.WriteError(w, http.StatusInternalServerError, "Unable to read pinyin course")
+			return
+		}
+		httpx.SetCacheControl(w, publicCacheControl)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(raw)
 	})
 }

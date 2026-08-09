@@ -185,3 +185,51 @@ func TestMuxRoutes(t *testing.T) {
 		t.Fatalf("body = %q, want Not found", rec.Body.String())
 	}
 }
+
+func TestPinyinCourseHandlerOK(t *testing.T) {
+	rec := doRequest(NewPinyinCourseHandler(), http.MethodGet, "/api/content/pinyin/course")
+	if rec.Code != http.StatusOK {
+		t.Fatalf("code = %d, want 200", rec.Code)
+	}
+	if got := rec.Header().Get("Cache-Control"); got != publicCacheControl {
+		t.Fatalf("cache-control = %q", got)
+	}
+	if got := rec.Header().Get("Content-Type"); got != "application/json" {
+		t.Fatalf("content-type = %q", got)
+	}
+	var body struct {
+		Modules []struct {
+			ID string `json:"id"`
+		} `json:"modules"`
+	}
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if len(body.Modules) != 4 {
+		t.Fatalf("modules = %d, want 4", len(body.Modules))
+	}
+}
+
+func TestPinyinCourseHandlerMethodNotAllowed(t *testing.T) {
+	rec := doRequest(NewPinyinCourseHandler(), http.MethodPost, "/api/content/pinyin/course")
+	if rec.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("code = %d, want 405", rec.Code)
+	}
+	if got := rec.Header().Get("Allow"); got != "GET" {
+		t.Fatalf("allow = %q, want GET", got)
+	}
+}
+
+func TestMuxPinyinRoute(t *testing.T) {
+	mux := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		Handler(w, r)
+	})
+	rec := doRequest(mux, http.MethodGet, "/api/content/pinyin/course")
+	if rec.Code != http.StatusOK {
+		t.Fatalf("mux pinyin code = %d, want 200 (route matched)", rec.Code)
+	}
+	rec = doRequest(mux, http.MethodGet, "/api/content/pinyin/course/")
+	if rec.Code != http.StatusOK {
+		t.Fatalf("mux pinyin trailing slash code = %d, want 200", rec.Code)
+	}
+}
