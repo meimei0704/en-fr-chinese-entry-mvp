@@ -1,6 +1,7 @@
 package contentbuild
 
 import (
+	"bytes"
 	"encoding/json"
 	"sort"
 
@@ -15,19 +16,30 @@ var contentModuleTypes = []string{
 
 var supportedExplanationLanguages = []string{"en", "fr"}
 
-func isRecord(value any) bool {
-	switch value.(type) {
-	case map[string]any, map[string]string:
-		return true
-	default:
-		return false
-	}
+// isJSONObject reports whether raw decodes to a JSON object (not array/null).
+func isJSONObject(raw json.RawMessage) bool {
+	trimmed := bytes.TrimSpace(raw)
+	return len(trimmed) > 0 && trimmed[0] == '{'
 }
 
-// BuildLessonFromRows assembles a LessonContent-like map. It returns nil when
-// any of the six modules is missing or the lessonMeta payload is invalid
-// (mirrors publicContent.ts).
-func BuildLessonFromRows(rows []contentstore.PublishedModuleRow) (map[string]any, bool) {
+// LessonContent mirrors the TS LessonContent field order exactly so the
+// assembled JSON matches the TS output key-for-key. Module payloads stay as
+// json.RawMessage and marshal back to their ORIGINAL bytes.
+type LessonContent struct {
+	ID               string          `json:"id"`
+	Title            json.RawMessage `json:"title"`
+	Scenario         json.RawMessage `json:"scenario"`
+	Dialogue         json.RawMessage `json:"dialogue"`
+	SentencePatterns json.RawMessage `json:"sentencePatterns"`
+	Vocabulary       json.RawMessage `json:"vocabulary"`
+	Practice         json.RawMessage `json:"practice"`
+	ReviewCards      json.RawMessage `json:"reviewCards"`
+}
+
+// BuildLessonFromRows assembles a LessonContent. It returns nil when any of
+// the six modules is missing or the lessonMeta payload is invalid (mirrors
+// publicContent.ts).
+func BuildLessonFromRows(rows []contentstore.PublishedModuleRow) (*LessonContent, bool) {
 	byModule := make(map[string]contentstore.PublishedModuleRow, len(rows))
 	for _, row := range rows {
 		byModule[row.ModuleType] = row
@@ -39,26 +51,27 @@ func BuildLessonFromRows(rows []contentstore.PublishedModuleRow) (map[string]any
 	}
 
 	meta := byModule["lessonMeta"].Payload
-	var metaObj map[string]any
+	var metaObj struct {
+		ID       string          `json:"id"`
+		Title    json.RawMessage `json:"title"`
+		Scenario json.RawMessage `json:"scenario"`
+	}
 	if err := json.Unmarshal(meta, &metaObj); err != nil {
 		return nil, false
 	}
-	id, idOK := metaObj["id"].(string)
-	title, titleOK := metaObj["title"]
-	scenario, scenarioOK := metaObj["scenario"]
-	if !idOK || !titleOK || !scenarioOK || !isRecord(title) || !isRecord(scenario) {
+	if metaObj.ID == "" || !isJSONObject(metaObj.Title) || !isJSONObject(metaObj.Scenario) {
 		return nil, false
 	}
 
-	return map[string]any{
-		"id":               id,
-		"title":            title,
-		"scenario":         scenario,
-		"dialogue":         json.RawMessage(byModule["dialogue"].Payload),
-		"sentencePatterns": json.RawMessage(byModule["sentencePatterns"].Payload),
-		"vocabulary":       json.RawMessage(byModule["vocabulary"].Payload),
-		"practice":         json.RawMessage(byModule["practice"].Payload),
-		"reviewCards":      json.RawMessage(byModule["reviewCards"].Payload),
+	return &LessonContent{
+		ID:               metaObj.ID,
+		Title:            metaObj.Title,
+		Scenario:         metaObj.Scenario,
+		Dialogue:         json.RawMessage(byModule["dialogue"].Payload),
+		SentencePatterns: json.RawMessage(byModule["sentencePatterns"].Payload),
+		Vocabulary:       json.RawMessage(byModule["vocabulary"].Payload),
+		Practice:         json.RawMessage(byModule["practice"].Payload),
+		ReviewCards:      json.RawMessage(byModule["reviewCards"].Payload),
 	}, true
 }
 

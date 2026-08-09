@@ -29,8 +29,8 @@ func TestBuildLessonComplete(t *testing.T) {
 	if !ok || lesson == nil {
 		t.Fatal("expected complete lesson")
 	}
-	if lesson["id"] != "self-intro" {
-		t.Fatalf("id = %v", lesson["id"])
+	if lesson.ID != "self-intro" {
+		t.Fatalf("id = %v", lesson.ID)
 	}
 }
 
@@ -81,8 +81,8 @@ func TestBuildCourseSortsByDisplayOrder(t *testing.T) {
 	if len(lessons) != 2 {
 		t.Fatalf("lessons = %d, want 2", len(lessons))
 	}
-	first := lessons[0].(map[string]any)
-	if first["id"] != "b" {
-		t.Fatalf("first lesson id = %v, want b (displayOrder 1)", first["id"])
+	first := lessons[0].(*LessonContent)
+	if first.ID != "b" {
+		t.Fatalf("first lesson id = %v, want b (displayOrder 1)", first.ID)
 	}
 }
