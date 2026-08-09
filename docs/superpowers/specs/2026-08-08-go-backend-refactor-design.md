@@ -242,3 +242,4 @@ pinyin 内容结构与主课程不同（`reference` / `toneGame` 模块，无 di
 4. **静态 `course.ts` 去留**：语音 manifest 依赖它，故保留；后续若语音下线可再评估删除。
 5. **`vercel.json` 新增 `/api/content/pinyin/course` rewrite**：无 path 参数则不需要；若走 `/api/content/pinyin/:courseId` 才需加 rewrite。
 6. **node 运维工具**（`runMysqlContentAdmin.ts`）：**已确认保留 Node 脚本**应用迁移/seed，不迁 Go。
+7. **~~DSN 格式~~ **已落地（M2 spike）**：线上 `MYSQL_DATABASE_URL` 为 `mysql://user:pass@host:port/db` URI scheme 形式；go-sql-driver 的 `sql.Open("mysql", dsn)` 不认 URI，`internal/contentstore.normalizeDSN` 将其解析并重拼为 `user:pass@tcp(host:port)/db?...` DSN，`MYSQL_SSL=required` 映射 `tls=true`，连接超时沿用 20s 默认/`MYSQL_CONNECT_TIMEOUT_MS` 覆盖。查询 URI 自带参数保留。
