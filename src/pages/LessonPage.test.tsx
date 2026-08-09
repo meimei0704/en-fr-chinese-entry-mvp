@@ -1,11 +1,14 @@
 import '@testing-library/jest-dom/vitest'
-import { screen, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
+import { appRoutes } from '../app/router'
 import { course } from '../content/course'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
+import { MockCourseProvider, MockPinyinCourseProvider } from '../test/mockContentProvider'
 import { renderRoute } from '../test/renderRoute'
 
 class MockUtterance {
@@ -317,5 +320,33 @@ describe('LessonPage', () => {
     expect(audioPlay).toHaveBeenCalledTimes(3)
     expect(cancel).toHaveBeenCalledTimes(3)
     expect(speak).not.toHaveBeenCalled()
+  })
+
+  it('fetches the lesson from the API when it is missing from the course context', async () => {
+    const lesson = course.lessons[0]
+    const courseWithoutLesson = { ...course, lessons: course.lessons.filter((l) => l.id !== lesson.id) }
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify(lesson), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/lesson/self-intro'] })
+
+    render(
+      <MockCourseProvider course={courseWithoutLesson}>
+        <MockPinyinCourseProvider course={null}>
+          <RouterProvider router={router} />
+        </MockPinyinCourseProvider>
+      </MockCourseProvider>,
+    )
+
+    expect(await screen.findByRole('link', { name: /go to practice/i })).toBeVisible()
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/content/lessons?lessonId=self-intro',
+      { credentials: 'same-origin' },
+    )
+    expect(screen.queryByText(/we couldn’t find that lesson/i)).not.toBeInTheDocument()
   })
 })

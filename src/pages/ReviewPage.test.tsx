@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { course } from '../content/course'
 import { completeLesson, createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { renderRoute } from '../test/renderRoute'
 
@@ -57,8 +58,8 @@ describe('ReviewPage', () => {
 
   it('shows review cards enqueued by the fourth and fifth formal lessons after progress reload', async () => {
     const user = userEvent.setup()
-    const afterPhonePayment = completeLesson('phone-and-payment', createDefaultProgress())
-    const afterStoreRun = completeLesson('convenience-store-run', afterPhonePayment)
+    const afterPhonePayment = completeLesson(course, 'phone-and-payment', createDefaultProgress())
+    const afterStoreRun = completeLesson(course, 'convenience-store-run', afterPhonePayment)
 
     saveProgress(afterStoreRun)
     renderRoute('/review')
@@ -90,8 +91,8 @@ describe('ReviewPage', () => {
 
   it('shows review cards enqueued by the new restaurant and train-station lessons', async () => {
     const user = userEvent.setup()
-    const afterRestaurant = completeLesson('restaurant-order', createDefaultProgress())
-    const afterTrainStation = completeLesson('train-station-ticket', afterRestaurant)
+    const afterRestaurant = completeLesson(course, 'restaurant-order', createDefaultProgress())
+    const afterTrainStation = completeLesson(course, 'train-station-ticket', afterRestaurant)
 
     saveProgress(afterTrainStation)
     renderRoute('/review')
