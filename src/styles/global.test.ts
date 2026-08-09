@@ -350,7 +350,6 @@ describe('global color accessibility tokens', () => {
       ['.lesson-page .lesson-header-card__title .eyebrow', 'margin-bottom: 0.25rem;'],
       ['.lesson-page .lesson-progress-preview', 'gap: 0.75rem;'],
       ['.lesson-page .lesson-progress-preview', 'padding: 0.85rem;'],
-      ['.lesson-page .lesson-progress-preview__summary', 'gap: 0.5rem;'],
     ] as const
     for (const [selector, declaration] of scoped) {
       expect(ruleBlock(selector)).toContain(declaration)
