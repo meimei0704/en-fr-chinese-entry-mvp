@@ -5,11 +5,14 @@ function staticContentApiMock(): Plugin {
   return {
     name: 'static-content-api-mock',
     configureServer(server) {
+      const coursePromise = import('./src/content/course.js')
+      const pinyinCoursePromise = import('./src/content/pinyin/course.js')
+
       server.middlewares.use((request, response, next) => {
         const url = new URL(request.url ?? '/', 'http://localhost')
 
         if (url.pathname === '/api/content/course') {
-          void import('./src/content/course.js').then(({ course }) => {
+          void coursePromise.then(({ course }) => {
             response.setHeader('Content-Type', 'application/json')
             response.end(JSON.stringify(course))
           })
@@ -18,7 +21,7 @@ function staticContentApiMock(): Plugin {
 
         if (url.pathname === '/api/content/lessons') {
           const lessonId = url.searchParams.get('lessonId')
-          void import('./src/content/course.js').then(({ course }) => {
+          void coursePromise.then(({ course }) => {
             const lesson = course.lessons.find((entry) => entry.id === lessonId)
             if (!lesson) {
               response.statusCode = 404
@@ -33,7 +36,7 @@ function staticContentApiMock(): Plugin {
         }
 
         if (url.pathname === '/api/content/pinyin/course') {
-          void import('./src/content/pinyin/course.js').then(({ pinyinCourse }) => {
+          void pinyinCoursePromise.then(({ pinyinCourse }) => {
             response.setHeader('Content-Type', 'application/json')
             response.end(JSON.stringify(pinyinCourse))
           })
