@@ -20,12 +20,20 @@ export function PinyinWholeSyllablesSection({
       <div className="pinyin-whole-syllables__grid">
         {items.map((item) => (
           <article key={item.id} className="study-item pinyin-reference-card pinyin-whole-syllable-card">
-            <div className="pinyin-whole-syllable-card__main">
-              <span className="pinyin-whole-syllable-card__emoji" aria-hidden="true">
-                {item.emoji}
-              </span>
-              <p className="pinyin-whole-syllable-card__hanzi">{item.hanzi}</p>
-              <p className="pinyin-line">{item.pinyin}</p>
+            <div className="pinyin-reference-card__main">
+              <div className="pinyin-reference-card__target">
+                <p className="pinyin-reference-card__phoneme pinyin-whole-syllable-card__phoneme">
+                  {item.pinyin}
+                </p>
+              </div>
+              <div className="pinyin-reference-card__example">
+                <span className="pinyin-reference-card__hanzi" aria-hidden="true">
+                  {item.hanzi}
+                </span>
+                <span className="pinyin-reference-card__emoji" aria-hidden="true">
+                  {item.emoji}
+                </span>
+              </div>
             </div>
             <SpeechButton
               label={playAudioLabel(item.pinyin)}

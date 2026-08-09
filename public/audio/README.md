@@ -16,5 +16,6 @@ Pinyin course (`public/audio/pinyin/`):
 - Covers all 73 referenced paths across `src/content/pinyin/lesson1.ts`, `lesson2.ts`, and `lesson3.ts`.
 - Orphaned files (old `shadow-*` and legacy `tone-game-*` assets no longer referenced by course content) were removed.
 - On 2026-08-09, the 16 whole-recognition syllables (整体认读音节) were added under `whole-syllables/`: each MP3 is synthesized from its example hanzi (zhi→知, chi→吃, shi→十, ri→日, zi→子, ci→词, si→四, yi→一, wu→五, yu→鱼, ye→夜, yue→月, yuan→圆, yin→音, yun→云, ying→英) with the same `zh-CN-XiaoxiaoNeural` voice and `-8%` rate.
+- On 2026-08-09, the reference cards switched to common concrete-noun examples (f→饭 fàn, d→蛋 dàn, n→牛 niú, etc.) with complete tone-marked pinyin. The 27 affected `reference-*.mp3` files were regenerated from their new hanzi; the remaining files were unchanged. Paths and naming are unchanged.
 
 If these assets are regenerated, keep the existing content paths unless a coordinated content/test update changes the naming convention.
