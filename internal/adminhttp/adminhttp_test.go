@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"io"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -11,6 +12,7 @@ import (
 
 	"en-fr-chinese-entry-mvp/internal/adminrepo"
 	"en-fr-chinese-entry-mvp/internal/auth"
+	"en-fr-chinese-entry-mvp/internal/contentstore"
 )
 
 type fakeRepo struct {
@@ -312,3 +314,95 @@ func TestSanitizeDiagnosticText(t *testing.T) {
 		t.Fatalf("sanitized = %s, want [redacted]", sanitized)
 	}
 }
+
+func TestPublishRollbackMethodGuards(t *testing.T) {
+	handler := newTestHandler(&fakeRepo{}, adminAuthEnv)
+
+	pub := doRequest(t, handler, http.MethodGet, "/api/admin/content/publish", map[string]string{"Authorization": basicAuth}, "")
+	if pub.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("publish GET = %d, want 405", pub.Code)
+	}
+	if allow := pub.Header().Get("Allow"); allow != "POST" {
+		t.Fatalf("publish Allow = %q, want POST", allow)
+	}
+
+	rb := doRequest(t, handler, http.MethodGet, "/api/admin/content/rollback", map[string]string{"Authorization": basicAuth}, "")
+	if rb.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("rollback GET = %d, want 405", rb.Code)
+	}
+	if allow := rb.Header().Get("Allow"); allow != "POST" {
+		t.Fatalf("rollback Allow = %q, want POST", allow)
+	}
+}
+
+func TestPublishRollbackValidation(t *testing.T) {
+	handler := newTestHandler(&fakeRepo{}, adminAuthEnv)
+
+	pubMissingLesson := doRequest(t, handler, http.MethodPost, "/api/admin/content/publish", map[string]string{"Authorization": basicAuth}, `{"moduleType":"lessonMeta"}`)
+	if pubMissingLesson.Code != http.StatusBadRequest {
+		t.Fatalf("publish missing lessonId = %d, want 400", pubMissingLesson.Code)
+	}
+	if !strings.Contains(pubMissingLesson.Body.String(), "Missing lessonId") {
+		t.Fatalf("body = %s", pubMissingLesson.Body.String())
+	}
+
+	pubMissingModule := doRequest(t, handler, http.MethodPost, "/api/admin/content/publish", map[string]string{"Authorization": basicAuth}, `{"lessonId":"self-intro"}`)
+	if pubMissingModule.Code != http.StatusBadRequest {
+		t.Fatalf("publish missing moduleType = %d, want 400", pubMissingModule.Code)
+	}
+	if !strings.Contains(pubMissingModule.Body.String(), "Missing moduleType") {
+		t.Fatalf("body = %s", pubMissingModule.Body.String())
+	}
+
+	rbMissingRevision := doRequest(t, handler, http.MethodPost, "/api/admin/content/rollback", map[string]string{"Authorization": basicAuth}, `{"lessonId":"self-intro","moduleType":"lessonMeta"}`)
+	if rbMissingRevision.Code != http.StatusBadRequest {
+		t.Fatalf("rollback missing publishedRevisionId = %d, want 400", rbMissingRevision.Code)
+	}
+	if !strings.Contains(rbMissingRevision.Body.String(), "Missing publishedRevisionId") {
+		t.Fatalf("body = %s", rbMissingRevision.Body.String())
+	}
+
+	rbInvalidRevision := doRequest(t, handler, http.MethodPost, "/api/admin/content/rollback", map[string]string{"Authorization": basicAuth}, `{"lessonId":"self-intro","moduleType":"lessonMeta","publishedRevisionId":"abc"}`)
+	if rbInvalidRevision.Code != http.StatusBadRequest {
+		t.Fatalf("rollback invalid publishedRevisionId = %d, want 400", rbInvalidRevision.Code)
+	}
+
+	rbBlankRevision := doRequest(t, handler, http.MethodPost, "/api/admin/content/rollback", map[string]string{"Authorization": basicAuth}, `{"lessonId":"self-intro","moduleType":"lessonMeta","publishedRevisionId":12.5}`)
+	if rbBlankRevision.Code != http.StatusBadRequest {
+		t.Fatalf("rollback fractional publishedRevisionId = %d, want 400", rbBlankRevision.Code)
+	}
+}
+
+func TestDraftRepoDatabaseUnavailable(t *testing.T) {
+	repo := &fakeRepo{
+		saveDraftModule: func(ctx context.Context, input adminrepo.SaveDraftModuleInput) (*adminrepo.AdminLessonSnapshot, error) {
+			return nil, contentstore.ErrMissingDatabaseURL
+		},
+	}
+	handler := newTestHandler(repo, adminAuthEnv)
+
+	rec := doRequest(t, handler, http.MethodPut, "/api/admin/content/draft", map[string]string{"Authorization": basicAuth}, `{"lessonId":"self-intro","moduleType":"lessonMeta","payload":{"id":"self-intro"}}`)
+	if rec.Code != http.StatusServiceUnavailable {
+		t.Fatalf("status = %d, want 503", rec.Code)
+	}
+	if !strings.Contains(rec.Body.String(), "Content admin database is not configured") {
+		t.Fatalf("body = %s", rec.Body.String())
+	}
+}
+
+func TestIsTransientMysqlConnectTimeoutVariants(t *testing.T) {
+	if !isTransientMysqlConnectTimeout(&adminConnError{code: "ETIMEDOUT", syscall: "connect"}) {
+		t.Fatal("adminConnError with ETIMEDOUT/connect should be transient")
+	}
+	if !isTransientMysqlConnectTimeout(&adminConnError{message: "dial tcp: connect ETIMEDOUT"}) {
+		t.Fatal("adminConnError message fallback should be transient")
+	}
+	netErr := &net.OpError{Op: "dial", Err: errors.New("dial tcp: connect ETIMEDOUT")}
+	if !isTransientMysqlConnectTimeout(netErr) {
+		t.Fatal("net.OpError should be treated as transient")
+	}
+	if isTransientMysqlConnectTimeout(errors.New("unexpected boom")) {
+		t.Fatal("unrelated error should not be transient")
+	}
+}
+

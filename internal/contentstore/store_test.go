@@ -160,3 +160,45 @@ func TestNormalizeDSNAppliesConnectTimeout(t *testing.T) {
 		t.Fatalf("dsn = %q, want timeout=5s", got)
 	}
 }
+
+func TestEnvFromMap(t *testing.T) {
+	env := EnvFromMap(map[string]string{
+		"MYSQL_DATABASE_URL":       "mysql://a/content",
+		"MYSQL_URL":                "mysql://b/content",
+		"DATABASE_URL":             "mysql://c/content",
+		"MYSQL_SSL":                "required",
+		"MYSQL_CONNECT_TIMEOUT_MS": "3000",
+	})
+	if env.MYSQLDatabaseURL != "mysql://a/content" || env.MYSQLURL != "mysql://b/content" || env.DatabaseURL != "mysql://c/content" {
+		t.Fatalf("EnvFromMap url fields = %+v", env)
+	}
+	if env.MYSQLSSL != "required" || env.MYSQLConnectTimeoutMS != "3000" {
+		t.Fatalf("EnvFromMap ssl/timeout = %+v", env)
+	}
+}
+
+func TestOpenMissingDatabaseURL(t *testing.T) {
+	if _, err := Open(Env{}); err != ErrMissingDatabaseURL {
+		t.Fatalf("Open(empty) err = %v, want ErrMissingDatabaseURL", err)
+	}
+}
+
+func TestOpenInvalidURI(t *testing.T) {
+	if _, err := Open(Env{MYSQLDatabaseURL: "://bad%url"}); err == nil {
+		t.Fatal("Open(invalid uri) should error")
+	}
+}
+
+func TestOpenInvalidPlainDSN(t *testing.T) {
+	if _, err := Open(Env{MYSQLDatabaseURL: "no-dsn-here"}); err == nil {
+		t.Fatal("Open(invalid dsn) should error")
+	}
+}
+
+func TestOpenValidDSN(t *testing.T) {
+	db, err := Open(Env{MYSQLDatabaseURL: "mysql://user:pass@db.example.com:4000/content_admin"})
+	if err != nil {
+		t.Fatalf("Open(valid) err = %v", err)
+	}
+	defer db.Close()
+}

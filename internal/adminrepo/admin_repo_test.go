@@ -430,3 +430,53 @@ func TestGetLessonSnapshotNotFound(t *testing.T) {
 		t.Fatalf("err = %v, want *NotFoundError", err)
 	}
 }
+
+func TestValidateModulePayload(t *testing.T) {
+	cases := []struct {
+		name       string
+		moduleType string
+		payload    string
+	}{
+		{"invalid json", "lessonMeta", `{`},
+		{"lessonMeta not object", "lessonMeta", `[]`},
+		{"lessonMeta id missing", "lessonMeta", `{"title":{"en":"T","fr":"T"},"scenario":{"en":"S","fr":"S"}}`},
+		{"lessonMeta id not string", "lessonMeta", `{"id":42,"title":{"en":"T","fr":"T"},"scenario":{"en":"S","fr":"S"}}`},
+		{"lessonMeta title not string map", "lessonMeta", `{"id":"l","title":"T","scenario":{"en":"S","fr":"S"}}`},
+		{"lessonMeta scenario not string map", "lessonMeta", `{"id":"l","title":{"en":"T","fr":"T"},"scenario":"S"}`},
+		{"dialogue not object", "dialogue", `[]`},
+		{"dialogue title missing", "dialogue", `{"lines":[]}`},
+		{"dialogue lines not array", "dialogue", `{"title":{"en":"T","fr":"T"},"lines":"x"}`},
+		{"practice not object", "practice", `[]`},
+		{"practice missing listening", "practice", `{"speaking":[],"reading":[]}`},
+		{"practice speaking not array", "practice", `{"listening":[],"speaking":"x","reading":[]}`},
+		{"sentencePatterns not array", "sentencePatterns", `{}`},
+		{"vocabulary not array", "vocabulary", `{}`},
+		{"reviewCards not array", "reviewCards", `{}`},
+		{"unknown module type", "wat", `{}`},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			_, err := validateModulePayload(c.moduleType, []byte(c.payload))
+			if err == nil {
+				t.Fatalf("expected ValidationError for %s", c.payload)
+			}
+			var validationErr *ValidationError
+			if !errors.As(err, &validationErr) {
+				t.Fatalf("err = %v, want *ValidationError", err)
+			}
+		})
+	}
+
+	if _, err := validateModulePayload("lessonMeta", lessonMetaPayload); err != nil {
+		t.Fatalf("valid lessonMeta rejected: %v", err)
+	}
+	if _, err := validateModulePayload("dialogue", dialoguePayload); err != nil {
+		t.Fatalf("valid dialogue rejected: %v", err)
+	}
+	if _, err := validateModulePayload("practice", practicePayload); err != nil {
+		t.Fatalf("valid practice rejected: %v", err)
+	}
+	if _, err := validateModulePayload("sentencePatterns", sentencePatternsPayload); err != nil {
+		t.Fatalf("valid sentencePatterns rejected: %v", err)
+	}
+}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 
@@ -314,5 +315,128 @@ func TestAdminRunInTransactionRollback(t *testing.T) {
 	}
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Fatalf("unmet sqlmock expectations: %v", err)
+	}
+}
+
+type errResult struct{}
+
+func (errResult) LastInsertId() (int64, error) { return 0, errors.New("no last insert id") }
+func (errResult) RowsAffected() (int64, error) { return 1, nil }
+
+func TestAdminInsertModuleRevisionExecError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("sqlmock: %v", err)
+	}
+	defer db.Close()
+
+	mock.ExpectExec("insert into module_revisions").WillReturnError(errors.New("insert boom"))
+
+	store := NewAdminStore(db)
+	if _, err := store.InsertModuleRevision(context.Background(), InsertModuleRevisionInput{LessonID: "l1", ModuleType: "lessonMeta"}); err == nil {
+		t.Fatal("want exec error")
+	}
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("unmet sqlmock expectations: %v", err)
+	}
+}
+
+func TestAdminInsertModuleRevisionLastInsertError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("sqlmock: %v", err)
+	}
+	defer db.Close()
+
+	mock.ExpectExec("insert into module_revisions").WillReturnResult(errResult{})
+
+	store := NewAdminStore(db)
+	if _, err := store.InsertModuleRevision(context.Background(), InsertModuleRevisionInput{LessonID: "l1", ModuleType: "lessonMeta"}); err == nil {
+		t.Fatal("want last insert id error")
+	}
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("unmet sqlmock expectations: %v", err)
+	}
+}
+
+func TestAdminGetCurrentModuleStateQueryError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("sqlmock: %v", err)
+	}
+	defer db.Close()
+
+	mock.ExpectQuery("select l\\.lesson_id as lessonId").WillReturnError(errors.New("query boom"))
+
+	store := NewAdminStore(db)
+	if _, err := store.GetCurrentModuleState(context.Background(), "l1", "lessonMeta"); err == nil {
+		t.Fatal("want query error")
+	}
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("unmet sqlmock expectations: %v", err)
+	}
+}
+
+func TestAdminRunInTransactionBeginError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("sqlmock: %v", err)
+	}
+	defer db.Close()
+
+	mock.ExpectBegin().WillReturnError(errors.New("begin boom"))
+
+	store := NewAdminStore(db)
+	err = store.RunInTransaction(context.Background(), func(txStore AdminStore) error { return nil })
+	if err == nil {
+		t.Fatal("want begin error")
+	}
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("unmet sqlmock expectations: %v", err)
+	}
+}
+
+func TestAdminRunInTransactionCommitError(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("sqlmock: %v", err)
+	}
+	defer db.Close()
+
+	mock.ExpectBegin()
+	mock.ExpectCommit().WillReturnError(errors.New("commit boom"))
+
+	store := NewAdminStore(db)
+	err = store.RunInTransaction(context.Background(), func(txStore AdminStore) error { return nil })
+	if err == nil {
+		t.Fatal("want commit error")
+	}
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Fatalf("unmet sqlmock expectations: %v", err)
+	}
+}
+
+type nonSQLDBQueryer struct{}
+
+func (nonSQLDBQueryer) QueryContext(context.Context, string, ...any) (*sql.Rows, error) {
+	return nil, errors.New("not a database")
+}
+
+func (nonSQLDBQueryer) ExecContext(context.Context, string, ...any) (sql.Result, error) {
+	return nil, errors.New("not a database")
+}
+
+func TestAdminRunInTransactionFallsBackWithoutSQLDB(t *testing.T) {
+	store := &AdminMysqlStore{q: nonSQLDBQueryer{}}
+	ran := false
+	err := store.RunInTransaction(context.Background(), func(txStore AdminStore) error {
+		ran = true
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("RunInTransaction: %v", err)
+	}
+	if !ran {
+		t.Fatal("work function was not invoked")
 	}
 }

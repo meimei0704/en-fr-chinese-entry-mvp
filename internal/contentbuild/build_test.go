@@ -50,7 +50,6 @@ func TestBuildCourseSkipsDisabled(t *testing.T) {
 		t.Fatalf("lessons = %d, want 1 (disabled skipped)", len(course.Lessons))
 	}
 }
-
 func TestBuildCourseSortsByDisplayOrder(t *testing.T) {
 	payload := func(v any) json.RawMessage {
 		b, _ := json.Marshal(v)
@@ -83,5 +82,41 @@ func TestBuildCourseSortsByDisplayOrder(t *testing.T) {
 	first := lessons[0]
 	if first.ID != "b" {
 		t.Fatalf("first lesson id = %v, want b (displayOrder 1)", first.ID)
+	}
+}
+
+func TestBuildLessonInvalidMetaPayload(t *testing.T) {
+	payload := func(v any) json.RawMessage {
+		b, _ := json.Marshal(v)
+		return json.RawMessage(b)
+	}
+	complete := func(meta json.RawMessage) []contentstore.PublishedModuleRow {
+		return []contentstore.PublishedModuleRow{
+			{LessonID: "l", DisplayOrder: 1, Enabled: true, ModuleType: "lessonMeta", Payload: meta},
+			{LessonID: "l", DisplayOrder: 1, Enabled: true, ModuleType: "dialogue", Payload: payload(map[string]any{})},
+			{LessonID: "l", DisplayOrder: 1, Enabled: true, ModuleType: "sentencePatterns", Payload: payload([]any{})},
+			{LessonID: "l", DisplayOrder: 1, Enabled: true, ModuleType: "vocabulary", Payload: payload([]any{})},
+			{LessonID: "l", DisplayOrder: 1, Enabled: true, ModuleType: "practice", Payload: payload(map[string]any{})},
+			{LessonID: "l", DisplayOrder: 1, Enabled: true, ModuleType: "reviewCards", Payload: payload([]any{})},
+		}
+	}
+	goodMeta := map[string]any{"id": "l", "title": map[string]string{"en": "T", "fr": "T"}, "scenario": map[string]string{"en": "S", "fr": "S"}}
+
+	if lesson, ok := BuildLessonFromRows(complete(payload(goodMeta))); !ok || lesson == nil {
+		t.Fatal("complete lesson with valid meta should build")
+	}
+
+	cases := []json.RawMessage{
+		json.RawMessage(`{"id":`), // malformed JSON
+		payload(map[string]any{"title": map[string]string{"en": "T", "fr": "T"}, "scenario": map[string]string{"en": "S", "fr": "S"}}),           // missing id
+		payload(map[string]any{"id": "", "title": map[string]string{"en": "T", "fr": "T"}, "scenario": map[string]string{"en": "S", "fr": "S"}}), // blank id
+		payload(map[string]any{"id": "l", "title": "not an object", "scenario": map[string]string{"en": "S", "fr": "S"}}),                        // title not object
+		payload(map[string]any{"id": "l", "title": map[string]string{"en": "T", "fr": "T"}}),                                                     // scenario missing
+		payload(map[string]any{"id": "l", "title": map[string]string{"en": "T", "fr": "T"}, "scenario": []any{}}),                                // scenario not object
+	}
+	for index, meta := range cases {
+		if lesson, ok := BuildLessonFromRows(complete(meta)); ok || lesson != nil {
+			t.Fatalf("case %d: expected rejected meta payload, got lesson %v", index, lesson)
+		}
 	}
 }
