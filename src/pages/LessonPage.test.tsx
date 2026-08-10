@@ -127,7 +127,7 @@ describe('LessonPage', () => {
     expect(screen.getAllByLabelText(/ligne de dialogue, interlocuteur voyageur/i)[0]).toHaveTextContent(
       '请问您会说英语吗？',
     )
-    expect(screen.getByRole('heading', { level: 2, name: /dialogue/i })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: /phrases/i })).toBeVisible()
     expect(
       screen.getByRole('heading', { level: 2, name: /structures utiles/i }),
     ).toBeVisible()
@@ -198,15 +198,15 @@ describe('LessonPage', () => {
       expect(steps).toHaveLength(3)
       expect(steps.map((step) => step.textContent)).toEqual(
         language === 'en'
-          ? ['1Dialogue', '2Useful patterns', '3Vocabulary']
-          : ['1Dialogue', '2Structures utiles', '3Vocabulaire'],
+          ? ['1Phrases', '2Useful patterns', '3Vocabulary']
+          : ['1Phrases', '2Structures utiles', '3Vocabulaire'],
       )
       expect(steps[0]).toHaveClass('is-current')
       expect(preview).not.toHaveTextContent(removed)
       const retainedHeadings =
         language === 'en'
-          ? ['Dialogue', 'Useful patterns', 'Vocabulary']
-          : ['Dialogue', 'Structures utiles', 'Vocabulaire']
+          ? ['Phrases', 'Useful patterns', 'Vocabulary']
+          : ['Phrases', 'Structures utiles', 'Vocabulaire']
       for (const heading of retainedHeadings) {
         expect(screen.getByRole('heading', { level: 2, name: heading })).toBeVisible()
       }
