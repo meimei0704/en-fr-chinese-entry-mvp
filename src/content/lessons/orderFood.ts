@@ -7,8 +7,8 @@ export const orderFoodLesson: LessonContent = {
     fr: '酒店入住 / À l’hôtel',
   },
   scenario: {
-    en: 'Complete the simplest front desk check-in: say you have a reservation, give your name, show your passport, receive the room card, ask about WiFi, breakfast, deposit, and checkout time.',
-    fr: 'Effectuer le check-in le plus simple à la réception : dire que l\'on a une réservation, donner son nom, présenter son passeport, recevoir la carte de chambre, demander le WiFi, le petit-déjeuner, la caution et l\'heure de check-out.',
+    en: 'Check in, ask for hotel service, request room items, and check out.',
+    fr: 'Faire le check-in, demander un service d\'hôtel, demander des articles de chambre et régler le départ.',
   },
   dialogue: {
     title: {
@@ -156,51 +156,51 @@ export const orderFoodLesson: LessonContent = {
   sentencePatterns: [
     {
       id: 'order-food-pattern-1',
-      pattern: '我有预订。',
+      pattern: '我要办理入住。',
       meaning: {
-        en: 'I have a reservation.',
-        fr: 'J\'ai une réservation.',
+        en: 'Hello, I want to check in.',
+        fr: 'Bonjour, je veux faire le check-in.',
       },
-      example: '你好，我有预订。',
+      example: '您好，我要办理入住。',
       audio: '/audio/order-food/pattern-01.mp3',
       explanation: {
-        en: 'Use this as your first front desk sentence.',
-        fr: 'Utilise cette phrase comme première phrase à la réception.',
+        en: 'Use this as your first front desk sentence to start the check-in.',
+        fr: 'Utilise cette phrase comme première phrase à la réception pour commencer le check-in.',
       },
     },
     {
       id: 'order-food-pattern-2',
-      pattern: '我叫……',
+      pattern: '我已经预订了。',
       meaning: {
-        en: 'My name is ...',
-        fr: 'Je m\'appelle ...',
+        en: 'I have a reservation.',
+        fr: 'J\'ai une réservation.',
       },
-      example: '我叫 Alex。',
+      example: '我已经预订了。',
       audio: '/audio/order-food/pattern-02.mp3',
       explanation: {
-        en: 'This gives the name attached to the booking.',
-        fr: 'Cela donne le nom associé à la réservation.',
+        en: 'Mention 我已经预订了 so the front desk can find your booking.',
+        fr: 'Dis 我已经预订了 pour que la réception trouve ta réservation.',
       },
     },
     {
       id: 'order-food-pattern-3',
-      pattern: '这是您的……',
+      pattern: '这是我的……。',
       meaning: {
-        en: 'This is your ...',
-        fr: 'Voici votre ...',
+        en: 'Here is my ...',
+        fr: 'Voici mon / ma ...',
       },
-      example: '这是您的房卡。',
+      example: '这是我的护照。',
       audio: '/audio/order-food/pattern-03.mp3',
       explanation: {
-        en: 'You may hear this when receiving a room card or document.',
-        fr: 'Tu peux entendre cette structure en recevant une carte de chambre ou un document.',
+        en: 'Hand over a document like your passport with 这是我的护照.',
+        fr: 'Présente un document comme ton passeport avec 这是我的护照.',
       },
     },
     {
       id: 'order-food-pattern-4',
       pattern: '……是多少？',
-      meaning: { en: 'What is ...? (for numbers)', fr: 'Quel est ... ? (pour les chiffres)' },
-      example: 'WiFi密码是多少？',
+      meaning: { en: 'What is ...? (for a number or code)', fr: 'Quel est ... ? (pour un chiffre ou un code)' },
+      example: 'Wi-Fi密码是多少？',
       audio: '/audio/order-food/pattern-04.mp3',
       explanation: {
         en: 'Use …是多少 to ask for a password, price, or room number.',
@@ -209,13 +209,13 @@ export const orderFoodLesson: LessonContent = {
     },
     {
       id: 'order-food-pattern-5',
-      pattern: '需要……吗？',
-      meaning: { en: 'Is ... needed? / Do I need ...?', fr: 'Est-ce que ... est nécessaire ?' },
-      example: '需要押金吗？',
+      pattern: '几点……？',
+      meaning: { en: 'What time ...?', fr: 'À quelle heure ... ?' },
+      example: '几点退房？',
       audio: '/audio/order-food/pattern-05.mp3',
       explanation: {
-        en: 'Use 需要…吗 to ask whether a deposit, passport, or other item is required.',
-        fr: 'Utilise 需要…吗 pour demander si une caution, un passeport ou autre est nécessaire.',
+        en: 'Use 几点 before an action to ask about breakfast or checkout time.',
+        fr: 'Utilise 几点 avant une action pour demander l\'heure du petit-déjeuner ou du check-out.',
       },
     },
   ],
