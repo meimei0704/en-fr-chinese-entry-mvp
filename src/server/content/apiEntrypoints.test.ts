@@ -128,13 +128,28 @@ describe('Vercel content API entrypoints', () => {
     }
 
     expect(vercelConfig.regions).toBeUndefined()
-    expect(vercelConfig.rewrites?.[0]).toEqual({
-      source: '/api/content/lessons/:lessonId',
-      destination: '/api/content/lessons?lessonId=:lessonId',
-    })
     expect(vercelConfig.rewrites?.at(-1)).toEqual({
       source: '/(.*)',
       destination: '/index.html',
     })
+    const apiRewrites = vercelConfig.rewrites?.filter(
+      (rewrite) => rewrite.destination !== '/index.html',
+    )
+    expect(apiRewrites?.map((r) => r.source)).toEqual([
+      '/api/content/course',
+      '/api/content/lessons',
+      '/api/content/pinyin/course',
+      '/api/admin/content/lessons',
+      '/api/admin/content/draft',
+      '/api/admin/content/publish',
+      '/api/admin/content/rollback',
+    ])
+    for (const rewrite of apiRewrites ?? []) {
+      if (rewrite.source.startsWith('/api/content/')) {
+        expect(rewrite.destination).toBe('/api/content')
+      } else {
+        expect(rewrite.destination).toBe('/api/admin/content')
+      }
+    }
   })
 })

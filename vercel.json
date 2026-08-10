@@ -9,10 +9,6 @@
       "destination": "/api/content"
     },
     {
-      "source": "/api/content/lessons/:lessonId",
-      "destination": "/api/content/lessons?lessonId=:lessonId"
-    },
-    {
       "source": "/api/content/pinyin/course",
       "destination": "/api/content"
     },
