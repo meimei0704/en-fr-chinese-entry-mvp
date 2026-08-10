@@ -264,37 +264,41 @@ export const metroTicketLesson: LessonContent = {
     },
     {
       id: 'metro-ticket-vocab-4',
+      hanzi: '二号线',
+      pinyin: 'èr hào xiàn',
+      audio: '/audio/metro-ticket/vocab-04.mp3',
+      meaning: {
+        en: 'Line 2',
+        fr: 'ligne 2',
+      },
+      explanation: {
+        en: 'A model phrase for numbered metro lines.',
+        fr: 'Une phrase modèle pour les lignes de métro numérotées.',
+      },
+    },
+    {
+      id: 'metro-ticket-vocab-5',
       hanzi: '换乘',
       pinyin: 'huànchéng',
-      audio: '/audio/metro-ticket/vocab-04.mp3',
+      audio: '/audio/metro-ticket/vocab-05.mp3',
       meaning: {
         en: 'transfer',
         fr: 'correspondance',
       },
       explanation: {
-        en: 'Recognize it on signs when you need to change lines.',
-        fr: 'Reconnais-le sur les panneaux quand tu dois changer de ligne.',
+        en: 'Recognize it on signs even if this first route stays simple.',
+        fr: 'Reconnais-le sur les panneaux même si ce premier trajet reste simple.',
       },
     },
-    {
-      id: 'metro-ticket-vocab-5',
-      hanzi: '出口',
-      pinyin: 'chūkǒu',
-      audio: '/audio/metro-ticket/vocab-05.mp3',
-      meaning: {
-        en: 'exit',
-        fr: 'sortie',
-      },
-      explanation: {
-        en: 'Look for 出口 signs to leave the station.',
-        fr: 'Cherche les panneaux 出口 pour sortir de la station.',
-      },
-    },
-    { id: 'metro-ticket-vocab-6', hanzi: '方向', pinyin: 'fāngxiàng', audio: '/audio/metro-ticket/vocab-06.mp3', meaning: { en: 'direction', fr: 'direction' }, explanation: { en: 'Check 方向 on metro signs to know which platform to take.', fr: 'Vérifie 方向 sur les panneaux de métro pour savoir quel quai prendre.' } },
-    { id: 'metro-ticket-vocab-7', hanzi: '入口', pinyin: 'rùkǒu', audio: '/audio/metro-ticket/vocab-07.mp3', meaning: { en: 'entrance', fr: 'entrée' }, explanation: { en: 'The entrance you use to go into the metro station.', fr: 'L\'entrée que tu utilises pour entrer dans la station de métro.' } },
-    { id: 'metro-ticket-vocab-8', hanzi: '自动售票机', pinyin: 'zìdòng shòupiàojī', audio: '/audio/metro-ticket/vocab-08.mp3', meaning: { en: 'ticket vending machine', fr: 'distributeur de tickets' }, explanation: { en: 'A machine where you buy your metro ticket.', fr: 'Une machine où tu achètes ton ticket de métro.' } },
-    { id: 'metro-ticket-vocab-9', hanzi: '上车', pinyin: 'shàng chē', audio: '/audio/metro-ticket/vocab-09.mp3', meaning: { en: 'get on the train', fr: 'monter dans le train' }, explanation: { en: 'The action of boarding the train or metro.', fr: 'L\'action de monter dans le train ou le métro.' } },
-    { id: 'metro-ticket-vocab-10', hanzi: '下车', pinyin: 'xià chē', audio: '/audio/metro-ticket/vocab-10.mp3', meaning: { en: 'get off the train', fr: 'descendre du train' }, explanation: { en: 'The action of getting off at your stop.', fr: 'L\'action de descendre à ton arrêt.' } },
+    { id: 'metro-ticket-vocab-6', hanzi: '出口', pinyin: 'chūkǒu', audio: '/audio/metro-ticket/vocab-06.mp3', meaning: { en: 'exit', fr: 'sortie' }, explanation: { en: 'Look for 出口 signs to leave the station.', fr: 'Cherche les panneaux 出口 pour sortir de la station.' } },
+    { id: 'metro-ticket-vocab-7', hanzi: '公交卡', pinyin: 'gōngjiāokǎ', audio: '/audio/metro-ticket/vocab-07.mp3', meaning: { en: 'transit card', fr: 'carte de transport' }, explanation: { en: 'A rechargeable card for bus and metro rides.', fr: 'Une carte rechargeable pour les trajets en bus et métro.' } },
+    { id: 'metro-ticket-vocab-8', hanzi: '一张', pinyin: 'yì zhāng', audio: '/audio/metro-ticket/vocab-08.mp3', meaning: { en: 'one (for flat items like tickets)', fr: 'un (pour les objets plats comme les tickets)' }, explanation: { en: 'Use 张 for tickets, paper, and flat objects.', fr: 'Utilise 张 pour les tickets, le papier et les objets plats.' } },
+    { id: 'metro-ticket-vocab-9', hanzi: '充值', pinyin: 'chōngzhí', audio: '/audio/metro-ticket/vocab-09.mp3', meaning: { en: 'top up / recharge', fr: 'recharger' }, explanation: { en: 'Use 充值 to add money to your transit card.', fr: 'Utilise 充值 pour ajouter de l\'argent à ta carte de transport.' } },
+    { id: 'metro-ticket-vocab-10', hanzi: '方向', pinyin: 'fāngxiàng', audio: '/audio/metro-ticket/vocab-10.mp3', meaning: { en: 'direction', fr: 'direction' }, explanation: { en: 'Check 方向 on metro signs to know which platform to take.', fr: 'Vérifie 方向 sur les panneaux de métro pour savoir quel quai prendre.' } },
+    { id: 'metro-ticket-vocab-11', hanzi: '入口', pinyin: 'rùkǒu', audio: '/audio/metro-ticket/vocab-11.mp3', meaning: { en: 'entrance', fr: 'entrée' }, explanation: { en: 'The entrance you use to go into the metro station.', fr: 'L\'entrée que tu utilises pour entrer dans la station de métro.' } },
+    { id: 'metro-ticket-vocab-12', hanzi: '自动售票机', pinyin: 'zìdòng shòupiàojī', audio: '/audio/metro-ticket/vocab-12.mp3', meaning: { en: 'ticket vending machine', fr: 'distributeur de tickets' }, explanation: { en: 'A machine where you buy your metro ticket.', fr: 'Une machine où tu achètes ton ticket de métro.' } },
+    { id: 'metro-ticket-vocab-13', hanzi: '上车', pinyin: 'shàng chē', audio: '/audio/metro-ticket/vocab-13.mp3', meaning: { en: 'get on the train', fr: 'monter dans le train' }, explanation: { en: 'The action of boarding the train or metro.', fr: 'L\'action de monter dans le train ou le métro.' } },
+    { id: 'metro-ticket-vocab-14', hanzi: '下车', pinyin: 'xià chē', audio: '/audio/metro-ticket/vocab-14.mp3', meaning: { en: 'get off the train', fr: 'descendre du train' }, explanation: { en: 'The action of getting off at your stop.', fr: 'L\'action de descendre à ton arrêt.' } },
   ],
   practice: {
     listening: [

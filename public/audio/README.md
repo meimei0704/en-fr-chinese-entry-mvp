@@ -10,6 +10,7 @@ Current batch:
 - Baseline coverage: 182 course files after the original Lesson 1 Arrival sample refresh; 90 files belong to lessons 6-10.
 - On 2026-08-07, the expanded Arrival lesson (`self-intro`) was synchronized to all 35 of its current playback paths. Six stale dialogue files were replaced, 15 missing files were added, and the 14 already-correct files were retained byte-for-byte. The checked-in course-audio inventory is now 197 files.
 - On 2026-08-09, the course was expanded to 12 lessons. Two new lessons (`daily-greetings`, `small-talk`) were added with full audio (line/pattern/vocab/practice), and the `self-intro` content was replaced with the approved arrival sentences, regenerating its 31 playback paths. The course-audio inventory is now 359 files.
+- On 2026-08-11, the useful-patterns text for 8 lessons was aligned with the approved 0810 copy. All 40 `pattern-*.mp3` files were regenerated to match the new example text, and 9 vocabulary files were added (`train-station-ticket/vocab-11..15.mp3`, `metro-ticket/vocab-11..14.mp3`) for the newly added station/metro words. The course-audio inventory is now 368 files.
 
 Pinyin course (`public/audio/pinyin/`):
 - Regenerated on 2026-08-07 to fix pronunciation: each MP3 is synthesized from the hanzi whose reading matches the intended pinyin syllable (e.g. `reference-initial-b.mp3` = 波, `reference-tone-1.mp3` = 妈), so the default TTS voice never reads Latin pinyin as English.
