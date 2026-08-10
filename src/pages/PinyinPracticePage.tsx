@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
+import { ContentLoading } from '../components/ContentState'
 import { PracticeChallenge } from '../components/PracticeChallenge'
 import type { PinyinModuleContent, PinyinModuleKey } from '../content/types'
 import { buildPinyinPracticeChallenge } from '../lib/practiceChallenge'
@@ -53,14 +54,7 @@ export function PinyinPracticePage() {
   }
 
   if (!module) {
-    return (
-      <main className="page-shell" role="status" aria-live="polite">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
-          <h1>{copy.contentState.loadingHeading}</h1>
-        </section>
-      </main>
-    )
+    return <ContentLoading />
   }
 
   const moduleKey = module.id as PinyinModuleKey

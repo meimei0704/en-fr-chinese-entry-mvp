@@ -1,15 +1,11 @@
 import { getUiCopy } from '../content/copy'
 import type { ExplanationLanguage } from '../content/types'
 
-export function ContentLoading({ language = 'en' }: { language?: ExplanationLanguage }) {
-  const copy = getUiCopy(language).contentState
-
+export function ContentLoading() {
   return (
-    <main className="page-shell" role="status" aria-live="polite">
-      <section className="hero-card hero-card--compact">
-        <p className="eyebrow">{copy.loadingEyebrow}</p>
-        <h1>{copy.loadingHeading}</h1>
-      </section>
+    <main className="brand-loading" role="status" aria-live="polite">
+      <img className="brand-loading__logo" src="/favicon.svg" alt="" width="72" height="69" />
+      <p className="brand-loading__title">轻松学中文</p>
     </main>
   )
 }

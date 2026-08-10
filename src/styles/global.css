@@ -3697,3 +3697,61 @@ h2 {
     grid-template-columns: 1fr;
   }
 }
+
+.brand-loading {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 1.2rem;
+  justify-items: center;
+}
+
+.brand-loading__logo {
+  width: 4.5rem;
+  height: auto;
+  animation: app-boot-pulse 1.6s ease-in-out infinite;
+}
+
+.brand-loading__title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    90deg,
+    #2f6fba 0%,
+    #7e14ff 30%,
+    #a84f16 60%,
+    #2f6fba 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: app-boot-shimmer 2.2s linear infinite;
+}
+
+@keyframes app-boot-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes app-boot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-loading__logo,
+  .brand-loading__title {
+    animation: none;
+  }
+}

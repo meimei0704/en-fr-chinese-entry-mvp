@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
+import { ContentLoading } from '../components/ContentState'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { buildJourney, journeyNodeIcons } from '../content/journey'
@@ -43,14 +44,7 @@ export function ProgressPage() {
   }
 
   if (!course) {
-    return (
-      <main className="page-shell" role="status" aria-live="polite">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
-          <h1>{copy.contentState.loadingHeading}</h1>
-        </section>
-      </main>
-    )
+    return <ContentLoading />
   }
 
   const journey = buildJourney(course)

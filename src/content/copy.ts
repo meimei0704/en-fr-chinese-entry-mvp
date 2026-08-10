@@ -173,8 +173,6 @@ export const uiCopy = {
       lessonActions: 'Pinyin lesson actions',
     },
     contentState: {
-      loadingEyebrow: 'Loading',
-      loadingHeading: 'Loading the course…',
       errorEyebrow: 'Content unavailable',
       errorHeading: 'We couldn’t load the course.',
       errorBody: 'Check your connection and try again.',
@@ -344,8 +342,6 @@ export const uiCopy = {
       lessonActions: 'Actions de la leçon de pinyin',
     },
     contentState: {
-      loadingEyebrow: 'Chargement',
-      loadingHeading: 'Chargement du cours…',
       errorEyebrow: 'Contenu indisponible',
       errorHeading: 'Impossible de charger le cours.',
       errorBody: 'Vérifie ta connexion puis réessaie.',
