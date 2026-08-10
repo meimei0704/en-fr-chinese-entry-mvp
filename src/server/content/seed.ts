@@ -83,7 +83,7 @@ export function createInitialContentSeed(
 }
 
 function sqlString(value: string) {
-  return `'${value.replaceAll("'", "''")}'`
+  return `'${value.replaceAll('\\', '\\\\').replaceAll("'", "''")}'`
 }
 
 function sqlJson(value: unknown) {

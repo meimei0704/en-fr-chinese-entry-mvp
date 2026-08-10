@@ -65,6 +65,7 @@ func modulePayloads(lesson LessonSnapshot) [][]byte {
 }
 
 func sqlString(value string) string {
+	value = strings.ReplaceAll(value, `\`, `\\`)
 	return "'" + strings.ReplaceAll(value, "'", "''") + "'"
 }
 
