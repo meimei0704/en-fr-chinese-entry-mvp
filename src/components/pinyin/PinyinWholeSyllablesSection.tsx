@@ -22,7 +22,7 @@ export function PinyinWholeSyllablesSection({
           <article key={item.id} className="study-item pinyin-reference-card pinyin-whole-syllable-card">
             <div className="pinyin-reference-card__main">
               <div className="pinyin-reference-card__target">
-                <p className="pinyin-reference-card__phoneme pinyin-whole-syllable-card__phoneme">
+                <p className="pinyin-reference-card__phoneme">
                   {item.pinyin}
                 </p>
               </div>
