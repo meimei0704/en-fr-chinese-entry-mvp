@@ -3,7 +3,7 @@
 一个面向 **英语 / 法语母语者** 的零基础汉语入门 Web MVP。当前版本覆盖：
 
 - 解释语言选择：English / Français
-- 3 个场景课：self-intro / order-food / ask-directions
+- 12 个场景课：daily-greetings / self-intro / ask-directions / order-food / phone-and-payment / restaurant-order / train-station-ticket / metro-ticket / convenience-store-run / ask-for-help-problem / pharmacy-help / small-talk
 - 主学习路径：lesson → practice → short input
 - review 队列与 progress 进度页
 - 本地静态数据与浏览器 localStorage 学习进度
@@ -16,6 +16,15 @@
 - React Router
 - Vitest
 - Playwright
+- Go 1.24（`net/http`）— 内容与内容管理 API 的 Vercel Functions 后端
+
+## API 后端
+
+公开内容读取与内容管理端点由 **Go Vercel Functions** 提供（`api/content/index.go`、`api/admin/content/index.go`），读取 MySQL 中已发布的课程内容并组装 JSON；TS 仅保留语音相关 Functions（`api/admin/voice/*.ts`）。TS↔Go 契约对比脚本：
+
+```bash
+node scripts/compare-content-api.mjs --admin
+```
 
 ## Local Development
 
@@ -52,7 +61,7 @@ npm run preview -- --host 0.0.0.0 --port 4173
 
 ## Stable Deployment: Vercel
 
-这个项目是 **纯前端静态站点**，适合直接部署到 Vercel。仓库里已经补了 `vercel.json`，用于保证 React Router 的前端路由（如 `/home`、`/review`、`/lesson/self-intro`）在静态部署后仍可直接访问。
+仓库里已配置 `vercel.json`，用于保证 React Router 的前端路由（如 `/home`、`/review`、`/lesson/self-intro`）在静态部署后仍可直接访问，并将 `/api/content/lessons/:lessonId` 重写到 Go 端点的查询参数形式。内容/内容管理 API 由仓库内的 Go Functions 构建（Vercel 会自动识别 `api/**/index.go`）。
 
 - **当前固定生产地址**：`https://en-fr-chinese-entry-mvp.vercel.app`
 - **当前 Vercel 项目**：`mei930/en-fr-chinese-entry-mvp`

@@ -1,5 +1,4 @@
-import { course } from '../content/course'
-import type { ExplanationLanguage, LessonId } from '../content/types'
+import type { CourseContent, ExplanationLanguage, LessonId } from '../content/types'
 import {
   loadJsonFromStorage,
   removeFromStorage,
@@ -35,10 +34,7 @@ function isExplanationLanguage(value: unknown): value is ExplanationLanguage {
 }
 
 function isLessonId(value: unknown): value is LessonId {
-  return (
-    typeof value === 'string' &&
-    course.lessons.some((lesson) => lesson.id === value)
-  )
+  return typeof value === 'string'
 }
 
 function isStringArray(value: unknown): value is string[] {
@@ -105,6 +101,7 @@ export function clearProgress() {
 }
 
 export function completeLesson(
+  course: CourseContent,
   lessonId: LessonId,
   progress: LearnerProgress,
 ): LearnerProgress {
@@ -158,7 +155,10 @@ export function markPracticeSection(
   }
 }
 
-export function getContinueLessonId(progress: LearnerProgress): LessonId | null {
+export function getContinueLessonId(
+  course: CourseContent,
+  progress: LearnerProgress,
+): LessonId | null {
   if (progress.lastVisitedLesson === null) {
     return course.lessons[0]?.id ?? null
   }

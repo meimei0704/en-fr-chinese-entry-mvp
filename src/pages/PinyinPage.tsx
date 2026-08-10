@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { pinyinCourse } from '../content/pinyin/course'
 import type { PinyinModuleKey } from '../content/types'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
@@ -13,6 +12,7 @@ import {
   savePinyinProgress,
 } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
+import { usePinyinCourse } from '../lib/pinyinContentProvider'
 
 const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'tones', 'whole-syllables']
 
@@ -32,6 +32,7 @@ function findDefaultModuleKey(): PinyinModuleKey {
 }
 
 export function PinyinPage() {
+  const { course: pinyinCourse, error, reload } = usePinyinCourse()
   const language = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(language)
   const pinyinCopy = copy.pinyinPage
@@ -40,9 +41,34 @@ export function PinyinPage() {
 
   const module = useMemo(
     () =>
-      pinyinCourse.modules.find((m) => m.id === selectedModuleKey) ?? pinyinCourse.modules[0],
-    [selectedModuleKey],
+      pinyinCourse?.modules.find((m) => m.id === selectedModuleKey) ?? pinyinCourse?.modules[0],
+    [pinyinCourse, selectedModuleKey],
   )
+
+  if (error) {
+    return (
+      <main className="page-shell">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
+          <h1>{copy.contentState.errorHeading}</h1>
+          <button type="button" className="primary-button" onClick={reload}>
+            {copy.contentState.retry}
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!pinyinCourse || !module) {
+    return (
+      <main className="page-shell" role="status" aria-live="polite">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
+          <h1>{copy.contentState.loadingHeading}</h1>
+        </section>
+      </main>
+    )
+  }
 
   function handleReferenceAudioPlay() {
     const nextProgress = recordPinyinReferenceComplete(loadPinyinProgress(), selectedModuleKey)

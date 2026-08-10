@@ -1,11 +1,14 @@
 import '@testing-library/jest-dom/vitest'
-import { screen, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
+import { appRoutes } from '../app/router'
 import { createDefaultPinyinProgress, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
+import { MockCourseProvider, MockPinyinCourseProvider } from '../test/mockContentProvider'
 import { renderRoute } from '../test/renderRoute'
 
 const expectedLessonHrefs = expectedLessonTopicOrder.map((topic) => `/lesson/${topic.id}`)
@@ -449,5 +452,34 @@ describe('HomePage', () => {
       .not.toBeInTheDocument()
     expect(within(journeyMap).queryAllByText(/peek inside/i)).toHaveLength(0)
     expect(within(journeyMap).queryAllByText(/coming soon/i)).toHaveLength(0)
+  })
+
+  it('shows the loading state while the course is being fetched', () => {
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/home'] })
+
+    render(
+      <MockCourseProvider course={null}>
+        <MockPinyinCourseProvider course={null}>
+          <RouterProvider router={router} />
+        </MockPinyinCourseProvider>
+      </MockCourseProvider>,
+    )
+
+    expect(screen.getByRole('status')).toHaveTextContent('Loading the course…')
+  })
+
+  it('shows the error state with a retry button when the course fetch fails', () => {
+    const router = createMemoryRouter(appRoutes, { initialEntries: ['/home'] })
+
+    render(
+      <MockCourseProvider course={null} error={new Error('boom')}>
+        <MockPinyinCourseProvider course={null}>
+          <RouterProvider router={router} />
+        </MockPinyinCourseProvider>
+      </MockCourseProvider>,
+    )
+
+    expect(screen.getByText("We couldn’t load the course.")).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeVisible()
   })
 })

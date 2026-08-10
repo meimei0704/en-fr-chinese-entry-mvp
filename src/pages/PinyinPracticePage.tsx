@@ -3,7 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { PracticeChallenge } from '../components/PracticeChallenge'
-import { pinyinCourse } from '../content/pinyin/course'
 import type { PinyinModuleContent, PinyinModuleKey } from '../content/types'
 import { buildPinyinPracticeChallenge } from '../lib/practiceChallenge'
 import { loadProgress } from '../lib/progress'
@@ -12,28 +11,57 @@ import {
   recordPinyinPracticeComplete,
   savePinyinProgress,
 } from '../lib/pinyinProgress'
+import { usePinyinCourse } from '../lib/pinyinContentProvider'
 
-function findPinyinModule(moduleKey: string | null): PinyinModuleContent {
-  return (
-    pinyinCourse.modules.find((module) => module.id === moduleKey) ?? pinyinCourse.modules[0]
-  )
+function findPinyinModule(
+  modules: PinyinModuleContent[],
+  moduleKey: string | null,
+): PinyinModuleContent {
+  return modules.find((module) => module.id === moduleKey) ?? modules[0]
 }
 
 export function PinyinPracticePage() {
   const [searchParams] = useSearchParams()
-  const module = findPinyinModule(searchParams.get('module'))
-  const [seed] = useState(() => Math.floor(Math.random() * 2 ** 31))
-  const [lessonCompleted, setLessonCompleted] = useState(false)
+  const { course: pinyinCourse, error, reload } = usePinyinCourse()
   const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
-
+  const [seed] = useState(() => Math.floor(Math.random() * 2 ** 31))
+  const [lessonCompleted, setLessonCompleted] = useState(false)
+  const module = pinyinCourse
+    ? findPinyinModule(pinyinCourse.modules, searchParams.get('module'))
+    : undefined
   const buildChallenge = useCallback(
     (nextSeed: number) =>
-      module.toneGame
+      module?.toneGame
         ? buildPinyinPracticeChallenge(module, selectedLanguage, 5, nextSeed)
         : { questions: [], maxScore: 0 },
     [module, selectedLanguage],
   )
+
+  if (error) {
+    return (
+      <main className="page-shell">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
+          <h1>{copy.contentState.errorHeading}</h1>
+          <button type="button" className="primary-button" onClick={reload}>
+            {copy.contentState.retry}
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!module) {
+    return (
+      <main className="page-shell" role="status" aria-live="polite">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
+          <h1>{copy.contentState.loadingHeading}</h1>
+        </section>
+      </main>
+    )
+  }
 
   const moduleKey = module.id as PinyinModuleKey
 

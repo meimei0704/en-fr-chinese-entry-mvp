@@ -4,25 +4,22 @@ import { Link } from 'react-router-dom'
 import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { course } from '../content/course'
-import { journeyNodeIcons, journeyNodes } from '../content/journey'
+import { buildJourney, journeyNodeIcons } from '../content/journey'
 import { getLessonTopicText } from '../content/lessonTopics'
 import type { JourneyNode, LessonId } from '../content/types'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
+import { useCourse } from '../lib/contentProvider'
 
 type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
-
-const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
-const lessonJourneyNodes = orderedJourneyNodes.filter(isLessonJourneyNode)
-const lessonJourneyLessonIds = new Set(lessonJourneyNodes.map((node) => node.lessonId))
 
 function isLessonJourneyNode(node: JourneyNode): node is LessonJourneyNode {
   return node.kind === 'lesson' && node.lessonId !== undefined
 }
 
 export function ProgressPage() {
+  const { course, error, reload } = useCourse()
   const progress = loadProgress()
   const pinyinProgress = loadPinyinProgress()
   const language = progress.selectedExplanationLanguage
@@ -30,8 +27,38 @@ export function ProgressPage() {
   const completedPinyinSectionsCount = pinyinProgress.completedSections.length
   const totalPinyinSections = 3
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
+
+  if (error) {
+    return (
+      <main className="page-shell">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
+          <h1>{copy.contentState.errorHeading}</h1>
+          <button type="button" className="primary-button" onClick={reload}>
+            {copy.contentState.retry}
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!course) {
+    return (
+      <main className="page-shell" role="status" aria-live="polite">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
+          <h1>{copy.contentState.loadingHeading}</h1>
+        </section>
+      </main>
+    )
+  }
+
+  const journey = buildJourney(course)
+  const orderedJourneyNodes = [...journey.nodes].sort((left, right) => left.pathOrder - right.pathOrder)
+  const lessonJourneyNodes = orderedJourneyNodes.filter(isLessonJourneyNode)
+  const lessonJourneyLessonIds = new Set(lessonJourneyNodes.map((node) => node.lessonId))
   const currentLessonId =
-    progress.lastVisitedLesson === null ? null : getContinueLessonId(progress)
+    progress.lastVisitedLesson === null ? null : getContinueLessonId(course, progress)
   const currentLesson = course.lessons.find((lesson) => lesson.id === currentLessonId)
   const completedLessonIds = new Set(
     progress.completedLessons.filter((lessonId) => lessonJourneyLessonIds.has(lessonId)),

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { course } from '../content/course'
 import type { LearnerProgress } from './progress'
 
 async function importProgressModule() {
@@ -104,7 +105,7 @@ describe('learner progress', () => {
     const { createDefaultProgress, getContinueLessonId } = await importProgressModule()
 
     expect(
-      getContinueLessonId({
+      getContinueLessonId(course, {
         ...createDefaultProgress(),
         completedLessons: [
           'daily-greetings',
@@ -121,7 +122,7 @@ describe('learner progress', () => {
       }),
     ).toBe('ask-for-help-problem')
     expect(
-      getContinueLessonId({
+      getContinueLessonId(course, {
         ...createDefaultProgress(),
         completedLessons: [
           'daily-greetings',
@@ -140,7 +141,7 @@ describe('learner progress', () => {
       }),
     ).toBe('small-talk')
     expect(
-      getContinueLessonId({
+      getContinueLessonId(course, {
         ...createDefaultProgress(),
         completedLessons: [
           'daily-greetings',
@@ -165,14 +166,14 @@ describe('learner progress', () => {
     const { createDefaultProgress, getContinueLessonId } = await importProgressModule()
 
     expect(
-      getContinueLessonId({
+      getContinueLessonId(course, {
         ...createDefaultProgress(),
         completedLessons: ['self-intro', 'ask-directions', 'order-food'],
         lastVisitedLesson: 'order-food',
       }),
     ).toBe('phone-and-payment')
     expect(
-      getContinueLessonId({
+      getContinueLessonId(course, {
         ...createDefaultProgress(),
         completedLessons: ['self-intro', 'ask-directions', 'order-food', 'phone-and-payment'],
         lastVisitedLesson: 'phone-and-payment',
@@ -183,9 +184,9 @@ describe('learner progress', () => {
   it('completes new formal lessons by queuing their review cards', async () => {
     const { completeLesson, createDefaultProgress } = await importProgressModule()
 
-    const afterRestaurant = completeLesson('restaurant-order', createDefaultProgress())
-    const afterProblemHelp = completeLesson('ask-for-help-problem', afterRestaurant)
-    const afterTrainTicket = completeLesson('train-station-ticket', afterProblemHelp)
+    const afterRestaurant = completeLesson(course, 'restaurant-order', createDefaultProgress())
+    const afterProblemHelp = completeLesson(course, 'ask-for-help-problem', afterRestaurant)
+    const afterTrainTicket = completeLesson(course, 'train-station-ticket', afterProblemHelp)
 
     expect(afterRestaurant.completedLessons).toEqual(['restaurant-order'])
     expect(afterRestaurant.reviewQueue).toEqual([
@@ -229,7 +230,7 @@ describe('learner progress', () => {
   it('completes a lesson by marking it done and queuing its review cards', async () => {
     const { completeLesson, createDefaultProgress } = await importProgressModule()
 
-    const updatedProgress = completeLesson('self-intro', {
+    const updatedProgress = completeLesson(course, 'self-intro', {
       ...createDefaultProgress(),
       lessonStepProgress: {
         'self-intro': {
@@ -252,7 +253,7 @@ describe('learner progress', () => {
       completedSections: ['dialogue', 'practice'],
     })
 
-    const repeatedCompletion = completeLesson('self-intro', updatedProgress)
+    const repeatedCompletion = completeLesson(course, 'self-intro', updatedProgress)
 
     expect(repeatedCompletion.completedLessons).toEqual(['self-intro'])
     expect(repeatedCompletion.reviewQueue).toEqual([

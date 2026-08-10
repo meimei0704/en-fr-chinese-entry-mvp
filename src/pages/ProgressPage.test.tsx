@@ -3,7 +3,8 @@ import { screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { getLocalizedText } from '../content/copy'
-import { journeyNodes } from '../content/journey'
+import { course } from '../content/course'
+import { buildJourney } from '../content/journey'
 import { createDefaultPinyinProgress, recordPinyinPracticeScore, recordPinyinReferenceComplete, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import {
@@ -13,7 +14,7 @@ import {
 } from '../test/lessonTopicExpectations'
 import { renderRoute } from '../test/renderRoute'
 
-const orderedJourneyNodes = [...journeyNodes].sort((left, right) => left.pathOrder - right.pathOrder)
+const orderedJourneyNodes = [...buildJourney(course).nodes].sort((left, right) => left.pathOrder - right.pathOrder)
 const expectedJourneyLessonHrefs = [
   '/lesson/daily-greetings',
   '/lesson/self-intro',
@@ -42,7 +43,7 @@ const expectedSeriesCopy = {
   },
 } as const
 
-function journeyTitle(node: (typeof journeyNodes)[number], language: 'en' | 'fr' = 'en') {
+function journeyTitle(node: (typeof orderedJourneyNodes)[number], language: 'en' | 'fr' = 'en') {
   if (node.kind === 'lesson' && node.lessonId) {
     const topic = expectedLessonTopicOrder.find((entry) => entry.id === node.lessonId)
 
@@ -54,7 +55,7 @@ function journeyTitle(node: (typeof journeyNodes)[number], language: 'en' | 'fr'
   return getLocalizedText(node.title, language)
 }
 
-function journeyTitlePattern(node: (typeof journeyNodes)[number], language: 'en' | 'fr' = 'en') {
+function journeyTitlePattern(node: (typeof orderedJourneyNodes)[number], language: 'en' | 'fr' = 'en') {
   if (node.kind === 'lesson' && node.lessonId) {
     const topic = expectedLessonTopicOrder.find((entry) => entry.id === node.lessonId)
 

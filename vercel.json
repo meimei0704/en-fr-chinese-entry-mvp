@@ -1,8 +1,32 @@
 {
   "rewrites": [
     {
-      "source": "/api/content/lessons/:lessonId",
-      "destination": "/api/content/lessons?lessonId=:lessonId"
+      "source": "/api/content/course",
+      "destination": "/api/content"
+    },
+    {
+      "source": "/api/content/lessons",
+      "destination": "/api/content"
+    },
+    {
+      "source": "/api/content/pinyin/course",
+      "destination": "/api/content"
+    },
+    {
+      "source": "/api/admin/content/lessons",
+      "destination": "/api/admin/content"
+    },
+    {
+      "source": "/api/admin/content/draft",
+      "destination": "/api/admin/content"
+    },
+    {
+      "source": "/api/admin/content/publish",
+      "destination": "/api/admin/content"
+    },
+    {
+      "source": "/api/admin/content/rollback",
+      "destination": "/api/admin/content"
     },
     {
       "source": "/(.*)",

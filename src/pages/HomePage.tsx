@@ -6,11 +6,13 @@ import { HomeHeroIllustration } from '../components/HomeHeroIllustration'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { journeyNodeIcons, journeyNodes } from '../content/journey'
+import { buildJourney, journeyNodeIcons } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
+import { useCourse } from '../lib/contentProvider'
 
 export function HomePage() {
+  const { course, error, reload } = useCourse()
   const [progress, setProgress] = useState(() => loadProgress())
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
@@ -31,6 +33,33 @@ export function HomePage() {
       return nextProgress
     })
   }
+
+  if (error) {
+    return (
+      <main className="page-shell">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
+          <h1>{copy.contentState.errorHeading}</h1>
+          <button type="button" className="primary-button" onClick={reload}>
+            {copy.contentState.retry}
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!course) {
+    return (
+      <main className="page-shell" role="status" aria-live="polite">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
+          <h1>{copy.contentState.loadingHeading}</h1>
+        </section>
+      </main>
+    )
+  }
+
+  const journeyNodes = buildJourney(course).nodes
 
   return (
     <main className="page-shell">

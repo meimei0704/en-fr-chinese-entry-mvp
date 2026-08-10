@@ -3,22 +3,49 @@ import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { ExplanationBlock } from '../components/ExplanationBlock'
-import { course } from '../content/course'
 import type { ReviewCard } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
+import { useCourse } from '../lib/contentProvider'
 
-function findReviewCard(cardId: string): ReviewCard | undefined {
-  return course.lessons
+function findReviewCard(course: ReturnType<typeof useCourse>['course'], cardId: string): ReviewCard | undefined {
+  return course?.lessons
     .flatMap((lesson) => lesson.reviewCards)
     .find((card) => card.id === cardId)
 }
 
 export function ReviewPage() {
+  const { course, error, reload } = useCourse()
   const [progress, setProgress] = useState(() => loadProgress())
   const [finishedCount, setFinishedCount] = useState(0)
   const copy = getUiCopy(progress.selectedExplanationLanguage)
+
+  if (error) {
+    return (
+      <main className="page-shell">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
+          <h1>{copy.contentState.errorHeading}</h1>
+          <button type="button" className="primary-button" onClick={reload}>
+            {copy.contentState.retry}
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!course) {
+    return (
+      <main className="page-shell" role="status" aria-live="polite">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
+          <h1>{copy.contentState.loadingHeading}</h1>
+        </section>
+      </main>
+    )
+  }
+
   const dueCards = progress.reviewQueue
-    .map((cardId) => findReviewCard(cardId))
+    .map((cardId) => findReviewCard(course, cardId))
     .filter((card): card is ReviewCard => Boolean(card))
   const currentCard = dueCards[0]
 

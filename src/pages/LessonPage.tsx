@@ -6,17 +6,20 @@ import { DialoguePlayer } from '../components/DialoguePlayer'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { SpeechButton } from '../components/SpeechButton'
-import { course } from '../content/course'
 import type { LessonContent } from '../content/types'
+import { fetchLesson } from '../lib/contentApi'
 import { loadProgress, saveProgress } from '../lib/progress'
+import { useCourse } from '../lib/contentProvider'
 
-function findLesson(lessonId?: string): LessonContent | undefined {
-  return course.lessons.find((lesson) => lesson.id === lessonId)
+function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: string): LessonContent | undefined {
+  return course?.lessons.find((lesson) => lesson.id === lessonId)
 }
 
 export function LessonPage() {
   const { lessonId } = useParams()
-  const lesson = findLesson(lessonId)
+  const { course, error, reload } = useCourse()
+  const [fallbackLesson, setFallbackLesson] = useState<LessonContent | undefined>(undefined)
+  const lesson = fallbackLesson ?? findLesson(course, lessonId)
   const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
   const studyLayers = [
@@ -25,6 +28,32 @@ export function LessonPage() {
     { id: 'lesson-vocabulary', label: copy.lessonPage.vocabulary },
   ]
   const [activeLayerId, setActiveLayerId] = useState(studyLayers[0].id)
+
+  useEffect(() => {
+    if (!lessonId) {
+      return
+    }
+
+    if (course && findLesson(course, lessonId)) {
+      return
+    }
+
+    let active = true
+    fetchLesson(lessonId)
+      .then((fetchedLesson) => {
+        if (active) {
+          setFallbackLesson(fetchedLesson)
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setFallbackLesson(undefined)
+        }
+      })
+    return () => {
+      active = false
+    }
+  }, [course, lessonId])
 
   useEffect(() => {
     if (!lesson) {
@@ -42,6 +71,31 @@ export function LessonPage() {
       lastVisitedLesson: lesson.id,
     })
   }, [lesson])
+
+  if (error) {
+    return (
+      <main className="page-shell">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
+          <h1>{copy.contentState.errorHeading}</h1>
+          <button type="button" className="primary-button" onClick={reload}>
+            {copy.contentState.retry}
+          </button>
+        </section>
+      </main>
+    )
+  }
+
+  if (!course && !fallbackLesson) {
+    return (
+      <main className="page-shell" role="status" aria-live="polite">
+        <section className="hero-card hero-card--compact">
+          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
+          <h1>{copy.contentState.loadingHeading}</h1>
+        </section>
+      </main>
+    )
+  }
 
   if (!lesson) {
     return (
