@@ -99,9 +99,6 @@ export function HomePage() {
                 id="home-pinyin-series-title"
                 title={copy.courseSeries.pinyinTitle}
               />
-              <span className="course-series__entry-cue" aria-hidden="true">
-                →
-              </span>
             </Link>
           </section>
 
@@ -121,9 +118,6 @@ export function HomePage() {
                 id="home-journey-series-title"
                 title={copy.courseSeries.basicExpressionsTitle}
               />
-              <span className="course-series__entry-cue" aria-hidden="true">
-                ↓
-              </span>
             </a>
 
             <div

@@ -123,14 +123,6 @@ describe('HomePage', () => {
       'aria-hidden',
       'true',
     )
-    expect(pinyinEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
-      'aria-hidden',
-      'true',
-    )
-    expect(journeyEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
-      'aria-hidden',
-      'true',
-    )
 
     expect(journeyLessonLinks).toHaveLength(12)
     expect(journeyLessonLinks.map((link) => link.getAttribute('href'))).toEqual(expectedLessonHrefs)

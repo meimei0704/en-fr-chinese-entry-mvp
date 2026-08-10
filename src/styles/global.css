@@ -591,8 +591,7 @@ h2 {
   display: grid;
   grid-template-columns:
     var(--course-series-entry-icon-size)
-    minmax(0, 1fr)
-    var(--course-series-entry-icon-size);
+    minmax(0, 1fr);
   grid-template-rows: auto auto;
   gap: 0.35rem 0.65rem;
   align-content: start;
@@ -656,18 +655,13 @@ h2 {
 }
 
 .course-series__pinyin-mark,
-.course-series__journey-mark,
-.course-series__entry-cue {
+.course-series__journey-mark {
   grid-row: 1 / -1;
   display: inline-grid;
   place-items: center;
   width: 100%;
   aspect-ratio: 1;
   border-radius: 999px;
-}
-
-.course-series__pinyin-mark,
-.course-series__journey-mark {
   grid-column: 1;
   font-size: 1.5rem;
   font-weight: 900;
@@ -685,15 +679,6 @@ h2 {
   color: var(--color-cinnabar-dark);
   background: rgba(255, 244, 230, 0.94);
   transform: rotate(4deg);
-}
-
-.course-series__entry-cue {
-  grid-column: 3;
-  border: 1px solid rgba(31, 26, 23, 0.12);
-  color: var(--color-ink-soft);
-  background: rgba(255, 255, 255, 0.72);
-  font-size: 1.2rem;
-  font-weight: 900;
 }
 
 .course-series__progress {

@@ -233,14 +233,6 @@ describe('ProgressPage', () => {
       'aria-hidden',
       'true',
     )
-    expect(pinyinEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
-      'aria-hidden',
-      'true',
-    )
-    expect(journeyEntry.querySelector('.course-series__entry-cue')).toHaveAttribute(
-      'aria-hidden',
-      'true',
-    )
 
     expect(cards).toHaveLength(12)
     expect(cards.map((card) => card.getAttribute('data-journey-node-id'))).toEqual(

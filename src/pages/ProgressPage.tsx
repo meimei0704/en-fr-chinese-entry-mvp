@@ -205,9 +205,6 @@ export function ProgressPage() {
                     totalPinyinSections,
                   )}
                 </p>
-                <span className="course-series__entry-cue" aria-hidden="true">
-                  →
-                </span>
               </Link>
             </section>
 
@@ -230,9 +227,6 @@ export function ProgressPage() {
                 <p className="course-series__progress">
                   {copy.progressPage.completedSummary(completedLessonsCount, totalLessons)}
                 </p>
-                <span className="course-series__entry-cue" aria-hidden="true">
-                  ↓
-                </span>
               </a>
 
               <div
