@@ -201,7 +201,7 @@ export function buildJourney(course: CourseContent): {
       lessonId: pharmacyHelpLesson.id,
       title: pharmacyHelpLesson.title,
       eyebrow: {
-        en: 'Pharmacy',
+        en: 'Emergency',
         fr: 'Pharmacie',
       },
       summary: pharmacyHelpLesson.scenario,

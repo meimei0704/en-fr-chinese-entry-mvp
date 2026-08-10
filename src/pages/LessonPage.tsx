@@ -109,7 +109,6 @@ export function LessonPage() {
     <main className="page-shell page-shell--wide lesson-page">
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
-          <p className="eyebrow">{copy.lessonPage.eyebrow}</p>
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
         </header>
 
