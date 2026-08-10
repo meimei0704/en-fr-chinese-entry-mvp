@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getUiCopy } from '../content/copy'
+import { ContentLoading } from '../components/ContentState'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { PracticeChallenge } from '../components/PracticeChallenge'
 import type { LessonContent } from '../content/types'
@@ -90,14 +91,7 @@ export function PracticePage() {
   }
 
   if (!course && !fallbackLesson) {
-    return (
-      <main className="page-shell" role="status" aria-live="polite">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
-          <h1>{copy.contentState.loadingHeading}</h1>
-        </section>
-      </main>
-    )
+    return <ContentLoading />
   }
 
   if (!lesson) {

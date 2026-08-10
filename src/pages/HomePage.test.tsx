@@ -465,7 +465,7 @@ describe('HomePage', () => {
       </MockCourseProvider>,
     )
 
-    expect(screen.getByRole('status')).toHaveTextContent('Loading the course…')
+    expect(screen.getByRole('status')).toHaveTextContent('轻松学中文')
   })
 
   it('shows the error state with a retry button when the course fetch fails', () => {

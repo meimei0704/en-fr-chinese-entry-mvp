@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
+import { ContentLoading } from '../components/ContentState'
 import type { PinyinModuleKey } from '../content/types'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
@@ -60,14 +61,7 @@ export function PinyinPage() {
   }
 
   if (!pinyinCourse || !module) {
-    return (
-      <main className="page-shell" role="status" aria-live="polite">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
-          <h1>{copy.contentState.loadingHeading}</h1>
-        </section>
-      </main>
-    )
+    return <ContentLoading />
   }
 
   function handleReferenceAudioPlay() {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
+import { ContentLoading } from '../components/ContentState'
 import { DialoguePlayer } from '../components/DialoguePlayer'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
@@ -87,14 +88,7 @@ export function LessonPage() {
   }
 
   if (!course && !fallbackLesson) {
-    return (
-      <main className="page-shell" role="status" aria-live="polite">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.loadingEyebrow}</p>
-          <h1>{copy.contentState.loadingHeading}</h1>
-        </section>
-      </main>
-    )
+    return <ContentLoading />
   }
 
   if (!lesson) {

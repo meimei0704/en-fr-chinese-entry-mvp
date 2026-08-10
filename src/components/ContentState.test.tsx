@@ -8,16 +8,11 @@ import { render } from '@testing-library/react'
 import { ContentError, ContentLoading } from './ContentState'
 
 describe('ContentState', () => {
-  it('renders the loading state in English by default', () => {
-    render(<ContentLoading />)
+  it('renders the branded loading state with an accessible status region', () => {
+    const { container } = render(<ContentLoading />)
 
-    expect(screen.getByRole('status')).toHaveTextContent('Loading the course…')
-  })
-
-  it('renders the loading state in French when requested', () => {
-    render(<ContentLoading language="fr" />)
-
-    expect(screen.getByRole('status')).toHaveTextContent('Chargement du cours…')
+    expect(screen.getByRole('status')).toHaveTextContent('轻松学中文')
+    expect(container.querySelector('.brand-loading__logo')).toBeInTheDocument()
   })
 
   it('renders the error state with a working retry button', async () => {
