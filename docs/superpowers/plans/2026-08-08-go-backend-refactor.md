@@ -1525,33 +1525,26 @@ git commit -am "docs: mark go backend refactor complete and update README"
 
 ---
 
-## M8：Vercel 路由对齐（单入口 mux → 每端点独立 Function）
+## M8：Vercel 路由对齐（rewrite 方案，已实测定案）
 
 **背景**：方案 A（`internal/`→`pkg/`，`fb554e9`+`4fca4d6`）修复了 Vercel 构建失败（preview `state=success`），但实测暴露路由层缺口：Vercel Go Functions 按**文件路径**路由（`api/content/index.go` → 仅 `/api/content`），不把 `/api/content/*` 子路径转发给该函数；vercel.json 的 catch-all `/(.*) → /index.html` 吞掉所有子路径，导致 4 个 API 子端点全部返回 SPA HTML。
 
-**结论**：计划风险 1 的备选单入口 mux 与 Vercel 路由模型不兼容，回退为**每端点独立 .go 文件**（对齐原 TS 端点布局）。
+**定案（实测验证，非拆分）**：采用 **vercel.json 显式 subpath rewrite** 方案，`cef079e` 加 7 条 API subpath rewrite（每个子路径 → 对应单入口 Function 挂载点）+ `10a2cf7` 删除失效 path-form lessons rewrite 并断言完整 rewrite 集。**关键实测结论：Vercel rewrite 到 Function 时保留原始请求路径**（`r.URL.Path` 仍为 `/api/content/course` 而非 `/api/content`），Go 单入口 switch 原样命中——计划方此前担心的"path 被改写"风险实测不存在。拆分方案（每端点 .go）因此**不需要**，保留零改动。
 
-### Task 8.1: content 侧拆分
+**验证证据（preview `ga5sheloy`，state=success）**：
+- `/api/content/course` → 200 Go JSON ✅
+- `/api/content/lessons?lessonId=self-intro` → 200 Go JSON ✅
+- `/api/content/pinyin/course` → 200 Go JSON ✅
+- `/api/admin/content/lessons`（+ draft PUT / publish/rollback POST）→ 401 Go JSON ✅
+- 全部 JSON，无 SPA HTML；本地全量复验绿（vitest 45/302、go 10 包、tsc/lint 0 错误、compare 全 PASS、apiEntrypoints 2/2）
 
-- [ ] `api/content/course.go` → `Handler` 调 `NewCourseHandler().ServeHTTP(w,r)`
-- [ ] `api/content/lessons.go` → `Handler` 调 `NewLessonHandler().ServeHTTP(w,r)`
-- [ ] `api/content/pinyin/course.go`（目录层级 → 路由 `/api/content/pinyin/course`）→ `NewPinyinCourseHandler().ServeHTTP(w,r)`
-- [ ] 删除 `api/content/index.go`（保留或迁移 index_test.go 到各端点 *_test.go）
-- [ ] 保留 vercel.json lessons rewrite（`/api/content/lessons/:lessonId → /api/content/lessons?lessonId=:lessonId`，拆分后依然成立）
+### Task 8.1（已完成，record）
 
-### Task 8.2: admin 侧拆分
-
-- [ ] `api/admin/content/lessons.go`、`draft.go`、`publish.go`、`rollback.go`：各自 `package handler` + `func Handler(w,r)` 内 `adminhttp.New(repo,env).ServeHTTP(w,r)`（Vercel 路由到精确路径后 `r.URL.Path` 恰为对应端点，内部 switch 直接命中）
-- [ ] 删除 `api/admin/content/index.go`
-
-**无需改动 pkg/adminhttp / pkg/contentbuild 等**（handler 内部 switch 依赖 r.URL.Path，拆分后各文件收到精确路径，天然命中）。
-
-### Task 8.3: 复验与验收
-
-- [ ] 本地全量：`gofmt -l` 干净；`go build/vet ./...` exit 0；`go test -count=1 ./...` 13 包全绿；vitest 45/302；tsc/lint/build 0 错误；compare 16/16
-- [ ] 提交拆分 commit
-- [ ] 一次 Vercel preview，实测 4 端点全部返回 Go JSON：`/api/content/course`、`/api/content/lessons`、`/api/content/pinyin/course`、`/api/admin/content/lessons`（无需登录端点）
-- [ ] reviewer + planner 独立复验（preview 实测 + 本地全量）
+- [x] vercel.json 加 7 条 subpath rewrite（course/lessons/pinyin/course + admin lessons/draft/publish/rollback → 各自单入口挂载点），SPA fallback `/(.*)` 保持末位
+- [x] 删除失效 path-form lessons rewrite（前端与 compare 均用 query 形式 `?lessonId=`，无依赖）
+- [x] `apiEntrypoints.test.ts` 断言 7 条 rewrite 映射 + SPA fallback 末位
+- [x] 一次 preview（`ga5sheloy`）实测 4 端点全部返回 Go JSON
+- [x] reviewer + planner 独立复验（preview 实测 + 本地全量）
 
 ## 验证清单（每个里程碑必须满足）
 
@@ -1564,13 +1557,13 @@ git commit -am "docs: mark go backend refactor complete and update README"
 | M5 | `npm run test -- --run`、`npm run build`、`npm run lint`、`npx playwright test` |
 | M6 | `go test ./... -cover`；`node scripts/compare-content-api.mjs` 一致 |
 | M7 | 稳定 URL 生产验证 course/lessons/pinyin/admin |
-| M8 | 拆分后本地全量复验绿 + preview 4 端点返回 Go JSON |
+| M8 | vercel.json subpath rewrite 后本地全量复验绿 + preview（`ga5sheloy`）4 端点返回 Go JSON |
 
 > 注：方案 A 已将 `internal/` 重命名为 `pkg/`，M1–M4 验证路径同步改为 `./pkg/...`。
 
 ## 风险与实施注意
 
-1. **Vercel Go Functions 路由语义（M8 已实测定案）**：初始采用单入口 mux（`api/content/index.go`、`api/admin/content/index.go` 按 path 路由），但经 Vercel 实测不兼容——Vercel 按**文件路径**路由，`index.go` 仅映射 `/api/content`，不转发 `/api/content/*` 子路径，catch-all `/(.*)` rewrite 吞掉所有子路径（全返回 SPA HTML）。**M8 定案：每端点独立 .go 文件**（`api/content/course.go`、`lessons.go`、`pinyin/course.go`；`api/admin/content/lessons.go`、`draft.go`、`publish.go`、`rollback.go`），对齐原 TS 端点布局；本地 `go build ./api/...` 验证同目录多 Handler 编译。
+1. **Vercel Go Functions 路由语义（M8 已实测定案）**：初始采用单入口 mux（`api/content/index.go`、`api/admin/content/index.go` 按 path 路由），但经 Vercel 实测暴露路由缺口——Vercel 按**文件路径**路由，`index.go` 仅映射 `/api/content`，不转发 `/api/content/*` 子路径，catch-all `/(.*)` rewrite 吞掉所有子路径（全返回 SPA HTML）。**M8 定案：vercel.json 显式 subpath rewrite**（7 条，子路径 → 单入口挂载点）；实测确认 Vercel rewrite 到 Function 时**保留原始请求路径**，Go switch 原样命中，无需拆分每端点 .go 文件。前端与 compare 均用 query 形式 `?lessonId=`，path-form rewrite 已删除无依赖。
 2. **DSN 兼容（M2 Step 0 spike）**：确认 `MYSQL_DATABASE_URL` 格式；URI scheme 需转 go-sql-driver DSN；`MYSQL_SSL=required` 的 `tls=true` 拼接需按 query 格式处理。
 3. **`apiEntrypoints.test.ts`**：M7 删 TS 端点时同步更新该测试。
 4. **前端时序**：页面测试由同步改异步，用 `findBy*`；避免时序敏感断言。
