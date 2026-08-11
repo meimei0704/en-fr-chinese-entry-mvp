@@ -34,16 +34,17 @@ export function PinyinReferenceSection({
                       <p className="pinyin-reference-card__phoneme">
                         {item.tone !== undefined ? item.pinyin : getLocalizedText(item.label, language)}
                       </p>
+                      <SpeechButton
+                        label={playAudioLabel(item.pinyin)}
+                        text={item.pinyin}
+                        audioSrc={item.audio}
+                        onActivate={onReferenceAudioPlay}
+                      />
                     </div>
                     <div className="pinyin-reference-card__example">
                       {item.hanzi ? (
                         <span className="pinyin-reference-card__hanzi" aria-hidden="true">
                           {item.hanzi}
-                        </span>
-                      ) : null}
-                      {item.emoji ? (
-                        <span className="pinyin-reference-card__emoji" aria-hidden="true">
-                          {item.emoji}
                         </span>
                       ) : null}
                       {item.tone !== undefined ? (
@@ -56,20 +57,20 @@ export function PinyinReferenceSection({
                             label={getLocalizedText(item.label, language)}
                           />
                         </>
-                      ) : null}
-                      {item.tone === undefined ? (
+                      ) : (
                         <p className="pinyin-reference-card__example-pinyin">
                           {item.pinyin}
                         </p>
-                      ) : null}
+                      )}
                     </div>
+                    {item.emoji ? (
+                      <div className="pinyin-reference-card__image">
+                        <span className="pinyin-reference-card__emoji" aria-hidden="true">
+                          {item.emoji}
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
-                  <SpeechButton
-                    label={playAudioLabel(item.pinyin)}
-                    text={item.pinyin}
-                    audioSrc={item.audio}
-                    onActivate={onReferenceAudioPlay}
-                  />
                   <p className="muted-text">{getLocalizedText(item.description, language)}</p>
                 </article>
               ))}

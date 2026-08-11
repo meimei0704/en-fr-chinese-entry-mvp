@@ -25,25 +25,27 @@ export function PinyinWholeSyllablesSection({
                 <p className="pinyin-reference-card__phoneme">
                   {item.bare}
                 </p>
+                <SpeechButton
+                  label={playAudioLabel(item.bare)}
+                  text={item.bare}
+                  audioSrc={item.audio}
+                  onActivate={onReferenceAudioPlay}
+                />
               </div>
               <div className="pinyin-reference-card__example">
                 <span className="pinyin-reference-card__hanzi" aria-hidden="true">
                   {item.hanzi}
                 </span>
-                <span className="pinyin-reference-card__emoji" aria-hidden="true">
-                  {item.emoji}
-                </span>
                 <p className="pinyin-reference-card__example-pinyin">
                   {item.pinyin}
                 </p>
               </div>
+              <div className="pinyin-reference-card__image">
+                <span className="pinyin-reference-card__emoji" aria-hidden="true">
+                  {item.emoji}
+                </span>
+              </div>
             </div>
-            <SpeechButton
-              label={playAudioLabel(item.bare)}
-              text={item.bare}
-              audioSrc={item.audio}
-              onActivate={onReferenceAudioPlay}
-            />
             <p className="muted-text">{getLocalizedText(item.description, language)}</p>
           </article>
         ))}
