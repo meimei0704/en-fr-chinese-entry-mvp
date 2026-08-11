@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 import { readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -54,6 +55,29 @@ describe('pinyin course content', () => {
       expect(audioPath).toMatch(/^\/audio\/pinyin\/(lesson-\d|whole-syllables)\/.+\.mp3$/)
       const publicFilePath = join(process.cwd(), 'public', audioPath.replace(/^\//, ''))
       expect(statSync(publicFilePath).size).toBeGreaterThan(0)
+    }
+  })
+
+  it('locks the 23 initial call-sound MP3s to the sha256 manifest', () => {
+    const manifestPath = join(
+      process.cwd(),
+      'public/audio/pinyin/reference-initial.sha256',
+    )
+    const manifest = readFileSync(manifestPath, 'utf8')
+      .trim()
+      .split('\n')
+      .map((line) => line.split('  '))
+      .map(([hash, relPath]) => ({ hash, relPath }))
+
+    expect(manifest).toHaveLength(23)
+
+    for (const { hash, relPath } of manifest) {
+      const filePath = join(process.cwd(), 'public/audio/pinyin', relPath)
+      const liveHash = createHash('sha256').update(readFileSync(filePath)).digest('hex')
+      expect(
+        liveHash,
+        `${relPath} should play the initial call sound (呼读音), not an example word`,
+      ).toBe(hash)
     }
   })
 
