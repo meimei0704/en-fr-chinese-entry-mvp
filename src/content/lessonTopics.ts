@@ -84,10 +84,10 @@ export const lessonTopicDisplays = {
     },
   },
   'small-talk': {
-    hanzi: '闲聊',
+    hanzi: '闲聊和赞美',
     explanation: {
-      en: 'Small talk',
-      fr: 'Petite conversation',
+      en: 'Small talk and compliment',
+      fr: 'Petite conversation et compliments',
     },
   },
 } as const satisfies Record<LessonId, LessonTopicDisplay>
