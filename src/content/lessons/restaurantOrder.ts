@@ -218,6 +218,132 @@ export const restaurantOrderLesson: LessonContent = {
         fr: 'Demande cela à la fin du repas si tu veux emporter la nourriture.',
       },
     },
+    {
+      id: 'restaurant-order-pattern-6',
+      pattern: '服务员！',
+      meaning: {
+        en: 'Waiter!',
+        fr: 'Serveur !',
+      },
+      example: '服务员！',
+      audio: '/audio/restaurant-order/pattern-06.mp3',
+      explanation: {
+        en: 'Call 服务员 to get a server\'s attention in a restaurant.',
+        fr: 'Appelle 服务员 pour attirer l\'attention d\'un serveur au restaurant.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-7',
+      pattern: '可以点餐了吗？',
+      meaning: {
+        en: 'Can I order now?',
+        fr: 'Puis-je commander maintenant ?',
+      },
+      example: '可以点餐了吗？',
+      audio: '/audio/restaurant-order/pattern-07.mp3',
+      explanation: {
+        en: 'Ask 可以点餐了吗 when you are ready to order.',
+        fr: 'Demande 可以点餐了吗 quand tu es prêt à commander.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-8',
+      pattern: '我要这个。',
+      meaning: {
+        en: 'I want this one.',
+        fr: 'Je veux ceci.',
+      },
+      example: '我要这个。',
+      audio: '/audio/restaurant-order/pattern-08.mp3',
+      explanation: {
+        en: 'Point at an item and say 我要这个 to order it.',
+        fr: 'Montre un article et dis 我要这个 pour le commander.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-9',
+      pattern: '来一碗米饭。',
+      meaning: {
+        en: 'A bowl of rice, please.',
+        fr: 'Un bol de riz, s\'il vous plaît.',
+      },
+      example: '来一碗米饭。',
+      audio: '/audio/restaurant-order/pattern-09.mp3',
+      explanation: {
+        en: 'Order a bowl of rice with 来一碗米饭.',
+        fr: 'Commande un bol de riz avec 来一碗米饭.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-10',
+      pattern: '请给我一杯水。',
+      meaning: {
+        en: 'Please give me a glass of water.',
+        fr: 'Un verre d\'eau, s\'il vous plaît.',
+      },
+      example: '请给我一杯水。',
+      audio: '/audio/restaurant-order/pattern-10.mp3',
+      explanation: {
+        en: 'Use 请给我一杯水 to ask for a glass of water.',
+        fr: 'Utilise 请给我一杯水 pour demander un verre d\'eau.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-11',
+      pattern: '微辣。',
+      meaning: {
+        en: 'Mildly spicy.',
+        fr: 'Légèrement épicé.',
+      },
+      example: '微辣。',
+      audio: '/audio/restaurant-order/pattern-11.mp3',
+      explanation: {
+        en: 'Use 微辣 to ask for a mild level of spice.',
+        fr: 'Utilise 微辣 pour demander un niveau de piment léger.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-12',
+      pattern: '我是素食主义者。',
+      meaning: {
+        en: 'I am vegetarian.',
+        fr: 'Je suis végétarien(ne).',
+      },
+      example: '我是素食主义者。',
+      audio: '/audio/restaurant-order/pattern-12.mp3',
+      explanation: {
+        en: 'Tell the server 我是素食主义者 to explain your dietary preference.',
+        fr: 'Dis au serveur 我是素食主义者 pour expliquer ton régime alimentaire.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-13',
+      pattern: '您好，结账。',
+      meaning: {
+        en: 'Hello, the check, please.',
+        fr: 'Bonjour, l\'addition, s\'il vous plaît.',
+      },
+      example: '您好，结账。',
+      audio: '/audio/restaurant-order/pattern-13.mp3',
+      explanation: {
+        en: 'Ask 您好，结账 to request the bill at the end of a meal.',
+        fr: 'Demande 您好，结账 pour réclamer l\'addition à la fin du repas.',
+      },
+    },
+    {
+      id: 'restaurant-order-pattern-14',
+      pattern: '我吃饱了。',
+      meaning: {
+        en: 'I am full.',
+        fr: 'Je suis rassasié(e).',
+      },
+      example: '我吃饱了。',
+      audio: '/audio/restaurant-order/pattern-14.mp3',
+      explanation: {
+        en: 'Say 我吃饱了 to let the server know you have eaten enough.',
+        fr: 'Dis 我吃饱了 pour faire savoir au serveur que tu as assez mangé.',
+      },
+    },
   ],
   vocabulary: [
     {

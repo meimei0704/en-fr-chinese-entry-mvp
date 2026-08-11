@@ -218,6 +218,160 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'Dis 我迷路了 quand tu ne trouves pas ton chemin.',
       },
     },
+    {
+      id: 'ask-for-help-problem-pattern-6',
+      pattern: '我手机没电了。',
+      meaning: {
+        en: 'My phone is dead.',
+        fr: 'Mon téléphone n\'a plus de batterie.',
+      },
+      example: '我手机没电了。',
+      audio: '/audio/ask-for-help-problem/pattern-06.mp3',
+      explanation: {
+        en: 'Say 我手机没电了 when your phone has run out of battery.',
+        fr: 'Dis 我手机没电了 quand ton téléphone n\'a plus de batterie.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-7',
+      pattern: '请问哪里可以给手机充电？',
+      meaning: {
+        en: 'Where can I charge my phone?',
+        fr: 'Où puis-je recharger mon téléphone ?',
+      },
+      example: '请问哪里可以给手机充电？',
+      audio: '/audio/ask-for-help-problem/pattern-07.mp3',
+      explanation: {
+        en: 'Ask 哪里可以给手机充电 to find a place to charge your phone.',
+        fr: 'Demande 哪里可以给手机充电 pour trouver un endroit où recharger ton téléphone.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-8',
+      pattern: '您好，共享单车怎么用？',
+      meaning: {
+        en: 'Hello, how do I use the shared bike?',
+        fr: 'Bonjour, comment utiliser le vélo partagé ?',
+      },
+      example: '您好，共享单车怎么用？',
+      audio: '/audio/ask-for-help-problem/pattern-08.mp3',
+      explanation: {
+        en: 'Ask 共享单车怎么用 to learn how to use a shared bike.',
+        fr: 'Demande 共享单车怎么用 pour apprendre à utiliser un vélo partagé.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-9',
+      pattern: '能帮我一个忙吗？',
+      meaning: {
+        en: 'Could you do me a favor?',
+        fr: 'Pouvez-vous me rendre un service ?',
+      },
+      example: '能帮我一个忙吗？',
+      audio: '/audio/ask-for-help-problem/pattern-09.mp3',
+      explanation: {
+        en: 'Use 能帮我一个忙吗 to ask someone for a favor politely.',
+        fr: 'Utilise 能帮我一个忙吗 pour demander poliment un service.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-10',
+      pattern: '麻烦你了。',
+      meaning: {
+        en: 'Sorry to trouble you.',
+        fr: 'Désolé de vous déranger.',
+      },
+      example: '麻烦你了。',
+      audio: '/audio/ask-for-help-problem/pattern-10.mp3',
+      explanation: {
+        en: 'Say 麻烦你了 to thank someone after asking for their help.',
+        fr: 'Dis 麻烦你了 pour remercier quelqu\'un après lui avoir demandé de l\'aide.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-11',
+      pattern: '救命！',
+      meaning: {
+        en: 'Help!',
+        fr: 'Au secours !',
+      },
+      example: '救命！',
+      audio: '/audio/ask-for-help-problem/pattern-11.mp3',
+      explanation: {
+        en: 'Shout 救命 in an emergency to call for urgent help.',
+        fr: 'Crie 救命 en cas d\'urgence pour appeler de l\'aide.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-12',
+      pattern: '请给警察打电话。',
+      meaning: {
+        en: 'Please call the police.',
+        fr: 'Veuillez appeler la police.',
+      },
+      example: '请给警察打电话。',
+      audio: '/audio/ask-for-help-problem/pattern-12.mp3',
+      explanation: {
+        en: 'Ask 请给警察打电话 when you need the police in an emergency.',
+        fr: 'Demande 请给警察打电话 quand tu as besoin de la police en urgence.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-13',
+      pattern: '卫生间在哪里？',
+      meaning: {
+        en: 'Where is the toilet?',
+        fr: 'Où sont les toilettes ?',
+      },
+      example: '卫生间在哪里？',
+      audio: '/audio/ask-for-help-problem/pattern-13.mp3',
+      explanation: {
+        en: 'Ask 卫生间在哪里 to find a restroom in a public place.',
+        fr: 'Demande 卫生间在哪里 pour trouver des toilettes dans un lieu public.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-14',
+      pattern: '打扰一下，请问最近的便利店在哪里？',
+      meaning: {
+        en: 'Excuse me, where is the nearest convenience store?',
+        fr: 'Excusez-moi, où est la supérette la plus proche ?',
+      },
+      example: '打扰一下,请问最近的便利店在哪里?',
+      audio: '/audio/ask-for-help-problem/pattern-14.mp3',
+      explanation: {
+        en: 'Ask 最近的便利店在哪里 to find a nearby convenience store.',
+        fr: 'Demande 最近的便利店在哪里 pour trouver une supérette proche.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-15',
+      pattern: '我的手机不见了。',
+      meaning: {
+        en: 'I lost my phone.',
+        fr: 'J\'ai perdu mon téléphone.',
+      },
+      example: '我的手机不见了。',
+      audio: '/audio/ask-for-help-problem/pattern-15.mp3',
+      explanation: {
+        en: 'Say 我的手机不见了 to report a lost phone.',
+        fr: 'Dis 我的手机不见了 pour signaler un téléphone perdu.',
+      },
+    },
+    {
+      id: 'ask-for-help-problem-pattern-16',
+      pattern: '我的钱包不见了。',
+      meaning: {
+        en: 'I lost my wallet.',
+        fr: 'J\'ai perdu mon portefeuille.',
+      },
+      example: '我的钱包不见了。',
+      audio: '/audio/ask-for-help-problem/pattern-16.mp3',
+      explanation: {
+        en: 'Say 我的钱包不见了 to report a lost wallet.',
+        fr: 'Dis 我的钱包不见了 pour signaler un portefeuille perdu.',
+      },
+    },
   ],
   vocabulary: [
     {

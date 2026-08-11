@@ -218,6 +218,104 @@ export const trainStationTicketLesson: LessonContent = {
         fr: 'Demande 怎么换乘 quand tu dois changer de train.',
       },
     },
+    {
+      id: 'train-station-ticket-pattern-6',
+      pattern: '售票处在哪里？',
+      meaning: {
+        en: 'Where is the ticket office?',
+        fr: 'Où est le guichet de billets ?',
+      },
+      example: '售票处在哪里？',
+      audio: '/audio/train-station-ticket/pattern-06.mp3',
+      explanation: {
+        en: 'Ask 售票处在哪里 to find the ticket office at the station.',
+        fr: 'Demande 售票处在哪里 pour trouver le guichet de billets en gare.',
+      },
+    },
+    {
+      id: 'train-station-ticket-pattern-7',
+      pattern: '这是我的护照。',
+      meaning: {
+        en: 'This is my passport.',
+        fr: 'Voici mon passeport.',
+      },
+      example: '这是我的护照。',
+      audio: '/audio/train-station-ticket/pattern-07.mp3',
+      explanation: {
+        en: 'Hand over your passport with 这是我的护照 when buying a ticket.',
+        fr: 'Présente ton passeport avec 这是我的护照 quand tu achètes un billet.',
+      },
+    },
+    {
+      id: 'train-station-ticket-pattern-8',
+      pattern: '餐车在哪里？',
+      meaning: {
+        en: 'Where is the dining car?',
+        fr: 'Où est la voiture-restaurant ?',
+      },
+      example: '餐车在哪里？',
+      audio: '/audio/train-station-ticket/pattern-08.mp3',
+      explanation: {
+        en: 'Ask 餐车在哪里 to find the dining car on the train.',
+        fr: 'Demande 餐车在哪里 pour trouver la voiture-restaurant dans le train.',
+      },
+    },
+    {
+      id: 'train-station-ticket-pattern-9',
+      pattern: '我误车了。',
+      meaning: {
+        en: 'I missed my train.',
+        fr: 'J\'ai raté mon train.',
+      },
+      example: '我误车了。',
+      audio: '/audio/train-station-ticket/pattern-09.mp3',
+      explanation: {
+        en: 'Say 我误车了 to tell staff you missed your train.',
+        fr: 'Dis 我误车了 pour dire au personnel que tu as raté ton train.',
+      },
+    },
+    {
+      id: 'train-station-ticket-pattern-10',
+      pattern: '我没赶上火车。',
+      meaning: {
+        en: 'I missed the train.',
+        fr: 'J\'ai raté le train.',
+      },
+      example: '我没赶上火车。',
+      audio: '/audio/train-station-ticket/pattern-10.mp3',
+      explanation: {
+        en: 'Another way to say 我没赶上火车 when you arrived too late.',
+        fr: 'Une autre façon de dire que tu es arrivé trop tard pour le train.',
+      },
+    },
+    {
+      id: 'train-station-ticket-pattern-11',
+      pattern: '能改签下一辆车吗？',
+      meaning: {
+        en: 'Can I change my ticket for a later train?',
+        fr: 'Puis-je modifier mon billet pour un train suivant ?',
+      },
+      example: '能改签下一辆车吗？',
+      audio: '/audio/train-station-ticket/pattern-11.mp3',
+      explanation: {
+        en: 'Ask 能改签 to exchange your ticket for a later train.',
+        fr: 'Demande 能改签 pour échanger ton billet contre un train suivant.',
+      },
+    },
+    {
+      id: 'train-station-ticket-pattern-12',
+      pattern: '如何退票退款呢？',
+      meaning: {
+        en: 'How can I get a ticket cancellation and refund?',
+        fr: 'Comment obtenir l\'annulation et le remboursement du billet ?',
+      },
+      example: '如何退票退款呢？',
+      audio: '/audio/train-station-ticket/pattern-12.mp3',
+      explanation: {
+        en: 'Ask 如何退票退款 to learn how to cancel and get a refund.',
+        fr: 'Demande 如何退票退款 pour savoir comment annuler et te faire rembourser.',
+      },
+    },
   ],
   vocabulary: [
     {

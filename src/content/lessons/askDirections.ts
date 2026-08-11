@@ -233,6 +233,90 @@ export const askDirectionsLesson: LessonContent = {
         fr: 'Utilise 可以…吗 pour demander poliment un confort ou un moyen de paiement dans le taxi.',
       },
     },
+    {
+      id: 'ask-directions-pattern-6',
+      pattern: '请开慢一点。',
+      meaning: {
+        en: 'Please drive slower.',
+        fr: 'Allez plus lentement, s\'il vous plaît.',
+      },
+      example: '请开慢一点。',
+      audio: '/audio/ask-directions/pattern-06.mp3',
+      explanation: {
+        en: 'Ask the driver to slow down if the ride feels too fast.',
+        fr: 'Demande au chauffeur de ralentir si la course te semble trop rapide.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-7',
+      pattern: '麻烦停下车。',
+      meaning: {
+        en: 'Please stop the car.',
+        fr: 'Arrêtez la voiture, s\'il vous plaît.',
+      },
+      example: '麻烦停下车。',
+      audio: '/audio/ask-directions/pattern-07.mp3',
+      explanation: {
+        en: 'Use 麻烦停车 to politely ask the taxi to stop.',
+        fr: 'Utilise 麻烦停车 pour demander poliment au taxi de s\'arrêter.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-8',
+      pattern: '一共多少钱？',
+      meaning: {
+        en: 'How much is it altogether?',
+        fr: 'Combien ça fait au total ?',
+      },
+      example: '一共多少钱？',
+      audio: '/audio/ask-directions/pattern-08.mp3',
+      explanation: {
+        en: 'Ask 一共多少钱 to get the total fare when the ride ends.',
+        fr: 'Demande 一共多少钱 pour connaître le prix total à la fin de la course.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-9',
+      pattern: '怎么支付呢？',
+      meaning: {
+        en: 'How should I pay?',
+        fr: 'Comment payer ?',
+      },
+      example: '怎么支付呢？',
+      audio: '/audio/ask-directions/pattern-09.mp3',
+      explanation: {
+        en: 'Ask 怎么支付 to learn the accepted payment methods.',
+        fr: 'Demande 怎么支付 pour connaître les moyens de paiement acceptés.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-10',
+      pattern: '可以用微信/支付宝吗？',
+      meaning: {
+        en: 'Can I use WeChat Pay / Alipay?',
+        fr: 'Puis-je payer avec WeChat / Alipay ?',
+      },
+      example: '可以用微信/支付宝吗？',
+      audio: '/audio/ask-directions/pattern-10.mp3',
+      explanation: {
+        en: 'Check if mobile payment apps are accepted before paying.',
+        fr: 'Vérifie si les applications de paiement mobile sont acceptées avant de payer.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-11',
+      pattern: '请给我发票。',
+      meaning: {
+        en: 'Please give me a receipt.',
+        fr: 'Un reçu, s\'il vous plaît.',
+      },
+      example: '请给我发票。',
+      audio: '/audio/ask-directions/pattern-11.mp3',
+      explanation: {
+        en: 'Ask 请给我发票 when you need an official receipt for reimbursement.',
+        fr: 'Demande 请给我发票 si tu as besoin d\'un reçu officiel pour te faire rembourser.',
+      },
+    },
   ],
   vocabulary: [
     {

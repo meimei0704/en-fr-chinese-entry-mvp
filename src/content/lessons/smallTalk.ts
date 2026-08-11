@@ -233,6 +233,90 @@ export const smallTalkLesson: LessonContent = {
         fr: 'Complimente un trait avec 你的……很好.',
       },
     },
+    {
+      id: 'small-talk-pattern-6',
+      pattern: '今天天气好冷啊。',
+      meaning: {
+        en: 'The weather is cold today.',
+        fr: 'Il fait froid aujourd\'hui.',
+      },
+      example: '今天天气好冷啊。',
+      audio: '/audio/small-talk/pattern-06.mp3',
+      explanation: {
+        en: 'Comment on the cold weather with 好冷啊 to keep a chat going.',
+        fr: 'Commente le froid avec 好冷啊 pour poursuivre une conversation.',
+      },
+    },
+    {
+      id: 'small-talk-pattern-7',
+      pattern: '你穿衣真好看。',
+      meaning: {
+        en: 'I like your outfit.',
+        fr: 'J\'aime beaucoup ta tenue.',
+      },
+      example: '你穿衣真好看。',
+      audio: '/audio/small-talk/pattern-07.mp3',
+      explanation: {
+        en: 'Compliment someone\'s outfit with 你穿衣真好看.',
+        fr: 'Complimente la tenue de quelqu\'un avec 你穿衣真好看.',
+      },
+    },
+    {
+      id: 'small-talk-pattern-8',
+      pattern: '你太幽默了。',
+      meaning: {
+        en: 'You are so funny.',
+        fr: 'Tu es très drôle.',
+      },
+      example: '你太幽默了。',
+      audio: '/audio/small-talk/pattern-08.mp3',
+      explanation: {
+        en: 'Compliment someone\'s humor with 你太幽默了.',
+        fr: 'Complimente l\'humour de quelqu\'un avec 你太幽默了.',
+      },
+    },
+    {
+      id: 'small-talk-pattern-9',
+      pattern: '你真了不起！',
+      meaning: {
+        en: 'You are incredible!',
+        fr: 'Tu es incroyable !',
+      },
+      example: '你真了不起！',
+      audio: '/audio/small-talk/pattern-09.mp3',
+      explanation: {
+        en: 'Give a strong compliment with 你真了不起.',
+        fr: 'Fais un grand compliment avec 你真了不起.',
+      },
+    },
+    {
+      id: 'small-talk-pattern-10',
+      pattern: '你太热情了。',
+      meaning: {
+        en: 'You are so warm-hearted.',
+        fr: 'Tu es très chaleureux.',
+      },
+      example: '你太热情了。',
+      audio: '/audio/small-talk/pattern-10.mp3',
+      explanation: {
+        en: 'Compliment someone\'s warm personality with 你太热情了.',
+        fr: 'Complimente la chaleur de quelqu\'un avec 你太热情了.',
+      },
+    },
+    {
+      id: 'small-talk-pattern-11',
+      pattern: '你太乐于助人了。',
+      meaning: {
+        en: 'You are kind-hearted and helpful.',
+        fr: 'Tu es gentil(le) et serviable.',
+      },
+      example: '你太乐于助人了。',
+      audio: '/audio/small-talk/pattern-11.mp3',
+      explanation: {
+        en: 'Thank someone for being helpful with 你太乐于助人了.',
+        fr: 'Remercie quelqu\'un d\'être serviable avec 你太乐于助人了.',
+      },
+    },
   ],
   vocabulary: [
     {

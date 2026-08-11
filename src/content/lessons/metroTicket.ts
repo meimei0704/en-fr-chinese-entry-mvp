@@ -218,6 +218,62 @@ export const metroTicketLesson: LessonContent = {
         fr: 'Confirme que tu vas dans le bon sens avec 是这个方向吗.',
       },
     },
+    {
+      id: 'metro-ticket-pattern-6',
+      pattern: '在哪儿买票？',
+      meaning: {
+        en: 'Where can I buy a ticket?',
+        fr: 'Où puis-je acheter un ticket ?',
+      },
+      example: '在哪儿买票？',
+      audio: '/audio/metro-ticket/pattern-06.mp3',
+      explanation: {
+        en: 'Ask 在哪儿买票 to find where to buy a metro ticket.',
+        fr: 'Demande 在哪儿买票 pour trouver où acheter un ticket de métro.',
+      },
+    },
+    {
+      id: 'metro-ticket-pattern-7',
+      pattern: '您好，我要一张票。',
+      meaning: {
+        en: 'Hello, I want to buy a ticket.',
+        fr: 'Bonjour, je voudrais un ticket.',
+      },
+      example: '您好，我要一张票。',
+      audio: '/audio/metro-ticket/pattern-07.mp3',
+      explanation: {
+        en: 'Ask 我要一张票 to buy a single metro ticket.',
+        fr: 'Demande 我要一张票 pour acheter un ticket de métro.',
+      },
+    },
+    {
+      id: 'metro-ticket-pattern-8',
+      pattern: '我要去这里。',
+      meaning: {
+        en: 'I want to go to this place.',
+        fr: 'Je veux aller à cet endroit.',
+      },
+      example: '我要去这里。',
+      audio: '/audio/metro-ticket/pattern-08.mp3',
+      explanation: {
+        en: 'Point at a map and say 我要去这里 to show your destination.',
+        fr: 'Montre une carte et dis 我要去这里 pour indiquer ta destination.',
+      },
+    },
+    {
+      id: 'metro-ticket-pattern-9',
+      pattern: '请问，哪个出口去？',
+      meaning: {
+        en: 'Excuse me, which exit should I take?',
+        fr: 'Excusez-moi, quelle sortie dois-je prendre ?',
+      },
+      example: '请问，哪个出口去？',
+      audio: '/audio/metro-ticket/pattern-09.mp3',
+      explanation: {
+        en: 'Ask 哪个出口去 to find the right exit for your destination.',
+        fr: 'Demande 哪个出口去 pour trouver la bonne sortie vers ta destination.',
+      },
+    },
   ],
   vocabulary: [
     {

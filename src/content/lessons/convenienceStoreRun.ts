@@ -218,6 +218,104 @@ export const convenienceStoreRunLesson: LessonContent = {
         fr: 'Utilise 有…吗 pour vérifier si un article ou un service est disponible.',
       },
     },
+    {
+      id: 'convenience-store-run-pattern-6',
+      pattern: '我只是看看。',
+      meaning: {
+        en: 'I am just looking.',
+        fr: 'Je regarde juste.',
+      },
+      example: '我只是看看。',
+      audio: '/audio/convenience-store-run/pattern-06.mp3',
+      explanation: {
+        en: 'Say 我只是看看 when you do not want to buy yet.',
+        fr: 'Dis 我只是看看 quand tu ne veux pas encore acheter.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-7',
+      pattern: '有别的颜色吗?',
+      meaning: {
+        en: 'Do you have other colors?',
+        fr: 'Avez-vous d\'autres couleurs ?',
+      },
+      example: '有别的颜色吗?',
+      audio: '/audio/convenience-store-run/pattern-07.mp3',
+      explanation: {
+        en: 'Ask 有别的颜色吗 to check for other color options.',
+        fr: 'Demande 有别的颜色吗 pour vérifier les autres couleurs.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-8',
+      pattern: '我可以试试吗？',
+      meaning: {
+        en: 'Can I try it on?',
+        fr: 'Puis-je l\'essayer ?',
+      },
+      example: '我可以试试吗？',
+      audio: '/audio/convenience-store-run/pattern-08.mp3',
+      explanation: {
+        en: 'Ask 我可以试试吗 before trying on clothing.',
+        fr: 'Demande 我可以试试吗 avant d\'essayer des vêtements.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-9',
+      pattern: '试衣间在哪里?',
+      meaning: {
+        en: 'Where is the fitting room?',
+        fr: 'Où est la cabine d\'essayage ?',
+      },
+      example: '试衣间在哪里?',
+      audio: '/audio/convenience-store-run/pattern-09.mp3',
+      explanation: {
+        en: 'Ask 试衣间在哪里 to find the fitting room.',
+        fr: 'Demande 试衣间在哪里 pour trouver la cabine d\'essayage.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-10',
+      pattern: '有大号/小号吗?',
+      meaning: {
+        en: 'Do you have a large/small size?',
+        fr: 'Avez-vous une grande/petite taille ?',
+      },
+      example: '有大号/小号吗?',
+      audio: '/audio/convenience-store-run/pattern-10.mp3',
+      explanation: {
+        en: 'Ask 有大号/小号吗 to check available sizes.',
+        fr: 'Demande 有大号/小号吗 pour vérifier les tailles disponibles.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-11',
+      pattern: '可以刷卡吗?',
+      meaning: {
+        en: 'Can I pay by card?',
+        fr: 'Puis-je payer par carte ?',
+      },
+      example: '可以刷卡吗?',
+      audio: '/audio/convenience-store-run/pattern-11.mp3',
+      explanation: {
+        en: 'Ask 可以刷卡吗 to check if card payment is accepted.',
+        fr: 'Demande 可以刷卡吗 pour vérifier si le paiement par carte est accepté.',
+      },
+    },
+    {
+      id: 'convenience-store-run-pattern-12',
+      pattern: '我用微信支付 / 支付宝。',
+      meaning: {
+        en: 'I will use WeChat Pay / Alipay.',
+        fr: 'Je vais payer avec WeChat / Alipay.',
+      },
+      example: '我用微信支付 / 支付宝。',
+      audio: '/audio/convenience-store-run/pattern-12.mp3',
+      explanation: {
+        en: 'Tell the clerk how you will pay with 微信支付 or 支付宝.',
+        fr: 'Indique au vendeur comment tu vas payer avec 微信支付 ou 支付宝.',
+      },
+    },
   ],
   vocabulary: [
     {

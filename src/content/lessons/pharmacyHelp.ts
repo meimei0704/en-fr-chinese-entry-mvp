@@ -221,6 +221,118 @@ export const pharmacyHelpLesson: LessonContent = {
         fr: 'Demande ceci pour confirmer quand prendre ton médicament.',
       },
     },
+    {
+      id: 'pharmacy-help-pattern-6',
+      pattern: '我要挂号。',
+      meaning: {
+        en: 'I need to register.',
+        fr: 'Je dois m\'inscrire / enregistrer.',
+      },
+      example: '我要挂号。',
+      audio: '/audio/pharmacy-help/pattern-06.mp3',
+      explanation: {
+        en: 'Say 我要挂号 to register at a hospital reception.',
+        fr: 'Dis 我要挂号 pour t\'inscrire à l\'accueil de l\'hôpital.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-7',
+      pattern: '我头痛。',
+      meaning: {
+        en: 'I have a headache.',
+        fr: 'J\'ai mal à la tête.',
+      },
+      example: '我头痛。',
+      audio: '/audio/pharmacy-help/pattern-07.mp3',
+      explanation: {
+        en: 'Describe a headache with 我头痛.',
+        fr: 'Décris un mal de tête avec 我头痛.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-8',
+      pattern: '我感冒了。',
+      meaning: {
+        en: 'I caught a cold.',
+        fr: 'J\'ai attrapé un rhume.',
+      },
+      example: '我感冒了。',
+      audio: '/audio/pharmacy-help/pattern-08.mp3',
+      explanation: {
+        en: 'Say 我感冒了 to tell the doctor or pharmacist you have a cold.',
+        fr: 'Dis 我感冒了 pour dire au médecin ou au pharmacien que tu as un rhume.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-9',
+      pattern: '我拉肚子了。',
+      meaning: {
+        en: 'I have diarrhea.',
+        fr: 'J\'ai la diarrhée.',
+      },
+      example: '我拉肚子了。',
+      audio: '/audio/pharmacy-help/pattern-09.mp3',
+      explanation: {
+        en: 'Report a stomach problem with 我拉肚子了.',
+        fr: 'Signale un problème de ventre avec 我拉肚子了.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-10',
+      pattern: '谢谢医生。谢谢护士。',
+      meaning: {
+        en: 'Thank you, doctor. Thank you, nurse.',
+        fr: 'Merci, docteur. Merci, infirmière.',
+      },
+      example: '谢谢医生。谢谢护士。',
+      audio: '/audio/pharmacy-help/pattern-10.mp3',
+      explanation: {
+        en: 'Thank the medical staff with 谢谢医生 and 谢谢护士.',
+        fr: 'Remercie le personnel médical avec 谢谢医生 et 谢谢护士.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-11',
+      pattern: '请问去哪里结账？',
+      meaning: {
+        en: 'Where do I pay the bill?',
+        fr: 'Où dois-je payer la facture ?',
+      },
+      example: '请问去哪里结账？',
+      audio: '/audio/pharmacy-help/pattern-11.mp3',
+      explanation: {
+        en: 'Ask 请问去哪里结账 to find the payment counter.',
+        fr: 'Demande 请问去哪里结账 pour trouver la caisse.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-12',
+      pattern: '去哪里取药？',
+      meaning: {
+        en: 'Where do I pick up my prescription?',
+        fr: 'Où retirer mon médicament ?',
+      },
+      example: '去哪里取药？',
+      audio: '/audio/pharmacy-help/pattern-12.mp3',
+      explanation: {
+        en: 'Ask 去哪里取药 to find where to collect your medicine.',
+        fr: 'Demande 去哪里取药 pour savoir où récupérer ton médicament.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-13',
+      pattern: '多少钱？',
+      meaning: {
+        en: 'How much is it?',
+        fr: 'Combien ça coûte ?',
+      },
+      example: '多少钱？',
+      audio: '/audio/pharmacy-help/pattern-13.mp3',
+      explanation: {
+        en: 'Ask 多少钱 to check the price of medicine or treatment.',
+        fr: 'Demande 多少钱 pour connaître le prix du médicament ou du traitement.',
+      },
+    },
   ],
   vocabulary: [
     {

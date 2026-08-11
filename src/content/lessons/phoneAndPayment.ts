@@ -210,6 +210,62 @@ export const phoneAndPaymentLesson: LessonContent = {
       example: '怎么充值？', audio: '/audio/phone-and-payment/pattern-05.mp3',
       explanation: { en: 'Use 怎么 before a verb to ask how to do something, like 充值.', fr: 'Utilise 怎么 avant un verbe pour demander comment faire quelque chose, comme 充值.' },
     },
+    {
+      id: 'phone-and-payment-pattern-6',
+      pattern: '多少钱？',
+      meaning: {
+        en: 'How much is it?',
+        fr: 'Combien ça coûte ?',
+      },
+      example: '多少钱？',
+      audio: '/audio/phone-and-payment/pattern-06.mp3',
+      explanation: {
+        en: 'Ask 多少钱 to get the price of a SIM card or data plan.',
+        fr: 'Demande 多少钱 pour connaître le prix d\'une carte SIM ou d\'un forfait.',
+      },
+    },
+    {
+      id: 'phone-and-payment-pattern-7',
+      pattern: '帮我设置一下网络好吗？',
+      meaning: {
+        en: 'Could you help me set up the Internet?',
+        fr: 'Pouvez-vous m\'aider à configurer Internet ?',
+      },
+      example: '帮我设置一下网络好吗？',
+      audio: '/audio/phone-and-payment/pattern-07.mp3',
+      explanation: {
+        en: 'Use 帮我设置一下 to ask for help setting up a network or phone.',
+        fr: 'Utilise 帮我设置一下 pour demander de l\'aide pour configurer un réseau ou un téléphone.',
+      },
+    },
+    {
+      id: 'phone-and-payment-pattern-8',
+      pattern: '没有网络。',
+      meaning: {
+        en: 'There is no internet.',
+        fr: 'Il n\'y a pas de connexion Internet.',
+      },
+      example: '没有网络。',
+      audio: '/audio/phone-and-payment/pattern-08.mp3',
+      explanation: {
+        en: 'Say 没有网络 to explain you have no internet connection.',
+        fr: 'Dis 没有网络 pour expliquer que tu n\'as pas de connexion Internet.',
+      },
+    },
+    {
+      id: 'phone-and-payment-pattern-9',
+      pattern: '没有信号。',
+      meaning: {
+        en: 'There is no signal.',
+        fr: 'Il n\'y a pas de signal.',
+      },
+      example: '没有信号。',
+      audio: '/audio/phone-and-payment/pattern-09.mp3',
+      explanation: {
+        en: 'Say 没有信号 when your phone shows no network signal.',
+        fr: 'Dis 没有信号 quand ton téléphone n\'affiche aucun signal.',
+      },
+    },
   ],
   vocabulary: [
     {

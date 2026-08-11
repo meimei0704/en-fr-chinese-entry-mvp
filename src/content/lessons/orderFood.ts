@@ -218,6 +218,118 @@ export const orderFoodLesson: LessonContent = {
         fr: 'Utilise 几点 avant une action pour demander l\'heure du petit-déjeuner ou du check-out.',
       },
     },
+    {
+      id: 'order-food-pattern-6',
+      pattern: '你会说英文吗？',
+      meaning: {
+        en: 'Do you speak English?',
+        fr: 'Parlez-vous anglais ?',
+      },
+      example: '你会说英文吗？',
+      audio: '/audio/order-food/pattern-06.mp3',
+      explanation: {
+        en: 'Ask 你会说英文吗 when you need help in another language.',
+        fr: 'Demande 你会说英文吗 quand tu as besoin d\'aide dans une autre langue.',
+      },
+    },
+    {
+      id: 'order-food-pattern-7',
+      pattern: '几点吃早餐？',
+      meaning: {
+        en: 'What time is breakfast?',
+        fr: 'À quelle heure est le petit-déjeuner ?',
+      },
+      example: '几点吃早餐？',
+      audio: '/audio/order-food/pattern-07.mp3',
+      explanation: {
+        en: 'Ask 几点吃早餐 to check the breakfast hours at the hotel.',
+        fr: 'Demande 几点吃早餐 pour connaître les horaires du petit-déjeuner à l\'hôtel.',
+      },
+    },
+    {
+      id: 'order-food-pattern-8',
+      pattern: '电梯在哪里？',
+      meaning: {
+        en: 'Where is the elevator?',
+        fr: 'Où est l\'ascenseur ?',
+      },
+      example: '电梯在哪里？',
+      audio: '/audio/order-food/pattern-08.mp3',
+      explanation: {
+        en: 'Ask 电梯在哪里 to find the elevator to your room.',
+        fr: 'Demande 电梯在哪里 pour trouver l\'ascenseur vers ta chambre.',
+      },
+    },
+    {
+      id: 'order-food-pattern-9',
+      pattern: '我需要更多毛巾。',
+      meaning: {
+        en: 'I need more towels.',
+        fr: 'J\'ai besoin de plus de serviettes.',
+      },
+      example: '我需要更多毛巾。',
+      audio: '/audio/order-food/pattern-09.mp3',
+      explanation: {
+        en: 'Use 我需要更多毛巾 to request extra towels from hotel staff.',
+        fr: 'Utilise 我需要更多毛巾 pour demander des serviettes supplémentaires au personnel de l\'hôtel.',
+      },
+    },
+    {
+      id: 'order-food-pattern-10',
+      pattern: '空调坏了。',
+      meaning: {
+        en: 'The air conditioner does not work.',
+        fr: 'La climatisation ne fonctionne pas.',
+      },
+      example: '空调坏了。',
+      audio: '/audio/order-food/pattern-10.mp3',
+      explanation: {
+        en: 'Report a broken appliance in your room with 空调坏了.',
+        fr: 'Signale un appareil en panne dans ta chambre avec 空调坏了.',
+      },
+    },
+    {
+      id: 'order-food-pattern-11',
+      pattern: '我的房卡丢了。',
+      meaning: {
+        en: 'I lost my room key.',
+        fr: 'J\'ai perdu ma carte de chambre.',
+      },
+      example: '我的房卡丢了。',
+      audio: '/audio/order-food/pattern-11.mp3',
+      explanation: {
+        en: 'Tell the front desk 我的房卡丢了 to get a replacement.',
+        fr: 'Dis à la réception 我的房卡丢了 pour obtenir un remplacement.',
+      },
+    },
+    {
+      id: 'order-food-pattern-12',
+      pattern: '请打扫房间。',
+      meaning: {
+        en: 'Please clean my room.',
+        fr: 'Veuillez nettoyer ma chambre.',
+      },
+      example: '请打扫房间。',
+      audio: '/audio/order-food/pattern-12.mp3',
+      explanation: {
+        en: 'Use 请打扫房间 to request housekeeping service.',
+        fr: 'Utilise 请打扫房间 pour demander le service de ménage.',
+      },
+    },
+    {
+      id: 'order-food-pattern-13',
+      pattern: '我可以寄存行李吗？',
+      meaning: {
+        en: 'Can I store my luggage?',
+        fr: 'Puis-je déposer mes bagages ?',
+      },
+      example: '我可以寄存行李吗？',
+      audio: '/audio/order-food/pattern-13.mp3',
+      explanation: {
+        en: 'Ask 我可以寄存行李吗 to leave your bags at the hotel.',
+        fr: 'Demande 我可以寄存行李吗 pour laisser tes bagages à l\'hôtel.',
+      },
+    },
   ],
   vocabulary: [
     {
