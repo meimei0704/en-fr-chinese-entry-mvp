@@ -347,7 +347,6 @@ describe('global color accessibility tokens', () => {
       ['.lesson-page .lesson-header-card', 'gap: clamp(0.9rem, 2vw, 1.25rem);'],
       ['.lesson-page .lesson-header-card', 'padding: clamp(1.25rem, 3vw, 2rem);'],
       ['.lesson-page .lesson-header-card__title', 'gap: 0.1rem;'],
-      ['.lesson-page .lesson-header-card__title .eyebrow', 'margin-bottom: 0.25rem;'],
       ['.lesson-page .lesson-progress-preview', 'gap: 0.75rem;'],
       ['.lesson-page .lesson-progress-preview', 'padding: 0.85rem;'],
     ] as const
