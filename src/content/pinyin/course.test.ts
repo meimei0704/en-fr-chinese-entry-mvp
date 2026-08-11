@@ -48,7 +48,7 @@ describe('pinyin course content', () => {
       ...(module.wholeSyllables?.map((item) => item.audio) ?? []),
     ])
 
-    expect(allAudioPaths.length).toBe(90)
+    expect(allAudioPaths.length).toBe(92)
 
     for (const audioPath of allAudioPaths) {
       expect(audioPath).toMatch(/^\/audio\/pinyin\/(lesson-\d|whole-syllables)\/.+\.mp3$/)

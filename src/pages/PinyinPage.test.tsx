@@ -68,10 +68,12 @@ describe('PinyinPage', () => {
 
     await user.click(screen.getByRole('tab', { name: 'Whole Syllables' }))
 
+    expect(screen.getByText('zhi')).toBeVisible()
     expect(screen.getByText('zhī')).toBeVisible()
+    expect(screen.getByText('ying')).toBeVisible()
     expect(screen.getByText('yīng')).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Play zhī' })).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Play yīng' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Play zhi' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Play ying' })).toBeVisible()
     expect(screen.getByText('知')).toBeVisible()
     expect(screen.getByText('英')).toBeVisible()
   })

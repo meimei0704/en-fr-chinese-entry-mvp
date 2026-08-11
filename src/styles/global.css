@@ -3023,6 +3023,12 @@ h2 {
   width: min(100%, 72rem);
 }
 
+.pinyin-module-intro {
+  margin: 0;
+  max-width: 48rem;
+  white-space: pre-line;
+}
+
 .pinyin-reference-section__groups {
   display: grid;
   gap: 1.25rem;

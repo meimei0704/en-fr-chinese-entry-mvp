@@ -23,7 +23,7 @@ export function PinyinWholeSyllablesSection({
             <div className="pinyin-reference-card__main">
               <div className="pinyin-reference-card__target">
                 <p className="pinyin-reference-card__phoneme">
-                  {item.pinyin}
+                  {item.bare}
                 </p>
               </div>
               <div className="pinyin-reference-card__example">
@@ -33,11 +33,14 @@ export function PinyinWholeSyllablesSection({
                 <span className="pinyin-reference-card__emoji" aria-hidden="true">
                   {item.emoji}
                 </span>
+                <p className="pinyin-reference-card__example-pinyin">
+                  {item.pinyin}
+                </p>
               </div>
             </div>
             <SpeechButton
-              label={playAudioLabel(item.pinyin)}
-              text={item.pinyin}
+              label={playAudioLabel(item.bare)}
+              text={item.bare}
               audioSrc={item.audio}
               onActivate={onReferenceAudioPlay}
             />
