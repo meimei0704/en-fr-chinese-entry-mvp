@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "content:mysql:apply": "node --experimental-strip-types src/server/content/runMysqlContentAdmin.ts",
+    "content:pinyin:check": "node scripts/export-pinyin-json.mjs && git diff --exit-code -- pkg/pinyincontent/data/pinyin_course.json",
     "test:e2e": "playwright test"
   },
   "dependencies": {
