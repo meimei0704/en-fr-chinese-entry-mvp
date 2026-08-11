@@ -1,4 +1,4 @@
-import { statSync } from 'node:fs'
+import { readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
@@ -55,5 +55,11 @@ describe('pinyin course content', () => {
       const publicFilePath = join(process.cwd(), 'public', audioPath.replace(/^\//, ''))
       expect(statSync(publicFilePath).size).toBeGreaterThan(0)
     }
+  })
+
+  it('keeps the Go embed pinyin_course.json in sync with the TS source', () => {
+    const embedPath = join(process.cwd(), 'pkg/pinyincontent/data/pinyin_course.json')
+    const embedded = readFileSync(embedPath, 'utf8')
+    expect(embedded).toBe(`${JSON.stringify(pinyinCourse)}\n`)
   })
 })
