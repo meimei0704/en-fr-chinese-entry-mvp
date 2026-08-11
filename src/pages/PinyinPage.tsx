@@ -6,6 +6,7 @@ import { ContentLoading } from '../components/ContentState'
 import type { PinyinModuleKey } from '../content/types'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
+import { PinyinSyllableIntro } from '../components/pinyin/PinyinSyllableIntro'
 import { PinyinWholeSyllablesSection } from '../components/pinyin/PinyinWholeSyllablesSection'
 import {
   loadPinyinProgress,
@@ -75,6 +76,8 @@ export function PinyinPage() {
     <main className="page-shell page-shell--wide pinyin-page">
       <div className="pinyin-page__content">
         <PinyinHero eyebrow={pinyinCopy.eyebrow} heading={pinyinCopy.heading} />
+
+        <PinyinSyllableIntro copy={pinyinCopy.syllableIntro} />
 
         <nav role="tablist" aria-label="Pinyin modules" className="pinyin-lesson-tabs">
           {pinyinCourse.modules.map((m) => (

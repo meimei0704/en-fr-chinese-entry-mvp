@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
@@ -17,6 +17,21 @@ vi.mock('../lib/speech', () => ({
 
 const courseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 
+const syllableIntroCopy = {
+  en: {
+    description:
+      'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
+    figureLabel:
+      'Pinyin syllable composition example: mā consists of initial m, final a, and the first-tone mark.',
+  },
+  fr: {
+    description:
+      'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
+    figureLabel:
+      'Exemple de composition d’une syllabe pinyin : mā se compose de l’initiale m, de la finale a et de la marque du premier ton.',
+  },
+} as const
+
 describe('PinyinPage', () => {
   beforeEach(() => {
     localStorage.clear()
@@ -33,6 +48,61 @@ describe('PinyinPage', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: 'Pinyin（零基础第一课）' }),
     ).toBeVisible()
+  })
+
+  it('renders the English syllable composition intro between the hero and module tabs', () => {
+    renderRoute('/pinyin')
+
+    const heading = screen.getByRole('heading', {
+      level: 1,
+      name: 'Pinyin（零基础第一课）',
+    })
+    const hero = heading.closest('section')
+    const figure = screen.getByRole('figure', {
+      name: syllableIntroCopy.en.figureLabel,
+    })
+    const tabs = screen.getByRole('tablist', { name: 'Pinyin modules' })
+    const intro = within(figure)
+
+    if (!hero) {
+      throw new Error('Missing Pinyin hero')
+    }
+
+    expect(intro.getByText(syllableIntroCopy.en.description)).toBeVisible()
+    expect(intro.getByText('Pinyin')).toBeVisible()
+    expect(intro.getByText('Initial')).toBeVisible()
+    expect(intro.getByText('Final')).toBeVisible()
+    expect(intro.getByText('Tone')).toBeVisible()
+    expect(intro.getByText('mā')).toBeVisible()
+    expect(intro.getByText('妈')).toBeVisible()
+    expect(intro.getByText('m')).toBeVisible()
+    expect(intro.getByText('a')).toBeVisible()
+    expect(intro.getByText('¯')).toBeVisible()
+    expect(
+      hero.compareDocumentPosition(figure) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(
+      figure.compareDocumentPosition(tabs) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+  })
+
+  it('keeps exactly one syllable composition intro while switching all four modules', async () => {
+    const user = userEvent.setup()
+    renderRoute('/pinyin')
+
+    const figure = screen.getByRole('figure', {
+      name: syllableIntroCopy.en.figureLabel,
+    })
+
+    for (const moduleName of ['Finals', 'Tones', 'Whole Syllables', 'Initials']) {
+      await user.click(screen.getByRole('tab', { name: moduleName }))
+      expect(
+        screen.getByRole('figure', { name: syllableIntroCopy.en.figureLabel }),
+      ).toBe(figure)
+      expect(
+        screen.getAllByRole('figure', { name: syllableIntroCopy.en.figureLabel }),
+      ).toHaveLength(1)
+    }
   })
 
   it('renders four numbered module tab badges', () => {
@@ -140,6 +210,19 @@ describe('PinyinPage', () => {
       'href',
       '/pinyin/practice?module=initials',
     )
+
+    const figure = screen.getByRole('figure', {
+      name: syllableIntroCopy.fr.figureLabel,
+    })
+    const intro = within(figure)
+
+    expect(intro.getByText(syllableIntroCopy.fr.description)).toBeVisible()
+    expect(intro.getByText('Initiale')).toBeVisible()
+    expect(intro.getByText('Finale')).toBeVisible()
+    expect(intro.getByText('Ton')).toBeVisible()
+    expect(intro.getByText('mā')).toBeVisible()
+    expect(intro.getByText('妈')).toBeVisible()
+    expect(intro.getByText('¯')).toBeVisible()
 
     expect(screen.queryByText('Reference')).not.toBeInTheDocument()
     expect(screen.queryByText('First tone: high and level')).not.toBeInTheDocument()

@@ -164,6 +164,16 @@ export const uiCopy = {
     pinyinPage: {
       eyebrow: 'Pinyin',
       heading: 'Pinyin（零基础第一课）',
+      syllableIntro: {
+        description:
+          'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
+        figureLabel:
+          'Pinyin syllable composition example: mā consists of initial m, final a, and the first-tone mark.',
+        pinyinLabel: 'Pinyin',
+        initialLabel: 'Initial',
+        finalLabel: 'Final',
+        toneLabel: 'Tone',
+      },
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
       playReferenceAudio: (label: string) => `Play ${label}`,
@@ -332,6 +342,16 @@ export const uiCopy = {
     pinyinPage: {
       eyebrow: 'Pinyin',
       heading: 'Pinyin（零基础第一课）',
+      syllableIntro: {
+        description:
+          'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
+        figureLabel:
+          'Exemple de composition d’une syllabe pinyin : mā se compose de l’initiale m, de la finale a et de la marque du premier ton.',
+        pinyinLabel: 'Pinyin',
+        initialLabel: 'Initiale',
+        finalLabel: 'Finale',
+        toneLabel: 'Ton',
+      },
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       playReferenceAudio: (label: string) => `Écouter ${label}`,
