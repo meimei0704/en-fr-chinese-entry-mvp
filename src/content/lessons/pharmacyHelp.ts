@@ -7,8 +7,8 @@ export const pharmacyHelpLesson: LessonContent = {
     fr: '买药，看医生 / Hôpital et pharmacie',
   },
   scenario: {
-    en: 'Describe a headache or stomach ache, answer fever questions, ask about allergies, understand medicine frequency and dosage, and pay.',
-    fr: 'Décrire un mal de tête ou de ventre, répondre aux questions de fièvre, demander à propos des allergies, comprendre la fréquence et le dosage, et payer.',
+    en: 'Describe your discomfort and get the right treatment or medicine.',
+    fr: 'Décris ton inconfort et obtiens le bon traitement ou le bon médicament.',
   },
   dialogue: {
     title: {
@@ -156,66 +156,69 @@ export const pharmacyHelpLesson: LessonContent = {
   sentencePatterns: [
     {
       id: 'pharmacy-help-pattern-1',
+      pattern: '请问哪里有……？',
+      meaning: {
+        en: 'Where is the ...?',
+        fr: 'Où est ... ?',
+      },
+      example: '请问哪里有医院？',
+      audio: '/audio/pharmacy-help/pattern-01.mp3',
+      explanation: {
+        en: 'Use 哪里有 to ask where a place like a hospital or pharmacy is.',
+        fr: 'Utilise 哪里有 pour demander où se trouve un lieu comme un hôpital ou une pharmacie.',
+      },
+    },
+    {
+      id: 'pharmacy-help-pattern-2',
       pattern: '我……疼。',
       meaning: {
         en: 'My ... hurts.',
         fr: 'J’ai mal à ...',
       },
-      example: '我头疼。',
-      audio: '/audio/pharmacy-help/pattern-01.mp3',
-      explanation: {
-        en: 'Put the body part before 疼 for a simple symptom.',
-        fr: 'Place la partie du corps avant 疼 pour un symptôme simple.',
-      },
-    },
-    {
-      id: 'pharmacy-help-pattern-2',
-      pattern: '你……吗？',
-      meaning: {
-        en: 'Do you ...?',
-        fr: 'Est-ce que vous ... ?',
-      },
-      example: '你发烧吗？',
+      example: '我肚子疼。',
       audio: '/audio/pharmacy-help/pattern-02.mp3',
       explanation: {
-        en: 'Listen for 吗 when a clerk asks a yes/no health question.',
-        fr: 'Écoute 吗 quand un employé pose une question de santé oui/non.',
+        en: 'Put the body part before 疼 to describe where it hurts.',
+        fr: 'Place la partie du corps avant 疼 pour décrire où tu as mal.',
       },
     },
     {
       id: 'pharmacy-help-pattern-3',
-      pattern: '一次……片。',
+      pattern: '我……了。',
       meaning: {
-        en: '... tablet(s) per dose.',
-        fr: '... comprimé(s) par prise.',
+        en: 'I have ...',
+        fr: 'J’ai ...',
       },
-      example: '一次一片。',
+      example: '我发烧了。',
       audio: '/audio/pharmacy-help/pattern-03.mp3',
       explanation: {
-        en: 'This tells you how many pills to take at one time.',
-        fr: 'Cela indique combien de pilules prendre en une fois.',
+        en: 'Use 我……了 to state a symptom like a fever, cold, or diarrhea.',
+        fr: 'Utilise 我……了 pour indiquer un symptôme comme la fièvre, un rhume ou la diarrhée.',
       },
     },
     {
       id: 'pharmacy-help-pattern-4',
-      pattern: '我对……过敏。',
-      meaning: { en: 'I am allergic to ...', fr: 'Je suis allergique à ...' },
-      example: '我对青霉素过敏。',
+      pattern: '我想买……。',
+      meaning: {
+        en: 'I want to buy ...',
+        fr: 'Je veux acheter ...',
+      },
+      example: '我想买药。',
       audio: '/audio/pharmacy-help/pattern-04.mp3',
       explanation: {
-        en: 'Use this to name a specific allergy if asked.',
-        fr: 'Utilise cette structure pour nommer une allergie spécifique si on te le demande.',
+        en: 'Use 我想买 to ask for medicine at a pharmacy.',
+        fr: 'Utilise 我想买 pour demander un médicament à la pharmacie.',
       },
     },
     {
       id: 'pharmacy-help-pattern-5',
-      pattern: '饭前还是饭后？',
-      meaning: { en: 'Before or after meals?', fr: 'Avant ou après les repas ?' },
-      example: '饭前还是饭后？',
+      pattern: '饭前吃还是饭后吃？',
+      meaning: { en: 'Should I take it before or after meals?', fr: 'Dois-je le prendre avant ou après les repas ?' },
+      example: '饭前吃还是饭后吃？',
       audio: '/audio/pharmacy-help/pattern-05.mp3',
       explanation: {
-        en: 'Ask this to confirm when to take the medicine.',
-        fr: 'Demande cela pour confirmer quand prendre le médicament.',
+        en: 'Ask this to confirm when to take your medicine.',
+        fr: 'Demande ceci pour confirmer quand prendre ton médicament.',
       },
     },
   ],
@@ -295,6 +298,7 @@ export const pharmacyHelpLesson: LessonContent = {
     { id: 'pharmacy-help-vocab-8', hanzi: '一次一片', pinyin: 'yí cì yí piàn', audio: '/audio/pharmacy-help/vocab-08.mp3', meaning: { en: 'one tablet per dose', fr: 'un comprimé par prise' }, explanation: { en: 'The dosage instruction you will hear with medicine.', fr: 'La consigne de dosage que tu entendras avec le médicament.' } },
     { id: 'pharmacy-help-vocab-9', hanzi: '饭前', pinyin: 'fàn qián', audio: '/audio/pharmacy-help/vocab-09.mp3', meaning: { en: 'before meals', fr: 'avant les repas' }, explanation: { en: 'One of the two common medicine timing words.', fr: 'Un des deux mots courants pour le moment de prise du médicament.' } },
     { id: 'pharmacy-help-vocab-10', hanzi: '饭后', pinyin: 'fàn hòu', audio: '/audio/pharmacy-help/vocab-10.mp3', meaning: { en: 'after meals', fr: 'après les repas' }, explanation: { en: 'The other common medicine timing word paired with 饭前.', fr: 'L’autre mot courant pour le moment de prise, associé à 饭前.' } },
+    { id: 'pharmacy-help-vocab-11', hanzi: '医院', pinyin: 'yīyuàn', audio: '/audio/pharmacy-help/vocab-11.mp3', meaning: { en: 'hospital', fr: 'hôpital' }, explanation: { en: 'The place where you see a doctor or go to a pharmacy.', fr: 'Le lieu où tu vois un médecin ou tu vas à la pharmacie.' } },
   ],
   practice: {
     listening: [

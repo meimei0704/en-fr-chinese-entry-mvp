@@ -33,7 +33,7 @@ const expectedEnglishTitles = [
   '购物 / Shopping',
   '寻求帮助 / Ask for help',
   '买药，看医生 / Hospital and pharmacy',
-  '闲聊 / Small talk',
+  '闲聊和赞美 / Small talk and compliment',
 ]
 
 const expectedFrenchTitles = [
@@ -48,7 +48,7 @@ const expectedFrenchTitles = [
   '购物 / Shopping',
   '寻求帮助 / Demander de l’aide',
   '买药，看医生 / Hôpital et pharmacie',
-  '闲聊 / Petite conversation',
+  '闲聊和赞美 / Petite conversation et compliments',
 ]
 
 describe('journey content', () => {

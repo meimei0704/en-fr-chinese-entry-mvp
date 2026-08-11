@@ -69,9 +69,9 @@ export const expectedLessonTopicOrder = [
   },
   {
     id: 'small-talk',
-    hanzi: '闲聊',
-    en: 'Small talk',
-    fr: 'Petite conversation',
+    hanzi: '闲聊和赞美',
+    en: 'Small talk and compliment',
+    fr: 'Petite conversation et compliments',
   },
 ] as const satisfies ReadonlyArray<{
   id: LessonId

@@ -7,8 +7,8 @@ export const convenienceStoreRunLesson: LessonContent = {
     fr: '购物 / Shopping',
   },
   scenario: {
-    en: 'Buy a bottle of water and a snack, say you do not need anything else, ask the total, pay by phone, and ask for a bag.',
-    fr: 'Acheter une bouteille d\'eau et un snack, dire que l\'on n\'a besoin de rien d\'autre, demander le total, payer par téléphone et demander un sac.',
+    en: 'Phrases to navigate stores, check prices, bargain and pay smoothly.',
+    fr: 'Des phrases pour se repérer en magasin, vérifier les prix, négocier et payer facilement.',
   },
   dialogue: {
     title: {
@@ -156,62 +156,62 @@ export const convenienceStoreRunLesson: LessonContent = {
   sentencePatterns: [
     {
       id: 'convenience-store-run-pattern-1',
-      pattern: '我要……',
+      pattern: '……多少钱?',
       meaning: {
-        en: 'I want ...',
-        fr: 'Je veux / je voudrais ...',
+        en: 'How much is this?',
+        fr: 'C\'est combien ?',
       },
-      example: '我要一瓶水。',
+      example: '这个多少钱?',
       audio: '/audio/convenience-store-run/pattern-01.mp3',
       explanation: {
-        en: 'Use it for one simple item when the context is already clear.',
-        fr: 'Utilise cette structure pour un article simple quand le contexte est clair.',
+        en: 'Point at an item and ask 这个多少钱 to check the price.',
+        fr: 'Montre un article et demande 这个多少钱 pour vérifier le prix.',
       },
     },
     {
       id: 'convenience-store-run-pattern-2',
-      pattern: '还要……吗？',
+      pattern: '太……了。',
       meaning: {
-        en: 'Do you also want ...?',
-        fr: 'Voulez-vous aussi ... ?',
+        en: 'It\'s too ...',
+        fr: 'C\'est trop ...',
       },
-      example: '还要别的吗？',
+      example: '太贵了。',
       audio: '/audio/convenience-store-run/pattern-02.mp3',
       explanation: {
-        en: 'This is a common question from a clerk before payment.',
-        fr: 'C\'est une question courante de l\'employé avant le paiement.',
+        en: '太贵了 tells the seller the price feels too high.',
+        fr: '太贵了 dit au vendeur que le prix est trop élevé.',
       },
     },
     {
       id: 'convenience-store-run-pattern-3',
-      pattern: '一共多少钱？',
+      pattern: '可以……吗?',
       meaning: {
-        en: 'How much is it altogether?',
-        fr: 'Combien ça fait au total ?',
+        en: 'Can you ...?',
+        fr: 'Pouvez-vous ... ?',
       },
-      example: '一共多少钱？',
+      example: '可以便宜一点吗?',
       audio: '/audio/convenience-store-run/pattern-03.mp3',
       explanation: {
-        en: 'Ask this when you are ready to pay for the purchase.',
-        fr: 'Demande cela quand tu es prêt à payer l\'achat.',
+        en: 'Use 可以…吗 to ask politely for a lower price or other help.',
+        fr: 'Utilise 可以…吗 pour demander poliment un prix plus bas ou de l\'aide.',
       },
     },
     {
       id: 'convenience-store-run-pattern-4',
-      pattern: '我要……和……',
-      meaning: { en: 'I want ... and ...', fr: 'Je voudrais ... et ...' },
-      example: '我要一瓶水和一包薯片。',
+      pattern: '我买这个。',
+      meaning: { en: 'I will buy this.', fr: 'Je prends ceci.' },
+      example: '我买这个。',
       audio: '/audio/convenience-store-run/pattern-04.mp3',
       explanation: {
-        en: 'Use 和 to list two items in one sentence at a store.',
-        fr: 'Utilise 和 pour énumérer deux articles dans une phrase au magasin.',
+        en: 'Say 我买这个 to confirm the item you want.',
+        fr: 'Dis 我买这个 pour confirmer l\'article que tu veux.',
       },
     },
     {
       id: 'convenience-store-run-pattern-5',
-      pattern: '有……吗？',
+      pattern: '有……吗?',
       meaning: { en: 'Do you have ...?', fr: 'Avez-vous ... ?' },
-      example: '有袋子吗？',
+      example: '有袋子吗?',
       audio: '/audio/convenience-store-run/pattern-05.mp3',
       explanation: {
         en: 'Use 有…吗 to check if an item or service is available.',

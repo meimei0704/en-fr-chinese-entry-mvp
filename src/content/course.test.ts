@@ -127,11 +127,11 @@ describe('course content', () => {
       'order-food': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'phone-and-payment': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'restaurant-order': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'train-station-ticket': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'metro-ticket': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'train-station-ticket': { dialogue: 8, patterns: 5, vocab: 15, practice: 2, cards: 6 },
+      'metro-ticket': { dialogue: 8, patterns: 5, vocab: 14, practice: 2, cards: 6 },
       'convenience-store-run': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'ask-for-help-problem': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'pharmacy-help': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'pharmacy-help': { dialogue: 8, patterns: 5, vocab: 11, practice: 2, cards: 6 },
       'small-talk': { dialogue: 8, patterns: 5, vocab: 10, practice: 2, cards: 6 },
     }
 
@@ -225,8 +225,8 @@ describe('course content', () => {
 
     expect(lesson.id).toBe('small-talk')
     expect(lesson.title).toEqual({
-      en: '闲聊 / Small talk',
-      fr: '闲聊 / Petite conversation',
+      en: '闲聊和赞美 / Small talk and compliment',
+      fr: '闲聊和赞美 / Petite conversation et compliments',
     })
     expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
       Array.from({ length: 8 }, (_, index) => `small-talk-line-${String(index + 1).padStart(2, '0')}`),
@@ -320,7 +320,7 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(359)
+    expect(audioPaths).toHaveLength(369)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {

@@ -7,8 +7,8 @@ export const askDirectionsLesson: LessonContent = {
     fr: '打车 / Prendre un taxi',
   },
   scenario: {
-    en: 'Get into a taxi, show the address, ask for the meter, check how long the ride will take, and pay at the end.',
-    fr: 'Monter dans un taxi, montrer l\'adresse, demander le compteur, vérifier la durée du trajet et payer à la fin.',
+    en: 'Get to the right destination, ensure comfort and safety, make the payment.',
+    fr: 'Arriver à la bonne destination, assurer confort et sécurité, et régler la course.',
   },
   dialogue: {
     title: {
@@ -165,72 +165,72 @@ export const askDirectionsLesson: LessonContent = {
   sentencePatterns: [
     {
       id: 'ask-directions-pattern-1',
-      pattern: '去这个……',
+      pattern: '师傅您好，我要去……。',
       meaning: {
-        en: 'Go to this ...',
-        fr: 'Aller à ce / cette ...',
+        en: 'Hello, please go to ...',
+        fr: 'Bonjour, conduisez-moi à ..., s\'il vous plaît.',
       },
-      example: '去这个酒店。',
+      example: '师傅您好，我要去这里。',
       audio: '/audio/ask-directions/pattern-01.mp3',
       explanation: {
-        en: 'Point to your map or booking while saying the destination.',
-        fr: 'Montre ta carte ou ta réservation en disant la destination.',
+        en: 'Say 我要去这里 and point to the destination to start the ride.',
+        fr: 'Dis 我要去这里 et montre la destination pour commencer la course.',
       },
     },
     {
       id: 'ask-directions-pattern-2',
-      pattern: '给我看一下……',
+      pattern: '这是……。',
       meaning: {
-        en: 'Show me ... for a moment',
-        fr: 'Montre-moi ... un instant',
+        en: 'This is ...',
+        fr: 'C\'est ...',
       },
-      example: '给我看一下地址。',
+      example: '这是地址。',
       audio: '/audio/ask-directions/pattern-02.mp3',
       explanation: {
-        en: 'Drivers may use this to ask for the address on your phone.',
-        fr: 'Les chauffeurs peuvent utiliser cette phrase pour demander l\'adresse sur ton téléphone.',
+        en: 'Use 这是地址 while showing the address on your phone.',
+        fr: 'Utilise 这是地址 en montrant l\'adresse sur ton téléphone.',
       },
     },
     {
       id: 'ask-directions-pattern-3',
-      pattern: '大概……到？',
-      meaning: {
-        en: 'About ... until arrival?',
-        fr: 'Environ ... pour arriver ?',
-      },
-      example: '大概多久到？',
-      audio: '/audio/ask-directions/pattern-03.mp3',
-      explanation: {
-        en: 'Use it to ask a short travel-time question in the taxi.',
-        fr: 'Utilise-le pour demander rapidement la durée du trajet en taxi.',
-      },
-    },
-    {
-      id: 'ask-directions-pattern-4',
-      pattern: '请……',
+      pattern: '请……。',
       meaning: {
         en: 'Please ... (polite request)',
         fr: 'S\'il vous plaît ... (demande polie)',
       },
       example: '请打表。',
+      audio: '/audio/ask-directions/pattern-03.mp3',
+      explanation: {
+        en: 'Put 请 before a short action to make a polite request, like turning on the meter.',
+        fr: 'Mets 请 devant une action courte pour faire une demande polie, comme allumer le compteur.',
+      },
+    },
+    {
+      id: 'ask-directions-pattern-4',
+      pattern: '大概多久到？',
+      meaning: {
+        en: 'How long will it take?',
+        fr: 'Combien de temps pour arriver ?',
+      },
+      example: '大概多久到？',
       audio: '/audio/ask-directions/pattern-04.mp3',
       explanation: {
-        en: 'Use 请 before a short action to make a polite request in a taxi or at a counter.',
-        fr: 'Utilise 请 avant une action courte pour faire une demande polie en taxi ou à un comptoir.',
+        en: 'Ask 大概多久到 to check the approximate travel time.',
+        fr: 'Demande 大概多久到 pour connaître la durée approximative du trajet.',
       },
     },
     {
       id: 'ask-directions-pattern-5',
       pattern: '可以……吗？',
       meaning: {
-        en: 'Can I ...? / Is it possible to ...?',
-        fr: 'Puis-je ... ? / Est-il possible de ... ?',
+        en: 'Can I ...? / Could you please ...?',
+        fr: 'Puis-je ... ? / Pourriez-vous ... ?',
       },
-      example: '可以扫码吗？',
+      example: '可以开空调吗？',
       audio: '/audio/ask-directions/pattern-05.mp3',
       explanation: {
-        en: 'Use 可以…吗 to check if a payment method, action, or request is okay.',
-        fr: 'Utilise 可以…吗 pour vérifier si un moyen de paiement, une action ou une demande est accepté.',
+        en: 'Use 可以…吗 to ask politely for comfort or payment options in the taxi.',
+        fr: 'Utilise 可以…吗 pour demander poliment un confort ou un moyen de paiement dans le taxi.',
       },
     },
   ],
