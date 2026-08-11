@@ -3007,6 +3007,167 @@ h2 {
     rgba(255, 255, 255, 0.94);
 }
 
+.pinyin-syllable-intro {
+  width: min(100%, 72rem);
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  gap: clamp(0.9rem, 2vw, 1.2rem);
+  overflow: visible;
+}
+
+.pinyin-syllable-intro__description {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: clamp(1rem, 2vw, 1.12rem);
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.pinyin-syllable-intro__diagram {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) auto minmax(0, 1.4fr);
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.pinyin-syllable-intro__example {
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  gap: 0.2rem;
+  padding: clamp(0.9rem, 2.5vw, 1.25rem);
+  border: 1px solid rgba(194, 87, 28, 0.18);
+  border-radius: var(--radius-lg);
+  background: #fffaf4;
+}
+
+.pinyin-syllable-intro__pinyin,
+.pinyin-syllable-intro__hanzi {
+  display: block;
+}
+
+.pinyin-syllable-intro__pinyin {
+  color: #c2571c;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.pinyin-syllable-intro__hanzi {
+  color: var(--color-ink);
+  font-size: clamp(2.8rem, 7vw, 4.6rem);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.pinyin-syllable-intro__arrow {
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  line-height: 1;
+  transform-origin: center;
+}
+
+.pinyin-syllable-intro__composition {
+  min-width: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.pinyin-syllable-intro__heading {
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(106, 27, 154, 0.18);
+  border-radius: var(--radius-md);
+  background: #f3e5f5;
+  color: #6a1b9a;
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.pinyin-syllable-intro__parts {
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.pinyin-syllable-intro__part {
+  min-width: 0;
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.65rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.pinyin-syllable-intro__part dt,
+.pinyin-syllable-intro__part dd {
+  margin: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.pinyin-syllable-intro__part dt {
+  font-size: clamp(0.78rem, 1.6vw, 0.9rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.pinyin-syllable-intro__part dd {
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.pinyin-syllable-intro__part--initial {
+  border-color: rgba(194, 87, 28, 0.18);
+  background: #fff3e0;
+  color: #c2571c;
+}
+
+.pinyin-syllable-intro__part--initial dt {
+  color: #a34a16;
+}
+
+.pinyin-syllable-intro__part--final {
+  border-color: rgba(46, 125, 50, 0.18);
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.pinyin-syllable-intro__part--tone {
+  border-color: rgba(21, 101, 192, 0.18);
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+@media (max-width: 640px) {
+  .pinyin-syllable-intro__diagram {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pinyin-syllable-intro__arrow {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 360px) {
+  .pinyin-syllable-intro__parts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .pinyin-section-heading {
   display: grid;
   gap: 0.25rem;

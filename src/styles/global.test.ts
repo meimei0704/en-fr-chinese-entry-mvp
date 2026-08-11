@@ -371,4 +371,57 @@ describe('global color accessibility tokens', () => {
       /\.admin-[^{]*\{[^}]*(?:gap: clamp\(0\.9rem, 2vw, 1\.25rem\)|padding: clamp\(1\.25rem, 3vw, 2rem\))/,
     )
   })
+
+  it('keeps the Pinyin syllable intro responsive and tied to module palettes', () => {
+    const intro = ruleBlock('.pinyin-syllable-intro')
+    const diagram = ruleBlock('.pinyin-syllable-intro__diagram')
+    const parts = ruleBlock('.pinyin-syllable-intro__parts')
+    const initial = ruleBlock('.pinyin-syllable-intro__part--initial')
+    const final = ruleBlock('.pinyin-syllable-intro__part--final')
+    const tone = ruleBlock('.pinyin-syllable-intro__part--tone')
+    const heading = ruleBlock('.pinyin-syllable-intro__heading')
+    const initialLabel = ruleBlock('.pinyin-syllable-intro__part--initial dt')
+
+    expect(intro).toContain('min-width: 0;')
+    expect(diagram).toContain(
+      'grid-template-columns: minmax(0, 0.8fr) auto minmax(0, 1.4fr);',
+    )
+    expect(diagram).toContain('min-width: 0;')
+    expect(parts).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
+    expect(parts).toContain('min-width: 0;')
+    expect(initial).toContain('background: #fff3e0;')
+    expect(initial).toContain('color: #c2571c;')
+    expect(initialLabel).toContain('color: #a34a16;')
+    expect(final).toContain('background: #e8f5e9;')
+    expect(final).toContain('color: #2e7d32;')
+    expect(tone).toContain('background: #e3f2fd;')
+    expect(tone).toContain('color: #1565c0;')
+    expect(heading).toContain('background: #f3e5f5;')
+    expect(heading).toContain('color: #6a1b9a;')
+    expect(contrastRatio('#a34a16', '#fff3e0')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio('#2e7d32', '#e8f5e9')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio('#1565c0', '#e3f2fd')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio('#6a1b9a', '#f3e5f5')).toBeGreaterThanOrEqual(4.5)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 640px)',
+        '.pinyin-syllable-intro__diagram',
+        'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 640px)',
+        '.pinyin-syllable-intro__arrow',
+        'transform: rotate(90deg);',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 360px)',
+        '.pinyin-syllable-intro__parts',
+        'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
+  })
 })
