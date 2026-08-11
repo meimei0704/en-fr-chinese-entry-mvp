@@ -87,6 +87,15 @@ export const pinyinLesson3: PinyinLessonContent = {
           audio: `${lessonAudioBase}/reference-final-ei.mp3`,
         },
         {
+          id: 'final-ui',
+          hanzi: '水',
+          emoji: '💧',
+          label: 'ui',
+          pinyin: 'shuǐ',
+          description: { en: 'Glide from "oo" to "ee", like "way". Water = 水.', fr: 'Glissez de « ou » vers « i », comme « ouèi ». Eau = 水.', },
+          audio: `${lessonAudioBase}/reference-final-ui.mp3`,
+        },
+        {
           id: 'final-ao',
           hanzi: '好',
           emoji: '👍',
@@ -103,15 +112,6 @@ export const pinyinLesson3: PinyinLessonContent = {
           pinyin: 'shǒu',
           description: { en: 'Like "oh" with rounded lips. Hand = 手.', fr: 'Comme « o » avec lèvres arrondies. Main = 手.', },
           audio: `${lessonAudioBase}/reference-final-ou.mp3`,
-        },
-        {
-          id: 'final-ui',
-          hanzi: '水',
-          emoji: '💧',
-          label: 'ui',
-          pinyin: 'shuǐ',
-          description: { en: 'Glide from "oo" to "ee", like "way". Water = 水.', fr: 'Glissez de « ou » vers « i », comme « ouèi ». Eau = 水.', },
-          audio: `${lessonAudioBase}/reference-final-ui.mp3`,
         },
         {
           id: 'final-iu',
