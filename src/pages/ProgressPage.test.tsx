@@ -262,7 +262,9 @@ describe('ProgressPage', () => {
       'journey-node--lesson',
       'journey-node--card-link',
     )
-    expect(taxiCard.querySelector('.journey-node__doodle')).toHaveTextContent('🚕')
+    expect(
+      taxiCard.querySelector('.journey-node__doodle .journey-node__course-image'),
+    ).toHaveAttribute('src', '/images/course/course-03.png')
     expect(within(taxiCard).getByText('Open lesson')).toHaveClass('journey-node__stamp')
 
     expect(restaurantCard).toHaveRole('link')
@@ -271,7 +273,9 @@ describe('ProgressPage', () => {
       'journey-node--lesson',
       'journey-node--card-link',
     )
-    expect(restaurantCard.querySelector('.journey-node__doodle')).toHaveTextContent('🍜')
+    expect(
+      restaurantCard.querySelector('.journey-node__doodle .journey-node__course-image'),
+    ).toHaveAttribute('src', '/images/course/course-06.png')
     expect(within(restaurantCard).getByText('Open lesson')).toHaveClass('journey-node__stamp')
     expect(within(restaurantCard).queryAllByText(/coming soon/i)).toHaveLength(0)
   })

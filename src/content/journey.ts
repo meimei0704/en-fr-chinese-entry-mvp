@@ -32,6 +32,21 @@ export const journeyNodeIcons: Record<JourneyNodeId, string> = {
   'small-talk': '💬',
 }
 
+export const journeyNodeImages: Record<JourneyNodeId, string> = {
+  'daily-greetings': '/images/course/course-01.png',
+  'airport-immigration': '/images/course/course-02.png',
+  'taxi-to-stay': '/images/course/course-03.png',
+  'hotel-check-in': '/images/course/course-04.png',
+  'phone-and-payment': '/images/course/course-05.png',
+  'restaurant-order': '/images/course/course-06.png',
+  'train-station-ticket': '/images/course/course-07.png',
+  'metro-ticket': '/images/course/course-08.png',
+  'convenience-store-run': '/images/course/course-09.png',
+  'ask-for-help-problem': '/images/course/course-10.png',
+  'pharmacy-help': '/images/course/course-11.png',
+  'small-talk': '/images/course/course-12.png',
+}
+
 const journeyStages: JourneyStage[] = [
   {
     id: 'arrival-in-china',

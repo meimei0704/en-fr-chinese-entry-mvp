@@ -843,6 +843,20 @@ h2 {
   transform: rotate(8deg);
 }
 
+.journey-node__course-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.journey-node__doodle--fallback {
+  line-height: 1;
+}
+
 .journey-map .journey-node,
 .journey-map .journey-node__preview-button {
   --journey-card-min-height: clamp(10.5rem, 24vw, 12.75rem);
@@ -892,7 +906,7 @@ h2 {
 }
 
 .journey-map .journey-node__doodle--stamp {
-  position: static;
+  position: relative;
   top: auto;
   right: auto;
   width: min(100%, var(--journey-stamp-slot-max-width));

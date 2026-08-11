@@ -423,14 +423,14 @@ describe('HomePage', () => {
 
     expect(
       restaurantCard.querySelector(
-        '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
+        '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp .journey-node__course-image',
       ),
-    ).toBeInTheDocument()
+    ).toHaveAttribute('src', '/images/course/course-06.png')
     expect(
       trainCard.querySelector(
-        '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp',
+        '.journey-node__illustration-slot--stamp .journey-node__doodle--stamp .journey-node__course-image',
       ),
-    ).toBeInTheDocument()
+    ).toHaveAttribute('src', '/images/course/course-10.png')
   })
 
   it('keeps all formal lesson nodes out of preview affordances', () => {
