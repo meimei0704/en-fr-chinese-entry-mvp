@@ -226,6 +226,43 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
       ],
     },
+    {
+      id: 'initials-yw',
+      title: {
+        en: 'Y and W',
+        fr: 'Y et W',
+      },
+      summary: {
+        en: 'Two semi-consonants that always begin syllables on their own.',
+        fr: 'Deux semi-consonnes qui commencent toujours une syllabe.',
+      },
+      items: [
+        {
+          id: 'initial-y',
+          hanzi: '雨',
+          emoji: '🌧️',
+          label: 'y',
+          pinyin: 'yǔ',
+          description: {
+            en: 'A glide like "y" in "yes". Rain = 雨.',
+            fr: 'Un glissement comme « y » dans « yes ». Pluie = 雨.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-y.mp3`,
+        },
+        {
+          id: 'initial-w',
+          hanzi: '我',
+          emoji: '🙋',
+          label: 'w',
+          pinyin: 'wǒ',
+          description: {
+            en: 'A glide like "w" in "water". I/me = 我.',
+            fr: 'Un glissement comme « w » dans « water ». Moi = 我.',
+          },
+          audio: `${lessonAudioBase}/reference-initial-w.mp3`,
+        },
+      ],
+    },
   ],
   toneGame: {
     title: {

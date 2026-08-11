@@ -164,6 +164,7 @@ export type PinyinReferenceGroupId =
   | 'initials-retroflex'
   | 'initials-alveolar'
   | 'initials-palatal'
+  | 'initials-yw'
   | 'finals-compound'
   | 'finals-nasal-n'
   | 'finals-nasal-ng'
@@ -188,6 +189,7 @@ export interface PinyinReferenceGroup {
 
 export interface PinyinWholeSyllable {
   id: string
+  bare: string
   hanzi: string
   pinyin: string
   emoji: string
@@ -228,6 +230,7 @@ export interface PinyinModuleContent {
   id: PinyinModuleKey
   title: LocalizedField
   summary: LocalizedField
+  intro?: LocalizedField
   reference: PinyinReferenceGroup[]
   wholeSyllables?: PinyinWholeSyllable[]
   toneGame?: PinyinToneGame
