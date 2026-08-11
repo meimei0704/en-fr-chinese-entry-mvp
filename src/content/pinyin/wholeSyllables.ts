@@ -5,6 +5,7 @@ const audioBase = '/audio/pinyin/whole-syllables'
 export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   {
     id: 'whole-zhi',
+    bare: 'zhi',
     hanzi: '知',
     pinyin: 'zhī',
     emoji: '🧠',
@@ -16,6 +17,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-chi',
+    bare: 'chi',
     hanzi: '吃',
     pinyin: 'chī',
     emoji: '🍚',
@@ -27,6 +29,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-shi',
+    bare: 'shi',
     hanzi: '十',
     pinyin: 'shí',
     emoji: '🔟',
@@ -38,6 +41,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-ri',
+    bare: 'ri',
     hanzi: '日',
     pinyin: 'rì',
     emoji: '☀️',
@@ -49,6 +53,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-zi',
+    bare: 'zi',
     hanzi: '子',
     pinyin: 'zǐ',
     emoji: '📝',
@@ -60,6 +65,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-ci',
+    bare: 'ci',
     hanzi: '词',
     pinyin: 'cí',
     emoji: '📖',
@@ -71,6 +77,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-si',
+    bare: 'si',
     hanzi: '四',
     pinyin: 'sì',
     emoji: '4️⃣',
@@ -82,6 +89,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-yi',
+    bare: 'yi',
     hanzi: '一',
     pinyin: 'yī',
     emoji: '1️⃣',
@@ -93,6 +101,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-wu',
+    bare: 'wu',
     hanzi: '五',
     pinyin: 'wǔ',
     emoji: '5️⃣',
@@ -104,6 +113,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-yu',
+    bare: 'yu',
     hanzi: '鱼',
     pinyin: 'yú',
     emoji: '🐟',
@@ -115,6 +125,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-ye',
+    bare: 'ye',
     hanzi: '夜',
     pinyin: 'yè',
     emoji: '🌙',
@@ -126,6 +137,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-yue',
+    bare: 'yue',
     hanzi: '月',
     pinyin: 'yuè',
     emoji: '🌕',
@@ -137,6 +149,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-yuan',
+    bare: 'yuan',
     hanzi: '圆',
     pinyin: 'yuán',
     emoji: '⭕',
@@ -148,6 +161,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-yin',
+    bare: 'yin',
     hanzi: '音',
     pinyin: 'yīn',
     emoji: '🎵',
@@ -159,6 +173,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-yun',
+    bare: 'yun',
     hanzi: '云',
     pinyin: 'yún',
     emoji: '☁️',
@@ -170,6 +185,7 @@ export const pinyinWholeSyllables: PinyinWholeSyllable[] = [
   },
   {
     id: 'whole-ying',
+    bare: 'ying',
     hanzi: '英',
     pinyin: 'yīng',
     emoji: '🇬🇧',

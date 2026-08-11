@@ -102,6 +102,10 @@ export function PinyinPage() {
           ))}
         </nav>
 
+        {module.intro ? (
+          <p className="pinyin-module-intro muted-text">{getLocalizedText(module.intro, language)}</p>
+        ) : null}
+
         {module.id === 'whole-syllables' && module.wholeSyllables ? (
           <PinyinWholeSyllablesSection
             items={module.wholeSyllables}
