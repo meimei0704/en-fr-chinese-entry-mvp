@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-11
 
-**Status:** User-approved design, pending written-spec review
+**Status:** Written spec approved; implementation plan in progress
 
 **Loop thread:** `#dylan-s-test:ad36590f`
 
@@ -226,6 +226,10 @@ does not add a keyboard stop.
 | Final | `#e8f5e9` | `#2e7d32` |
 | Tone | `#e3f2fd` | `#1565c0` |
 | Pinyin heading | `#f3e5f5` | `#6a1b9a` |
+
+The small Initial label uses the existing selected-state orange `#a34a16`
+against `#fff3e0` so normal-sized text meets the 4.5:1 contrast threshold.
+The larger Initial value may retain `#c2571c`.
 
 The printed labels and values remain present in every colored block, so color
 is reinforcement rather than the sole carrier of meaning.
