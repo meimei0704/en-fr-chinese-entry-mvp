@@ -845,10 +845,10 @@ h2 {
 
 .journey-node__course-image {
   position: absolute;
-  inset: 0.4rem;
+  inset: 0;
   z-index: 1;
-  width: calc(100% - 0.8rem);
-  height: calc(100% - 0.8rem);
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: inherit;
 }
@@ -860,8 +860,8 @@ h2 {
 .journey-map .journey-node,
 .journey-map .journey-node__preview-button {
   --journey-card-min-height: clamp(10.5rem, 24vw, 12.75rem);
-  --journey-stamp-slot-max-width: clamp(3.5rem, 11vw, 5rem);
-  --journey-stamp-slot-max-height: clamp(3.5rem, 10vw, 4.75rem);
+  --journey-stamp-slot-max-width: clamp(3rem, 9vw, 4.25rem);
+  --journey-stamp-slot-max-height: clamp(3rem, 9vw, 4.25rem);
   --journey-stamp-slot-offset: clamp(0.6rem, 1.5vw, 1rem);
 }
 
