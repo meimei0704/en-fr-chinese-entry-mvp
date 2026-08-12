@@ -254,9 +254,20 @@ describe('pinyin course content', () => {
       'lesson-1/tone-game-ma-3.mp3',
       'lesson-1/tone-game-ma-4.mp3',
     ])
+    const assetPaths = new Set(
+      readdirSync(join(process.cwd(), 'public/audio/pinyin/lesson-1'))
+        .filter(
+          (fileName) =>
+            (fileName.startsWith('reference-tone-') ||
+              fileName.startsWith('tone-game-ma-')) &&
+            fileName.endsWith('.mp3'),
+        )
+        .map((fileName) => `lesson-1/${fileName}`),
+    )
 
     expect(manifest).toHaveLength(9)
     expect(new Set(manifest.map(({ relPath }) => relPath))).toEqual(expectedPaths)
+    expect(assetPaths).toEqual(expectedPaths)
     const hashByPath = new Map(manifest.map(({ hash, relPath }) => [relPath, hash]))
     for (const tone of [1, 2, 3, 4]) {
       expect(hashByPath.get(`lesson-1/reference-tone-${tone}.mp3`)).toBe(
