@@ -140,12 +140,16 @@ describe('PinyinPage', () => {
 
     expect(screen.getByText('zhi')).toBeVisible()
     expect(screen.getByText('zhī')).toBeVisible()
+    expect(screen.getByText('shī')).toBeVisible()
+    expect(screen.getByText('rī')).toBeVisible()
+    expect(screen.getByText('wū')).toBeVisible()
+    expect(screen.getByText('yūn')).toBeVisible()
     expect(screen.getByText('ying')).toBeVisible()
     expect(screen.getByText('yīng')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play zhi' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play ying' })).toBeVisible()
-    expect(screen.getByText('知')).toBeVisible()
-    expect(screen.getByText('英')).toBeVisible()
+    expect(screen.queryByText('知')).not.toBeInTheDocument()
+    expect(screen.queryByText('英')).not.toBeInTheDocument()
   })
 
   it('marks the reference section complete after the learner plays a reference audio sample', async () => {
