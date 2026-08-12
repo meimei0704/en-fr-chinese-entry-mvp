@@ -209,6 +209,82 @@ describe('pinyin course content', () => {
     }
   })
 
+  it('maps the five tone cards and four ma practice prompts to approved audio', () => {
+    const tonesModule = pinyinCourse.modules.find((module) => module.id === 'tones')
+    const toneItems = tonesModule?.reference.flatMap((group) => group.items) ?? []
+
+    expect(toneItems.map(({ pinyin, tone, audio }) => [pinyin, tone, audio])).toEqual([
+      ['mā', 1, '/audio/pinyin/lesson-1/reference-tone-1.mp3'],
+      ['má', 2, '/audio/pinyin/lesson-1/reference-tone-2.mp3'],
+      ['mǎ', 3, '/audio/pinyin/lesson-1/reference-tone-3.mp3'],
+      ['mà', 4, '/audio/pinyin/lesson-1/reference-tone-4.mp3'],
+      ['ma', 0, '/audio/pinyin/lesson-1/reference-tone-neutral.mp3'],
+    ])
+    expect(
+      tonesModule?.toneGame?.questions.slice(0, 4).map(({ promptText, promptAudio }) => [
+        promptText,
+        promptAudio,
+      ]),
+    ).toEqual([
+      ['mā', '/audio/pinyin/lesson-1/tone-game-ma-1.mp3'],
+      ['má', '/audio/pinyin/lesson-1/tone-game-ma-2.mp3'],
+      ['mǎ', '/audio/pinyin/lesson-1/tone-game-ma-3.mp3'],
+      ['mà', '/audio/pinyin/lesson-1/tone-game-ma-4.mp3'],
+    ])
+  })
+
+  it('locks the approved ma tone MP3s to the sha256 manifest', () => {
+    const manifestPath = join(
+      process.cwd(),
+      'public/audio/pinyin/reference-tone.sha256',
+    )
+    const manifest = readFileSync(manifestPath, 'utf8')
+      .trim()
+      .split('\n')
+      .map((line) => line.split('  '))
+      .map(([hash, relPath]) => ({ hash, relPath }))
+    const expectedPaths = new Set([
+      'lesson-1/reference-tone-1.mp3',
+      'lesson-1/reference-tone-2.mp3',
+      'lesson-1/reference-tone-3.mp3',
+      'lesson-1/reference-tone-4.mp3',
+      'lesson-1/reference-tone-neutral.mp3',
+      'lesson-1/tone-game-ma-1.mp3',
+      'lesson-1/tone-game-ma-2.mp3',
+      'lesson-1/tone-game-ma-3.mp3',
+      'lesson-1/tone-game-ma-4.mp3',
+    ])
+    const assetPaths = new Set(
+      readdirSync(join(process.cwd(), 'public/audio/pinyin/lesson-1'))
+        .filter(
+          (fileName) =>
+            (fileName.startsWith('reference-tone-') ||
+              fileName.startsWith('tone-game-ma-')) &&
+            fileName.endsWith('.mp3'),
+        )
+        .map((fileName) => `lesson-1/${fileName}`),
+    )
+
+    expect(manifest).toHaveLength(9)
+    expect(new Set(manifest.map(({ relPath }) => relPath))).toEqual(expectedPaths)
+    expect(assetPaths).toEqual(expectedPaths)
+    const hashByPath = new Map(manifest.map(({ hash, relPath }) => [relPath, hash]))
+    for (const tone of [1, 2, 3, 4]) {
+      expect(hashByPath.get(`lesson-1/reference-tone-${tone}.mp3`)).toBe(
+        hashByPath.get(`lesson-1/tone-game-ma-${tone}.mp3`),
+      )
+    }
+    expect(hashByPath.get('lesson-1/reference-tone-neutral.mp3')).toBe(
+      hashByPath.get('lesson-1/reference-tone-1.mp3'),
+    )
+
+    for (const { hash, relPath } of manifest) {
+      const filePath = join(process.cwd(), 'public/audio/pinyin', relPath)
+      const liveHash = createHash('sha256').update(readFileSync(filePath)).digest('hex')
+      expect(liveHash, `${relPath} should match the approved ma tone audio`).toBe(hash)
+    }
+  })
+
   it('locks the 23 initial call-sound MP3s to the sha256 manifest', () => {
     const manifestPath = join(
       process.cwd(),
