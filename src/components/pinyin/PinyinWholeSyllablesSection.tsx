@@ -40,11 +40,13 @@ export function PinyinWholeSyllablesSection({
                   {item.pinyin}
                 </p>
               </div>
-              <div className="pinyin-reference-card__image">
-                <span className="pinyin-reference-card__emoji" aria-hidden="true">
-                  {item.emoji}
-                </span>
-              </div>
+              {item.emoji ? (
+                <div className="pinyin-reference-card__image">
+                  <span className="pinyin-reference-card__emoji" aria-hidden="true">
+                    {item.emoji}
+                  </span>
+                </div>
+              ) : null}
             </div>
             <p className="muted-text">{getLocalizedText(item.description, language)}</p>
           </article>

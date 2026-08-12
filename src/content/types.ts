@@ -192,7 +192,7 @@ export interface PinyinWholeSyllable {
   bare: string
   hanzi: string
   pinyin: string
-  emoji: string
+  emoji?: string
   description: LocalizedField
   audio: string
 }
