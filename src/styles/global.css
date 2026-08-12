@@ -849,7 +849,7 @@ h2 {
   z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: inherit;
 }
 
@@ -913,34 +913,14 @@ h2 {
   min-height: var(--journey-stamp-slot-max-height);
   padding: 0.35rem;
   border-radius: 1.1rem;
-  border: 1px solid rgba(214, 181, 150, 0.58);
+  border: 1px solid transparent;
   box-shadow: 0 12px 30px -24px rgba(67, 40, 20, 0.35);
   font-size: clamp(1.65rem, 4.2vw, 2.35rem);
   transform: rotate(6deg);
 }
 
-.journey-map .journey-node:nth-child(6n + 1) .journey-node__doodle--stamp {
-  background: #ffd9e4;
-}
-
-.journey-map .journey-node:nth-child(6n + 2) .journey-node__doodle--stamp {
-  background: #d8e6ff;
-}
-
-.journey-map .journey-node:nth-child(6n + 3) .journey-node__doodle--stamp {
-  background: #d9f2e3;
-}
-
-.journey-map .journey-node:nth-child(6n + 4) .journey-node__doodle--stamp {
-  background: #fff2c9;
-}
-
-.journey-map .journey-node:nth-child(6n + 5) .journey-node__doodle--stamp {
-  background: #e9dcf5;
-}
-
-.journey-map .journey-node:nth-child(6n + 6) .journey-node__doodle--stamp {
-  background: #ffe3d0;
+.journey-map .journey-node__doodle--stamp {
+  background: transparent;
 }
 
 .journey-node h2,
