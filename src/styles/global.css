@@ -849,7 +849,7 @@ h2 {
   z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: inherit;
 }
 
@@ -919,28 +919,8 @@ h2 {
   transform: rotate(6deg);
 }
 
-.journey-map .journey-node:nth-child(6n + 1) .journey-node__doodle--stamp {
-  background: #ffd9e4;
-}
-
-.journey-map .journey-node:nth-child(6n + 2) .journey-node__doodle--stamp {
-  background: #d8e6ff;
-}
-
-.journey-map .journey-node:nth-child(6n + 3) .journey-node__doodle--stamp {
-  background: #d9f2e3;
-}
-
-.journey-map .journey-node:nth-child(6n + 4) .journey-node__doodle--stamp {
-  background: #fff2c9;
-}
-
-.journey-map .journey-node:nth-child(6n + 5) .journey-node__doodle--stamp {
-  background: #e9dcf5;
-}
-
-.journey-map .journey-node:nth-child(6n + 6) .journey-node__doodle--stamp {
-  background: #ffe3d0;
+.journey-map .journey-node__doodle--stamp {
+  background: transparent;
 }
 
 .journey-node h2,
