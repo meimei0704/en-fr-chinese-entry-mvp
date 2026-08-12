@@ -204,4 +204,52 @@ describe('buildPinyinPracticeChallenge', () => {
       challenge.questions.some((question) => question.kind === 'read' && question.prompt),
     ).toBe(true)
   })
+
+  it('uses the approved first-tone final labels as every Finals practice answer', () => {
+    const module = pinyinCourse.modules.find((candidate) => candidate.id === 'finals')
+    if (!module) {
+      throw new Error('Missing Finals module')
+    }
+
+    const expectedAnswers = new Map([
+      ['/audio/pinyin/lesson-1/reference-final-a.mp3', 'ā'],
+      ['/audio/pinyin/lesson-1/reference-final-o.mp3', 'ō'],
+      ['/audio/pinyin/lesson-1/reference-final-e.mp3', 'ē'],
+      ['/audio/pinyin/lesson-1/reference-final-i.mp3', 'ī'],
+      ['/audio/pinyin/lesson-1/reference-final-u.mp3', 'ū'],
+      ['/audio/pinyin/lesson-1/reference-final-ue.mp3', 'ǖ'],
+      ['/audio/pinyin/lesson-3/reference-final-ai.mp3', 'āi'],
+      ['/audio/pinyin/lesson-3/reference-final-ei.mp3', 'ēi'],
+      ['/audio/pinyin/lesson-3/reference-final-ui.mp3', 'uī'],
+      ['/audio/pinyin/lesson-3/reference-final-ao.mp3', 'āo'],
+      ['/audio/pinyin/lesson-3/reference-final-ou.mp3', 'ōu'],
+      ['/audio/pinyin/lesson-3/reference-final-iu.mp3', 'iū'],
+      ['/audio/pinyin/lesson-3/reference-final-ie.mp3', 'iē'],
+      ['/audio/pinyin/lesson-3/reference-final-ue.mp3', 'üē'],
+      ['/audio/pinyin/lesson-3/reference-final-er.mp3', 'ēr'],
+      ['/audio/pinyin/lesson-3/reference-final-an.mp3', 'ān'],
+      ['/audio/pinyin/lesson-3/reference-final-en.mp3', 'ēn'],
+      ['/audio/pinyin/lesson-3/reference-final-in.mp3', 'īn'],
+      ['/audio/pinyin/lesson-3/reference-final-un.mp3', 'ūn'],
+      ['/audio/pinyin/lesson-3/reference-final-uen.mp3', 'ǖn'],
+      ['/audio/pinyin/lesson-3/reference-final-ang.mp3', 'āng'],
+      ['/audio/pinyin/lesson-3/reference-final-eng.mp3', 'ēng'],
+      ['/audio/pinyin/lesson-3/reference-final-ing.mp3', 'īng'],
+      ['/audio/pinyin/lesson-3/reference-final-ong.mp3', 'ōng'],
+    ])
+    const challenge = buildPinyinPracticeChallenge(module, 'en', 56, 20260812)
+
+    for (const [audio, answer] of expectedAnswers) {
+      for (const suffix of ['listen', 'read']) {
+        const question = challenge.questions.find(
+          (candidate) => candidate.audio === audio && candidate.id.endsWith(`-${suffix}`),
+        )
+        expect(question, `${audio} ${suffix} should be in the complete challenge`).toBeDefined()
+        expect(question?.target).toBe(answer)
+        expect(
+          question?.options.find((option) => option.id === question.correctOptionId)?.label,
+        ).toBe(answer)
+      }
+    }
+  })
 })

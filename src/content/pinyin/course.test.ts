@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { readFileSync, statSync } from 'node:fs'
+import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
@@ -55,6 +55,81 @@ describe('pinyin course content', () => {
       expect(audioPath).toMatch(/^\/audio\/pinyin\/(lesson-\d|whole-syllables)\/.+\.mp3$/)
       const publicFilePath = join(process.cwd(), 'public', audioPath.replace(/^\//, ''))
       expect(statSync(publicFilePath).size).toBeGreaterThan(0)
+    }
+  })
+
+  it('maps all 24 finals to their approved first-tone reference MP3s', () => {
+    const finalsModule = pinyinCourse.modules.find((module) => module.id === 'finals')
+    const finalItems = finalsModule?.reference.flatMap((group) => group.items) ?? []
+    const expectedFinals = [
+      ['a', 'ā', '啊', '/audio/pinyin/lesson-1/reference-final-a.mp3'],
+      ['o', 'ō', '喔', '/audio/pinyin/lesson-1/reference-final-o.mp3'],
+      ['e', 'ē', '婀', '/audio/pinyin/lesson-1/reference-final-e.mp3'],
+      ['i', 'ī', '衣', '/audio/pinyin/lesson-1/reference-final-i.mp3'],
+      ['u', 'ū', '乌', '/audio/pinyin/lesson-1/reference-final-u.mp3'],
+      ['ü', 'ǖ', '迂', '/audio/pinyin/lesson-1/reference-final-ue.mp3'],
+      ['ai', 'āi', '哀', '/audio/pinyin/lesson-3/reference-final-ai.mp3'],
+      ['ei', 'ēi', '诶', '/audio/pinyin/lesson-3/reference-final-ei.mp3'],
+      ['ui', 'uī', '威', '/audio/pinyin/lesson-3/reference-final-ui.mp3'],
+      ['ao', 'āo', '凹', '/audio/pinyin/lesson-3/reference-final-ao.mp3'],
+      ['ou', 'ōu', '欧', '/audio/pinyin/lesson-3/reference-final-ou.mp3'],
+      ['iu', 'iū', '忧', '/audio/pinyin/lesson-3/reference-final-iu.mp3'],
+      ['ie', 'iē', '椰', '/audio/pinyin/lesson-3/reference-final-ie.mp3'],
+      ['üe', 'üē', '约', '/audio/pinyin/lesson-3/reference-final-ue.mp3'],
+      ['er', 'ēr', '儿', '/audio/pinyin/lesson-3/reference-final-er.mp3'],
+      ['an', 'ān', '安', '/audio/pinyin/lesson-3/reference-final-an.mp3'],
+      ['en', 'ēn', '恩', '/audio/pinyin/lesson-3/reference-final-en.mp3'],
+      ['in', 'īn', '因', '/audio/pinyin/lesson-3/reference-final-in.mp3'],
+      ['un', 'ūn', '温', '/audio/pinyin/lesson-3/reference-final-un.mp3'],
+      ['ün', 'ǖn', '晕', '/audio/pinyin/lesson-3/reference-final-uen.mp3'],
+      ['ang', 'āng', '肮', '/audio/pinyin/lesson-3/reference-final-ang.mp3'],
+      ['eng', 'ēng', '鞥', '/audio/pinyin/lesson-3/reference-final-eng.mp3'],
+      ['ing', 'īng', '英', '/audio/pinyin/lesson-3/reference-final-ing.mp3'],
+      ['ong', 'ōng', '嗡', '/audio/pinyin/lesson-3/reference-final-ong.mp3'],
+    ]
+
+    expect(finalItems.map(({ label, pinyin, hanzi, audio }) => [label, pinyin, hanzi, audio])).toEqual(
+      expectedFinals,
+    )
+    expect(finalItems.every((item) => item.emoji === undefined)).toBe(true)
+  })
+
+  it('locks the 24 approved finals MP3s to the sha256 manifest', () => {
+    const manifestPath = join(
+      process.cwd(),
+      'public/audio/pinyin/reference-final.sha256',
+    )
+    const manifest = readFileSync(manifestPath, 'utf8')
+      .trim()
+      .split('\n')
+      .map((line) => line.split('  '))
+      .map(([hash, relPath]) => ({ hash, relPath }))
+    const finalsModule = pinyinCourse.modules.find((module) => module.id === 'finals')
+    const referencedPaths = new Set(
+      finalsModule?.reference.flatMap((group) =>
+        group.items.map((item) => item.audio.replace('/audio/pinyin/', '')),
+      ) ?? [],
+    )
+    const assetPaths = new Set(
+      ['lesson-1', 'lesson-3'].flatMap((lesson) =>
+        readdirSync(join(process.cwd(), 'public/audio/pinyin', lesson))
+          .filter((fileName) => fileName.startsWith('reference-final-') && fileName.endsWith('.mp3'))
+          .map((fileName) => `${lesson}/${fileName}`),
+      ),
+    )
+    const manifestPaths = new Set(manifest.map(({ relPath }) => relPath))
+
+    expect(manifest).toHaveLength(24)
+    expect(referencedPaths).toEqual(manifestPaths)
+    expect(assetPaths).toEqual(manifestPaths)
+
+    for (const { hash, relPath } of manifest) {
+      const filePath = join(process.cwd(), 'public/audio/pinyin', relPath)
+      const liveHash = createHash('sha256').update(readFileSync(filePath)).digest('hex')
+      expect(
+        liveHash,
+        `${relPath} should play the approved standalone final in first tone`,
+      ).toBe(hash)
     }
   })
 
