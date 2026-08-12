@@ -94,6 +94,22 @@ describe('pinyin course content', () => {
     expect(finalItems.every((item) => item.emoji === undefined)).toBe(true)
   })
 
+  it('keeps reference cards emoji-free across all modules', () => {
+    for (const module of pinyinCourse.modules) {
+      const referenceItems = module.reference.flatMap((group) => group.items)
+      expect(
+        referenceItems.every((item) => item.emoji === undefined),
+        `${module.id} reference items should carry no emoji`,
+      ).toBe(true)
+      if (module.wholeSyllables) {
+        expect(
+          module.wholeSyllables.every((item) => item.emoji === undefined),
+          `${module.id} whole syllables should carry no emoji`,
+        ).toBe(true)
+      }
+    }
+  })
+
   it('locks the 24 approved finals MP3s to the sha256 manifest', () => {
     const manifestPath = join(
       process.cwd(),
