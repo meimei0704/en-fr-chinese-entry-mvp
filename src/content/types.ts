@@ -190,7 +190,7 @@ export interface PinyinReferenceGroup {
 export interface PinyinWholeSyllable {
   id: string
   bare: string
-  hanzi: string
+  hanzi?: string
   pinyin: string
   emoji?: string
   description: LocalizedField

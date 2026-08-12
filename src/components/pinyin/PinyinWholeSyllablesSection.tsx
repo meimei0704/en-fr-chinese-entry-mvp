@@ -33,9 +33,11 @@ export function PinyinWholeSyllablesSection({
                 />
               </div>
               <div className="pinyin-reference-card__example">
-                <span className="pinyin-reference-card__hanzi" aria-hidden="true">
-                  {item.hanzi}
-                </span>
+                {item.hanzi ? (
+                  <span className="pinyin-reference-card__hanzi" aria-hidden="true">
+                    {item.hanzi}
+                  </span>
+                ) : null}
                 <p className="pinyin-reference-card__example-pinyin">
                   {item.pinyin}
                 </p>
