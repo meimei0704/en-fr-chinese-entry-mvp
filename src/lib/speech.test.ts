@@ -18,8 +18,11 @@ function installMockAudio(play = vi.fn().mockResolvedValue(undefined)) {
     addEventListener: ReturnType<typeof vi.fn>
     currentTime: number
     listeners: Record<string, () => void>
+    load: ReturnType<typeof vi.fn>
     pause: ReturnType<typeof vi.fn>
     play: typeof play
+    preload: string
+    removeAttribute: ReturnType<typeof vi.fn>
     src: string
   }> = []
 
@@ -36,14 +39,21 @@ function installMockAudio(play = vi.fn().mockResolvedValue(undefined)) {
     })
     currentTime = 0
     listeners: Record<string, () => void> = {}
+    load = vi.fn()
     pause = vi.fn()
     play = play
+    preload = ''
+    removeAttribute = vi.fn()
     src: string
 
-    constructor(src: string) {
+    constructor(src = '') {
       audioConstructor(src)
       this.src = src
       instances.push(this)
+    }
+
+    getAttribute(name: string) {
+      return name === 'src' ? this.src : null
     }
   }
 
@@ -54,14 +64,12 @@ function installMockAudio(play = vi.fn().mockResolvedValue(undefined)) {
 
 describe('speakChinese', () => {
   const speak = vi.fn()
-  const cancel = vi.fn()
 
   beforeEach(() => {
     speak.mockReset()
-    cancel.mockReset()
     vi.stubGlobal('SpeechSynthesisUtterance', MockUtterance)
     vi.stubGlobal('speechSynthesis', {
-      cancel,
+      cancel: vi.fn(),
       speak,
       getVoices: () => [],
     })
@@ -72,7 +80,7 @@ describe('speakChinese', () => {
     vi.unstubAllGlobals()
   })
 
-  it('plays the provided audio source before falling back to browser TTS', () => {
+  it('plays the provided audio source without touching browser TTS', () => {
     const { audioConstructor, play } = installMockAudio()
 
     const didStart = speakChinese({
@@ -81,106 +89,130 @@ describe('speakChinese', () => {
     })
 
     expect(didStart).toBe(true)
-    expect(audioConstructor).toHaveBeenCalledWith('/audio/self-intro/line-01.mp3')
+    expect(audioConstructor).toHaveBeenCalled()
     expect(play).toHaveBeenCalledTimes(1)
-    expect(cancel).toHaveBeenCalledTimes(1)
     expect(speak).not.toHaveBeenCalled()
   })
 
-  it('falls back to browser TTS when audio play rejects', async () => {
-    installMockAudio(vi.fn().mockRejectedValue(new Error('decode failed')))
+  it('retries with backoff when audio play rejects, then gives up silently', async () => {
+    vi.useFakeTimers()
+    const rejectPlay = vi.fn().mockRejectedValue(new Error('decode failed'))
+    installMockAudio(rejectPlay)
 
-    const didStart = speakChinese({
+    speakChinese({
       text: '请问，地铁票在哪儿买？',
       audioSrc: '/audio/ask-directions/line-01.mp3',
     })
+
     await Promise.resolve()
+    expect(rejectPlay).toHaveBeenCalledTimes(1)
+    expect(speak).not.toHaveBeenCalled()
 
-    expect(didStart).toBe(true)
-    expect(speak).toHaveBeenCalledTimes(1)
-    expect(speak.mock.calls[0]?.[0]).toMatchObject({
-      text: '请问，地铁票在哪儿买？',
-      lang: 'zh-CN',
-      rate: 0.9,
-    })
+    await vi.advanceTimersByTimeAsync(200)
+    expect(rejectPlay).toHaveBeenCalledTimes(2)
+
+    await vi.advanceTimersByTimeAsync(500)
+    expect(rejectPlay).toHaveBeenCalledTimes(3)
+
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(rejectPlay).toHaveBeenCalledTimes(4)
+
+    expect(speak).not.toHaveBeenCalled()
+
+    vi.useRealTimers()
   })
 
-  it('falls back to browser TTS when audio emits an error', () => {
-    const { instances } = installMockAudio()
+  it('retries via the same audio element without recreating it', async () => {
+    vi.useFakeTimers()
+    const rejectPlay = vi.fn().mockRejectedValue(new Error('decode failed'))
+    const { audioConstructor, instances } = installMockAudio(rejectPlay)
 
-    const didStart = speakChinese({
-      text: '我有预订。',
-      audioSrc: '/audio/order-food/line-01.mp3',
+    speakChinese({
+      text: '你好。',
+      audioSrc: '/audio/daily-greetings/line-01.mp3',
     })
 
-    instances[0].listeners.error()
+    await vi.advanceTimersByTimeAsync(200)
+    expect(audioConstructor).toHaveBeenCalledTimes(1)
+    expect(instances).toHaveLength(1)
+    expect(instances[0].play).toHaveBeenCalledTimes(2)
+    expect(instances[0].src).toBe('/audio/daily-greetings/line-01.mp3')
 
-    expect(didStart).toBe(true)
-    expect(speak).toHaveBeenCalledTimes(1)
-    expect(speak.mock.calls[0]?.[0]).toMatchObject({
-      text: '我有预订。',
-      lang: 'zh-CN',
-      rate: 0.9,
-    })
+    vi.useRealTimers()
   })
 
+  it('tries generated audio, original fallback audio, then gives up silently', async () => {
+    vi.useFakeTimers()
+    const play = vi.fn().mockRejectedValue(new Error('decode failed'))
+    const { audioConstructor, instances } = installMockAudio(play)
 
-  it('tries generated audio, original fallback audio, then browser TTS', () => {
-    const { audioConstructor, instances, play } = installMockAudio()
-
-    const didStart = speakChinese({
+    speakChinese({
       text: '你好，我来旅游。',
       audioSrc: '/voice/generated/self-intro/line-01.mp3',
       fallbackAudioSrc: '/audio/self-intro/line-01.mp3',
     })
 
-    expect(didStart).toBe(true)
-    expect(audioConstructor).toHaveBeenNthCalledWith(1, '/voice/generated/self-intro/line-01.mp3')
-    expect(play).toHaveBeenCalledTimes(1)
+    for (let i = 0; i < 3; i += 1) {
+      await vi.advanceTimersByTimeAsync([200, 500, 1000][i])
+    }
 
-    instances[0]!.listeners.error()
-
-    expect(audioConstructor).toHaveBeenNthCalledWith(2, '/audio/self-intro/line-01.mp3')
-    expect(play).toHaveBeenCalledTimes(2)
+    expect(audioConstructor).toHaveBeenNthCalledWith(1, '')
+    expect(audioConstructor).toHaveBeenNthCalledWith(2, '')
+    expect(instances).toHaveLength(2)
+    expect(instances[0].src).toBe('/voice/generated/self-intro/line-01.mp3')
+    expect(instances[1].src).toBe('/audio/self-intro/line-01.mp3')
     expect(speak).not.toHaveBeenCalled()
 
-    instances[1]!.listeners.error()
-
-    expect(speak).toHaveBeenCalledTimes(1)
-    expect(speak.mock.calls[0]?.[0]).toMatchObject({
-      text: '你好，我来旅游。',
-      lang: 'zh-CN',
-      rate: 0.9,
-    })
+    vi.useRealTimers()
   })
 
-  it('uses browser TTS when no audio source is available', () => {
+  it('does not fall back to browser TTS when no audio source is available', () => {
     const didStart = speakChinese({ text: '我要一瓶水。' })
 
-    expect(didStart).toBe(true)
-    expect(cancel).toHaveBeenCalledTimes(1)
-    expect(speak).toHaveBeenCalledTimes(1)
-    expect(speak.mock.calls[0]?.[0]).toMatchObject({
-      text: '我要一瓶水。',
-      lang: 'zh-CN',
-      rate: 0.9,
-    })
+    expect(didStart).toBe(false)
+    expect(speak).not.toHaveBeenCalled()
   })
 
-  it('cancels queued speech and stops previous audio when switching playback', () => {
-    const { audioConstructor, instances, play } = installMockAudio()
+  it('stops previous audio when switching playback', () => {
+    const { audioConstructor, instances } = installMockAudio()
 
-    speakChinese({ text: '旧的语音。' })
     speakChinese({ text: '第一段音频。', audioSrc: '/audio/self-intro/line-01.mp3' })
     instances[0].currentTime = 12
 
     speakChinese({ text: '第二段音频。', audioSrc: '/audio/self-intro/line-02.mp3' })
 
-    expect(audioConstructor).toHaveBeenNthCalledWith(1, '/audio/self-intro/line-01.mp3')
-    expect(audioConstructor).toHaveBeenNthCalledWith(2, '/audio/self-intro/line-02.mp3')
+    expect(audioConstructor).toHaveBeenCalledTimes(2)
     expect(instances[0].pause).toHaveBeenCalledTimes(1)
+    expect(instances[0].removeAttribute).toHaveBeenCalledWith('src')
     expect(instances[0].currentTime).toBe(0)
-    expect(cancel).toHaveBeenCalledTimes(3)
+  })
+
+  it('does not retry a superseded playback after a new sentence starts', async () => {
+    vi.useFakeTimers()
+    const play = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('interrupted'))
+      .mockResolvedValueOnce(undefined)
+    const { instances } = installMockAudio(play)
+
+    speakChinese({
+      text: '第一段音频。',
+      audioSrc: '/audio/self-intro/line-01.mp3',
+    })
+
+    speakChinese({
+      text: '第二段音频。',
+      audioSrc: '/audio/self-intro/line-02.mp3',
+    })
+
+    await vi.advanceTimersByTimeAsync(200)
     expect(play).toHaveBeenCalledTimes(2)
+
+    await vi.advanceTimersByTimeAsync(5000)
+    expect(play).toHaveBeenCalledTimes(2)
+    expect(speak).not.toHaveBeenCalled()
+    expect(instances[1].src).toBe('/audio/self-intro/line-02.mp3')
+
+    vi.useRealTimers()
   })
 })

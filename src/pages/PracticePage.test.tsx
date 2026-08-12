@@ -39,13 +39,20 @@ describe('PracticePage', () => {
     class MockAudio {
       addEventListener = vi.fn()
       currentTime = 0
+      load = vi.fn()
       pause = vi.fn()
       play = audioPlay.mockResolvedValue(undefined)
+      preload = ''
+      removeAttribute = vi.fn()
       src: string
 
-      constructor(src: string) {
+      constructor(src = '') {
         audioConstructor(src)
         this.src = src
+      }
+
+      getAttribute(name: string) {
+        return name === 'src' ? this.src : null
       }
     }
 
