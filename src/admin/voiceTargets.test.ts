@@ -77,7 +77,7 @@ describe('admin batch voice audio targets', () => {
     const targets = collectCourseVoiceAudioTargets(course.lessons)
     const targetTexts = new Set(targets.map((target) => target.text))
 
-    expect(targets).toHaveLength(439)
+    expect(targets).toHaveLength(425)
     expect(targets.every((target) => target.language === 'zh-CN')).toBe(true)
     expect(targets.every((target) => target.originalAudio.startsWith('/audio/'))).toBe(true)
     expect(targets.every((target) => target.storageKey.startsWith('audio/'))).toBe(true)
@@ -105,12 +105,12 @@ describe('admin batch voice audio targets', () => {
       ]),
     )
 
-    expect(completeTargets).toHaveLength(439)
+    expect(completeTargets).toHaveLength(425)
     expect(completeTargets.some((target) => target.moduleType === 'pronunciation')).toBe(false)
-    expect(visibleTargets).toHaveLength(439)
+    expect(visibleTargets).toHaveLength(425)
     expect(visibleCounts).toEqual({
-      dialogue: 107,
-      sentencePatterns: 130,
+      dialogue: 152,
+      sentencePatterns: 71,
       vocabulary: 130,
       practice: 72,
     })
