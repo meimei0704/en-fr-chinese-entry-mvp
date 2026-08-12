@@ -133,6 +133,82 @@ describe('pinyin course content', () => {
     }
   })
 
+  it('maps all 16 whole syllables to their approved first-tone MP3s', () => {
+    const wholeSyllablesModule = pinyinCourse.modules.find(
+      (module) => module.id === 'whole-syllables',
+    )
+    const expectedWholeSyllables = [
+      ['zhi', 'zhī', '/audio/pinyin/whole-syllables/reference-whole-zhi.mp3'],
+      ['chi', 'chī', '/audio/pinyin/whole-syllables/reference-whole-chi.mp3'],
+      ['shi', 'shī', '/audio/pinyin/whole-syllables/reference-whole-shi.mp3'],
+      ['ri', 'rī', '/audio/pinyin/whole-syllables/reference-whole-ri.mp3'],
+      ['zi', 'zī', '/audio/pinyin/whole-syllables/reference-whole-zi.mp3'],
+      ['ci', 'cī', '/audio/pinyin/whole-syllables/reference-whole-ci.mp3'],
+      ['si', 'sī', '/audio/pinyin/whole-syllables/reference-whole-si.mp3'],
+      ['yi', 'yī', '/audio/pinyin/whole-syllables/reference-whole-yi.mp3'],
+      ['wu', 'wū', '/audio/pinyin/whole-syllables/reference-whole-wu.mp3'],
+      ['yu', 'yū', '/audio/pinyin/whole-syllables/reference-whole-yu.mp3'],
+      ['ye', 'yē', '/audio/pinyin/whole-syllables/reference-whole-ye.mp3'],
+      ['yue', 'yuē', '/audio/pinyin/whole-syllables/reference-whole-yue.mp3'],
+      ['yuan', 'yuān', '/audio/pinyin/whole-syllables/reference-whole-yuan.mp3'],
+      ['yin', 'yīn', '/audio/pinyin/whole-syllables/reference-whole-yin.mp3'],
+      ['yun', 'yūn', '/audio/pinyin/whole-syllables/reference-whole-yun.mp3'],
+      ['ying', 'yīng', '/audio/pinyin/whole-syllables/reference-whole-ying.mp3'],
+    ]
+
+    expect(
+      wholeSyllablesModule?.wholeSyllables?.map(({ bare, pinyin, audio }) => [
+        bare,
+        pinyin,
+        audio,
+      ]),
+    ).toEqual(expectedWholeSyllables)
+    expect(
+      wholeSyllablesModule?.wholeSyllables?.every(
+        (item) => item.hanzi === undefined && item.emoji === undefined,
+      ),
+    ).toBe(true)
+  })
+
+  it('locks the 16 approved whole syllable MP3s to the sha256 manifest', () => {
+    const manifestPath = join(
+      process.cwd(),
+      'public/audio/pinyin/reference-whole-syllable.sha256',
+    )
+    const manifest = readFileSync(manifestPath, 'utf8')
+      .trim()
+      .split('\n')
+      .map((line) => line.split('  '))
+      .map(([hash, relPath]) => ({ hash, relPath }))
+    const wholeSyllablesModule = pinyinCourse.modules.find(
+      (module) => module.id === 'whole-syllables',
+    )
+    const referencedPaths = new Set(
+      wholeSyllablesModule?.wholeSyllables?.map((item) =>
+        item.audio.replace('/audio/pinyin/', ''),
+      ) ?? [],
+    )
+    const assetPaths = new Set(
+      readdirSync(join(process.cwd(), 'public/audio/pinyin/whole-syllables'))
+        .filter((fileName) => fileName.startsWith('reference-whole-') && fileName.endsWith('.mp3'))
+        .map((fileName) => `whole-syllables/${fileName}`),
+    )
+    const manifestPaths = new Set(manifest.map(({ relPath }) => relPath))
+
+    expect(manifest).toHaveLength(16)
+    expect(referencedPaths).toEqual(manifestPaths)
+    expect(assetPaths).toEqual(manifestPaths)
+
+    for (const { hash, relPath } of manifest) {
+      const filePath = join(process.cwd(), 'public/audio/pinyin', relPath)
+      const liveHash = createHash('sha256').update(readFileSync(filePath)).digest('hex')
+      expect(
+        liveHash,
+        `${relPath} should play the approved whole syllable in first tone`,
+      ).toBe(hash)
+    }
+  })
+
   it('locks the 23 initial call-sound MP3s to the sha256 manifest', () => {
     const manifestPath = join(
       process.cwd(),
