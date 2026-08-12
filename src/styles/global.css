@@ -913,7 +913,7 @@ h2 {
   min-height: var(--journey-stamp-slot-max-height);
   padding: 0.35rem;
   border-radius: 1.1rem;
-  border: 1px solid rgba(214, 181, 150, 0.58);
+  border: 1px solid transparent;
   box-shadow: 0 12px 30px -24px rgba(67, 40, 20, 0.35);
   font-size: clamp(1.65rem, 4.2vw, 2.35rem);
   transform: rotate(6deg);
