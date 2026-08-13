@@ -75,7 +75,7 @@ export function PinyinPage() {
   return (
     <main className="page-shell page-shell--wide pinyin-page">
       <div className="pinyin-page__content">
-        <PinyinHero eyebrow={pinyinCopy.eyebrow} heading={pinyinCopy.heading} />
+        <PinyinHero heading={pinyinCopy.heading} />
 
         <PinyinSyllableIntro copy={pinyinCopy.syllableIntro} />
 

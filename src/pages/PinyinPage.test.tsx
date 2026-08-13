@@ -46,7 +46,7 @@ describe('PinyinPage', () => {
     renderRoute('/pinyin')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'Pinyin（零基础第一课）' }),
+      screen.getByRole('heading', { level: 1, name: 'Pinyin（Mandarin Phonetic System）' }),
     ).toBeVisible()
   })
 
@@ -55,7 +55,7 @@ describe('PinyinPage', () => {
 
     const heading = screen.getByRole('heading', {
       level: 1,
-      name: 'Pinyin（零基础第一课）',
+      name: 'Pinyin（Mandarin Phonetic System）',
     })
     const hero = heading.closest('section')
     const figure = screen.getByRole('figure', {
