@@ -115,7 +115,9 @@ test('completes Pinyin Zone from the course entry with reference audio', async (
   await expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
   await pinyinEntry.click()
   await expect(page).toHaveURL(/\/pinyin$/)
-  await expect(page.getByRole('heading', { name: 'Pinyin（零基础第一课）' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Pinyin（Mandarin Phonetic System）' }),
+  ).toBeVisible()
 
   await page.getByRole('button', { name: 'Play bā' }).click()
   await expect

@@ -162,8 +162,7 @@ export const uiCopy = {
       goToReview: 'Go to review',
     },
     pinyinPage: {
-      eyebrow: 'Pinyin',
-      heading: 'Pinyin（零基础第一课）',
+      heading: 'Pinyin（Mandarin Phonetic System）',
       syllableIntro: {
         description:
           'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
@@ -339,8 +338,7 @@ export const uiCopy = {
       goToReview: 'Aller à la révision',
     },
     pinyinPage: {
-      eyebrow: 'Pinyin',
-      heading: 'Pinyin（零基础第一课）',
+      heading: 'Pinyin（Mandarin Phonetic System）',
       syllableIntro: {
         description:
           'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
