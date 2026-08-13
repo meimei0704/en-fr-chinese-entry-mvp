@@ -59,19 +59,41 @@ async function installPinyinBrowserMocks(page: Page) {
 
     class SpyAudio {
       currentTime = 0
-      src: string
+      private _src: string
 
       constructor(src = '') {
-        this.src = src
+        this._src = src
         if (src) {
           state.__pinyinPlayedAudioSources.push(src)
         }
       }
 
+      get src() {
+        return this._src
+      }
+
+      set src(value: string) {
+        this._src = value
+        if (value) {
+          state.__pinyinPlayedAudioSources.push(value)
+        }
+      }
+
       addEventListener() {}
+      getAttribute(attribute: string) {
+        return attribute === 'src' ? this._src : null
+      }
+      load() {}
       pause() {}
       play() {
         return Promise.resolve()
+      }
+      removeAttribute() {}
+      setAttribute(attribute: string, value: string) {
+        if (attribute === 'src') {
+          this._src = value
+          state.__pinyinPlayedAudioSources.push(value)
+        }
       }
     }
 

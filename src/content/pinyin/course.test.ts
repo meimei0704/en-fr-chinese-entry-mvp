@@ -206,7 +206,7 @@ describe('pinyin course content', () => {
     }
   })
 
-  it('maps the five tone cards and four ma practice prompts to approved audio', () => {
+  it('maps the five tone cards to approved reference audio', () => {
     const tonesModule = pinyinCourse.modules.find((module) => module.id === 'tones')
     const toneItems = tonesModule?.reference.flatMap((group) => group.items) ?? []
 
@@ -216,17 +216,6 @@ describe('pinyin course content', () => {
       ['mǎ', 3, '/audio/pinyin/lesson-1/reference-tone-3.mp3'],
       ['mà', 4, '/audio/pinyin/lesson-1/reference-tone-4.mp3'],
       ['ma', 0, '/audio/pinyin/lesson-1/reference-tone-neutral.mp3'],
-    ])
-    expect(
-      tonesModule?.toneGame?.questions.slice(0, 4).map(({ promptText, promptAudio }) => [
-        promptText,
-        promptAudio,
-      ]),
-    ).toEqual([
-      ['mā', '/audio/pinyin/lesson-1/tone-game-ma-1.mp3'],
-      ['má', '/audio/pinyin/lesson-1/tone-game-ma-2.mp3'],
-      ['mǎ', '/audio/pinyin/lesson-1/tone-game-ma-3.mp3'],
-      ['mà', '/audio/pinyin/lesson-1/tone-game-ma-4.mp3'],
     ])
   })
 
@@ -246,31 +235,20 @@ describe('pinyin course content', () => {
       'lesson-1/reference-tone-3.mp3',
       'lesson-1/reference-tone-4.mp3',
       'lesson-1/reference-tone-neutral.mp3',
-      'lesson-1/tone-game-ma-1.mp3',
-      'lesson-1/tone-game-ma-2.mp3',
-      'lesson-1/tone-game-ma-3.mp3',
-      'lesson-1/tone-game-ma-4.mp3',
     ])
     const assetPaths = new Set(
       readdirSync(join(process.cwd(), 'public/audio/pinyin/lesson-1'))
         .filter(
           (fileName) =>
-            (fileName.startsWith('reference-tone-') ||
-              fileName.startsWith('tone-game-ma-')) &&
-            fileName.endsWith('.mp3'),
+            fileName.startsWith('reference-tone-') && fileName.endsWith('.mp3'),
         )
         .map((fileName) => `lesson-1/${fileName}`),
     )
 
-    expect(manifest).toHaveLength(9)
+    expect(manifest).toHaveLength(5)
     expect(new Set(manifest.map(({ relPath }) => relPath))).toEqual(expectedPaths)
     expect(assetPaths).toEqual(expectedPaths)
     const hashByPath = new Map(manifest.map(({ hash, relPath }) => [relPath, hash]))
-    for (const tone of [1, 2, 3, 4]) {
-      expect(hashByPath.get(`lesson-1/reference-tone-${tone}.mp3`)).toBe(
-        hashByPath.get(`lesson-1/tone-game-ma-${tone}.mp3`),
-      )
-    }
     expect(hashByPath.get('lesson-1/reference-tone-neutral.mp3')).toBe(
       hashByPath.get('lesson-1/reference-tone-1.mp3'),
     )
