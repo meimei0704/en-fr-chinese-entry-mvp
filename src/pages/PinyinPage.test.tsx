@@ -7,12 +7,13 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { appRoutes } from '../app/router'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
-import { speakChinese } from '../lib/speech'
+import { speakChinese, preloadAudioSources } from '../lib/speech'
 import { MockCourseProvider, MockPinyinCourseProvider } from '../test/mockContentProvider'
 import { renderRoute } from '../test/renderRoute'
 
 vi.mock('../lib/speech', () => ({
   speakChinese: vi.fn(),
+  preloadAudioSources: vi.fn(),
 }))
 
 const courseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
@@ -36,6 +37,7 @@ describe('PinyinPage', () => {
   beforeEach(() => {
     localStorage.clear()
     vi.mocked(speakChinese).mockReset()
+    vi.mocked(preloadAudioSources).mockReset()
   })
 
   afterEach(() => {

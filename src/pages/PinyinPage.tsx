@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
@@ -14,6 +14,7 @@ import {
   savePinyinProgress,
 } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
+import { preloadAudioSources } from '../lib/speech'
 import { usePinyinCourse } from '../lib/pinyinContentProvider'
 
 const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'tones', 'whole-syllables']
@@ -46,6 +47,18 @@ export function PinyinPage() {
       pinyinCourse?.modules.find((m) => m.id === selectedModuleKey) ?? pinyinCourse?.modules[0],
     [pinyinCourse, selectedModuleKey],
   )
+
+  useEffect(() => {
+    if (!module) {
+      return
+    }
+
+    const audioSrcs = [
+      ...module.reference.flatMap((group) => group.items.map((item) => item.audio)),
+      ...(module.wholeSyllables?.map((item) => item.audio) ?? []),
+    ]
+    preloadAudioSources(audioSrcs)
+  }, [module])
 
   if (error) {
     return (

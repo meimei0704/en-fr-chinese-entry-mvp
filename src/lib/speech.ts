@@ -7,6 +7,9 @@ interface SpeakChineseOptions {
 let activeAudio: HTMLAudioElement | null = null
 let playbackId = 0
 
+const preloadAudioElements: HTMLAudioElement[] = []
+const preloadedAudioSrcs = new Set<string>()
+
 const RETRY_DELAYS_MS = [200, 500, 1000]
 const MAX_RETRIES = RETRY_DELAYS_MS.length
 
@@ -84,6 +87,25 @@ function playAudioSrc(audioSrc: string, fallbackAudioSrc?: string) {
   })
 
   return true
+}
+
+export function preloadAudioSources(srcs: string[]) {
+  if (typeof Audio === 'undefined') {
+    return
+  }
+
+  for (const src of srcs) {
+    if (preloadedAudioSrcs.has(src)) {
+      continue
+    }
+    preloadedAudioSrcs.add(src)
+
+    const audio = new Audio()
+    audio.preload = 'auto'
+    audio.src = src
+    audio.load()
+    preloadAudioElements.push(audio)
+  }
 }
 
 export function speakChinese({ audioSrc, fallbackAudioSrc }: SpeakChineseOptions) {
