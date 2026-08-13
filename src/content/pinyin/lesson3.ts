@@ -1,50 +1,6 @@
-import type {
-  PinyinLessonContent,
-  ToneGameChoice,
-  ToneGameQuestion,
-} from '../types.js'
+import type { PinyinLessonContent } from '../types.js'
 
 const lessonAudioBase = '/audio/pinyin/lesson-3'
-
-function nasalQuestion(
-  id: string,
-  promptText: string,
-  audioFile: string,
-  correctChoiceId: string,
-): ToneGameQuestion {
-  const choices: ToneGameChoice[] = [
-    { id: 'n', label: '-n', toneLabel: { en: '-n ending', fr: 'Terminaison -n' } },
-    { id: 'ng', label: '-ng', toneLabel: { en: '-ng ending', fr: 'Terminaison -ng' } },
-  ]
-  return {
-    id,
-    promptAudio: `${lessonAudioBase}/${audioFile}`,
-    promptText,
-    choices,
-    correctChoiceId,
-  }
-}
-
-function tonePairQuestion(
-  id: string,
-  promptText: string,
-  audioFile: string,
-  correctChoiceId: string,
-): ToneGameQuestion {
-  const choices: ToneGameChoice[] = [
-    { id: '1-1', label: '1-1', toneLabel: { en: 'First + First', fr: 'Premier + Premier' } },
-    { id: '2-4', label: '2-4', toneLabel: { en: 'Second + Fourth', fr: 'Deuxième + Quatrième' } },
-    { id: '3-1', label: '3-1', toneLabel: { en: 'Third + First', fr: 'Troisième + Premier' } },
-    { id: '4-4', label: '4-4', toneLabel: { en: 'Fourth + Fourth', fr: 'Quatrième + Quatrième' } },
-  ]
-  return {
-    id,
-    promptAudio: `${lessonAudioBase}/${audioFile}`,
-    promptText,
-    choices,
-    correctChoiceId,
-  }
-}
 
 export const pinyinLesson3: PinyinLessonContent = {
   id: 'pinyin-compound-finals-3',
@@ -241,24 +197,4 @@ export const pinyinLesson3: PinyinLessonContent = {
       ],
     },
   ],
-  toneGame: {
-    title: {
-      en: 'Nasal & tone pair ear training',
-      fr: 'Entraînement nasal et paires tonales',
-    },
-    instructions: {
-      en: 'Hear a syllable and pick the correct nasal ending or tone pattern.',
-      fr: 'Écoutez une syllabe et choisissez la terminaison nasale ou le motif tonal correct.',
-    },
-    questions: [
-      nasalQuestion('nasal-q-01', 'bān', 'tone-game-ban-n.mp3', 'n'),
-      nasalQuestion('nasal-q-02', 'bāng', 'tone-game-bang-ng.mp3', 'ng'),
-      nasalQuestion('nasal-q-03', 'jīn', 'tone-game-jin-n.mp3', 'n'),
-      nasalQuestion('nasal-q-04', 'jīng', 'tone-game-jing-ng.mp3', 'ng'),
-      tonePairQuestion('tone-pair-01', 'māma', 'tone-game-mama-11.mp3', '1-1'),
-      tonePairQuestion('tone-pair-02', 'xuéxiào', 'tone-game-xuexiao-24.mp3', '2-4'),
-      tonePairQuestion('tone-pair-03', 'hǎochī', 'tone-game-haochi-31.mp3', '3-1'),
-      tonePairQuestion('tone-pair-04', 'diànhuà', 'tone-game-dianhua-44.mp3', '4-4'),
-    ],
-  },
 }

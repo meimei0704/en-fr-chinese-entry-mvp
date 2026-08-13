@@ -3,8 +3,6 @@ import type {
   ExplanationLanguage,
   LessonContent,
   LocalizedField,
-  PinyinModuleContent,
-  ToneGameQuestion,
 } from '../content/types'
 import { getLocalizedText } from '../content/copy'
 
@@ -88,14 +86,6 @@ function buildChoiceOptions(
     label,
     pinyin: pinyinMap?.get(label),
   }))
-}
-
-function asBilingualExplanation(value: LocalizedField): BilingualExplanation {
-  if (typeof value === 'string') {
-    return { en: value, fr: value }
-  }
-
-  return value
 }
 
 function hanziCandidates(lesson: LessonContent): string[] {
@@ -337,115 +327,6 @@ function reviewQuestionFromCard(
     'review',
     audioMap,
   )
-}
-
-function pinyinToneListenQuestion(
-  question: ToneGameQuestion,
-  language: ExplanationLanguage,
-): PracticeChallengeQuestion {
-  const correctChoice =
-    question.choices.find((choice) => choice.id === question.correctChoiceId) ?? question.choices[0]
-  const correctLabel = getLocalizedText(correctChoice.toneLabel, language)
-  const options = question.choices.map((choice, index) => ({
-    id: `opt-${index}`,
-    label: getLocalizedText(choice.toneLabel, language),
-  }))
-  const explanation: BilingualExplanation = {
-    en: question.explanation ?? getLocalizedText(correctChoice.toneLabel, 'en'),
-    fr: getLocalizedText(correctChoice.toneLabel, 'fr'),
-  }
-
-  return {
-    id: `tone-${question.id}`,
-    kind: 'listen',
-    prompt: question.promptText
-      ? {
-          en: `Which tone matches “${question.promptText}”?`,
-          fr: `Quel ton correspond à « ${question.promptText} » ?`,
-        }
-      : { en: 'Which tone is this?', fr: 'Quel est ce ton ?' },
-    target: correctLabel,
-    correctOptionId: options.find((option) => option.label === correctLabel)?.id ?? options[0].id,
-    audio: question.promptAudio,
-    options,
-    explanation,
-  }
-}
-
-export function buildPinyinPracticeChallenge(
-  pinyinModule: PinyinModuleContent,
-  language: ExplanationLanguage,
-  count: number,
-  seed: number,
-): PracticeChallenge {
-  const rng = createSeededRandom(seed)
-  const referenceItems = pinyinModule.reference.flatMap((group) => group.items)
-  const pinyinPool = referenceItems.map((item) => item.pinyin)
-
-  const toneQuestions: PracticeChallengeQuestion[] = (pinyinModule.toneGame?.questions ?? []).map(
-    (question) => pinyinToneListenQuestion(question, language),
-  )
-
-  const referenceListen: PracticeChallengeQuestion[] = referenceItems.map((item) =>
-    listenQuestion(
-      {
-        id: `${item.id}-listen`,
-        prompt: { en: 'Which pinyin is this?', fr: 'Quel est ce pinyin ?' },
-        target: item.pinyin,
-        audio: item.audio,
-        explanation: asBilingualExplanation(item.description),
-      },
-      pinyinPool,
-      rng,
-    ),
-  )
-
-  const referenceRead: PracticeChallengeQuestion[] = referenceItems.map((item) => {
-    const options = buildChoiceOptions(
-      item.pinyin,
-      pickUnique(pinyinPool, item.pinyin, 3, rng),
-      rng,
-    )
-
-    return {
-      id: `${item.id}-read`,
-      kind: 'read',
-      prompt: item.description,
-      target: item.pinyin,
-      speechText: item.pinyin,
-      audio: item.audio,
-      correctOptionId: options.find((option) => option.label === item.pinyin)?.id ?? options[0].id,
-      options,
-      explanation: asBilingualExplanation(item.description),
-    }
-  })
-
-  const groups: Record<'listen' | 'read', PracticeChallengeQuestion[]> = {
-    listen: shuffle([...toneQuestions, ...referenceListen], rng),
-    read: shuffle(referenceRead, rng),
-  }
-
-  const kinds = ['listen', 'read'] as const
-  const selected: PracticeChallengeQuestion[] = []
-  let pickIndex = 0
-
-  while (selected.length < count) {
-    const kind = kinds[pickIndex % kinds.length]
-    const next = groups[kind].shift()
-
-    if (next) {
-      selected.push(next)
-    } else if (kinds.every((key) => groups[key].length === 0)) {
-      break
-    }
-
-    pickIndex += 1
-  }
-
-  return {
-    questions: shuffle(selected, rng),
-    maxScore: 100,
-  }
 }
 
 export function buildPracticeChallenge(

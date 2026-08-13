@@ -183,22 +183,10 @@ describe('PinyinPage', () => {
     expect(localStorage.getItem(courseProgressStorageKey)).toBe(existingCourseProgress)
   })
 
-  it('links to the practice page for the selected module', () => {
+  it('links back to home', () => {
     renderRoute('/pinyin')
 
-    expect(screen.getByRole('link', { name: 'Go to practice' })).toHaveAttribute(
-      'href',
-      '/pinyin/practice?module=initials',
-    )
     expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/home')
-  })
-
-  it('does not offer practice for the whole-syllables module', async () => {
-    const user = userEvent.setup()
-    renderRoute('/pinyin')
-
-    await user.click(screen.getByRole('tab', { name: 'Whole Syllables' }))
-
     expect(screen.queryByRole('link', { name: 'Go to practice' })).not.toBeInTheDocument()
   })
 
@@ -212,9 +200,9 @@ describe('PinyinPage', () => {
 
     expect(screen.getByRole('heading', { level: 2, name: 'Initiales' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter bā' })).toBeVisible()
-    expect(screen.getByRole('link', { name: 'Passer à la pratique' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Retour à l’accueil' })).toHaveAttribute(
       'href',
-      '/pinyin/practice?module=initials',
+      '/home',
     )
 
     const figure = screen.getByRole('figure', {

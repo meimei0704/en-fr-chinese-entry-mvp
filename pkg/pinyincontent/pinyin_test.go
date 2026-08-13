@@ -52,7 +52,6 @@ func TestModuleShape(t *testing.T) {
 			Summary        json.RawMessage `json:"summary"`
 			Reference      json.RawMessage `json:"reference"`
 			WholeSyllables json.RawMessage `json:"wholeSyllables,omitempty"`
-			ToneGame       json.RawMessage `json:"toneGame,omitempty"`
 		} `json:"modules"`
 	}
 	if err := json.Unmarshal(raw, &course); err != nil {
@@ -73,9 +72,6 @@ func TestModuleShape(t *testing.T) {
 		default:
 			if len(m.Reference) == 0 {
 				t.Fatalf("module %q missing reference", m.ID)
-			}
-			if len(m.ToneGame) == 0 {
-				t.Fatalf("module %q missing toneGame", m.ID)
 			}
 		}
 	}

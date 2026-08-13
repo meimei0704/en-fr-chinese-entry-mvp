@@ -123,11 +123,6 @@ export function PinyinPage() {
         )}
 
         <nav className="button-row lesson-actions lesson-action-dock" aria-label={pinyinCopy.lessonActions}>
-          {module.toneGame ? (
-            <Link className="primary-button" to={`/pinyin/practice?module=${selectedModuleKey}`}>
-              {pinyinCopy.goToPractice}
-            </Link>
-          ) : null}
           <Link className="secondary-link" to="/home">
             {pinyinCopy.backToHome}
           </Link>
