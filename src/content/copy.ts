@@ -177,7 +177,6 @@ export const uiCopy = {
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
       playReferenceAudio: (label: string) => `Play ${label}`,
-      goToPractice: 'Go to practice',
       backToHome: 'Back to home',
       lessonActions: 'Pinyin lesson actions',
     },
@@ -355,7 +354,6 @@ export const uiCopy = {
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       playReferenceAudio: (label: string) => `Écouter ${label}`,
-      goToPractice: 'Passer à la pratique',
       backToHome: 'Retour à l’accueil',
       lessonActions: 'Actions de la leçon de pinyin',
     },

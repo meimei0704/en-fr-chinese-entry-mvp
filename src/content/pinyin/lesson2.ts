@@ -1,60 +1,6 @@
-import type {
-  PinyinLessonContent,
-  ToneGameChoice,
-  ToneGameQuestion,
-} from '../types.js'
+import type { PinyinLessonContent } from '../types.js'
 
 const lessonAudioBase = '/audio/pinyin/lesson-2'
-
-const groupChoices: ToneGameChoice[] = [
-  {
-    id: 'retroflex',
-    label: 'zh/ch/sh/r',
-    toneLabel: {
-      en: 'Retroflex: tongue curled back',
-      fr: 'Rétroflexe : langue recourbée',
-    },
-  },
-  {
-    id: 'alveolar',
-    label: 'z/c/s',
-    toneLabel: {
-      en: 'Alveolar: tongue behind lower teeth',
-      fr: 'Alvéolaire : langue derrière les dents inférieures',
-    },
-  },
-  {
-    id: 'palatal',
-    label: 'j/q/x',
-    toneLabel: {
-      en: 'Palatal: tongue body raised',
-      fr: 'Palatal : corps de la langue levé',
-    },
-  },
-  {
-    id: 'unsure',
-    label: '?',
-    toneLabel: {
-      en: 'Can\'t tell',
-      fr: 'Je ne sais pas',
-    },
-  },
-]
-
-function groupQuestion(
-  id: string,
-  promptText: string,
-  audioFile: string,
-  correctChoiceId: string,
-): ToneGameQuestion {
-  return {
-    id,
-    promptAudio: `${lessonAudioBase}/${audioFile}`,
-    promptText,
-    choices: [...groupChoices],
-    correctChoiceId,
-  }
-}
 
 export const pinyinLesson2: PinyinLessonContent = {
   id: 'pinyin-sibilants-2',
@@ -252,24 +198,4 @@ export const pinyinLesson2: PinyinLessonContent = {
       ],
     },
   ],
-  toneGame: {
-    title: {
-      en: 'Sibilant ear training',
-      fr: 'Entraînement des sibilantes',
-    },
-    instructions: {
-      en: 'Hear a syllable, then choose which initial group it belongs to.',
-      fr: 'Écoutez une syllabe, puis choisissez le groupe d’initiale auquel elle appartient.',
-    },
-    questions: [
-      groupQuestion('sib-q-01', 'zhā', 'tone-game-zha-retroflex.mp3', 'retroflex'),
-      groupQuestion('sib-q-02', 'zā', 'tone-game-za-alveolar.mp3', 'alveolar'),
-      groupQuestion('sib-q-03', 'jiā', 'tone-game-jia-palatal.mp3', 'palatal'),
-      groupQuestion('sib-q-04', 'chī', 'tone-game-chi-retroflex.mp3', 'retroflex'),
-      groupQuestion('sib-q-05', 'cī', 'tone-game-ci-alveolar.mp3', 'alveolar'),
-      groupQuestion('sib-q-06', 'qī', 'tone-game-qi-palatal.mp3', 'palatal'),
-      groupQuestion('sib-q-07', 'shì', 'tone-game-shi-retroflex.mp3', 'retroflex'),
-      groupQuestion('sib-q-08', 'xì', 'tone-game-xi-palatal.mp3', 'palatal'),
-    ],
-  },
 }

@@ -27,7 +27,7 @@ export function ProgressPage() {
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const completedPinyinSectionsCount = pinyinProgress.completedSections.length
-  const totalPinyinSections = 3
+  const totalPinyinSections = 2
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
 
   if (error) {

@@ -19,8 +19,6 @@ export function createDefaultPinyinProgress(): PinyinProgress {
     schemaVersion: 4,
     visited: false,
     completedSections: [],
-    practiceLastScore: null,
-    practiceBestScore: null,
     shadowingCompletedPromptIds: [],
     lastVisitedPromptId: null,
     moduleProgress: {},
@@ -31,8 +29,6 @@ export function createDefaultLessonProgress(): PinyinLessonProgress {
   return {
     visited: false,
     completedSections: [],
-    practiceLastScore: null,
-    practiceBestScore: null,
     shadowingCompletedPromptIds: [],
     lastVisitedPromptId: null,
   }
@@ -69,8 +65,6 @@ function isPinyinLessonProgress(value: unknown): value is PinyinLessonProgress {
   return (
     typeof lp.visited === 'boolean' &&
     isPinyinModuleIdArray(lp.completedSections) &&
-    isScore(lp.practiceLastScore) &&
-    isScore(lp.practiceBestScore) &&
     isStringArray(lp.shadowingCompletedPromptIds) &&
     (lp.lastVisitedPromptId === null || typeof lp.lastVisitedPromptId === 'string')
   )
@@ -94,18 +88,9 @@ function deriveLegacyFields(progress: PinyinProgress): PinyinProgress {
   }
   completedSections.push(...allSections)
 
-  const scores = entries
-    .map((lp) => lp.practiceLastScore)
-    .filter((s): s is number => s !== null)
-  const scoresForBest = entries
-    .map((lp) => lp.practiceBestScore)
-    .filter((s): s is number => s !== null)
-
   return {
     ...progress,
     completedSections,
-    practiceLastScore: scores.length > 0 ? scores[scores.length - 1] : null,
-    practiceBestScore: scoresForBest.length > 0 ? Math.max(...scoresForBest) : null,
   }
 }
 
@@ -128,8 +113,6 @@ function isPinyinProgressV4(value: unknown): value is PinyinProgress {
     progress.schemaVersion === 4 &&
     typeof progress.visited === 'boolean' &&
     isPinyinModuleIdArray(progress.completedSections) &&
-    isScore(progress.practiceLastScore) &&
-    isScore(progress.practiceBestScore) &&
     isStringArray(progress.shadowingCompletedPromptIds) &&
     (progress.lastVisitedPromptId === null || typeof progress.lastVisitedPromptId === 'string') &&
     moduleProgressValid
@@ -146,8 +129,6 @@ function isV3LessonProgress(value: unknown): value is PinyinLessonProgress {
   return (
     typeof lp.visited === 'boolean' &&
     isPinyinModuleIdArray(lp.completedSections) &&
-    isScore(lp.practiceLastScore) &&
-    isScore(lp.practiceBestScore) &&
     isStringArray(lp.shadowingCompletedPromptIds) &&
     (lp.lastVisitedPromptId === null || typeof lp.lastVisitedPromptId === 'string')
   )
@@ -173,8 +154,6 @@ function isPinyinProgressV3(value: unknown): boolean {
     progress.schemaVersion === 3 &&
     typeof progress.visited === 'boolean' &&
     isPinyinModuleIdArray(progress.completedSections) &&
-    isScore(progress.practiceLastScore) &&
-    isScore(progress.practiceBestScore) &&
     isStringArray(progress.shadowingCompletedPromptIds) &&
     (progress.lastVisitedPromptId === null || typeof progress.lastVisitedPromptId === 'string') &&
     isV3LessonProgressRecord(progress.lessonProgress)
@@ -198,8 +177,6 @@ function migrateV3ToV4(raw: Record<string, unknown>): PinyinProgress {
       const legacy: PinyinLessonProgress = {
         visited: lp.visited,
         completedSections: lp.completedSections.map(migrateModuleId),
-        practiceLastScore: lp.practiceLastScore,
-        practiceBestScore: lp.practiceBestScore,
         shadowingCompletedPromptIds: lp.shadowingCompletedPromptIds,
         lastVisitedPromptId: lp.lastVisitedPromptId,
       }
@@ -217,13 +194,6 @@ function migrateV3ToV4(raw: Record<string, unknown>): PinyinProgress {
           completedSections: Array.from(
             new Set([...existing.completedSections, ...legacy.completedSections]),
           ),
-          practiceLastScore: legacy.practiceLastScore ?? existing.practiceLastScore,
-          practiceBestScore:
-            legacy.practiceBestScore === null
-              ? existing.practiceBestScore
-              : existing.practiceBestScore === null
-                ? legacy.practiceBestScore
-                : Math.max(existing.practiceBestScore, legacy.practiceBestScore),
         }
       }
     }
@@ -257,8 +227,6 @@ function isV2LessonProgress(value: unknown): value is LegacyV2LessonProgress {
   return (
     typeof lp.visited === 'boolean' &&
     isPinyinModuleIdArray(lp.completedSections) &&
-    isScore(lp.toneGameLastScore) &&
-    isScore(lp.toneGameBestScore) &&
     isStringArray(lp.shadowingCompletedPromptIds) &&
     (lp.lastVisitedPromptId === null || typeof lp.lastVisitedPromptId === 'string')
   )
@@ -327,8 +295,6 @@ function migrateV2ToV4(raw: Record<string, unknown>): PinyinProgress {
       const legacy: PinyinLessonProgress = {
         visited: lp.visited,
         completedSections: lp.completedSections.map(migrateModuleId),
-        practiceLastScore: isScore(lp.toneGameLastScore) ? lp.toneGameLastScore : null,
-        practiceBestScore: isScore(lp.toneGameBestScore) ? lp.toneGameBestScore : null,
         shadowingCompletedPromptIds: lp.shadowingCompletedPromptIds,
         lastVisitedPromptId: lp.lastVisitedPromptId,
       }
@@ -346,13 +312,6 @@ function migrateV2ToV4(raw: Record<string, unknown>): PinyinProgress {
           completedSections: Array.from(
             new Set([...existing.completedSections, ...legacy.completedSections]),
           ),
-          practiceLastScore: legacy.practiceLastScore ?? existing.practiceLastScore,
-          practiceBestScore:
-            legacy.practiceBestScore === null
-              ? existing.practiceBestScore
-              : existing.practiceBestScore === null
-                ? legacy.practiceBestScore
-                : Math.max(existing.practiceBestScore, legacy.practiceBestScore),
         }
       }
     }
@@ -368,14 +327,6 @@ function migrateV2ToV4(raw: Record<string, unknown>): PinyinProgress {
       ...foundations,
       visited: (typeof raw.visited === 'boolean' ? raw.visited : false) || foundations.visited,
       completedSections: legacyCompletedSections,
-      practiceLastScore:
-        raw.toneGameLastScore !== null && typeof raw.toneGameLastScore === 'number'
-          ? raw.toneGameLastScore
-          : foundations.practiceLastScore,
-      practiceBestScore:
-        raw.toneGameBestScore !== null && typeof raw.toneGameBestScore === 'number'
-          ? raw.toneGameBestScore
-          : foundations.practiceBestScore,
     }
   }
 
@@ -398,14 +349,6 @@ function migrateV1ToV4(raw: Record<string, unknown>): PinyinProgress {
     moduleProgress['initials'] = {
       visited: typeof raw.visited === 'boolean' ? raw.visited : false,
       completedSections: legacyCompletedSections,
-      practiceLastScore:
-        raw.toneGameLastScore !== null && typeof raw.toneGameLastScore === 'number'
-          ? raw.toneGameLastScore
-          : null,
-      practiceBestScore:
-        raw.toneGameBestScore !== null && typeof raw.toneGameBestScore === 'number'
-          ? raw.toneGameBestScore
-          : null,
       shadowingCompletedPromptIds: Array.isArray(raw.shadowingCompletedPromptIds)
         ? (raw.shadowingCompletedPromptIds as string[])
         : [],
@@ -489,40 +432,4 @@ export function recordPinyinReferenceComplete(
   moduleKey: PinyinModuleKey,
 ): PinyinProgress {
   return recordPinyinSectionComplete(progress, moduleKey, 'reference')
-}
-
-export function recordPinyinPracticeScore(
-  progress: PinyinProgress,
-  moduleKey: PinyinModuleKey,
-  score: number,
-): PinyinProgress {
-  const mp = progress.moduleProgress[moduleKey] ?? createDefaultLessonProgress()
-
-  const completedSections: PinyinModuleId[] = mp.completedSections.includes('practice')
-    ? mp.completedSections
-    : [...mp.completedSections, 'practice']
-
-  const updated: PinyinProgress = {
-    ...progress,
-    moduleProgress: {
-      ...progress.moduleProgress,
-      [moduleKey]: {
-        ...mp,
-        visited: true,
-        completedSections,
-        practiceLastScore: score,
-        practiceBestScore:
-          mp.practiceBestScore === null ? score : Math.max(mp.practiceBestScore, score),
-      },
-    },
-  }
-
-  return deriveLegacyFields(updated)
-}
-
-export function recordPinyinPracticeComplete(
-  progress: PinyinProgress,
-  moduleKey: PinyinModuleKey,
-): PinyinProgress {
-  return recordPinyinSectionComplete(progress, moduleKey, 'practice')
 }

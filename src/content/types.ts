@@ -197,33 +197,11 @@ export interface PinyinWholeSyllable {
   audio: string
 }
 
-export interface ToneGameChoice {
-  id: string
-  label: string
-  toneLabel: LocalizedField
-}
-
-export interface ToneGameQuestion {
-  id: string
-  promptAudio: string
-  promptText: string
-  choices: ToneGameChoice[]
-  correctChoiceId: string
-  explanation?: string
-}
-
-export interface PinyinToneGame {
-  title: LocalizedField
-  instructions: LocalizedField
-  questions: ToneGameQuestion[]
-}
-
 export interface PinyinLessonContent {
   id: PinyinLessonId
   title: LocalizedField
   summary: LocalizedField
   reference: PinyinReferenceGroup[]
-  toneGame: PinyinToneGame
 }
 
 export interface PinyinModuleContent {
@@ -233,7 +211,6 @@ export interface PinyinModuleContent {
   intro?: LocalizedField
   reference: PinyinReferenceGroup[]
   wholeSyllables?: PinyinWholeSyllable[]
-  toneGame?: PinyinToneGame
 }
 
 export interface PinyinCourseContent {
@@ -243,8 +220,6 @@ export interface PinyinCourseContent {
 export interface PinyinLessonProgress {
   visited: boolean
   completedSections: PinyinModuleId[]
-  practiceLastScore: number | null
-  practiceBestScore: number | null
   shadowingCompletedPromptIds: string[]
   lastVisitedPromptId: string | null
 }
@@ -253,8 +228,6 @@ export interface PinyinProgress {
   schemaVersion: 4
   visited: boolean
   completedSections: PinyinModuleId[]
-  practiceLastScore: number | null
-  practiceBestScore: number | null
   shadowingCompletedPromptIds: string[]
   lastVisitedPromptId: string | null
   moduleProgress: Partial<Record<PinyinModuleKey, PinyinLessonProgress>>

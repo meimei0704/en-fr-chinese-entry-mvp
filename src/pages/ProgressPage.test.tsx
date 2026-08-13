@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { getLocalizedText } from '../content/copy'
 import { course } from '../content/course'
 import { buildJourney } from '../content/journey'
-import { createDefaultPinyinProgress, recordPinyinPracticeScore, recordPinyinReferenceComplete, savePinyinProgress } from '../lib/pinyinProgress'
+import { createDefaultPinyinProgress, recordPinyinReferenceComplete, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
 import {
   expectedLessonTopic,
@@ -202,7 +202,7 @@ describe('ProgressPage', () => {
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(pinyinEntry).toHaveClass('course-series__entry-card', 'course-series__pinyin-link')
     expect(pinyinEntry).toHaveAccessibleName(expectedSeriesCopy.en.pinyin)
-    expect(pinyinEntry).toHaveTextContent('0 of 3 sections complete')
+    expect(pinyinEntry).toHaveTextContent('0 of 2 sections complete')
     expect(journeyEntry.tagName).toBe('A')
     expect(journeyEntry).toHaveAttribute('href', '#progress-basic-expressions-path')
     expect(journeyEntry).toHaveClass('course-series__entry-card', 'course-series__journey-link')
@@ -297,10 +297,9 @@ describe('ProgressPage', () => {
     expect(screen.queryByText(/1 of 5/i)).not.toBeInTheDocument()
   })
 
-  it('keeps 2-of-3 Pinyin and 1-of-12 Basic progress inside independent anchors', () => {
+  it('keeps 1-of-2 Pinyin and 1-of-12 Basic progress inside independent anchors', () => {
     let progress = createDefaultPinyinProgress()
     progress = recordPinyinReferenceComplete(progress, 'initials')
-    progress = recordPinyinPracticeScore(progress, 'initials', 6)
     savePinyinProgress(progress)
     saveProgress({
       ...createDefaultProgress(),
@@ -322,12 +321,12 @@ describe('ProgressPage', () => {
 
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(pinyinEntry).toHaveAccessibleName(expectedSeriesCopy.en.pinyin)
-    expect(within(pinyinEntry).getByText('2 of 3 sections complete')).toBeVisible()
+    expect(within(pinyinEntry).getByText('1 of 2 sections complete')).toBeVisible()
     expect(pinyinEntry).not.toHaveTextContent('1 of 12 lessons completed')
     expect(journeyEntry).toHaveAttribute('href', '#progress-basic-expressions-path')
     expect(journeyEntry).toHaveAccessibleName(expectedSeriesCopy.en.journey)
     expect(within(journeyEntry).getByText('1 of 12 lessons completed')).toBeVisible()
-    expect(journeyEntry).not.toHaveTextContent('2 of 3 sections complete')
+    expect(journeyEntry).not.toHaveTextContent('1 of 2 sections complete')
     expect(within(stats).getByText('1/12')).toBeVisible()
     expect(within(stats).getByText('8%')).toBeVisible()
     expect(screen.queryByText(/1 of 13/i)).not.toBeInTheDocument()

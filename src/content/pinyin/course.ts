@@ -34,7 +34,6 @@ export const pinyinCourse: PinyinCourseContent = {
         pickGroup(pinyinLesson2, 'initials-palatal'),
         pickGroup(pinyinLesson2, 'initials-yw'),
       ],
-      toneGame: pinyinLesson2.toneGame,
     },
     {
       id: 'finals',
@@ -52,7 +51,6 @@ export const pinyinCourse: PinyinCourseContent = {
         pickGroup(pinyinLesson3, 'finals-nasal-n'),
         pickGroup(pinyinLesson3, 'finals-nasal-ng'),
       ],
-      toneGame: pinyinLesson3.toneGame,
     },
     {
       id: 'tones',
@@ -69,7 +67,6 @@ export const pinyinCourse: PinyinCourseContent = {
         fr: 'Ce sont des règles particulières liées aux tons : entraînez-vous à parler le plus possible pour gagner en fluidité. Le pinyin et l’intonation sont importants, mais moins que votre envie d’exprimer vos idées et le courage de parler et de pratiquer en conversation.\n\nExemples de changements de ton :\nDeux tons 3 consécutifs : le premier troisième ton devient un deuxième ton. Exemple : 你好 nǐ hǎo devient ní hǎo.',
       },
       reference: [pickGroup(pinyinLesson1, 'tones')],
-      toneGame: pinyinLesson1.toneGame,
     },
     {
       id: 'whole-syllables',

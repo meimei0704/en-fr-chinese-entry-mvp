@@ -82,26 +82,7 @@ async function installPinyinBrowserMocks(page: Page) {
   })
 }
 
-async function finishPracticeChallenge(page: Page) {
-  for (let step = 0; step < 12; step += 1) {
-    const resultVisible = await page
-      .getByText('Challenge complete')
-      .isVisible()
-      .catch(() => false)
-    if (resultVisible) {
-      return
-    }
-
-    await page.locator('.option-button').first().click()
-
-    const nextButton = page.getByRole('button', { name: 'Next question' })
-    if (await nextButton.isVisible().catch(() => false)) {
-      await nextButton.click()
-    }
-  }
-}
-
-test('completes Pinyin Zone from the course entry with reference audio and practice challenge', async ({
+test('completes Pinyin Zone from the course entry with reference audio', async ({
   page,
 }) => {
   await installPinyinBrowserMocks(page)
@@ -124,12 +105,6 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
     )
     .toContain('/audio/pinyin/lesson-1/reference-initial-b.mp3')
 
-  await page.getByRole('link', { name: 'Go to practice' }).click()
-  await expect(page).toHaveURL(/\/pinyin\/practice/)
-  await expect(page.getByRole('heading', { level: 1, name: 'Initials' })).toBeVisible()
-
-  await finishPracticeChallenge(page)
-
   const browserState = await page.evaluate(
     ([pinyinKey, courseKey]) => {
       return {
@@ -144,7 +119,6 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
   )
 
   expect(browserState.pinyinProgress.completedSections).toContain('reference')
-  expect(browserState.pinyinProgress.completedSections).toContain('practice')
   expect(browserState.pinyinProgress.moduleProgress?.['initials']).toBeDefined()
   expect(browserState.courseProgress).toBeNull()
 })

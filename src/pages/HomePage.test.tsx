@@ -143,7 +143,7 @@ describe('HomePage', () => {
     savePinyinProgress({
       ...createDefaultPinyinProgress(),
       visited: true,
-      completedSections: ['reference', 'practice'],
+      completedSections: ['reference'],
     })
     saveProgress({
       ...createDefaultProgress(),
@@ -160,7 +160,7 @@ describe('HomePage', () => {
       name: expectedSeriesCopy.en.journey,
     })
 
-    expect(pinyinEntry).not.toHaveTextContent('2 of 3 sections complete')
+    expect(pinyinEntry).not.toHaveTextContent('1 of 2 sections complete')
     expect(journeyEntry).not.toHaveTextContent('1 of 10 lessons completed')
   })
 

@@ -7,8 +7,6 @@ const expectedDefaultProgress = {
   schemaVersion: 4,
   visited: false,
   completedSections: [],
-  practiceLastScore: null,
-  practiceBestScore: null,
   shadowingCompletedPromptIds: [],
   lastVisitedPromptId: null,
   moduleProgress: {},
@@ -37,17 +35,13 @@ describe('pinyin progress storage', () => {
     const updatedProgress = {
       schemaVersion: 4 as const,
       visited: true,
-      completedSections: ['reference', 'practice'] as const,
-      practiceLastScore: 6,
-      practiceBestScore: 7,
+      completedSections: ['reference'] as const,
       shadowingCompletedPromptIds: ['shadow-ni-hao', 'shadow-xie-xie'],
       lastVisitedPromptId: 'shadow-xie-xie',
       moduleProgress: {
         initials: {
           visited: true,
-          completedSections: ['reference', 'practice'] as const,
-          practiceLastScore: 6,
-          practiceBestScore: 7,
+          completedSections: ['reference'] as const,
           shadowingCompletedPromptIds: ['shadow-ni-hao', 'shadow-xie-xie'],
           lastVisitedPromptId: 'shadow-xie-xie',
         },
@@ -63,58 +57,6 @@ describe('pinyin progress storage', () => {
       updatedProgress,
     )
     expect(loadPinyinProgress()).toEqual(updatedProgress)
-  })
-
-  it('records practice scores, best score, and completion', async () => {
-    const {
-      createDefaultPinyinProgress,
-      loadPinyinProgress,
-      recordPinyinPracticeScore,
-      savePinyinProgress,
-    } = await importPinyinProgressModule()
-    const moduleKey = 'initials'
-
-    const progressAfterPractice = recordPinyinPracticeScore(createDefaultPinyinProgress(), moduleKey, 5)
-
-    expect(progressAfterPractice.moduleProgress[moduleKey]).toMatchObject({
-      completedSections: ['practice'],
-      practiceLastScore: 5,
-      practiceBestScore: 5,
-    })
-    expect(progressAfterPractice.completedSections).toEqual(['practice'])
-
-    const progressAfterHigherRetake = recordPinyinPracticeScore(progressAfterPractice, moduleKey, 9)
-
-    expect(progressAfterHigherRetake.moduleProgress[moduleKey]).toMatchObject({
-      completedSections: ['practice'],
-      practiceLastScore: 9,
-      practiceBestScore: 9,
-    })
-
-    const progressAfterLowerRetake = recordPinyinPracticeScore(progressAfterHigherRetake, moduleKey, 4)
-
-    expect(progressAfterLowerRetake.moduleProgress[moduleKey]).toMatchObject({
-      completedSections: ['practice'],
-      practiceLastScore: 4,
-      practiceBestScore: 9,
-    })
-
-    savePinyinProgress(progressAfterLowerRetake)
-    expect(loadPinyinProgress()).toEqual(progressAfterLowerRetake)
-  })
-
-  it('records practice completion without a score', async () => {
-    const { createDefaultPinyinProgress, recordPinyinPracticeComplete } =
-      await importPinyinProgressModule()
-    const moduleKey = 'finals'
-
-    const progress = recordPinyinPracticeComplete(createDefaultPinyinProgress(), moduleKey)
-
-    expect(progress.moduleProgress[moduleKey]).toMatchObject({
-      visited: true,
-      completedSections: ['practice'],
-    })
-    expect(progress.completedSections).toEqual(['practice'])
   })
 
   it('records reference completion and reflects in derived legacy fields', async () => {
@@ -134,17 +76,15 @@ describe('pinyin progress storage', () => {
     expect(progressAgain.moduleProgress[moduleKey]?.completedSections).toEqual(['reference'])
   })
 
-  it('deriveLegacyFields aggregates across multiple modules', async () => {
+  it('deriveLegacyFields aggregates completed sections across multiple modules', async () => {
     const {
       createDefaultPinyinProgress,
-      recordPinyinPracticeScore,
       recordPinyinReferenceComplete,
       savePinyinProgress,
     } = await importPinyinProgressModule()
 
     let progress = createDefaultPinyinProgress()
     progress = recordPinyinReferenceComplete(progress, 'initials')
-    progress = recordPinyinPracticeScore(progress, 'initials', 6)
 
     const multiModule = {
       ...progress,
@@ -153,8 +93,6 @@ describe('pinyin progress storage', () => {
         finals: {
           visited: true,
           completedSections: ['reference'] as const,
-          practiceLastScore: 5,
-          practiceBestScore: 7,
           shadowingCompletedPromptIds: [],
           lastVisitedPromptId: null,
         },
@@ -166,9 +104,7 @@ describe('pinyin progress storage', () => {
     const { loadPinyinProgress } = await importPinyinProgressModule()
     const result = loadPinyinProgress()
 
-    expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
-    expect(result.practiceLastScore).toBe(5)
-    expect(result.practiceBestScore).toBe(7)
+    expect(result.completedSections.sort()).toEqual(['reference'])
   })
 
   it('migrates v3 progress to v4 mapping lesson completion to modules', async () => {
@@ -199,13 +135,9 @@ describe('pinyin progress storage', () => {
 
     expect(result.schemaVersion).toBe(4)
     expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
-    expect(result.practiceLastScore).toBe(6)
-    expect(result.practiceBestScore).toBe(7)
     expect(result.moduleProgress['initials']).toMatchObject({
       visited: true,
       completedSections: ['reference', 'practice'],
-      practiceLastScore: 6,
-      practiceBestScore: 7,
     })
     expect(result.moduleProgress['finals']).toMatchObject({
       visited: true,
@@ -245,13 +177,9 @@ describe('pinyin progress storage', () => {
 
     expect(result.schemaVersion).toBe(4)
     expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
-    expect(result.practiceLastScore).toBe(6)
-    expect(result.practiceBestScore).toBe(7)
     expect(result.moduleProgress['initials']).toMatchObject({
       visited: true,
       completedSections: ['reference', 'practice'],
-      practiceLastScore: 6,
-      practiceBestScore: 7,
     })
   })
 
@@ -273,13 +201,9 @@ describe('pinyin progress storage', () => {
 
     expect(result.schemaVersion).toBe(4)
     expect(result.completedSections.sort()).toEqual(['practice', 'reference'])
-    expect(result.practiceLastScore).toBe(6)
-    expect(result.practiceBestScore).toBe(7)
     expect(result.moduleProgress['initials']).toMatchObject({
       visited: true,
       completedSections: ['reference', 'practice'],
-      practiceLastScore: 6,
-      practiceBestScore: 7,
     })
   })
 
@@ -288,16 +212,12 @@ describe('pinyin progress storage', () => {
       schemaVersion: 4,
       visited: true,
       completedSections: ['reference'],
-      practiceLastScore: null,
-      practiceBestScore: null,
       shadowingCompletedPromptIds: [],
       lastVisitedPromptId: null,
       moduleProgress: {
         initials: {
           visited: true,
           completedSections: ['reference'],
-          practiceLastScore: null,
-          practiceBestScore: null,
           shadowingCompletedPromptIds: [],
           lastVisitedPromptId: null,
         },
