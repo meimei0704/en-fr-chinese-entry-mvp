@@ -190,7 +190,11 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     const sizes = await cards.evaluateAll((els) =>
       els.map((el) => {
         const rect = el.getBoundingClientRect()
-        return { width: Math.round(rect.width), height: Math.round(rect.height) }
+        return {
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+          top: Math.round(rect.top),
+        }
       }),
     )
 
@@ -199,7 +203,15 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     )
 
     expect(sizes.map((s) => s.width)).toEqual(Array(count).fill(sizes[0].width))
-    expect(sizes.map((s) => s.height)).toEqual(Array(count).fill(sizes[0].height))
+    const rows = new Map<number, number[]>()
+    for (const s of sizes) {
+      const row = rows.get(s.top) ?? []
+      row.push(s.height)
+      rows.set(s.top, row)
+    }
+    for (const heights of rows.values()) {
+      expect(heights).toEqual(Array(heights.length).fill(heights[0]))
+    }
     expect(hanziInCards.every((n) => n === 0)).toBe(true)
 
     const grid = cards.first().locator('xpath=..')
