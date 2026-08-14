@@ -26,7 +26,6 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'initial-b',
-          hanzi: '八',
           label: 'b',
           pinyin: 'bā',
           description: {
@@ -37,7 +36,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-p',
-          hanzi: '跑',
           label: 'p',
           pinyin: 'pǎo',
           description: {
@@ -48,7 +46,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-m',
-          hanzi: '妈',
           label: 'm',
           pinyin: 'mā',
           description: {
@@ -59,7 +56,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-f',
-          hanzi: '饭',
           label: 'f',
           pinyin: 'fàn',
           description: {
@@ -70,7 +66,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-d',
-          hanzi: '蛋',
           label: 'd',
           pinyin: 'dàn',
           description: {
@@ -81,7 +76,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-t',
-          hanzi: '天',
           label: 't',
           pinyin: 'tiān',
           description: {
@@ -92,7 +86,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-n',
-          hanzi: '牛',
           label: 'n',
           pinyin: 'niú',
           description: {
@@ -103,7 +96,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-l',
-          hanzi: '六',
           label: 'l',
           pinyin: 'liù',
           description: {
@@ -114,7 +106,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-g',
-          hanzi: '哥',
           label: 'g',
           pinyin: 'gē',
           description: {
@@ -125,7 +116,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-k',
-          hanzi: '看',
           label: 'k',
           pinyin: 'kàn',
           description: {
@@ -136,7 +126,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'initial-h',
-          hanzi: '好',
           label: 'h',
           pinyin: 'hǎo',
           description: {
@@ -160,7 +149,6 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'final-a',
-          hanzi: '啊',
           label: 'a',
           pinyin: 'ā',
           description: {
@@ -171,7 +159,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-o',
-          hanzi: '喔',
           label: 'o',
           pinyin: 'ō',
           description: {
@@ -182,7 +169,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-e',
-          hanzi: '婀',
           label: 'e',
           pinyin: 'ē',
           description: {
@@ -193,7 +179,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-i',
-          hanzi: '衣',
           label: 'i',
           pinyin: 'ī',
           description: {
@@ -204,7 +189,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-u',
-          hanzi: '乌',
           label: 'u',
           pinyin: 'ū',
           description: {
@@ -215,7 +199,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         },
         {
           id: 'final-ue',
-          hanzi: '迂',
           label: 'ü',
           pinyin: 'ǖ',
           description: {

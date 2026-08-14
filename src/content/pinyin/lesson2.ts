@@ -26,7 +26,6 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-zh',
-          hanzi: '猪',
           label: 'zh',
           pinyin: 'zhū',
           description: {
@@ -37,7 +36,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-ch',
-          hanzi: '茶',
           label: 'ch',
           pinyin: 'chá',
           description: {
@@ -48,7 +46,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-sh',
-          hanzi: '书',
           label: 'sh',
           pinyin: 'shū',
           description: {
@@ -59,7 +56,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-r',
-          hanzi: '日',
           label: 'r',
           pinyin: 'rì',
           description: {
@@ -83,7 +79,6 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-z',
-          hanzi: '字',
           label: 'z',
           pinyin: 'zì',
           description: {
@@ -94,7 +89,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-c',
-          hanzi: '菜',
           label: 'c',
           pinyin: 'cài',
           description: {
@@ -105,7 +99,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-s',
-          hanzi: '四',
           label: 's',
           pinyin: 'sì',
           description: {
@@ -129,7 +122,6 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-j',
-          hanzi: '家',
           label: 'j',
           pinyin: 'jiā',
           description: {
@@ -140,7 +132,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-q',
-          hanzi: '七',
           label: 'q',
           pinyin: 'qī',
           description: {
@@ -151,7 +142,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-x',
-          hanzi: '西',
           label: 'x',
           pinyin: 'xī',
           description: {
@@ -175,7 +165,6 @@ export const pinyinLesson2: PinyinLessonContent = {
       items: [
         {
           id: 'initial-y',
-          hanzi: '雨',
           label: 'y',
           pinyin: 'yǔ',
           description: {
@@ -186,7 +175,6 @@ export const pinyinLesson2: PinyinLessonContent = {
         },
         {
           id: 'initial-w',
-          hanzi: '我',
           label: 'w',
           pinyin: 'wǒ',
           description: {

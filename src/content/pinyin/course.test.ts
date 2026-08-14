@@ -43,49 +43,51 @@ describe('pinyin course content', () => {
     const finalsModule = pinyinCourse.modules.find((module) => module.id === 'finals')
     const finalItems = finalsModule?.reference.flatMap((group) => group.items) ?? []
     const expectedFinals = [
-      ['a', 'ā', '啊', '/audio/pinyin/lesson-1/reference-final-a.mp3'],
-      ['o', 'ō', '喔', '/audio/pinyin/lesson-1/reference-final-o.mp3'],
-      ['e', 'ē', '婀', '/audio/pinyin/lesson-1/reference-final-e.mp3'],
-      ['i', 'ī', '衣', '/audio/pinyin/lesson-1/reference-final-i.mp3'],
-      ['u', 'ū', '乌', '/audio/pinyin/lesson-1/reference-final-u.mp3'],
-      ['ü', 'ǖ', '迂', '/audio/pinyin/lesson-1/reference-final-ue.mp3'],
-      ['ai', 'āi', '哀', '/audio/pinyin/lesson-3/reference-final-ai.mp3'],
-      ['ei', 'ēi', '诶', '/audio/pinyin/lesson-3/reference-final-ei.mp3'],
-      ['ui', 'uī', '威', '/audio/pinyin/lesson-3/reference-final-ui.mp3'],
-      ['ao', 'āo', '凹', '/audio/pinyin/lesson-3/reference-final-ao.mp3'],
-      ['ou', 'ōu', '欧', '/audio/pinyin/lesson-3/reference-final-ou.mp3'],
-      ['iu', 'iū', '忧', '/audio/pinyin/lesson-3/reference-final-iu.mp3'],
-      ['ie', 'iē', '椰', '/audio/pinyin/lesson-3/reference-final-ie.mp3'],
-      ['üe', 'üē', '约', '/audio/pinyin/lesson-3/reference-final-ue.mp3'],
-      ['er', 'ēr', '儿', '/audio/pinyin/lesson-3/reference-final-er.mp3'],
-      ['an', 'ān', '安', '/audio/pinyin/lesson-3/reference-final-an.mp3'],
-      ['en', 'ēn', '恩', '/audio/pinyin/lesson-3/reference-final-en.mp3'],
-      ['in', 'īn', '因', '/audio/pinyin/lesson-3/reference-final-in.mp3'],
-      ['un', 'ūn', '温', '/audio/pinyin/lesson-3/reference-final-un.mp3'],
-      ['ün', 'ǖn', '晕', '/audio/pinyin/lesson-3/reference-final-uen.mp3'],
-      ['ang', 'āng', '肮', '/audio/pinyin/lesson-3/reference-final-ang.mp3'],
-      ['eng', 'ēng', '鞥', '/audio/pinyin/lesson-3/reference-final-eng.mp3'],
-      ['ing', 'īng', '英', '/audio/pinyin/lesson-3/reference-final-ing.mp3'],
-      ['ong', 'ōng', '嗡', '/audio/pinyin/lesson-3/reference-final-ong.mp3'],
+      ['a', 'ā', '/audio/pinyin/lesson-1/reference-final-a.mp3'],
+      ['o', 'ō', '/audio/pinyin/lesson-1/reference-final-o.mp3'],
+      ['e', 'ē', '/audio/pinyin/lesson-1/reference-final-e.mp3'],
+      ['i', 'ī', '/audio/pinyin/lesson-1/reference-final-i.mp3'],
+      ['u', 'ū', '/audio/pinyin/lesson-1/reference-final-u.mp3'],
+      ['ü', 'ǖ', '/audio/pinyin/lesson-1/reference-final-ue.mp3'],
+      ['ai', 'āi', '/audio/pinyin/lesson-3/reference-final-ai.mp3'],
+      ['ei', 'ēi', '/audio/pinyin/lesson-3/reference-final-ei.mp3'],
+      ['ui', 'uī', '/audio/pinyin/lesson-3/reference-final-ui.mp3'],
+      ['ao', 'āo', '/audio/pinyin/lesson-3/reference-final-ao.mp3'],
+      ['ou', 'ōu', '/audio/pinyin/lesson-3/reference-final-ou.mp3'],
+      ['iu', 'iū', '/audio/pinyin/lesson-3/reference-final-iu.mp3'],
+      ['ie', 'iē', '/audio/pinyin/lesson-3/reference-final-ie.mp3'],
+      ['üe', 'üē', '/audio/pinyin/lesson-3/reference-final-ue.mp3'],
+      ['er', 'ēr', '/audio/pinyin/lesson-3/reference-final-er.mp3'],
+      ['an', 'ān', '/audio/pinyin/lesson-3/reference-final-an.mp3'],
+      ['en', 'ēn', '/audio/pinyin/lesson-3/reference-final-en.mp3'],
+      ['in', 'īn', '/audio/pinyin/lesson-3/reference-final-in.mp3'],
+      ['un', 'ūn', '/audio/pinyin/lesson-3/reference-final-un.mp3'],
+      ['ün', 'ǖn', '/audio/pinyin/lesson-3/reference-final-uen.mp3'],
+      ['ang', 'āng', '/audio/pinyin/lesson-3/reference-final-ang.mp3'],
+      ['eng', 'ēng', '/audio/pinyin/lesson-3/reference-final-eng.mp3'],
+      ['ing', 'īng', '/audio/pinyin/lesson-3/reference-final-ing.mp3'],
+      ['ong', 'ōng', '/audio/pinyin/lesson-3/reference-final-ong.mp3'],
     ]
 
-    expect(finalItems.map(({ label, pinyin, hanzi, audio }) => [label, pinyin, hanzi, audio])).toEqual(
+    expect(finalItems.map(({ label, pinyin, audio }) => [label, pinyin, audio])).toEqual(
       expectedFinals,
     )
-    expect(finalItems.every((item) => item.emoji === undefined)).toBe(true)
+    expect(finalItems.every((item) => item.emoji === undefined && item.hanzi === undefined)).toBe(true)
   })
 
   it('keeps reference cards emoji-free across all modules', () => {
     for (const module of pinyinCourse.modules) {
       const referenceItems = module.reference.flatMap((group) => group.items)
       expect(
-        referenceItems.every((item) => item.emoji === undefined),
-        `${module.id} reference items should carry no emoji`,
+        referenceItems.every((item) => item.emoji === undefined && item.hanzi === undefined),
+        `${module.id} reference items should carry no emoji or hanzi`,
       ).toBe(true)
       if (module.wholeSyllables) {
         expect(
-          module.wholeSyllables.every((item) => item.emoji === undefined),
-          `${module.id} whole syllables should carry no emoji`,
+          module.wholeSyllables.every(
+            (item) => item.emoji === undefined && item.hanzi === undefined,
+          ),
+          `${module.id} whole syllables should carry no emoji or hanzi`,
         ).toBe(true)
       }
     }
@@ -164,8 +166,7 @@ describe('pinyin course content', () => {
       wholeSyllablesModule?.wholeSyllables?.every(
         (item) => item.hanzi === undefined && item.emoji === undefined,
       ),
-    ).toBe(true)
-  })
+    ).toBe(true)  })
 
   it('locks the 16 approved whole syllable MP3s to the sha256 manifest', () => {
     const manifestPath = join(

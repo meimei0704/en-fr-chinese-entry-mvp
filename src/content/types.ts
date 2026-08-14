@@ -175,8 +175,6 @@ export interface PinyinReferenceItem {
   pinyin: string
   description: LocalizedField
   audio: string
-  hanzi?: string
-  emoji?: string
   tone?: number
 }
 
@@ -190,9 +188,7 @@ export interface PinyinReferenceGroup {
 export interface PinyinWholeSyllable {
   id: string
   bare: string
-  hanzi?: string
   pinyin: string
-  emoji?: string
   description: LocalizedField
   audio: string
 }

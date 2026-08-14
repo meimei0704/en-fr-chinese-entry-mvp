@@ -177,6 +177,38 @@ test('renders four module tabs and switches between modules preserving progress'
   expect(browserState.moduleProgress?.['initials']).toBeDefined()
 })
 
+for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
+  test(`keeps ${moduleName} cards hanzi-free and equal-sized`, async ({ page }) => {
+    await page.goto('/pinyin')
+
+    await page.getByRole('tab', { name: new RegExp(moduleName) }).click()
+
+    const cards = page.getByTestId('pinyin-card')
+    const count = await cards.count()
+    expect(count).toBeGreaterThan(0)
+
+    const sizes = await cards.evaluateAll((els) =>
+      els.map((el) => {
+        const rect = el.getBoundingClientRect()
+        return { width: Math.round(rect.width), height: Math.round(rect.height) }
+      }),
+    )
+
+    const hanziInCards = await cards.evaluateAll((els) =>
+      els.map((el) => el.textContent?.match(/[\u4e00-\u9fff]/g)?.length ?? 0),
+    )
+
+    expect(sizes.map((s) => s.width)).toEqual(Array(count).fill(sizes[0].width))
+    expect(sizes.map((s) => s.height)).toEqual(Array(count).fill(sizes[0].height))
+    expect(hanziInCards.every((n) => n === 0)).toBe(true)
+
+    const grid = cards.first().locator('xpath=..')
+    const gridBox = (await grid.boundingBox())!
+    const firstBox = (await cards.first().boundingBox())!
+    expect(Math.abs(firstBox.x - gridBox.x)).toBeLessThanOrEqual(1)
+  })
+}
+
 for (const language of ['en', 'fr'] as const) {
   for (const viewport of introViewports) {
     test(`renders the localized syllable composition intro in ${language} at ${viewport.name}`, async ({
