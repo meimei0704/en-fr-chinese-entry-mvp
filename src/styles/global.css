@@ -3203,7 +3203,7 @@ h2 {
 .pinyin-reference-group__items {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 14.5rem));
-  justify-content: center;
+  justify-content: start;
   gap: 0.85rem;
 }
 
@@ -3211,10 +3211,10 @@ h2 {
   position: relative;
   display: grid;
   gap: 0.75rem;
-  justify-items: center;
-  align-content: center;
+  justify-items: start;
+  align-content: start;
   min-height: 13.5rem;
-  text-align: center;
+  text-align: left;
   background:
     radial-gradient(circle at top right, rgba(243, 165, 63, 0.1), transparent 8rem),
     rgba(255, 255, 255, 0.94);
@@ -3353,7 +3353,7 @@ h2 {
 
 .pinyin-reference-card__target {
   display: grid;
-  place-items: center;
+  place-items: start;
   gap: 0.35rem;
   min-width: 4.4rem;
   padding: 0.55rem 0.7rem;
@@ -3373,7 +3373,7 @@ h2 {
 
 .pinyin-reference-card__tone {
   display: grid;
-  place-items: center;
+  place-items: start;
   gap: 0.2rem;
 }
 
@@ -3398,7 +3398,7 @@ h2 {
 .pinyin-whole-syllables__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14.5rem), 14.5rem));
-  justify-content: center;
+  justify-content: start;
   gap: 0.85rem;
 }
 

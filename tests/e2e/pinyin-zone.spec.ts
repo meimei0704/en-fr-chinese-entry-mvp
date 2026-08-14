@@ -201,6 +201,11 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     expect(sizes.map((s) => s.width)).toEqual(Array(count).fill(sizes[0].width))
     expect(sizes.map((s) => s.height)).toEqual(Array(count).fill(sizes[0].height))
     expect(hanziInCards.every((n) => n === 0)).toBe(true)
+
+    const grid = cards.first().locator('xpath=..')
+    const gridBox = (await grid.boundingBox())!
+    const firstBox = (await cards.first().boundingBox())!
+    expect(Math.abs(firstBox.x - gridBox.x)).toBeLessThanOrEqual(1)
   })
 }
 
