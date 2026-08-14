@@ -3211,10 +3211,10 @@ h2 {
   position: relative;
   display: grid;
   gap: 0.75rem;
-  justify-items: start;
-  align-content: start;
+  justify-items: center;
+  align-content: center;
   min-height: 13.5rem;
-  text-align: left;
+  text-align: center;
   background:
     radial-gradient(circle at top right, rgba(243, 165, 63, 0.1), transparent 8rem),
     rgba(255, 255, 255, 0.94);
@@ -3353,7 +3353,7 @@ h2 {
 
 .pinyin-reference-card__target {
   display: grid;
-  place-items: start;
+  place-items: center;
   gap: 0.35rem;
   min-width: 4.4rem;
   padding: 0.55rem 0.7rem;
@@ -3368,12 +3368,12 @@ h2 {
   font-size: clamp(1.7rem, 3.6vw, 2.2rem);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
 }
 
 .pinyin-reference-card__tone {
   display: grid;
-  place-items: start;
+  place-items: center;
   gap: 0.2rem;
 }
 

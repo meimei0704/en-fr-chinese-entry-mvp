@@ -17,7 +17,7 @@ import { loadProgress } from '../lib/progress'
 import { preloadAudioSources } from '../lib/speech'
 import { usePinyinCourse } from '../lib/pinyinContentProvider'
 
-const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'tones', 'whole-syllables']
+const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'whole-syllables', 'tones']
 
 function findDefaultModuleKey(): PinyinModuleKey {
   const progress = loadPinyinProgress()
@@ -149,8 +149,8 @@ function getModuleBadge(moduleKey: PinyinModuleKey): string {
   const badges: Record<PinyinModuleKey, string> = {
     initials: '①',
     finals: '②',
-    tones: '③',
-    'whole-syllables': '④',
+    'whole-syllables': '③',
+    tones: '④',
   }
   return badges[moduleKey]
 }
