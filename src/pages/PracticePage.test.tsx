@@ -116,7 +116,7 @@ describe('PracticePage', () => {
     renderRoute('/lesson/self-intro/practice')
 
     for (let questionNumber = 1; questionNumber <= 5; questionNumber += 1) {
-      if (screen.queryByText(/challenge complete/i)) {
+      if (screen.queryByRole('button', { name: /play again/i })) {
         break
       }
 
@@ -133,7 +133,7 @@ describe('PracticePage', () => {
       }
     }
 
-    expect(screen.getByText(/challenge complete/i)).toBeVisible()
+    expect(screen.getByRole('button', { name: /play again/i })).toBeVisible()
 
     const progress = loadProgress()
     expect(progress.lessonStepProgress['self-intro']?.completedSections).toContain('practice')

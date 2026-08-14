@@ -29,7 +29,7 @@ export function PracticePage() {
     (nextSeed: number) =>
       lesson
         ? buildPracticeChallenge(lesson, selectedLanguage, 5, nextSeed)
-        : { questions: [], maxScore: 0 },
+        : { questions: [] },
     [lesson, selectedLanguage],
   )
 

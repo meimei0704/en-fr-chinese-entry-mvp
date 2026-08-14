@@ -82,38 +82,18 @@ export const uiCopy = {
     },
     practiceChallenge: {
       playPromptAudio: (current: number) => `Play the audio for question ${current}`,
-      speakOptions: 'Speak practice options',
+      playOptionAudio: (option: string) => `Play ${option}`,
       answerOptions: 'Answer options',
-      fluentOption: 'I can say it fluently',
-      needsPracticeOption: 'I need to practice more',
-      showMeOption: 'Show me the model answer',
       correctFeedback: 'Correct!',
-      pointsGained: (points: number) => `+${points} points`,
       incorrectFeedback: 'Not quite.',
       correctAnswer: (answer: string) => `Answer: ${answer}`,
       nextQuestion: 'Next question',
-      resultHeading: 'Challenge complete',
-      finalScore: (score: number) => `Final score: ${score}`,
-      ratingLabel: 'Rating',
-      ratingValue: (rating: string) => `${rating}`,
       playAgain: 'Play again',
       completeLesson: 'Complete lesson',
       lessonCompleted: 'Lesson complete. Review cards are ready.',
       answerReview: 'Your answers',
       answerReviewCorrect: 'Correct',
       answerReviewIncorrect: 'Incorrect',
-      encouragement: (rating: string) => {
-        if (rating === 'S') {
-          return 'Outstanding — you nailed the challenge.'
-        }
-        if (rating === 'A') {
-          return 'Great work — nearly perfect.'
-        }
-        if (rating === 'B') {
-          return 'Solid effort — keep going.'
-        }
-        return 'Good start — try again to climb the score.'
-      },
     },
     reviewPage: {
       eyebrow: 'Review',
@@ -258,38 +238,18 @@ export const uiCopy = {
     },
     practiceChallenge: {
       playPromptAudio: (current: number) => `Écouter l’audio de la question ${current}`,
-      speakOptions: 'Options de pratique orale',
+      playOptionAudio: (option: string) => `Écouter ${option}`,
       answerOptions: 'Options de réponse',
-      fluentOption: 'Je peux le dire couramment',
-      needsPracticeOption: 'J’ai besoin de plus de pratique',
-      showMeOption: 'Montre-moi la réponse modèle',
       correctFeedback: 'Correct !',
-      pointsGained: (points: number) => `+${points} points`,
       incorrectFeedback: 'Pas tout à fait.',
       correctAnswer: (answer: string) => `Réponse : ${answer}`,
       nextQuestion: 'Question suivante',
-      resultHeading: 'Défi terminé',
-      finalScore: (score: number) => `Score final : ${score}`,
-      ratingLabel: 'Niveau',
-      ratingValue: (rating: string) => `${rating}`,
       playAgain: 'Rejouer',
       completeLesson: 'Terminer la leçon',
       lessonCompleted: 'Leçon terminée. Les cartes de révision sont prêtes.',
       answerReview: 'Tes réponses',
       answerReviewCorrect: 'Correct',
       answerReviewIncorrect: 'Incorrect',
-      encouragement: (rating: string) => {
-        if (rating === 'S') {
-          return 'Exceptionnel — tu as réussi le défi.'
-        }
-        if (rating === 'A') {
-          return 'Excellent travail — presque parfait.'
-        }
-        if (rating === 'B') {
-          return 'Bel effort — continue.'
-        }
-        return 'Bon début — rejoue pour améliorer ton score.'
-      },
     },
     reviewPage: {
       eyebrow: 'Révision',

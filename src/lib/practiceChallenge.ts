@@ -6,12 +6,13 @@ import type {
 } from '../content/types'
 import { getLocalizedText } from '../content/copy'
 
-export type PracticeChallengeKind = 'listen' | 'read' | 'speak' | 'review'
+export type PracticeChallengeKind = 'listen' | 'read' | 'review'
 
 export interface PracticeChallengeOption {
   id: string
   label: string
   pinyin?: string
+  audio?: string
 }
 
 export interface PracticeChallengeQuestion {
@@ -23,17 +24,12 @@ export interface PracticeChallengeQuestion {
   correctOptionId: string
   audio?: string
   audioFallback?: string
-  /** Text the pronunciation button should speak when it differs from `target` (e.g. a hanzi vs an English meaning). */
-  speechText?: string
   options: PracticeChallengeOption[]
   explanation: BilingualExplanation
 }
 
-export type ChallengeRating = 'S' | 'A' | 'B' | 'C'
-
 export interface PracticeChallenge {
   questions: PracticeChallengeQuestion[]
-  maxScore: number
 }
 
 export function createSeededRandom(seed: number): () => number {
@@ -184,6 +180,20 @@ function attachPinyinToQuestions(
   }))
 }
 
+function attachOptionAudio(
+  questions: PracticeChallengeQuestion[],
+  audioMap: ReadonlyMap<string, string>,
+): PracticeChallengeQuestion[] {
+  return questions.map((question) => ({
+    ...question,
+    options: question.options.map((option) =>
+      looksLikeHanzi(option.label) && !option.audio
+        ? { ...option, audio: audioMap.get(option.label) }
+        : option,
+    ),
+  }))
+}
+
 function meaningCandidates(
   lesson: LessonContent,
   language: ExplanationLanguage,
@@ -261,7 +271,6 @@ function readQuestionFromPair(
       kind,
       prompt: { en: `What does ${pair.hanzi} mean?`, fr: `Que signifie ${pair.hanzi} ?` },
       target: meaning,
-      speechText: pair.hanzi,
       audio: hanziAudio,
       correctOptionId: options.find((option) => option.label === meaning)?.id ?? options[0].id,
       options,
@@ -280,31 +289,10 @@ function readQuestionFromPair(
     kind,
     prompt: { en: `Which hanzi means “${meaning}”?`, fr: `Quel hanzi signifie « ${meaning} » ?` },
     target: pair.hanzi,
-    speechText: pair.hanzi,
     audio: hanziAudio,
     correctOptionId: options.find((option) => option.label === pair.hanzi)?.id ?? options[0].id,
     options,
     explanation: pair.explanation,
-  }
-}
-
-function speakQuestion(
-  item: { id: string; prompt: LocalizedField; target: string; audio: string; audioFallback?: string; explanation: BilingualExplanation },
-): PracticeChallengeQuestion {
-  return {
-    id: item.id,
-    kind: 'speak',
-    prompt: item.prompt,
-    target: item.target,
-    correctOptionId: 'fluent',
-    audio: item.audio,
-    audioFallback: item.audioFallback,
-    options: [
-      { id: 'fluent', label: 'fluent' },
-      { id: 'needs-practice', label: 'needs-practice' },
-      { id: 'show-me', label: 'show-me' },
-    ],
-    explanation: item.explanation,
   }
 }
 
@@ -361,7 +349,6 @@ export function buildPracticeChallenge(
   const readQuestions = pairs.map((pair) =>
     readQuestionFromPair(pair, 'hanzi-to-meaning', language, hanziPool, meaningPool, rng, 'read', audioMap),
   )
-  const speakQuestions = lesson.practice.speaking.map((item) => speakQuestion(item))
   const reviewQuestions = reviewPairs.flatMap((card, index) => {
     const direction: 'front-to-back' | 'back-to-front' = index % 2 === 0 ? 'front-to-back' : 'back-to-front'
     return [reviewQuestionFromCard(card, direction, language, hanziPool, meaningPool, rng, audioMap)]
@@ -370,7 +357,6 @@ export function buildPracticeChallenge(
   const groups: Record<PracticeChallengeKind, PracticeChallengeQuestion[]> = {
     listen: shuffle(listenQuestions, rng),
     read: shuffle(readQuestions, rng),
-    speak: shuffle(speakQuestions, rng),
     review: shuffle(reviewQuestions, rng),
   }
 
@@ -392,33 +378,9 @@ export function buildPracticeChallenge(
   }
 
   return {
-    questions: shuffle(attachPinyinToQuestions(selected, pinyinMap), rng),
-    maxScore: 100,
+    questions: shuffle(
+      attachOptionAudio(attachPinyinToQuestions(selected, pinyinMap), audioMap),
+      rng,
+    ),
   }
-}
-
-export function pointsForCorrect(questionCount: number): number {
-  return Math.round(100 / questionCount)
-}
-
-export function remainingPoints(questionCount: number): number {
-  return 100 - pointsForCorrect(questionCount) * questionCount
-}
-
-export function computeRating(score: number, maxScore: number): ChallengeRating {
-  if (maxScore <= 0) {
-    return 'C'
-  }
-
-  const ratio = score / maxScore
-  if (ratio >= 0.9) {
-    return 'S'
-  }
-  if (ratio >= 0.7) {
-    return 'A'
-  }
-  if (ratio >= 0.5) {
-    return 'B'
-  }
-  return 'C'
 }
