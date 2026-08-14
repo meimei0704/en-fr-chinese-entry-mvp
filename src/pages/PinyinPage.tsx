@@ -88,9 +88,9 @@ export function PinyinPage() {
   return (
     <main className="page-shell page-shell--wide pinyin-page">
       <div className="pinyin-page__content">
-        <PinyinHero heading={pinyinCopy.heading} />
-
-        <PinyinSyllableIntro copy={pinyinCopy.syllableIntro} />
+        <PinyinHero heading={pinyinCopy.heading}>
+          <PinyinSyllableIntro copy={pinyinCopy.syllableIntro} />
+        </PinyinHero>
 
         <nav role="tablist" aria-label="Pinyin modules" className="pinyin-lesson-tabs">
           {pinyinCourse.modules.map((m) => (
