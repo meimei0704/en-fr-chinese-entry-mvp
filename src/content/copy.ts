@@ -165,7 +165,7 @@ export const uiCopy = {
       heading: 'Pinyin（Mandarin Phonetic System）',
       syllableIntro: {
         description:
-          'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
+          'Pinyin is the official phonetic system for learning Mandarin Chinese. A syllable can consist of an initial, a final, and a tone. Tones change the meaning of words.',
         figureLabel:
           'Pinyin syllable composition example: mā consists of initial m, final a, and the first-tone mark.',
         pinyinLabel: 'Pinyin',
@@ -341,7 +341,7 @@ export const uiCopy = {
       heading: 'Pinyin（Mandarin Phonetic System）',
       syllableIntro: {
         description:
-          'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
+          'Le pinyin est le système phonétique officiel pour apprendre le mandarin. Une syllabe peut être composée d’une initiale, d’une finale et d’un ton. Les tons changent le sens des mots.',
         figureLabel:
           'Exemple de composition d’une syllabe pinyin : mā se compose de l’initiale m, de la finale a et de la marque du premier ton.',
         pinyinLabel: 'Pinyin',

@@ -156,15 +156,15 @@ export type PinyinModuleKey =
   | 'whole-syllables'
 
 export type PinyinReferenceGroupId =
-  | 'initials'
-  | 'finals'
   | 'tones'
-  | 'initials-aspirated'
-  | 'finals-single'
-  | 'initials-retroflex'
+  | 'initials-bilabial'
   | 'initials-alveolar'
+  | 'initials-velar'
   | 'initials-palatal'
+  | 'initials-retroflex'
+  | 'initials-flat-tongue'
   | 'initials-yw'
+  | 'finals-simple'
   | 'finals-compound'
   | 'finals-nasal-n'
   | 'finals-nasal-ng'
@@ -173,7 +173,7 @@ export interface PinyinReferenceItem {
   id: string
   label: LocalizedField
   pinyin: string
-  description: LocalizedField
+  description?: LocalizedField
   audio: string
   tone?: number
 }
@@ -189,7 +189,7 @@ export interface PinyinWholeSyllable {
   id: string
   bare: string
   pinyin: string
-  description: LocalizedField
+  description?: LocalizedField
   audio: string
 }
 

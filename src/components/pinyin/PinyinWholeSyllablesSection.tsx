@@ -31,9 +31,11 @@ export function PinyinWholeSyllablesSection({
                 onActivate={onReferenceAudioPlay}
               />
             </div>
-            <p className="pinyin-reference-card__description muted-text">
-              {getLocalizedText(item.description, language)}
-            </p>
+            {item.description ? (
+              <p className="pinyin-reference-card__description muted-text">
+                {getLocalizedText(item.description, language)}
+              </p>
+            ) : null}
           </article>
         ))}
       </div>

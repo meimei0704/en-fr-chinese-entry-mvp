@@ -21,13 +21,13 @@ const courseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 const syllableIntroCopy = {
   en: {
     description:
-      'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
+      'Pinyin is the official phonetic system for learning Mandarin Chinese. A syllable can consist of an initial, a final, and a tone. Tones change the meaning of words.',
     figureLabel:
       'Pinyin syllable composition example: mā consists of initial m, final a, and the first-tone mark.',
   },
   fr: {
     description:
-      'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
+      'Le pinyin est le système phonétique officiel pour apprendre le mandarin. Une syllabe peut être composée d’une initiale, d’une finale et d’un ton. Les tons changent le sens des mots.',
     figureLabel:
       'Exemple de composition d’une syllabe pinyin : mā se compose de l’initiale m, de la finale a et de la marque du premier ton.',
   },
@@ -129,7 +129,7 @@ describe('PinyinPage', () => {
   it('renders reference cards with audio playback entry points for the default module', () => {
     renderRoute('/pinyin')
 
-    expect(screen.getByRole('heading', { level: 2, name: 'Initials' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Bilabial' })).toBeVisible()
     expect(screen.getByText('b', { selector: '.pinyin-reference-card__phoneme' })).toBeVisible()
     expect(screen.queryByText('八')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Play bā' })).toBeVisible()
@@ -196,7 +196,7 @@ describe('PinyinPage', () => {
 
     renderRoute('/pinyin')
 
-    expect(screen.getByRole('heading', { level: 2, name: 'Initiales' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Bilabiales' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter bā' })).toBeVisible()
     expect(screen.getByRole('link', { name: 'Retour à l’accueil' })).toHaveAttribute(
       'href',

@@ -3220,6 +3220,10 @@ h2 {
     rgba(255, 255, 255, 0.94);
 }
 
+.pinyin-reference-group--tones .pinyin-reference-card {
+  align-content: start;
+}
+
 .pinyin-reference-card .speech-button {
   margin-top: 0;
 }

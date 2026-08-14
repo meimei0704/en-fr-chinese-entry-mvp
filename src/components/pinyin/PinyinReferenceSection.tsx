@@ -51,9 +51,11 @@ export function PinyinReferenceSection({
                       />
                     </div>
                   ) : null}
-                  <p className="pinyin-reference-card__description muted-text">
-                    {getLocalizedText(item.description, language)}
-                  </p>
+                  {item.description ? (
+                    <p className="pinyin-reference-card__description muted-text">
+                      {getLocalizedText(item.description, language)}
+                    </p>
+                  ) : null}
                 </article>
               ))}
             </div>

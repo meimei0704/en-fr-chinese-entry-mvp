@@ -6,14 +6,14 @@ const courseProgressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 const syllableIntroCopy = {
   en: {
     description:
-      'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
+      'Pinyin is the official phonetic system for learning Mandarin Chinese. A syllable can consist of an initial, a final, and a tone. Tones change the meaning of words.',
     figureLabel:
       'Pinyin syllable composition example: mā consists of initial m, final a, and the first-tone mark.',
     labels: ['Pinyin', 'Initial', 'Final', 'Tone'],
   },
   fr: {
     description:
-      'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
+      'Le pinyin est le système phonétique officiel pour apprendre le mandarin. Une syllabe peut être composée d’une initiale, d’une finale et d’un ton. Les tons changent le sens des mots.',
     figureLabel:
       'Exemple de composition d’une syllabe pinyin : mā se compose de l’initiale m, de la finale a et de la marque du premier ton.',
     labels: ['Pinyin', 'Initiale', 'Finale', 'Ton'],
@@ -178,7 +178,7 @@ test('renders four module tabs and switches between modules preserving progress'
 })
 
 for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
-  test(`keeps ${moduleName} cards hanzi-free, equal-sized and centered`, async ({ page }) => {
+  test(`keeps ${moduleName} cards hanzi-free, equal-sized and aligned`, async ({ page }) => {
     await page.goto('/pinyin')
 
     await page.getByRole('tab', { name: new RegExp(moduleName) }).click()
@@ -236,7 +236,20 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     expect(alignment.every((a) => a.phonemeCenterDelta <= 1)).toBe(true)
     expect(alignment.every((a) => a.buttonCenterDelta <= 1)).toBe(true)
     expect(alignment.every((a) => a.targetCenterDelta <= 1)).toBe(true)
-    expect(alignment.every((a) => a.groupCenterYDelta <= 1)).toBe(true)
+
+    if (moduleName === 'Tones') {
+      const topDeltas = await cards.evaluateAll((els) =>
+        els.map((el) => {
+          const cardRect = el.getBoundingClientRect()
+          const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')!
+          const targetRect = target.getBoundingClientRect()
+          return targetRect.top - cardRect.top
+        }),
+      )
+      expect(Math.max(...topDeltas) - Math.min(...topDeltas)).toBeLessThanOrEqual(1)
+    } else {
+      expect(alignment.every((a) => a.groupCenterYDelta <= 1)).toBe(true)
+    }
   })
 }
 

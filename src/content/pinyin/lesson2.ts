@@ -14,141 +14,101 @@ export const pinyinLesson2: PinyinLessonContent = {
   },
   reference: [
     {
-      id: 'initials-retroflex',
-      title: {
-        en: 'Retroflex',
-        fr: 'Rétroflexes',
-      },
-      summary: {
-        en: 'Curl your tongue back toward the roof of your mouth for these four sounds.',
-        fr: 'Recourbez la langue vers le palais pour ces quatre sons.',
-      },
-      items: [
-        {
-          id: 'initial-zh',
-          label: 'zh',
-          pinyin: 'zhū',
-          description: {
-            en: 'Unaspirated retroflex — tongue curled back, like "j" but further back.',
-            fr: 'Rétroflexe non aspirée — langue recourbée, comme « dj » mais plus en arrière.',
-          },
-          audio: `${lessonAudioBase}/reference-initial-zh.mp3`,
-        },
-        {
-          id: 'initial-ch',
-          label: 'ch',
-          pinyin: 'chá',
-          description: {
-            en: 'Aspirated retroflex — same tongue position as zh but with a puff of air.',
-            fr: 'Rétroflexe aspirée — même position que zh mais avec un souffle.',
-          },
-          audio: `${lessonAudioBase}/reference-initial-ch.mp3`,
-        },
-        {
-          id: 'initial-sh',
-          label: 'sh',
-          pinyin: 'shū',
-          description: {
-            en: 'Retroflex fricative — tongue curled, air flows continuously.',
-            fr: 'Fricative rétroflexe — langue recourbée, flux d’air continu.',
-          },
-          audio: `${lessonAudioBase}/reference-initial-sh.mp3`,
-        },
-        {
-          id: 'initial-r',
-          label: 'r',
-          pinyin: 'rì',
-          description: {
-            en: 'Voiced retroflex — same position as sh but with vocal fold vibration.',
-            fr: 'Rétroflexe voisée — même position que sh avec vibration des cordes vocales.',
-          },
-          audio: `${lessonAudioBase}/reference-initial-r.mp3`,
-        },
-      ],
-    },
-    {
-      id: 'initials-alveolar',
-      title: {
-        en: 'Alveolar',
-        fr: 'Alvéolaires',
-      },
-      summary: {
-        en: 'Keep your tongue tip behind your lower teeth for these three crisp sounds.',
-        fr: 'Gardez la pointe de la langue derrière les dents inférieures pour ces trois sons nets.',
-      },
-      items: [
-        {
-          id: 'initial-z',
-          label: 'z',
-          pinyin: 'zì',
-          description: {
-            en: 'Unaspirated alveolar — tongue behind lower teeth, like "ds".',
-            fr: 'Alvéolaire non aspirée — langue derrière les dents inférieures, comme « dz ».',
-          },
-          audio: `${lessonAudioBase}/reference-initial-z.mp3`,
-        },
-        {
-          id: 'initial-c',
-          label: 'c',
-          pinyin: 'cài',
-          description: {
-            en: 'Aspirated alveolar — like "ts" with a strong puff of air.',
-            fr: 'Alvéolaire aspirée — comme « ts » avec un fort souffle.',
-          },
-          audio: `${lessonAudioBase}/reference-initial-c.mp3`,
-        },
-        {
-          id: 'initial-s',
-          label: 's',
-          pinyin: 'sì',
-          description: {
-            en: 'Alveolar fricative — tongue behind teeth with steady airflow.',
-            fr: 'Fricative alvéolaire — langue derrière les dents avec flux d’air régulier.',
-          },
-          audio: `${lessonAudioBase}/reference-initial-s.mp3`,
-        },
-      ],
-    },
-    {
       id: 'initials-palatal',
       title: {
         en: 'Palatal',
         fr: 'Palatales',
       },
       summary: {
-        en: 'Raise the body of your tongue toward the hard palate for these three sounds.',
-        fr: 'Levez le corps de la langue vers le palais dur pour ces trois sons.',
+        en: 'Raise the body of your tongue toward the hard palate.',
+        fr: 'Élevez le corps de la langue vers le palais dur.',
       },
       items: [
         {
           id: 'initial-j',
           label: 'j',
           pinyin: 'jiā',
-          description: {
-            en: 'Unaspirated palatal — tongue body raised, like a soft "jee".',
-            fr: 'Palatale non aspirée — corps de la langue levé, comme un « dji » doux.',
-          },
           audio: `${lessonAudioBase}/reference-initial-j.mp3`,
         },
         {
           id: 'initial-q',
           label: 'q',
           pinyin: 'qī',
-          description: {
-            en: 'Aspirated palatal — same position as j but with a strong puff.',
-            fr: 'Palatale aspirée — même position que j mais avec un fort souffle.',
-          },
           audio: `${lessonAudioBase}/reference-initial-q.mp3`,
         },
         {
           id: 'initial-x',
           label: 'x',
           pinyin: 'xī',
-          description: {
-            en: 'Palatal fricative — tongue body raised, like a soft "sh" with a smile.',
-            fr: 'Fricative palatale — corps de la langue levé, comme un « ch » doux en souriant.',
-          },
           audio: `${lessonAudioBase}/reference-initial-x.mp3`,
+        },
+      ],
+    },
+    {
+      id: 'initials-retroflex',
+      title: {
+        en: 'Retroflex / curled-tongue',
+        fr: 'Rétroflexes / langue recourbée',
+      },
+      summary: {
+        en: 'Curl the tip of the tongue upward and backward toward the hard palate.',
+        fr: 'Recourbez la pointe de la langue vers le haut et l’arrière, en direction du palais dur.',
+      },
+      items: [
+        {
+          id: 'initial-zh',
+          label: 'zh',
+          pinyin: 'zhū',
+          audio: `${lessonAudioBase}/reference-initial-zh.mp3`,
+        },
+        {
+          id: 'initial-ch',
+          label: 'ch',
+          pinyin: 'chá',
+          audio: `${lessonAudioBase}/reference-initial-ch.mp3`,
+        },
+        {
+          id: 'initial-sh',
+          label: 'sh',
+          pinyin: 'shū',
+          audio: `${lessonAudioBase}/reference-initial-sh.mp3`,
+        },
+        {
+          id: 'initial-r',
+          label: 'r',
+          pinyin: 'rì',
+          audio: `${lessonAudioBase}/reference-initial-r.mp3`,
+        },
+      ],
+    },
+    {
+      id: 'initials-flat-tongue',
+      title: {
+        en: 'Flat-tongue',
+        fr: 'Langue plate',
+      },
+      summary: {
+        en: 'The tongue stays flat behind the upper front teeth.',
+        fr: 'La langue reste à plat derrière les dents supérieures de devant.',
+      },
+      items: [
+        {
+          id: 'initial-z',
+          label: 'z',
+          pinyin: 'zì',
+          audio: `${lessonAudioBase}/reference-initial-z.mp3`,
+        },
+        {
+          id: 'initial-c',
+          label: 'c',
+          pinyin: 'cài',
+          audio: `${lessonAudioBase}/reference-initial-c.mp3`,
+        },
+        {
+          id: 'initial-s',
+          label: 's',
+          pinyin: 'sì',
+          audio: `${lessonAudioBase}/reference-initial-s.mp3`,
         },
       ],
     },
@@ -159,28 +119,20 @@ export const pinyinLesson2: PinyinLessonContent = {
         fr: 'Y et W',
       },
       summary: {
-        en: 'Two semi-consonants that always begin syllables on their own.',
-        fr: 'Deux semi-consonnes qui commencent toujours une syllabe.',
+        en: 'Y and w are semivowels. In Chinese Pinyin, they can only be placed at the beginning of a syllable.',
+        fr: 'Y et w sont des semi-voyelles. En pinyin chinois, ils ne peuvent se placer qu’au début d’une syllabe.',
       },
       items: [
         {
           id: 'initial-y',
           label: 'y',
           pinyin: 'yǔ',
-          description: {
-            en: 'A glide like "y" in "yes".',
-            fr: 'Un glissement comme « y » dans « yes ».',
-          },
           audio: `${lessonAudioBase}/reference-initial-y.mp3`,
         },
         {
           id: 'initial-w',
           label: 'w',
           pinyin: 'wǒ',
-          description: {
-            en: 'A glide like "w" in "water".',
-            fr: 'Un glissement comme « w » dans « water ».',
-          },
           audio: `${lessonAudioBase}/reference-initial-w.mp3`,
         },
       ],
