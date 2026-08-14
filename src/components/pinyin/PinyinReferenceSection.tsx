@@ -28,50 +28,32 @@ export function PinyinReferenceSection({
 
             <div className="pinyin-reference-group__items">
               {group.items.map((item) => (
-                <article key={item.id} className="study-item pinyin-reference-card">
-                  <div className="pinyin-reference-card__main">
-                    <div className="pinyin-reference-card__target">
-                      <p className="pinyin-reference-card__phoneme">
-                        {item.tone !== undefined ? item.pinyin : getLocalizedText(item.label, language)}
+                <article key={item.id} className="study-item pinyin-reference-card" data-testid="pinyin-card">
+                  <div className="pinyin-reference-card__target">
+                    <p className="pinyin-reference-card__phoneme">
+                      {item.tone !== undefined ? item.pinyin : getLocalizedText(item.label, language)}
+                    </p>
+                    <SpeechButton
+                      label={playAudioLabel(item.pinyin)}
+                      text={item.pinyin}
+                      audioSrc={item.audio}
+                      onActivate={onReferenceAudioPlay}
+                    />
+                  </div>
+                  {item.tone !== undefined ? (
+                    <div className="pinyin-reference-card__tone">
+                      <p className="pinyin-reference-card__tone-label">
+                        {getLocalizedText(item.label, language)}
                       </p>
-                      <SpeechButton
-                        label={playAudioLabel(item.pinyin)}
-                        text={item.pinyin}
-                        audioSrc={item.audio}
-                        onActivate={onReferenceAudioPlay}
+                      <TonePitchVisual
+                        tone={item.tone}
+                        label={getLocalizedText(item.label, language)}
                       />
                     </div>
-                    <div className="pinyin-reference-card__example">
-                      {item.hanzi ? (
-                        <span className="pinyin-reference-card__hanzi" aria-hidden="true">
-                          {item.hanzi}
-                        </span>
-                      ) : null}
-                      {item.tone !== undefined ? (
-                        <>
-                          <p className="pinyin-reference-card__example-label">
-                            {getLocalizedText(item.label, language)}
-                          </p>
-                          <TonePitchVisual
-                            tone={item.tone}
-                            label={getLocalizedText(item.label, language)}
-                          />
-                        </>
-                      ) : (
-                        <p className="pinyin-reference-card__example-pinyin">
-                          {item.pinyin}
-                        </p>
-                      )}
-                    </div>
-                    {item.emoji ? (
-                      <div className="pinyin-reference-card__image">
-                        <span className="pinyin-reference-card__emoji" aria-hidden="true">
-                          {item.emoji}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                  <p className="muted-text">{getLocalizedText(item.description, language)}</p>
+                  ) : null}
+                  <p className="pinyin-reference-card__description muted-text">
+                    {getLocalizedText(item.description, language)}
+                  </p>
                 </article>
               ))}
             </div>

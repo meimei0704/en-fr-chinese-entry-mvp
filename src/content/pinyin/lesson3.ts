@@ -26,7 +26,6 @@ export const pinyinLesson3: PinyinLessonContent = {
       items: [
         {
           id: 'final-ai',
-          hanzi: '哀',
           label: 'ai',
           pinyin: 'āi',
           description: { en: 'Glide from open “a” to “i”; hold a first-tone contour.', fr: 'Glissez de « a » ouvert vers « i » avec un premier ton plat.', },
@@ -34,7 +33,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ei',
-          hanzi: '诶',
           label: 'ei',
           pinyin: 'ēi',
           description: { en: 'Glide from “e” to “i”; hold a first-tone contour.', fr: 'Glissez de « e » vers « i » avec un premier ton plat.', },
@@ -42,7 +40,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ui',
-          hanzi: '威',
           label: 'ui',
           pinyin: 'uī',
           description: { en: 'Glide smoothly from “u” through “e” to “i”; hold a first-tone contour.', fr: 'Glissez de « ou » vers « i » avec un premier ton plat.', },
@@ -50,7 +47,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ao',
-          hanzi: '凹',
           label: 'ao',
           pinyin: 'āo',
           description: { en: 'Glide from open “a” to rounded “o”; hold a first-tone contour.', fr: 'Glissez de « a » vers « o » avec un premier ton plat.', },
@@ -58,7 +54,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ou',
-          hanzi: '欧',
           label: 'ou',
           pinyin: 'ōu',
           description: { en: 'Glide from “o” to rounded “u”; hold a first-tone contour.', fr: 'Glissez de « o » vers « ou » avec un premier ton plat.', },
@@ -66,7 +61,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-iu',
-          hanzi: '忧',
           label: 'iu',
           pinyin: 'iū',
           description: { en: 'Glide from “i” through “o” to “u”; hold a first-tone contour.', fr: 'Glissez de « i » vers « ou » avec un premier ton plat.', },
@@ -74,7 +68,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ie',
-          hanzi: '椰',
           label: 'ie',
           pinyin: 'iē',
           description: { en: 'Glide from “i” to an open “e”; hold a first-tone contour.', fr: 'Glissez de « i » vers « e » avec un premier ton plat.', },
@@ -82,7 +75,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ue',
-          hanzi: '约',
           label: 'üe',
           pinyin: 'üē',
           description: { en: 'Round your lips for ü, then open to e; hold a first-tone contour.', fr: 'Arrondissez pour ü, puis ouvrez vers e avec un premier ton plat.', },
@@ -90,7 +82,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-er',
-          hanzi: '儿',
           label: 'er',
           pinyin: 'ēr',
           description: { en: 'A rhotic “er” with the tongue tip curled; hold a first-tone contour.', fr: 'Un « er » rhotique, pointe de la langue recourbée, avec un premier ton plat.', },
@@ -111,7 +102,6 @@ export const pinyinLesson3: PinyinLessonContent = {
       items: [
         {
           id: 'final-an',
-          hanzi: '安',
           label: 'an',
           pinyin: 'ān',
           description: { en: 'Open “ah” + n; hold a first-tone contour.', fr: '« a » ouvert + n, avec un premier ton plat.', },
@@ -119,7 +109,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-en',
-          hanzi: '恩',
           label: 'en',
           pinyin: 'ēn',
           description: { en: 'Relaxed “uh” + n; hold a first-tone contour.', fr: '« eu » relâché + n, avec un premier ton plat.', },
@@ -127,7 +116,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-in',
-          hanzi: '因',
           label: 'in',
           pinyin: 'īn',
           description: { en: '“ee” + n; hold a first-tone contour.', fr: '« i » + n, avec un premier ton plat.', },
@@ -135,7 +123,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-un',
-          hanzi: '温',
           label: 'un',
           pinyin: 'ūn',
           description: { en: '“oo” + n; hold a first-tone contour.', fr: '« ou » + n, avec un premier ton plat.', },
@@ -143,7 +130,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-uen',
-          hanzi: '晕',
           label: 'ün',
           pinyin: 'ǖn',
           description: { en: 'Round-lip ü + n; hold a first-tone contour.', fr: 'ü à lèvres arrondies + n, avec un premier ton plat.', },
@@ -164,7 +150,6 @@ export const pinyinLesson3: PinyinLessonContent = {
       items: [
         {
           id: 'final-ang',
-          hanzi: '肮',
           label: 'ang',
           pinyin: 'āng',
           description: { en: 'Open “ah” + ng; hold a first-tone contour.', fr: '« a » ouvert + ng, avec un premier ton plat.', },
@@ -172,7 +157,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-eng',
-          hanzi: '鞥',
           label: 'eng',
           pinyin: 'ēng',
           description: { en: 'Relaxed “uh” + ng; hold a first-tone contour.', fr: '« eu » relâché + ng, avec un premier ton plat.', },
@@ -180,7 +164,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ing',
-          hanzi: '英',
           label: 'ing',
           pinyin: 'īng',
           description: { en: '“ee” + ng; hold a first-tone contour.', fr: '« i » + ng, avec un premier ton plat.', },
@@ -188,7 +171,6 @@ export const pinyinLesson3: PinyinLessonContent = {
         },
         {
           id: 'final-ong',
-          hanzi: '嗡',
           label: 'ong',
           pinyin: 'ōng',
           description: { en: 'Rounded “oo” + ng; hold a first-tone contour.', fr: '« ou » arrondi + ng, avec un premier ton plat.', },

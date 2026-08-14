@@ -130,7 +130,8 @@ describe('PinyinPage', () => {
     renderRoute('/pinyin')
 
     expect(screen.getByRole('heading', { level: 2, name: 'Initials' })).toBeVisible()
-    expect(screen.getByText('bā')).toBeVisible()
+    expect(screen.getByText('b', { selector: '.pinyin-reference-card__phoneme' })).toBeVisible()
+    expect(screen.queryByText('八')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Play bā' })).toBeVisible()
   })
 
@@ -140,16 +141,11 @@ describe('PinyinPage', () => {
 
     await user.click(screen.getByRole('tab', { name: 'Whole Syllables' }))
 
-    expect(screen.getByText('zhi')).toBeVisible()
-    expect(screen.getByText('zhī')).toBeVisible()
-    expect(screen.getByText('shī')).toBeVisible()
-    expect(screen.getByText('rī')).toBeVisible()
-    expect(screen.getByText('wū')).toBeVisible()
-    expect(screen.getByText('yūn')).toBeVisible()
-    expect(screen.getByText('ying')).toBeVisible()
-    expect(screen.getByText('yīng')).toBeVisible()
+    expect(screen.getByText('zhi', { selector: '.pinyin-reference-card__phoneme' })).toBeVisible()
+    expect(screen.getByText('ying', { selector: '.pinyin-reference-card__phoneme' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play zhi' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Play ying' })).toBeVisible()
+    expect(screen.queryByText('zhī')).not.toBeInTheDocument()
     expect(screen.queryByText('知')).not.toBeInTheDocument()
     expect(screen.queryByText('英')).not.toBeInTheDocument()
   })
