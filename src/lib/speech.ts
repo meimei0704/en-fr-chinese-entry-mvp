@@ -45,7 +45,7 @@ function playWithRetry(
     // ignore source assignment errors; retry still attempts play()
   }
 
-  audio.play().catch(() => {
+  audio.play()?.catch(() => {
     if (id !== playbackId) {
       return
     }

@@ -1,14 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { selfIntroLesson } from '../content/lessons/selfIntro'
-import {
-  buildPracticeChallenge,
-  computeRating,
-  createSeededRandom,
-  pointsForCorrect,
-  remainingPoints,
-  shuffle,
-} from './practiceChallenge'
+import { buildPracticeChallenge, createSeededRandom, shuffle } from './practiceChallenge'
 
 describe('createSeededRandom', () => {
   it('is deterministic for the same seed', () => {
@@ -43,54 +36,18 @@ describe('shuffle', () => {
   })
 })
 
-describe('pointsForCorrect', () => {
-  it('splits a flat 100-point total across all questions', () => {
-    expect(pointsForCorrect(5)).toBe(20)
-    expect(pointsForCorrect(10)).toBe(10)
-    expect(pointsForCorrect(1)).toBe(100)
-  })
-})
-
-describe('remainingPoints', () => {
-  it('is zero for counts that divide 100 evenly', () => {
-    expect(remainingPoints(5)).toBe(0)
-    expect(remainingPoints(10)).toBe(0)
-  })
-
-  it('tops up non-divisible counts so the total stays exactly 100', () => {
-    expect(pointsForCorrect(3) * 3 + remainingPoints(3)).toBe(100)
-    expect(pointsForCorrect(6) * 6 + remainingPoints(6)).toBe(100)
-    expect(pointsForCorrect(7) * 7 + remainingPoints(7)).toBe(100)
-  })
-})
-
-describe('computeRating', () => {
-  it('maps score ratios to S/A/B/C bands', () => {
-    expect(computeRating(100, 100)).toBe('S')
-    expect(computeRating(90, 100)).toBe('S')
-    expect(computeRating(75, 100)).toBe('A')
-    expect(computeRating(60, 100)).toBe('B')
-    expect(computeRating(10, 100)).toBe('C')
-  })
-
-  it('treats an empty challenge as C', () => {
-    expect(computeRating(0, 0)).toBe('C')
-  })
-})
-
 describe('buildPracticeChallenge', () => {
   it('produces exactly five mixed-type questions without duplicates', () => {
     const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 2024)
 
     expect(challenge.questions).toHaveLength(5)
     expect(new Set(challenge.questions.map((question) => question.id)).size).toBe(5)
-    expect(challenge.maxScore).toBe(100)
 
     const kinds = new Set(challenge.questions.map((question) => question.kind))
     expect(kinds.has('listen')).toBe(true)
     expect(kinds.has('read')).toBe(true)
-    expect(kinds.has('speak')).toBe(true)
     expect(kinds.has('review')).toBe(true)
+    expect(kinds.has('speak')).toBe(false)
   })
 
   it('is deterministic for the same seed', () => {
@@ -113,9 +70,6 @@ describe('buildPracticeChallenge', () => {
     const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 555)
 
     for (const question of challenge.questions) {
-      if (question.kind === 'speak') {
-        continue
-      }
       const correct = question.options.find((option) => option.id === question.correctOptionId)
       expect(correct).toBeDefined()
       expect(question.options).toHaveLength(4)
@@ -126,19 +80,22 @@ describe('buildPracticeChallenge', () => {
     const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 777)
 
     for (const question of challenge.questions) {
-      if (question.kind === 'speak') {
-        continue
-      }
       for (const option of question.options) {
         expect(option.label.length).toBeGreaterThan(0)
       }
     }
   })
 
-  it('scores speak questions through self-rating options', () => {
+  it('attaches pronunciation audio to hanzi answer options', () => {
     const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 8080)
-    const speak = challenge.questions.find((question) => question.kind === 'speak')
-    expect(speak).toBeDefined()
-    expect(speak?.correctOptionId).toBe('fluent')
+
+    const hanziCorrect = challenge.questions
+      .map((question) => question.options.find((option) => option.id === question.correctOptionId))
+      .filter((option) => option && /[\u3400-\u9fff]/.test(option.label))
+
+    expect(hanziCorrect.length).toBeGreaterThan(0)
+    for (const option of hanziCorrect) {
+      expect(option.audio, `${option?.label} should carry hanzi pronunciation audio`).toBeDefined()
+    }
   })
 })

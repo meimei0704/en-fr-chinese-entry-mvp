@@ -2,37 +2,23 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { getLocalizedText } from '../content/copy'
 import type { ExplanationLanguage } from '../content/types'
-import {
-  computeRating,
-  pointsForCorrect,
-  remainingPoints,
-  type PracticeChallenge,
-  type PracticeChallengeQuestion,
-} from '../lib/practiceChallenge'
+import type { PracticeChallenge, PracticeChallengeQuestion } from '../lib/practiceChallenge'
 import { playPracticeSound } from '../lib/practiceSound'
+import { speakChinese } from '../lib/speech'
 import { ExplanationBlock } from './ExplanationBlock'
 import { SpeechButton } from './SpeechButton'
 
 export interface PracticeChallengeCopy {
   playPromptAudio: (current: number) => string
-  speakOptions: string
+  playOptionAudio: (option: string) => string
   answerOptions: string
-  fluentOption: string
-  needsPracticeOption: string
-  showMeOption: string
   correctFeedback: string
-  pointsGained: (points: number) => string
   incorrectFeedback: string
   correctAnswer: (answer: string) => string
   nextQuestion: string
-  resultHeading: string
-  finalScore: (score: number) => string
-  ratingLabel: string
-  ratingValue: (rating: string) => string
   playAgain: string
   completeLesson: string
   lessonCompleted: string
-  encouragement: (rating: string) => string
   answerReview: string
   answerReviewCorrect: string
   answerReviewIncorrect: string
@@ -64,12 +50,9 @@ export function PracticeChallenge({
 }: PracticeChallengeProps) {
   const [seed, setSeed] = useState(initialSeed)
   const [questionIndex, setQuestionIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [streak, setStreak] = useState(0)
   const [answers, setAnswers] = useState<AnswerRecord[]>([])
   const [feedback, setFeedback] = useState<{
     correct: boolean
-    points: number
     reveal: string
   } | null>(null)
   const [finished, setFinished] = useState(false)
@@ -82,7 +65,6 @@ export function PracticeChallenge({
   const currentQuestion = questions[questionIndex]
   const questionNumber = questionIndex + 1
   const isLastQuestion = questionIndex === questions.length - 1
-  const rating = computeRating(score, challenge.maxScore)
 
   useEffect(() => {
     if (finished && !reported) {
@@ -91,21 +73,23 @@ export function PracticeChallenge({
     }
   }, [finished, reported, onComplete])
 
+  useEffect(() => {
+    if (!currentQuestion || currentQuestion.kind !== 'listen') {
+      return
+    }
+
+    speakChinese({
+      text: currentQuestion.target,
+      audioSrc: currentQuestion.audio,
+      fallbackAudioSrc: currentQuestion.audioFallback,
+    })
+  }, [currentQuestion])
+
   function submitAnswer(isCorrect: boolean, reveal: string) {
-    const gained = isCorrect
-      ? pointsForCorrect(questions.length) + (isLastQuestion ? remainingPoints(questions.length) : 0)
-      : 0
-    const nextStreak = isCorrect ? streak + 1 : 0
-    const nextScore = score + gained
-
-    setScore(nextScore)
-    setStreak(nextStreak)
     setAnswers((current) => [...current, { question: currentQuestion, correct: isCorrect }])
-    setFeedback({ correct: isCorrect, points: gained, reveal })
+    setFeedback({ correct: isCorrect, reveal })
 
-    if (isCorrect && nextStreak >= 3) {
-      playPracticeSound('streak')
-    } else if (isCorrect) {
+    if (isCorrect) {
       playPracticeSound('correct')
     } else {
       playPracticeSound('incorrect')
@@ -128,8 +112,6 @@ export function PracticeChallenge({
   function restart() {
     setSeed(() => Math.floor(Math.random() * 2 ** 31))
     setQuestionIndex(0)
-    setScore(0)
-    setStreak(0)
     setAnswers([])
     setFeedback(null)
     setFinished(false)
@@ -158,60 +140,21 @@ export function PracticeChallenge({
     submitAnswer(isCorrect, reveal)
   }
 
-  function handleSelfRating(question: PracticeChallengeQuestion, ratingId: string) {
-    if (feedback || finished) {
-      return
-    }
-
-    submitAnswer(ratingId === 'fluent', question.target)
-  }
-
   if (finished) {
-    const correctCount = answers.filter((answer) => answer.correct).length
-
     return (
       <section className="surface-card practice-challenge practice-challenge--result">
-        <div className="practice-challenge__result-summary">
-          <div className="practice-challenge__result-main">
-            <p className="eyebrow">{copy.resultHeading}</p>
-            <p className="practice-challenge__score">{copy.finalScore(score)}</p>
-            <dl className="practice-challenge__rating">
-              <dt>{copy.ratingLabel}</dt>
-              <dd className="practice-challenge__rating-value" aria-label={copy.ratingValue(rating)}>
-                {copy.ratingValue(rating)}
-              </dd>
-            </dl>
-            <div className="practice-challenge__stars" aria-label={copy.ratingValue(rating)}>
-              {[0, 1, 2].map((starIndex) => (
-                <span
-                  key={starIndex}
-                  aria-hidden="true"
-                  className={`practice-challenge__star ${
-                    starIndex < Math.ceil((correctCount / questions.length) * 3)
-                      ? 'practice-challenge__star--lit'
-                      : ''
-                  }`}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
-            <p className="muted-text">{copy.encouragement(rating)}</p>
-          </div>
-
-          <div className="practice-challenge__result-actions">
-            <button type="button" className="primary-button" onClick={restart}>
-              {copy.playAgain}
-            </button>
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={handleCompleteLesson}
-              disabled={lessonCompleted}
-            >
-              {lessonCompleted ? copy.lessonCompleted : copy.completeLesson}
-            </button>
-          </div>
+        <div className="practice-challenge__result-actions">
+          <button type="button" className="primary-button" onClick={restart}>
+            {copy.playAgain}
+          </button>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={handleCompleteLesson}
+            disabled={lessonCompleted}
+          >
+            {lessonCompleted ? copy.lessonCompleted : copy.completeLesson}
+          </button>
         </div>
 
         <div className="practice-challenge__review">
@@ -250,40 +193,20 @@ export function PracticeChallenge({
       <div className="practice-challenge__question">
         <div className="practice-challenge__prompt">
           <p>{getLocalizedText(currentQuestion.prompt, language)}</p>
-          {currentQuestion.kind === 'speak' && currentQuestion.target ? (
-            <p className="practice-challenge__sentence">
-              <strong>{currentQuestion.target}</strong>
-              {currentQuestion.targetPinyin ? (
-                <span className="practice-challenge__sentence-pinyin">
-                  {currentQuestion.targetPinyin}
-                </span>
-              ) : null}
-            </p>          ) : null}
-          <SpeechButton
-            label={copy.playPromptAudio(questionNumber)}
-            text={currentQuestion.speechText ?? currentQuestion.target}
-            audioSrc={currentQuestion.audio}
-            fallbackAudioSrc={currentQuestion.audioFallback}
-          />
+          {currentQuestion.kind === 'listen' && currentQuestion.audio ? (
+            <SpeechButton
+              label={copy.playPromptAudio(questionNumber)}
+              text={currentQuestion.target}
+              audioSrc={currentQuestion.audio}
+              fallbackAudioSrc={currentQuestion.audioFallback}
+            />
+          ) : null}
         </div>
 
-        {currentQuestion.kind === 'speak' ? (
-          <div className="practice-challenge__options" role="group" aria-label={copy.speakOptions}>
-            <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'fluent')}>
-              {copy.fluentOption}
-            </button>
-            <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'needs-practice')}>
-              {copy.needsPracticeOption}
-            </button>
-            <button type="button" className="option-button" onClick={() => handleSelfRating(currentQuestion, 'show-me')}>
-              {copy.showMeOption}
-            </button>
-          </div>
-        ) : (
-          <div className="practice-challenge__options" role="group" aria-label={copy.answerOptions}>
-            {currentQuestion.options.map((option) => (
+        <div className="practice-challenge__options" role="group" aria-label={copy.answerOptions}>
+          {currentQuestion.options.map((option) => (
+            <div className="practice-challenge__option" key={option.id}>
               <button
-                key={option.id}
                 type="button"
                 className="option-button"
                 onClick={() => handleChoice(currentQuestion, option.id)}
@@ -295,9 +218,16 @@ export function PracticeChallenge({
                   </span>
                 ) : null}
               </button>
-            ))}
-          </div>
-        )}
+              {option.audio ? (
+                <SpeechButton
+                  label={copy.playOptionAudio(option.label)}
+                  text={option.label}
+                  audioSrc={option.audio}
+                />
+              ) : null}
+            </div>
+          ))}
+        </div>
       </div>
 
       {feedback ? (
@@ -308,9 +238,7 @@ export function PracticeChallenge({
         >
           <div className="practice-challenge__feedback-body">
             <p className="practice-challenge__feedback-heading">
-              {feedback.correct
-                ? `${copy.correctFeedback} ${copy.pointsGained(feedback.points)}`
-                : copy.incorrectFeedback}
+              {feedback.correct ? copy.correctFeedback : copy.incorrectFeedback}
             </p>
             {!feedback.correct ? (
               <p className="muted-text">{copy.correctAnswer(feedback.reveal)}</p>
