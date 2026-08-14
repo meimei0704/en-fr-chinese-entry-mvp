@@ -249,10 +249,8 @@ describe('pinyin course content', () => {
     expect(manifest).toHaveLength(5)
     expect(new Set(manifest.map(({ relPath }) => relPath))).toEqual(expectedPaths)
     expect(assetPaths).toEqual(expectedPaths)
-    const hashByPath = new Map(manifest.map(({ hash, relPath }) => [relPath, hash]))
-    expect(hashByPath.get('lesson-1/reference-tone-neutral.mp3')).toBe(
-      hashByPath.get('lesson-1/reference-tone-1.mp3'),
-    )
+    const distinctHashes = new Set(manifest.map(({ hash }) => hash))
+    expect(distinctHashes.size).toBe(manifest.length)
 
     for (const { hash, relPath } of manifest) {
       const filePath = join(process.cwd(), 'public/audio/pinyin', relPath)
