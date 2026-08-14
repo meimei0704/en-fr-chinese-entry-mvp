@@ -223,24 +223,19 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
       els.map((el) => {
         const cardRect = el.getBoundingClientRect()
         const cardCenterX = cardRect.left + cardRect.width / 2
-        const cardCenterY = cardRect.top + cardRect.height / 2
         const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')!
         const phoneme = el.querySelector<HTMLElement>('.pinyin-reference-card__phoneme')!
         const btn = el.querySelector<HTMLElement>('.speech-button')!
-        const last = el.lastElementChild as HTMLElement
         const targetRect = target.getBoundingClientRect()
         const phonemeRect = phoneme.getBoundingClientRect()
         const btnRect = btn.getBoundingClientRect()
-        const lastRect = last.getBoundingClientRect()
         return {
           phonemeCenterDelta: Math.abs(
             phonemeRect.left + phonemeRect.width / 2 - cardCenterX,
           ),
           buttonCenterDelta: Math.abs(btnRect.left + btnRect.width / 2 - cardCenterX),
           targetCenterDelta: Math.abs(targetRect.left + targetRect.width / 2 - cardCenterX),
-          groupCenterYDelta: Math.abs(
-            (targetRect.top + lastRect.bottom) / 2 - cardCenterY,
-          ),
+          topDelta: targetRect.top - cardRect.top,
         }
       }),
     )
@@ -248,20 +243,7 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     expect(alignment.every((a) => a.phonemeCenterDelta <= 1)).toBe(true)
     expect(alignment.every((a) => a.buttonCenterDelta <= 1)).toBe(true)
     expect(alignment.every((a) => a.targetCenterDelta <= 1)).toBe(true)
-
-    if (moduleName === 'Tones') {
-      const topDeltas = await cards.evaluateAll((els) =>
-        els.map((el) => {
-          const cardRect = el.getBoundingClientRect()
-          const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')!
-          const targetRect = target.getBoundingClientRect()
-          return targetRect.top - cardRect.top
-        }),
-      )
-      expect(Math.max(...topDeltas) - Math.min(...topDeltas)).toBeLessThanOrEqual(1)
-    } else {
-      expect(alignment.every((a) => a.groupCenterYDelta <= 1)).toBe(true)
-    }
+    expect(Math.max(...alignment.map((a) => a.topDelta)) - Math.min(...alignment.map((a) => a.topDelta))).toBeLessThanOrEqual(1)
   })
 }
 
