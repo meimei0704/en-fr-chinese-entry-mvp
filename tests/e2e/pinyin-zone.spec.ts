@@ -223,19 +223,26 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
       els.map((el) => {
         const cardRect = el.getBoundingClientRect()
         const cardCenterX = cardRect.left + cardRect.width / 2
+        const cardCenterY = cardRect.top + cardRect.height / 2
         const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')!
         const phoneme = el.querySelector<HTMLElement>('.pinyin-reference-card__phoneme')!
         const btn = el.querySelector<HTMLElement>('.speech-button')!
+        const hasDescription = Boolean(el.querySelector('.pinyin-reference-card__description'))
         const targetRect = target.getBoundingClientRect()
         const phonemeRect = phoneme.getBoundingClientRect()
         const btnRect = btn.getBoundingClientRect()
+        const style = window.getComputedStyle(el)
         return {
+          hasDescription,
+          contentTopOffset:
+            parseFloat(style.borderTopWidth) + parseFloat(style.paddingTop),
           phonemeCenterDelta: Math.abs(
             phonemeRect.left + phonemeRect.width / 2 - cardCenterX,
           ),
           buttonCenterDelta: Math.abs(btnRect.left + btnRect.width / 2 - cardCenterX),
           targetCenterDelta: Math.abs(targetRect.left + targetRect.width / 2 - cardCenterX),
           topDelta: targetRect.top - cardRect.top,
+          groupCenterYDelta: Math.abs((targetRect.top + targetRect.bottom) / 2 - cardCenterY),
         }
       }),
     )
@@ -243,7 +250,19 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     expect(alignment.every((a) => a.phonemeCenterDelta <= 1)).toBe(true)
     expect(alignment.every((a) => a.buttonCenterDelta <= 1)).toBe(true)
     expect(alignment.every((a) => a.targetCenterDelta <= 1)).toBe(true)
-    expect(Math.max(...alignment.map((a) => a.topDelta)) - Math.min(...alignment.map((a) => a.topDelta))).toBeLessThanOrEqual(1)
+
+    const withDescription = alignment.filter((a) => a.hasDescription)
+    const withoutDescription = alignment.filter((a) => !a.hasDescription)
+
+    if (withDescription.length > 0) {
+      const topDeltas = withDescription.map((a) => a.topDelta)
+      expect(Math.max(...topDeltas) - Math.min(...topDeltas)).toBeLessThanOrEqual(1)
+      expect(withDescription.every((a) => a.topDelta <= a.contentTopOffset + 1)).toBe(true)
+    }
+
+    if (withoutDescription.length > 0) {
+      expect(withoutDescription.every((a) => a.groupCenterYDelta <= 1)).toBe(true)
+    }
   })
 }
 

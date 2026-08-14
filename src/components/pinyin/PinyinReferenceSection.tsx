@@ -28,7 +28,11 @@ export function PinyinReferenceSection({
 
             <div className="pinyin-reference-group__items">
               {group.items.map((item) => (
-                <article key={item.id} className="study-item pinyin-reference-card" data-testid="pinyin-card">
+                <article
+                  key={item.id}
+                  className={`study-item pinyin-reference-card${item.description ? ' pinyin-reference-card--with-description' : ''}`}
+                  data-testid="pinyin-card"
+                >
                   <div className="pinyin-reference-card__target">
                     <p className="pinyin-reference-card__phoneme">
                       {item.tone !== undefined ? item.pinyin : getLocalizedText(item.label, language)}

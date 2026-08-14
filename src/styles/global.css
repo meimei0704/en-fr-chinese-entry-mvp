@@ -3212,12 +3212,16 @@ h2 {
   display: grid;
   gap: 0.75rem;
   justify-items: center;
-  align-content: start;
+  align-content: center;
   min-height: 13.5rem;
   text-align: center;
   background:
     radial-gradient(circle at top right, rgba(243, 165, 63, 0.1), transparent 8rem),
     rgba(255, 255, 255, 0.94);
+}
+
+.pinyin-reference-card--with-description {
+  align-content: start;
 }
 
 .pinyin-reference-card .speech-button {
