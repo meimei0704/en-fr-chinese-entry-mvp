@@ -232,7 +232,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'High and level.',
             fr: 'Haut et plat.',
           },
-          audio: `${lessonAudioBase}/reference-tone-1.mp3?v=6470708c`,
+          audio: `${lessonAudioBase}/reference-tone-1-6470708c.mp3`,
         },
         {
           id: 'tone-second',
@@ -246,7 +246,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Rising, like asking a short question.',
             fr: 'Montant, comme une courte question.',
           },
-          audio: `${lessonAudioBase}/reference-tone-2.mp3?v=0d561a45`,
+          audio: `${lessonAudioBase}/reference-tone-2-0d561a45.mp3`,
         },
         {
           id: 'tone-third',
@@ -260,7 +260,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Low dipping tone.',
             fr: 'Ton bas avec un creux.',
           },
-          audio: `${lessonAudioBase}/reference-tone-3.mp3?v=4299a7b1`,
+          audio: `${lessonAudioBase}/reference-tone-3-4299a7b1.mp3`,
         },
         {
           id: 'tone-fourth',
@@ -274,7 +274,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Falling, short, and decisive.',
             fr: 'Descendant, court et décidé.',
           },
-          audio: `${lessonAudioBase}/reference-tone-4.mp3?v=86535390`,
+          audio: `${lessonAudioBase}/reference-tone-4-86535390.mp3`,
         },
         {
           id: 'tone-neutral',
@@ -288,7 +288,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Light, short, and unmarked — a soft "ma" with no contour.',
             fr: 'Léger, court et sans marque — un « ma » doux sans contour.',
           },
-          audio: `${lessonAudioBase}/reference-tone-neutral.mp3?v=03195e20`,
+          audio: `${lessonAudioBase}/reference-tone-neutral-03195e20.mp3`,
         },
       ],
     },

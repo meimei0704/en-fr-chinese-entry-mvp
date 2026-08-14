@@ -34,7 +34,7 @@ describe('pinyin course content', () => {
 
     for (const audioPath of allAudioPaths) {
       expect(audioPath).toMatch(
-        /^\/audio\/pinyin\/(lesson-\d|whole-syllables)\/.+\.mp3(\?v=[0-9a-f]+)?$/,
+        /^\/audio\/pinyin\/(lesson-\d|whole-syllables)\/.+\.mp3$/,
       )
       const publicFilePath = join(
         process.cwd(),
@@ -218,15 +218,15 @@ describe('pinyin course content', () => {
     const toneItems = tonesModule?.reference.flatMap((group) => group.items) ?? []
 
     expect(toneItems.map(({ pinyin, tone, audio }) => [pinyin, tone, audio])).toEqual([
-      ['mā', 1, '/audio/pinyin/lesson-1/reference-tone-1.mp3?v=6470708c'],
-      ['má', 2, '/audio/pinyin/lesson-1/reference-tone-2.mp3?v=0d561a45'],
-      ['mǎ', 3, '/audio/pinyin/lesson-1/reference-tone-3.mp3?v=4299a7b1'],
-      ['mà', 4, '/audio/pinyin/lesson-1/reference-tone-4.mp3?v=86535390'],
-      ['ma', 0, '/audio/pinyin/lesson-1/reference-tone-neutral.mp3?v=03195e20'],
+      ['mā', 1, '/audio/pinyin/lesson-1/reference-tone-1-6470708c.mp3'],
+      ['má', 2, '/audio/pinyin/lesson-1/reference-tone-2-0d561a45.mp3'],
+      ['mǎ', 3, '/audio/pinyin/lesson-1/reference-tone-3-4299a7b1.mp3'],
+      ['mà', 4, '/audio/pinyin/lesson-1/reference-tone-4-86535390.mp3'],
+      ['ma', 0, '/audio/pinyin/lesson-1/reference-tone-neutral-03195e20.mp3'],
     ])
   })
 
-  it('locks each tone card URL version to the manifest hash short prefix', () => {
+  it('locks each tone card URL to a manifest-hashed physical filename', () => {
     const manifestPath = join(
       process.cwd(),
       'public/audio/pinyin/reference-tone.sha256',
@@ -246,13 +246,16 @@ describe('pinyin course content', () => {
     for (const { hash, relPath } of manifest) {
       const shortHash = hash.slice(0, 8)
       const expectedFile = relPath.split('/').at(-1)
+      expect(expectedFile, `${relPath} filename should embed its sha256 short prefix`).toContain(
+        shortHash,
+      )
       const item = [...itemsById.values()].find((entry) =>
-        entry.audio.split('?')[0].endsWith(`/${expectedFile}`),
+        entry.audio.endsWith(`/${expectedFile}`),
       )
 
       expect(item, `${relPath} should be referenced by a tone card`).toBeDefined()
-      expect(item?.audio, `${relPath} URL version must match manifest hash`).toBe(
-        `/audio/pinyin/lesson-1/${expectedFile}?v=${shortHash}`,
+      expect(item?.audio, `${relPath} URL must use the manifest-hashed filename`).toBe(
+        `/audio/pinyin/lesson-1/${expectedFile}`,
       )
     }
   })
@@ -268,11 +271,11 @@ describe('pinyin course content', () => {
       .map((line) => line.split('  '))
       .map(([hash, relPath]) => ({ hash, relPath }))
     const expectedPaths = new Set([
-      'lesson-1/reference-tone-1.mp3',
-      'lesson-1/reference-tone-2.mp3',
-      'lesson-1/reference-tone-3.mp3',
-      'lesson-1/reference-tone-4.mp3',
-      'lesson-1/reference-tone-neutral.mp3',
+      'lesson-1/reference-tone-1-6470708c.mp3',
+      'lesson-1/reference-tone-2-0d561a45.mp3',
+      'lesson-1/reference-tone-3-4299a7b1.mp3',
+      'lesson-1/reference-tone-4-86535390.mp3',
+      'lesson-1/reference-tone-neutral-03195e20.mp3',
     ])
     const assetPaths = new Set(
       readdirSync(join(process.cwd(), 'public/audio/pinyin/lesson-1'))
