@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 
 import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
 import { ContentLoading } from '../components/ContentState'
+import { JourneyNodeCourseImage } from '../components/JourneyNodeCourseImage'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { buildJourney, journeyNodeIcons } from '../content/journey'
+import { buildJourney, journeyNodeIcons, journeyNodeImages } from '../content/journey'
 import { getLessonTopicText } from '../content/lessonTopics'
 import type { JourneyNode, LessonId } from '../content/types'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
@@ -26,7 +27,7 @@ export function ProgressPage() {
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const completedPinyinSectionsCount = pinyinProgress.completedSections.length
-  const totalPinyinSections = 3
+  const totalPinyinSections = 2
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNode['id'] | null>(null)
 
   if (error) {
@@ -241,6 +242,7 @@ export function ProgressPage() {
                     const nodeSummary = getLocalizedText(node.summary, language)
                     const nodeEyebrow = getLocalizedText(node.eyebrow, language)
                     const nodeIcon = journeyNodeIcons[node.id]
+                    const nodeImage = journeyNodeImages[node.id]
 
                     if (isLessonJourneyNode(node)) {
                       const status = getJourneyNodeStatus(node)
@@ -262,7 +264,7 @@ export function ProgressPage() {
                           </div>
 
                           <span className="journey-node__doodle" aria-hidden="true">
-                            {nodeIcon}
+                            <JourneyNodeCourseImage src={nodeImage} fallback={nodeIcon} />
                           </span>
 
                           <div>

@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom'
 import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
 import { ContentLoading } from '../components/ContentState'
 import { HomeHeroIllustration } from '../components/HomeHeroIllustration'
+import { JourneyNodeCourseImage } from '../components/JourneyNodeCourseImage'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { buildJourney, journeyNodeIcons } from '../content/journey'
+import { buildJourney, journeyNodeIcons, journeyNodeImages } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
 import { useCourse } from '../lib/contentProvider'
@@ -129,6 +130,7 @@ export function HomePage() {
                   const nodeSummary = getLocalizedText(node.summary, language)
                   const nodeEyebrow = getLocalizedText(node.eyebrow, language)
                   const nodeIcon = journeyNodeIcons[node.id]
+                  const nodeImage = journeyNodeImages[node.id]
 
                   if (node.kind === 'lesson' && node.lessonId) {
                     return (
@@ -151,7 +153,7 @@ export function HomePage() {
                           aria-hidden="true"
                         >
                           <span className="journey-node__doodle journey-node__doodle--stamp">
-                            {nodeIcon}
+                            <JourneyNodeCourseImage src={nodeImage} fallback={nodeIcon} />
                           </span>
                         </span>
                       </Link>

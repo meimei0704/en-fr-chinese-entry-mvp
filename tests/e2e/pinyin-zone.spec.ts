@@ -59,19 +59,41 @@ async function installPinyinBrowserMocks(page: Page) {
 
     class SpyAudio {
       currentTime = 0
-      src: string
+      private _src: string
 
       constructor(src = '') {
-        this.src = src
+        this._src = src
         if (src) {
           state.__pinyinPlayedAudioSources.push(src)
         }
       }
 
+      get src() {
+        return this._src
+      }
+
+      set src(value: string) {
+        this._src = value
+        if (value) {
+          state.__pinyinPlayedAudioSources.push(value)
+        }
+      }
+
       addEventListener() {}
+      getAttribute(attribute: string) {
+        return attribute === 'src' ? this._src : null
+      }
+      load() {}
       pause() {}
       play() {
         return Promise.resolve()
+      }
+      removeAttribute() {}
+      setAttribute(attribute: string, value: string) {
+        if (attribute === 'src') {
+          this._src = value
+          state.__pinyinPlayedAudioSources.push(value)
+        }
       }
     }
 
@@ -82,26 +104,7 @@ async function installPinyinBrowserMocks(page: Page) {
   })
 }
 
-async function finishPracticeChallenge(page: Page) {
-  for (let step = 0; step < 12; step += 1) {
-    const resultVisible = await page
-      .getByText('Challenge complete')
-      .isVisible()
-      .catch(() => false)
-    if (resultVisible) {
-      return
-    }
-
-    await page.locator('.option-button').first().click()
-
-    const nextButton = page.getByRole('button', { name: 'Next question' })
-    if (await nextButton.isVisible().catch(() => false)) {
-      await nextButton.click()
-    }
-  }
-}
-
-test('completes Pinyin Zone from the course entry with reference audio and practice challenge', async ({
+test('completes Pinyin Zone from the course entry with reference audio', async ({
   page,
 }) => {
   await installPinyinBrowserMocks(page)
@@ -112,7 +115,9 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
   await expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
   await pinyinEntry.click()
   await expect(page).toHaveURL(/\/pinyin$/)
-  await expect(page.getByRole('heading', { name: 'Pinyin（零基础第一课）' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Pinyin（Mandarin Phonetic System）' }),
+  ).toBeVisible()
 
   await page.getByRole('button', { name: 'Play bā' }).click()
   await expect
@@ -123,12 +128,6 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
       }),
     )
     .toContain('/audio/pinyin/lesson-1/reference-initial-b.mp3')
-
-  await page.getByRole('link', { name: 'Go to practice' }).click()
-  await expect(page).toHaveURL(/\/pinyin\/practice/)
-  await expect(page.getByRole('heading', { level: 1, name: 'Initials' })).toBeVisible()
-
-  await finishPracticeChallenge(page)
 
   const browserState = await page.evaluate(
     ([pinyinKey, courseKey]) => {
@@ -144,7 +143,6 @@ test('completes Pinyin Zone from the course entry with reference audio and pract
   )
 
   expect(browserState.pinyinProgress.completedSections).toContain('reference')
-  expect(browserState.pinyinProgress.completedSections).toContain('practice')
   expect(browserState.pinyinProgress.moduleProgress?.['initials']).toBeDefined()
   expect(browserState.courseProgress).toBeNull()
 })
@@ -160,8 +158,8 @@ test('renders four module tabs and switches between modules preserving progress'
 
   await page.getByRole('button', { name: 'Play bā' }).click()
 
-  await tabs.nth(2).click()
-  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true')
+  await tabs.nth(3).click()
+  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByRole('heading', { level: 2, name: 'Tones' })).toBeVisible()
 
   await tabs.first().click()
@@ -178,6 +176,69 @@ test('renders four module tabs and switches between modules preserving progress'
   expect(browserState.moduleProgress).toBeDefined()
   expect(browserState.moduleProgress?.['initials']).toBeDefined()
 })
+
+for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
+  test(`keeps ${moduleName} cards hanzi-free, equal-sized and centered`, async ({ page }) => {
+    await page.goto('/pinyin')
+
+    await page.getByRole('tab', { name: new RegExp(moduleName) }).click()
+
+    const cards = page.getByTestId('pinyin-card')
+    const count = await cards.count()
+    expect(count).toBeGreaterThan(0)
+
+    const sizes = await cards.evaluateAll((els) =>
+      els.map((el) => {
+        const rect = el.getBoundingClientRect()
+        return { width: Math.round(rect.width), height: Math.round(rect.height) }
+      }),
+    )
+
+    const hanziInCards = await cards.evaluateAll((els) =>
+      els.map((el) => el.textContent?.match(/[\u4e00-\u9fff]/g)?.length ?? 0),
+    )
+
+    expect(sizes.map((s) => s.width)).toEqual(Array(count).fill(sizes[0].width))
+    expect(sizes.map((s) => s.height)).toEqual(Array(count).fill(sizes[0].height))
+    expect(hanziInCards.every((n) => n === 0)).toBe(true)
+
+    const grid = cards.first().locator('xpath=..')
+    const gridBox = (await grid.boundingBox())!
+    const firstBox = (await cards.first().boundingBox())!
+    expect(Math.abs(firstBox.x - gridBox.x)).toBeLessThanOrEqual(1)
+
+    const alignment = await cards.evaluateAll((els) =>
+      els.map((el) => {
+        const cardRect = el.getBoundingClientRect()
+        const cardCenterX = cardRect.left + cardRect.width / 2
+        const cardCenterY = cardRect.top + cardRect.height / 2
+        const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')!
+        const phoneme = el.querySelector<HTMLElement>('.pinyin-reference-card__phoneme')!
+        const btn = el.querySelector<HTMLElement>('.speech-button')!
+        const last = el.lastElementChild as HTMLElement
+        const targetRect = target.getBoundingClientRect()
+        const phonemeRect = phoneme.getBoundingClientRect()
+        const btnRect = btn.getBoundingClientRect()
+        const lastRect = last.getBoundingClientRect()
+        return {
+          phonemeCenterDelta: Math.abs(
+            phonemeRect.left + phonemeRect.width / 2 - cardCenterX,
+          ),
+          buttonCenterDelta: Math.abs(btnRect.left + btnRect.width / 2 - cardCenterX),
+          targetCenterDelta: Math.abs(targetRect.left + targetRect.width / 2 - cardCenterX),
+          groupCenterYDelta: Math.abs(
+            (targetRect.top + lastRect.bottom) / 2 - cardCenterY,
+          ),
+        }
+      }),
+    )
+
+    expect(alignment.every((a) => a.phonemeCenterDelta <= 1)).toBe(true)
+    expect(alignment.every((a) => a.buttonCenterDelta <= 1)).toBe(true)
+    expect(alignment.every((a) => a.targetCenterDelta <= 1)).toBe(true)
+    expect(alignment.every((a) => a.groupCenterYDelta <= 1)).toBe(true)
+  })
+}
 
 for (const language of ['en', 'fr'] as const) {
   for (const viewport of introViewports) {

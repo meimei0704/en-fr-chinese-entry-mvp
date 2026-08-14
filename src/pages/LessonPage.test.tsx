@@ -43,13 +43,20 @@ describe('LessonPage', () => {
     class MockAudio {
       addEventListener = vi.fn()
       currentTime = 0
+      load = vi.fn()
       pause = vi.fn()
       play = audioPlay.mockResolvedValue(undefined)
+      preload = ''
+      removeAttribute = vi.fn()
       src: string
 
-      constructor(src: string) {
+      constructor(src = '') {
         audioConstructor(src)
         this.src = src
+      }
+
+      getAttribute(name: string) {
+        return name === 'src' ? this.src : null
       }
     }
 
@@ -314,11 +321,7 @@ describe('LessonPage', () => {
       playbackButtons[lesson.dialogue.lines.length + lesson.sentencePatterns.length],
     )
 
-    expect(audioConstructor).toHaveBeenNthCalledWith(1, `/audio/${lesson.id}/line-01.mp3`)
-    expect(audioConstructor).toHaveBeenNthCalledWith(2, `/audio/${lesson.id}/pattern-01.mp3`)
-    expect(audioConstructor).toHaveBeenNthCalledWith(3, `/audio/${lesson.id}/vocab-01.mp3`)
     expect(audioPlay).toHaveBeenCalledTimes(3)
-    expect(cancel).toHaveBeenCalledTimes(3)
     expect(speak).not.toHaveBeenCalled()
   })
 

@@ -8,14 +8,14 @@ const seriesCopy = {
     label: 'Course series',
     pinyin: 'Mandarin tones and pinyin',
     journey: 'Useful sentences, expressions and Hanzi recognition',
-    pinyinProgress: '2 of 3 sections complete',
+    pinyinProgress: '1 of 2 sections complete',
     journeyProgress: '1 of 12 lessons completed',
   },
   fr: {
     label: 'Séries de cours',
     pinyin: 'Tons et pinyin du mandarin',
     journey: 'Expressions chinoises essentielles pour voyager sereinement',
-    pinyinProgress: '2 sections sur 3 terminées',
+    pinyinProgress: '1 section sur 2 terminée',
     journeyProgress: '1 leçon sur 12 terminée',
   },
 } as const
@@ -59,14 +59,20 @@ const lessonHrefs = [
   '/lesson/small-talk',
 ] as const
 
-const twoSectionPinyinProgress = {
-  schemaVersion: 1,
+const singleSectionPinyinProgress = {
+  schemaVersion: 4,
   visited: true,
-  completedSections: ['reference', 'practice'],
-  toneGameLastScore: 8,
-  toneGameBestScore: 8,
+  completedSections: ['reference'],
   shadowingCompletedPromptIds: [],
   lastVisitedPromptId: null,
+  moduleProgress: {
+    initials: {
+      visited: true,
+      completedSections: ['reference'],
+      shadowingCompletedPromptIds: [],
+      lastVisitedPromptId: null,
+    },
+  },
 } as const
 
 function courseProgress(language: Language) {
@@ -89,7 +95,7 @@ async function seedProgress(page: Page, language: Language) {
       courseKey: courseProgressStorageKey,
       learnerProgress: courseProgress(language),
       pinyinKey: pinyinProgressStorageKey,
-      pinyinProgress: twoSectionPinyinProgress,
+      pinyinProgress: singleSectionPinyinProgress,
     },
   )
 }

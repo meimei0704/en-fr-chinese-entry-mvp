@@ -1,62 +1,6 @@
-import type {
-  PinyinLessonContent,
-  ToneGameChoice,
-  ToneGameQuestion,
-} from '../types.js'
+import type { PinyinLessonContent } from '../types.js'
 
 const lessonAudioBase = '/audio/pinyin/lesson-1'
-
-const toneChoices: ToneGameChoice[] = [
-  {
-    id: 'tone-1',
-    label: 'mā',
-    toneLabel: {
-      en: 'First tone: high and level',
-      fr: 'Premier ton : haut et plat',
-    },
-  },
-  {
-    id: 'tone-2',
-    label: 'má',
-    toneLabel: {
-      en: 'Second tone: rising',
-      fr: 'Deuxième ton : montant',
-    },
-  },
-  {
-    id: 'tone-3',
-    label: 'mǎ',
-    toneLabel: {
-      en: 'Third tone: low dipping',
-      fr: 'Troisième ton : bas avec un creux',
-    },
-  },
-  {
-    id: 'tone-4',
-    label: 'mà',
-    toneLabel: {
-      en: 'Fourth tone: sharp falling',
-      fr: 'Quatrième ton : descendant net',
-    },
-  },
-]
-
-function toneQuestion(
-  id: string,
-  promptText: string,
-  audioFile: string,
-  correctChoiceId: string,
-  explanation: string,
-): ToneGameQuestion {
-  return {
-    id,
-    promptAudio: `${lessonAudioBase}/${audioFile}`,
-    promptText,
-    choices: [...toneChoices],
-    correctChoiceId,
-    explanation,
-  }
-}
 
 export const pinyinLesson1: PinyinLessonContent = {
   id: 'pinyin-foundations-1',
@@ -82,133 +26,111 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'initial-b',
-          hanzi: '八',
-          emoji: '8️⃣',
           label: 'b',
           pinyin: 'bā',
           description: {
-            en: 'Unaspirated b, close to a soft English “p”. Eight = 八.',
-            fr: 'b non aspiré, proche d’un « p » anglais doux. Huit = 八.',
+            en: 'Unaspirated b, close to a soft English “p”.',
+            fr: 'b non aspiré, proche d’un « p » anglais doux.',
           },
           audio: `${lessonAudioBase}/reference-initial-b.mp3`,
         },
         {
           id: 'initial-p',
-          hanzi: '跑',
-          emoji: '🏃',
           label: 'p',
           pinyin: 'pǎo',
           description: {
-            en: 'Aspirated p with a clear puff of air. Run = 跑.',
-            fr: 'p aspiré avec un souffle bien audible. Courir = 跑.',
+            en: 'Aspirated p with a clear puff of air.',
+            fr: 'p aspiré avec un souffle bien audible.',
           },
           audio: `${lessonAudioBase}/reference-initial-p.mp3`,
         },
         {
           id: 'initial-m',
-          hanzi: '妈',
-          emoji: '👩',
           label: 'm',
           pinyin: 'mā',
           description: {
-            en: 'Nasal m, steady and relaxed. Mom = 妈.',
-            fr: 'm nasal, stable et détendu. Maman = 妈.',
+            en: 'Nasal m, steady and relaxed.',
+            fr: 'm nasal, stable et détendu.',
           },
           audio: `${lessonAudioBase}/reference-initial-m.mp3`,
         },
         {
           id: 'initial-f',
-          hanzi: '饭',
-          emoji: '🍚',
           label: 'f',
           pinyin: 'fàn',
           description: {
-            en: 'Light f with the lower lip touching the upper teeth. Rice/meal = 饭.',
-            fr: 'f léger, la lèvre inférieure touchant les dents supérieures. Riz/repas = 饭.',
+            en: 'Light f with the lower lip touching the upper teeth.',
+            fr: 'f léger, la lèvre inférieure touchant les dents supérieures.',
           },
           audio: `${lessonAudioBase}/reference-initial-f.mp3`,
         },
         {
           id: 'initial-d',
-          hanzi: '蛋',
-          emoji: '🥚',
           label: 'd',
           pinyin: 'dàn',
           description: {
-            en: 'Unaspirated d, soft and unvoiced. Egg = 蛋.',
-            fr: 'd non aspiré, doux et non voisé. Œuf = 蛋.',
+            en: 'Unaspirated d, soft and unvoiced.',
+            fr: 'd non aspiré, doux et non voisé.',
           },
           audio: `${lessonAudioBase}/reference-initial-d.mp3`,
         },
         {
           id: 'initial-t',
-          hanzi: '天',
-          emoji: '☀️',
           label: 't',
           pinyin: 'tiān',
           description: {
-            en: 'Aspirated t with a strong puff of air. Sky/day = 天.',
-            fr: 't aspiré avec un souffle puissant. Ciel/jour = 天.',
+            en: 'Aspirated t with a strong puff of air.',
+            fr: 't aspiré avec un souffle puissant.',
           },
           audio: `${lessonAudioBase}/reference-initial-t.mp3`,
         },
         {
           id: 'initial-n',
-          hanzi: '牛',
-          emoji: '🐮',
           label: 'n',
           pinyin: 'niú',
           description: {
-            en: 'Nasal n, tip of tongue behind upper teeth. Cow = 牛.',
-            fr: 'n nasal, pointe de la langue derrière les dents supérieures. Vache = 牛.',
+            en: 'Nasal n, tip of tongue behind upper teeth.',
+            fr: 'n nasal, pointe de la langue derrière les dents supérieures.',
           },
           audio: `${lessonAudioBase}/reference-initial-n.mp3`,
         },
         {
           id: 'initial-l',
-          hanzi: '六',
-          emoji: '6️⃣',
           label: 'l',
           pinyin: 'liù',
           description: {
-            en: 'Light l, similar to English but clearer. Six = 六.',
-            fr: 'l léger, similaire à l’anglais mais plus clair. Six = 六.',
+            en: 'Light l, similar to English but clearer.',
+            fr: 'l léger, similaire à l’anglais mais plus clair.',
           },
           audio: `${lessonAudioBase}/reference-initial-l.mp3`,
         },
         {
           id: 'initial-g',
-          hanzi: '哥',
-          emoji: '👦',
           label: 'g',
           pinyin: 'gē',
           description: {
-            en: 'Unaspirated g, soft like an English “k” without the puff. Older brother = 哥.',
-            fr: 'g non aspiré, doux comme un « k » anglais sans souffle. Grand frère = 哥.',
+            en: 'Unaspirated g, soft like an English “k” without the puff.',
+            fr: 'g non aspiré, doux comme un « k » anglais sans souffle.',
           },
           audio: `${lessonAudioBase}/reference-initial-g.mp3`,
         },
         {
           id: 'initial-k',
-          hanzi: '看',
-          emoji: '👀',
           label: 'k',
           pinyin: 'kàn',
           description: {
-            en: 'Aspirated k with a strong burst of air. Look/see = 看.',
-            fr: 'k aspiré avec une forte explosion d’air. Regarder/voir = 看.',
+            en: 'Aspirated k with a strong burst of air.',
+            fr: 'k aspiré avec une forte explosion d’air.',
           },
           audio: `${lessonAudioBase}/reference-initial-k.mp3`,
         },
         {
           id: 'initial-h',
-          hanzi: '好',
-          emoji: '👍',
           label: 'h',
           pinyin: 'hǎo',
           description: {
-            en: 'Rough h, harsher than English — like the “ch” in Scottish “loch”. Good = 好.',
-            fr: 'h rauque, plus dur qu’en anglais — proche du « ch » allemand. Bien = 好.',
+            en: 'Rough h, harsher than English — like the “ch” in Scottish “loch”.',
+            fr: 'h rauque, plus dur qu’en anglais — proche du « ch » allemand.',
           },
           audio: `${lessonAudioBase}/reference-initial-h.mp3`,
         },
@@ -227,73 +149,61 @@ export const pinyinLesson1: PinyinLessonContent = {
       items: [
         {
           id: 'final-a',
-          hanzi: '啊',
-          emoji: '😮',
           label: 'a',
           pinyin: 'ā',
           description: {
-            en: 'Open “ah” sound.',
-            fr: 'Son ouvert « a ».',
+            en: 'Open “ah” sound; hold it high and level.',
+            fr: 'Son « a » ouvert, tenu haut et plat.',
           },
           audio: `${lessonAudioBase}/reference-final-a.mp3`,
         },
         {
           id: 'final-o',
-          hanzi: '哦',
-          emoji: '🤔',
           label: 'o',
-          pinyin: 'ò',
+          pinyin: 'ō',
           description: {
-            en: 'Rounded “oh” sound.',
-            fr: 'Son arrondi « o ».',
+            en: 'Rounded “oh” sound; hold it high and level.',
+            fr: 'Son « o » arrondi, tenu haut et plat.',
           },
           audio: `${lessonAudioBase}/reference-final-o.mp3`,
         },
         {
           id: 'final-e',
-          hanzi: '鹅',
-          emoji: '🦢',
           label: 'e',
-          pinyin: 'é',
+          pinyin: 'ē',
           description: {
-            en: 'Back vowel, like a relaxed “uh”. Goose = 鹅.',
-            fr: 'Voyelle arrière, proche d’un « eu » relâché. Oie = 鹅.',
+            en: 'Back vowel, like a relaxed “uh”; hold it high and level.',
+            fr: 'Voyelle arrière, proche d’un « eu » relâché, tenue haute et plate.',
           },
           audio: `${lessonAudioBase}/reference-final-e.mp3`,
         },
         {
           id: 'final-i',
-          hanzi: '衣',
-          emoji: '👕',
           label: 'i',
-          pinyin: 'yī',
+          pinyin: 'ī',
           description: {
-            en: 'Clear “ee” sound. Clothes = 衣.',
-            fr: 'Son clair « i ». Vêtements = 衣.',
+            en: 'Clear “ee” sound; hold it high and level.',
+            fr: 'Son « i » clair, tenu haut et plat.',
           },
           audio: `${lessonAudioBase}/reference-final-i.mp3`,
         },
         {
           id: 'final-u',
-          hanzi: '五',
-          emoji: '5️⃣',
           label: 'u',
-          pinyin: 'wǔ',
+          pinyin: 'ū',
           description: {
-            en: 'Rounded “oo” sound with tight lips. Five = 五.',
-            fr: 'Son arrondi « ou » avec les lèvres serrées. Cinq = 五.',
+            en: 'Rounded “oo” sound with tight lips; hold it high and level.',
+            fr: 'Son « ou » arrondi avec les lèvres serrées, tenu haut et plat.',
           },
           audio: `${lessonAudioBase}/reference-final-u.mp3`,
         },
         {
           id: 'final-ue',
-          hanzi: '鱼',
-          emoji: '🐟',
           label: 'ü',
-          pinyin: 'yú',
+          pinyin: 'ǖ',
           description: {
-            en: 'Round your lips as if saying “ee” — a unique Mandarin vowel. Fish = 鱼.',
-            fr: 'Arrondissez les lèvres comme pour dire « i » — une voyelle unique au mandarin. Poisson = 鱼.',
+            en: 'Round your lips as if saying “ee”; hold this Mandarin vowel high and level.',
+            fr: 'Arrondissez les lèvres comme pour dire « i » et tenez cette voyelle haute et plate.',
           },
           audio: `${lessonAudioBase}/reference-final-ue.mp3`,
         },
@@ -322,7 +232,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'High and level.',
             fr: 'Haut et plat.',
           },
-          audio: `${lessonAudioBase}/reference-tone-1.mp3`,
+          audio: `${lessonAudioBase}/reference-tone-1-6470708c.mp3`,
         },
         {
           id: 'tone-second',
@@ -336,7 +246,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Rising, like asking a short question.',
             fr: 'Montant, comme une courte question.',
           },
-          audio: `${lessonAudioBase}/reference-tone-2.mp3`,
+          audio: `${lessonAudioBase}/reference-tone-2-0d561a45.mp3`,
         },
         {
           id: 'tone-third',
@@ -350,7 +260,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Low dipping tone.',
             fr: 'Ton bas avec un creux.',
           },
-          audio: `${lessonAudioBase}/reference-tone-3.mp3`,
+          audio: `${lessonAudioBase}/reference-tone-3-4299a7b1.mp3`,
         },
         {
           id: 'tone-fourth',
@@ -364,7 +274,7 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Falling, short, and decisive.',
             fr: 'Descendant, court et décidé.',
           },
-          audio: `${lessonAudioBase}/reference-tone-4.mp3`,
+          audio: `${lessonAudioBase}/reference-tone-4-86535390.mp3`,
         },
         {
           id: 'tone-neutral',
@@ -378,77 +288,9 @@ export const pinyinLesson1: PinyinLessonContent = {
             en: 'Light, short, and unmarked — a soft "ma" with no contour.',
             fr: 'Léger, court et sans marque — un « ma » doux sans contour.',
           },
-          audio: `${lessonAudioBase}/reference-tone-neutral.mp3`,
+          audio: `${lessonAudioBase}/reference-tone-neutral-03195e20.mp3`,
         },
       ],
     },
   ],
-  toneGame: {
-    title: {
-      en: 'Tone ear check',
-      fr: 'Écoute des tons',
-    },
-    instructions: {
-      en: 'Listen, then choose the matching tone mark.',
-      fr: 'Écoutez, puis choisissez la marque de ton correspondante.',
-    },
-    questions: [
-      toneQuestion(
-        'tone-question-01',
-        'mā',
-        'tone-game-ma-1.mp3',
-        'tone-1',
-        'The first tone stays high and level.',
-      ),
-      toneQuestion(
-        'tone-question-02',
-        'má',
-        'tone-game-ma-2.mp3',
-        'tone-2',
-        'The second tone rises upward.',
-      ),
-      toneQuestion(
-        'tone-question-03',
-        'mǎ',
-        'tone-game-ma-3.mp3',
-        'tone-3',
-        'The third tone dips low before lifting.',
-      ),
-      toneQuestion(
-        'tone-question-04',
-        'mà',
-        'tone-game-ma-4.mp3',
-        'tone-4',
-        'The fourth tone falls quickly.',
-      ),
-      toneQuestion(
-        'tone-question-05',
-        'dā',
-        'tone-game-da-1.mp3',
-        'tone-1',
-        'First tone stays high from start to finish.',
-      ),
-      toneQuestion(
-        'tone-question-06',
-        'tǎ',
-        'tone-game-ta-3.mp3',
-        'tone-3',
-        'Third tone dips low — d and t make an aspirated pair.',
-      ),
-      toneQuestion(
-        'tone-question-07',
-        'gá',
-        'tone-game-ga-2.mp3',
-        'tone-2',
-        'Second tone rises — hear g/k as another unaspirated/aspirated pair.',
-      ),
-      toneQuestion(
-        'tone-question-08',
-        'nǚ',
-        'tone-game-nue-3.mp3',
-        'tone-3',
-        'Third tone with the ü vowel — round your lips.',
-      ),
-    ],
-  },
 }

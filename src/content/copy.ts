@@ -162,8 +162,7 @@ export const uiCopy = {
       goToReview: 'Go to review',
     },
     pinyinPage: {
-      eyebrow: 'Pinyin',
-      heading: 'Pinyin（零基础第一课）',
+      heading: 'Pinyin（Mandarin Phonetic System）',
       syllableIntro: {
         description:
           'A complete Pinyin syllable typically consists of three main components: the Initial, the Final, and the Tone.',
@@ -177,7 +176,6 @@ export const uiCopy = {
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
       playReferenceAudio: (label: string) => `Play ${label}`,
-      goToPractice: 'Go to practice',
       backToHome: 'Back to home',
       lessonActions: 'Pinyin lesson actions',
     },
@@ -340,8 +338,7 @@ export const uiCopy = {
       goToReview: 'Aller à la révision',
     },
     pinyinPage: {
-      eyebrow: 'Pinyin',
-      heading: 'Pinyin（零基础第一课）',
+      heading: 'Pinyin（Mandarin Phonetic System）',
       syllableIntro: {
         description:
           'Une syllabe pinyin complète se compose généralement de trois éléments principaux : l’initiale, la finale et le ton.',
@@ -355,7 +352,6 @@ export const uiCopy = {
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       playReferenceAudio: (label: string) => `Écouter ${label}`,
-      goToPractice: 'Passer à la pratique',
       backToHome: 'Retour à l’accueil',
       lessonActions: 'Actions de la leçon de pinyin',
     },

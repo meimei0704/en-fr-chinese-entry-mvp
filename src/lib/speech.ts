@@ -5,14 +5,13 @@ interface SpeakChineseOptions {
 }
 
 let activeAudio: HTMLAudioElement | null = null
+let playbackId = 0
 
-function canUseBrowserTts() {
-  return (
-    typeof window !== 'undefined' &&
-    typeof SpeechSynthesisUtterance !== 'undefined' &&
-    'speechSynthesis' in window
-  )
-}
+const preloadAudioElements: HTMLAudioElement[] = []
+const preloadedAudioSrcs = new Set<string>()
+
+const RETRY_DELAYS_MS = [200, 500, 1000]
+const MAX_RETRIES = RETRY_DELAYS_MS.length
 
 function stopActiveAudio() {
   if (!activeAudio) {
@@ -21,78 +20,98 @@ function stopActiveAudio() {
 
   activeAudio.pause()
   activeAudio.currentTime = 0
+  activeAudio.removeAttribute('src')
+  activeAudio.load()
   activeAudio = null
 }
 
-function speakWithBrowserTts(text: string) {
-  if (
-    !canUseBrowserTts()
-  ) {
+function playWithRetry(
+  audio: HTMLAudioElement,
+  audioSrc: string,
+  id: number,
+  attempt: number,
+  onGiveUp: () => void,
+) {
+  if (id !== playbackId) {
+    return
+  }
+
+  try {
+    if (audio.getAttribute('src') !== audioSrc) {
+      audio.src = audioSrc
+      audio.load()
+    }
+  } catch {
+    // ignore source assignment errors; retry still attempts play()
+  }
+
+  audio.play().catch(() => {
+    if (id !== playbackId) {
+      return
+    }
+
+    if (attempt < MAX_RETRIES) {
+      window.setTimeout(
+        () => playWithRetry(audio, audioSrc, id, attempt + 1, onGiveUp),
+        RETRY_DELAYS_MS[attempt],
+      )
+      return
+    }
+
+    onGiveUp()
+  })
+}
+
+function playAudioSrc(audioSrc: string, fallbackAudioSrc?: string) {
+  if (typeof Audio === 'undefined') {
     return false
   }
 
   stopActiveAudio()
 
-  const utterance = new SpeechSynthesisUtterance(text)
-  utterance.lang = 'zh-CN'
-  utterance.rate = 0.9
-
-  window.speechSynthesis.cancel()
-  window.speechSynthesis.speak(utterance)
-
-  return true
-}
-
-function playAudioSrc(audioSrc: string, text: string, fallbackAudioSrc?: string) {
-  if (typeof Audio === 'undefined') {
-    return speakWithBrowserTts(text)
-  }
-
-  stopActiveAudio()
-
-  if (canUseBrowserTts()) {
-    window.speechSynthesis.cancel()
-  }
-
-  const audio = new Audio(audioSrc)
+  const id = ++playbackId
+  const audio = new Audio()
+  audio.preload = 'auto'
   activeAudio = audio
-  let didFallback = false
 
-  function clearIfCurrent() {
-    if (activeAudio === audio) {
-      activeAudio = null
-    }
-  }
-
-  function fallbackFromAudio() {
-    if (didFallback) {
+  playWithRetry(audio, audioSrc, id, 0, () => {
+    if (id !== playbackId) {
       return
     }
 
-    didFallback = true
-    clearIfCurrent()
+    activeAudio = null
 
     if (fallbackAudioSrc && fallbackAudioSrc !== audioSrc) {
-      playAudioSrc(fallbackAudioSrc, text)
-      return
+      playAudioSrc(fallbackAudioSrc)
     }
-
-    speakWithBrowserTts(text)
-  }
-
-  audio.addEventListener('ended', clearIfCurrent, { once: true })
-  audio.addEventListener('error', fallbackFromAudio, { once: true })
-
-  const playResult = audio.play()
-  playResult?.catch(fallbackFromAudio)
+  })
 
   return true
 }
 
-export function speakChinese({ text, audioSrc, fallbackAudioSrc }: SpeakChineseOptions) {
-  if (audioSrc) {
-    return playAudioSrc(audioSrc, text, fallbackAudioSrc)
+export function preloadAudioSources(srcs: string[]) {
+  if (typeof Audio === 'undefined') {
+    return
   }
 
-  return speakWithBrowserTts(text)
+  for (const src of srcs) {
+    if (preloadedAudioSrcs.has(src)) {
+      continue
+    }
+    preloadedAudioSrcs.add(src)
+
+    const audio = new Audio()
+    audio.preload = 'auto'
+    audio.src = src
+    audio.load()
+    preloadAudioElements.push(audio)
+  }
+}
+
+export function speakChinese({ audioSrc, fallbackAudioSrc }: SpeakChineseOptions) {
+  if (audioSrc) {
+    return playAudioSrc(audioSrc, fallbackAudioSrc)
+  }
+
+  return false
 }

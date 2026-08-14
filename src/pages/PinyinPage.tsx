@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
@@ -14,9 +14,10 @@ import {
   savePinyinProgress,
 } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
+import { preloadAudioSources } from '../lib/speech'
 import { usePinyinCourse } from '../lib/pinyinContentProvider'
 
-const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'tones', 'whole-syllables']
+const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'whole-syllables', 'tones']
 
 function findDefaultModuleKey(): PinyinModuleKey {
   const progress = loadPinyinProgress()
@@ -47,6 +48,18 @@ export function PinyinPage() {
     [pinyinCourse, selectedModuleKey],
   )
 
+  useEffect(() => {
+    if (!module) {
+      return
+    }
+
+    const audioSrcs = [
+      ...module.reference.flatMap((group) => group.items.map((item) => item.audio)),
+      ...(module.wholeSyllables?.map((item) => item.audio) ?? []),
+    ]
+    preloadAudioSources(audioSrcs)
+  }, [module])
+
   if (error) {
     return (
       <main className="page-shell">
@@ -75,7 +88,7 @@ export function PinyinPage() {
   return (
     <main className="page-shell page-shell--wide pinyin-page">
       <div className="pinyin-page__content">
-        <PinyinHero eyebrow={pinyinCopy.eyebrow} heading={pinyinCopy.heading} />
+        <PinyinHero heading={pinyinCopy.heading} />
 
         <PinyinSyllableIntro copy={pinyinCopy.syllableIntro} />
 
@@ -123,11 +136,6 @@ export function PinyinPage() {
         )}
 
         <nav className="button-row lesson-actions lesson-action-dock" aria-label={pinyinCopy.lessonActions}>
-          {module.toneGame ? (
-            <Link className="primary-button" to={`/pinyin/practice?module=${selectedModuleKey}`}>
-              {pinyinCopy.goToPractice}
-            </Link>
-          ) : null}
           <Link className="secondary-link" to="/home">
             {pinyinCopy.backToHome}
           </Link>
@@ -141,8 +149,8 @@ function getModuleBadge(moduleKey: PinyinModuleKey): string {
   const badges: Record<PinyinModuleKey, string> = {
     initials: '①',
     finals: '②',
-    tones: '③',
-    'whole-syllables': '④',
+    'whole-syllables': '③',
+    tones: '④',
   }
   return badges[moduleKey]
 }
