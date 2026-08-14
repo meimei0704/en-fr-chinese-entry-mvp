@@ -121,8 +121,8 @@ describe('PinyinPage', () => {
     expect(tabs.map((tab) => tab.textContent)).toEqual([
       '①Initials',
       '②Finals',
-      '③Tones',
-      '④Whole Syllables',
+      '③Whole Syllables',
+      '④Tones',
     ])
   })
 

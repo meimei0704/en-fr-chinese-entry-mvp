@@ -53,22 +53,6 @@ export const pinyinCourse: PinyinCourseContent = {
       ],
     },
     {
-      id: 'tones',
-      title: {
-        en: 'Tones',
-        fr: 'Tons',
-      },
-      summary: {
-        en: 'Master the four Mandarin pitch shapes — plus the neutral tone.',
-        fr: 'Maîtrisez les quatre contours mélodiques du mandarin — plus le ton neutre.',
-      },
-      intro: {
-        en: 'These are special rules with tones so practice speaking as much as possible to build up your fluency. Pinyin and intonation is important but not as important as your willingness to express your ideas and the courage to speak and practice in conversations.\n\nExamples of tone changes:\nTwo 3rd tones together: the first third tone changes to a second tone. Example: 你好 nǐ hǎo becomes ní hǎo.',
-        fr: 'Ce sont des règles particulières liées aux tons : entraînez-vous à parler le plus possible pour gagner en fluidité. Le pinyin et l’intonation sont importants, mais moins que votre envie d’exprimer vos idées et le courage de parler et de pratiquer en conversation.\n\nExemples de changements de ton :\nDeux tons 3 consécutifs : le premier troisième ton devient un deuxième ton. Exemple : 你好 nǐ hǎo devient ní hǎo.',
-      },
-      reference: [pickGroup(pinyinLesson1, 'tones')],
-    },
-    {
       id: 'whole-syllables',
       title: {
         en: 'Whole Syllables',
@@ -84,6 +68,22 @@ export const pinyinCourse: PinyinCourseContent = {
       },
       reference: [],
       wholeSyllables: pinyinWholeSyllables,
+    },
+    {
+      id: 'tones',
+      title: {
+        en: 'Tones',
+        fr: 'Tons',
+      },
+      summary: {
+        en: 'Master the four Mandarin pitch shapes — plus the neutral tone.',
+        fr: 'Maîtrisez les quatre contours mélodiques du mandarin — plus le ton neutre.',
+      },
+      intro: {
+        en: 'These are special rules with tones so practice speaking as much as possible to build up your fluency. Pinyin and intonation is important but not as important as your willingness to express your ideas and the courage to speak and practice in conversations.\n\nExamples of tone changes:\nTwo 3rd tones together: the first third tone changes to a second tone. Example: 你好 nǐ hǎo becomes ní hǎo.',
+        fr: 'Ce sont des règles particulières liées aux tons : entraînez-vous à parler le plus possible pour gagner en fluidité. Le pinyin et l’intonation sont importants, mais moins que votre envie d’exprimer vos idées et le courage de parler et de pratiquer en conversation.\n\nExemples de changements de ton :\nDeux tons 3 consécutifs : le premier troisième ton devient un deuxième ton. Exemple : 你好 nǐ hǎo devient ní hǎo.',
+      },
+      reference: [pickGroup(pinyinLesson1, 'tones')],
     },
   ],
 }

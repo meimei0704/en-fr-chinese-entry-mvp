@@ -13,15 +13,15 @@ describe('pinyin course content', () => {
     expect(modules.map((m) => m.id)).toEqual([
       'initials',
       'finals',
-      'tones',
       'whole-syllables',
+      'tones',
     ])
     expect(modules[0].reference.length).toBeGreaterThanOrEqual(4)
     expect(modules[1].reference.length).toBeGreaterThanOrEqual(4)
-    expect(modules[2].reference.length).toBe(1)
-    expect(modules[2].wholeSyllables).toBeUndefined()
-    expect(modules[3].reference).toEqual([])
-    expect(modules[3].wholeSyllables).toHaveLength(16)
+    expect(modules[2].reference).toEqual([])
+    expect(modules[2].wholeSyllables).toHaveLength(16)
+    expect(modules[3].reference.length).toBe(1)
+    expect(modules[3].wholeSyllables).toBeUndefined()
   })
 
   it('ships real static MP3 assets for every module audio path', () => {

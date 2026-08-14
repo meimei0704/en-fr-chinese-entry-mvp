@@ -158,8 +158,8 @@ test('renders four module tabs and switches between modules preserving progress'
 
   await page.getByRole('button', { name: 'Play bā' }).click()
 
-  await tabs.nth(2).click()
-  await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true')
+  await tabs.nth(3).click()
+  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true')
   await expect(page.getByRole('heading', { level: 2, name: 'Tones' })).toBeVisible()
 
   await tabs.first().click()
@@ -178,7 +178,7 @@ test('renders four module tabs and switches between modules preserving progress'
 })
 
 for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
-  test(`keeps ${moduleName} cards hanzi-free and equal-sized`, async ({ page }) => {
+  test(`keeps ${moduleName} cards hanzi-free, equal-sized and centered`, async ({ page }) => {
     await page.goto('/pinyin')
 
     await page.getByRole('tab', { name: new RegExp(moduleName) }).click()
@@ -206,6 +206,37 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     const gridBox = (await grid.boundingBox())!
     const firstBox = (await cards.first().boundingBox())!
     expect(Math.abs(firstBox.x - gridBox.x)).toBeLessThanOrEqual(1)
+
+    const alignment = await cards.evaluateAll((els) =>
+      els.map((el) => {
+        const cardRect = el.getBoundingClientRect()
+        const cardCenterX = cardRect.left + cardRect.width / 2
+        const cardCenterY = cardRect.top + cardRect.height / 2
+        const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')!
+        const phoneme = el.querySelector<HTMLElement>('.pinyin-reference-card__phoneme')!
+        const btn = el.querySelector<HTMLElement>('.speech-button')!
+        const last = el.lastElementChild as HTMLElement
+        const targetRect = target.getBoundingClientRect()
+        const phonemeRect = phoneme.getBoundingClientRect()
+        const btnRect = btn.getBoundingClientRect()
+        const lastRect = last.getBoundingClientRect()
+        return {
+          phonemeCenterDelta: Math.abs(
+            phonemeRect.left + phonemeRect.width / 2 - cardCenterX,
+          ),
+          buttonCenterDelta: Math.abs(btnRect.left + btnRect.width / 2 - cardCenterX),
+          targetCenterDelta: Math.abs(targetRect.left + targetRect.width / 2 - cardCenterX),
+          groupCenterYDelta: Math.abs(
+            (targetRect.top + lastRect.bottom) / 2 - cardCenterY,
+          ),
+        }
+      }),
+    )
+
+    expect(alignment.every((a) => a.phonemeCenterDelta <= 1)).toBe(true)
+    expect(alignment.every((a) => a.buttonCenterDelta <= 1)).toBe(true)
+    expect(alignment.every((a) => a.targetCenterDelta <= 1)).toBe(true)
+    expect(alignment.every((a) => a.groupCenterYDelta <= 1)).toBe(true)
   })
 }
 
