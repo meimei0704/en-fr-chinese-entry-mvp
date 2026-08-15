@@ -32,7 +32,7 @@ export function PinyinSyllableIntro({ copy }: PinyinSyllableIntroProps) {
 
   return (
     <figure
-      className="surface-card pinyin-syllable-intro"
+      className="pinyin-syllable-intro"
       aria-label={copy.figureLabel}
     >
       <figcaption className="pinyin-syllable-intro__description">

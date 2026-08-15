@@ -3002,7 +3002,6 @@ h2 {
 }
 
 .pinyin-syllable-intro {
-  width: min(100%, 72rem);
   min-width: 0;
   margin: 0;
   display: grid;
