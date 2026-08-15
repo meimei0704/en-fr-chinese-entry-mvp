@@ -47,7 +47,7 @@ export const pinyinLesson2: PinyinLessonContent = {
     {
       id: 'initials-retroflex',
       title: {
-        en: 'Retroflex / curled-tongue',
+        en: 'Retroflex / Curled-tongue',
         fr: 'Rétroflexes / langue recourbée',
       },
       summary: {

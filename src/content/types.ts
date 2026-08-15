@@ -181,7 +181,7 @@ export interface PinyinReferenceItem {
 export interface PinyinReferenceGroup {
   id: PinyinReferenceGroupId
   title: LocalizedField
-  summary: LocalizedField
+  summary?: LocalizedField
   items: PinyinReferenceItem[]
 }
 

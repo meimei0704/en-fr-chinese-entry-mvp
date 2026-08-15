@@ -124,10 +124,6 @@ export const pinyinLesson1: PinyinLessonContent = {
         en: 'Simple Finals',
         fr: 'Finales simples',
       },
-      summary: {
-        en: '*Spelling rule for ü: When following j, q, x, the dots are omitted in writing, but we still pronounce it as ü. Examples: ju, qu, xu',
-        fr: '*Règle d’orthographe pour ü : après j, q, x, les points sont omis à l’écrit, mais on prononce toujours ü. Exemples : ju, qu, xu',
-      },
       items: [
         {
           id: 'final-a',
@@ -184,8 +180,8 @@ export const pinyinLesson1: PinyinLessonContent = {
           label: 'ü',
           pinyin: 'ǖ',
           description: {
-            en: 'Same rounded lip shape as u, raise the middle of your tongue a little higher.',
-            fr: 'Même arrondi des lèvres que pour u, élevez un peu plus le milieu de la langue.',
+            en: 'Same rounded lip shape as u, raise the middle of your tongue a little higher. Spelling rule for ü: When following j, q, x, the dots are omitted in writing, but we still pronounce it as ü. Examples: ju, qu, xu',
+            fr: 'Même arrondi des lèvres que pour u, élevez un peu plus le milieu de la langue. Règle d’orthographe pour ü : après j, q, x, les points sont omis à l’écrit, mais on prononce toujours ü. Exemples : ju, qu, xu',
           },
           audio: `${lessonAudioBase}/reference-final-ue.mp3`,
         },

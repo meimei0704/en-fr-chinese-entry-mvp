@@ -111,8 +111,9 @@ function hanziCandidates(lesson: LessonContent): string[] {
 function hanziToPinyinMap(lesson: LessonContent): Map<string, string> {
   const map = new Map<string, string>()
   const add = (hanzi: string, pinyin: string) => {
-    if (hanzi && !map.has(hanzi)) {
-      map.set(hanzi, pinyin)
+    const key = hanziLookupKey(hanzi)
+    if (hanzi && !map.has(key)) {
+      map.set(key, pinyin)
     }
   }
 
@@ -134,8 +135,9 @@ function hanziToPinyinMap(lesson: LessonContent): Map<string, string> {
 function hanziToAudioMap(lesson: LessonContent): Map<string, string> {
   const map = new Map<string, string>()
   const add = (hanzi: string, audio: string) => {
-    if (hanzi && !map.has(hanzi)) {
-      map.set(hanzi, audio)
+    const key = hanziLookupKey(hanzi)
+    if (hanzi && !map.has(key)) {
+      map.set(key, audio)
     }
   }
 
@@ -165,16 +167,20 @@ function looksLikeHanzi(value: string) {
   return /[\u3400-\u9fff]/.test(value)
 }
 
+function hanziLookupKey(value: string) {
+  return value.replace(/[\u3001\u3002\uff01\uff0c\uff1b\uff1a\uff1f\u2026,.!?;:]+$/g, '')
+}
+
 function attachPinyinToQuestions(
   questions: PracticeChallengeQuestion[],
   pinyinMap: ReadonlyMap<string, string>,
 ): PracticeChallengeQuestion[] {
   return questions.map((question) => ({
     ...question,
-    targetPinyin: pinyinMap.get(question.target),
+    targetPinyin: pinyinMap.get(hanziLookupKey(question.target)),
     options: question.options.map((option) =>
       looksLikeHanzi(option.label) && !option.pinyin
-        ? { ...option, pinyin: pinyinMap.get(option.label) }
+        ? { ...option, pinyin: pinyinMap.get(hanziLookupKey(option.label)) }
         : option,
     ),
   }))
@@ -188,7 +194,7 @@ function attachOptionAudio(
     ...question,
     options: question.options.map((option) =>
       looksLikeHanzi(option.label) && !option.audio
-        ? { ...option, audio: audioMap.get(option.label) }
+        ? { ...option, audio: audioMap.get(hanziLookupKey(option.label)) }
         : option,
     ),
   }))
@@ -254,10 +260,8 @@ function readQuestionFromPair(
   meaningCandidatesPool: string[],
   rng: () => number,
   kind: PracticeChallengeKind = 'read',
-  audioMap?: ReadonlyMap<string, string>,
 ): PracticeChallengeQuestion {
   const meaning = getLocalizedText(pair.meaning, language)
-  const hanziAudio = audioMap?.get(pair.hanzi)
 
   if (direction === 'hanzi-to-meaning') {
     const options = buildChoiceOptions(
@@ -271,7 +275,6 @@ function readQuestionFromPair(
       kind,
       prompt: { en: `What does ${pair.hanzi} mean?`, fr: `Que signifie ${pair.hanzi} ?` },
       target: meaning,
-      audio: hanziAudio,
       correctOptionId: options.find((option) => option.label === meaning)?.id ?? options[0].id,
       options,
       explanation: pair.explanation,
@@ -289,7 +292,6 @@ function readQuestionFromPair(
     kind,
     prompt: { en: `Which hanzi means “${meaning}”?`, fr: `Quel hanzi signifie « ${meaning} » ?` },
     target: pair.hanzi,
-    audio: hanziAudio,
     correctOptionId: options.find((option) => option.label === pair.hanzi)?.id ?? options[0].id,
     options,
     explanation: pair.explanation,
@@ -303,7 +305,6 @@ function reviewQuestionFromCard(
   hanziCandidatesPool: string[],
   meaningCandidatesPool: string[],
   rng: () => number,
-  audioMap?: ReadonlyMap<string, string>,
 ): PracticeChallengeQuestion {
   return readQuestionFromPair(
     card,
@@ -313,7 +314,6 @@ function reviewQuestionFromCard(
     meaningCandidatesPool,
     rng,
     'review',
-    audioMap,
   )
 }
 
@@ -347,11 +347,11 @@ export function buildPracticeChallenge(
     listenQuestion(item, hanziPool, rng),
   )
   const readQuestions = pairs.map((pair) =>
-    readQuestionFromPair(pair, 'hanzi-to-meaning', language, hanziPool, meaningPool, rng, 'read', audioMap),
+    readQuestionFromPair(pair, 'hanzi-to-meaning', language, hanziPool, meaningPool, rng, 'read'),
   )
   const reviewQuestions = reviewPairs.flatMap((card, index) => {
     const direction: 'front-to-back' | 'back-to-front' = index % 2 === 0 ? 'front-to-back' : 'back-to-front'
-    return [reviewQuestionFromCard(card, direction, language, hanziPool, meaningPool, rng, audioMap)]
+    return [reviewQuestionFromCard(card, direction, language, hanziPool, meaningPool, rng)]
   })
 
   const groups: Record<PracticeChallengeKind, PracticeChallengeQuestion[]> = {
