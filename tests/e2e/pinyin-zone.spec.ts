@@ -295,8 +295,8 @@ for (const language of ['en', 'fr'] as const) {
       }
 
       const metrics = await figure.evaluate((element) => {
-        const heroElement = element.previousElementSibling
-        const tabsElement = element.nextElementSibling
+        const heroElement = element.parentElement
+        const tabsElement = heroElement?.nextElementSibling ?? null
         const diagram = element.querySelector<HTMLElement>(
           '.pinyin-syllable-intro__diagram',
         )
