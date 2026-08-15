@@ -23,7 +23,9 @@ export function PinyinReferenceSection({
           <article key={group.id} className={`pinyin-reference-group pinyin-reference-group--${group.id}`}>
             <header>
               <h2>{getLocalizedText(group.title, language)}</h2>
-              <p className="muted-text">{getLocalizedText(group.summary, language)}</p>
+              {group.summary ? (
+                <p className="muted-text">{getLocalizedText(group.summary, language)}</p>
+              ) : null}
             </header>
 
             <div className="pinyin-reference-group__items">

@@ -98,4 +98,35 @@ describe('buildPracticeChallenge', () => {
       expect(option.audio, `${option?.label} should carry hanzi pronunciation audio`).toBeDefined()
     }
   })
+
+  it('does not attach prompt audio to read or review questions', () => {
+    for (let seed = 1; seed <= 20; seed += 1) {
+      const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 1000, seed)
+
+      for (const question of challenge.questions) {
+        if (question.kind === 'read' || question.kind === 'review') {
+          expect(question.audio, `${question.id} should not carry prompt audio`).toBeUndefined()
+        }
+      }
+    }
+  })
+
+  it('attaches pronunciation audio to every hanzi option of the baggage-claim listening question', () => {
+    const hanziPattern = /[\u3400-\u9fff]/
+
+    for (let seed = 1; seed <= 50; seed += 1) {
+      const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 1000, seed)
+      const baggageQuestion = challenge.questions.find(
+        (question) => question.id === 'self-intro-listening-2',
+      )
+
+      expect(baggageQuestion).toBeDefined()
+
+      for (const option of baggageQuestion!.options) {
+        if (hanziPattern.test(option.label)) {
+          expect(option.audio, `${option.label} should carry pronunciation audio`).toBeDefined()
+        }
+      }
+    }
+  })
 })

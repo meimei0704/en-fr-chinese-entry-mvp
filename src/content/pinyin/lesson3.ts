@@ -20,8 +20,8 @@ export const pinyinLesson3: PinyinLessonContent = {
         fr: 'Finales composées',
       },
       summary: {
-        en: 'They consist of two simple vowels. Pronounce with one smooth glide from the first vowel to the second, no break in between.\n\n*er is an exceptional curled-tongue final. It cannot be combined with any initial consonants. Example: 耳朵 ěr duo — ear.',
-        fr: 'Elles se composent de deux voyelles simples. Prononcez d’un seul glissement fluide de la première voyelle à la seconde, sans interruption.\n\n*er est une finale exceptionnelle à langue recourbée. Elle ne peut se combiner à aucune consonne initiale. Exemple : 耳朵 ěr duo — oreille.',
+        en: 'They consist of two simple vowels. Pronounce with one smooth glide from the first vowel to the second, no break in between.',
+        fr: 'Elles se composent de deux voyelles simples. Prononcez d’un seul glissement fluide de la première voyelle à la seconde, sans interruption.',
       },
       items: [
         {
@@ -76,6 +76,10 @@ export const pinyinLesson3: PinyinLessonContent = {
           id: 'final-er',
           label: 'er',
           pinyin: 'ēr',
+          description: {
+            en: 'er is an exceptional curled-tongue final. It cannot be combined with any initial consonants. Example: 耳朵 ěr duo — ear.',
+            fr: 'er est une finale exceptionnelle à langue recourbée. Elle ne peut se combiner à aucune consonne initiale. Exemple : 耳朵 ěr duo — oreille.',
+          },
           audio: `${lessonAudioBase}/reference-final-er.mp3`,
         },
       ],

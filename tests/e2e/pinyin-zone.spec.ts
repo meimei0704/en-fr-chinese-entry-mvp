@@ -199,7 +199,10 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
     )
 
     const hanziInCards = await cards.evaluateAll((els) =>
-      els.map((el) => el.textContent?.match(/[\u4e00-\u9fff]/g)?.length ?? 0),
+      els.map((el) => {
+        const target = el.querySelector<HTMLElement>('.pinyin-reference-card__target')
+        return target?.textContent?.match(/[\u4e00-\u9fff]/g)?.length ?? 0
+      }),
     )
 
     expect(sizes.map((s) => s.width)).toEqual(Array(count).fill(sizes[0].width))
