@@ -269,6 +269,38 @@ for (const moduleName of ['Initials', 'Finals', 'Tones', 'Whole Syllables']) {
   })
 }
 
+for (const moduleName of ['Whole Syllables', 'Tones']) {
+  test(`spans the ${moduleName} module intro across the content column and justifies it`, async ({
+    page,
+  }) => {
+    await page.goto('/pinyin')
+    await page.getByRole('tab', { name: moduleName }).click()
+
+    const metrics = await page.evaluate(() => {
+      const intro = document.querySelector<HTMLElement>('.pinyin-module-intro')
+      const section = document.querySelector<HTMLElement>(
+        '.pinyin-reference-section, .pinyin-whole-syllables-section',
+      )
+      if (!intro || !section) {
+        throw new Error('Missing pinyin module intro or reference section')
+      }
+      const introRect = intro.getBoundingClientRect()
+      const sectionRect = section.getBoundingClientRect()
+      return {
+        align: window.getComputedStyle(intro).textAlign,
+        introLeft: Math.round(introRect.left),
+        introRight: Math.round(introRect.right),
+        sectionLeft: Math.round(sectionRect.left),
+        sectionRight: Math.round(sectionRect.right),
+      }
+    })
+
+    expect(metrics.align).toBe('justify')
+    expect(Math.abs(metrics.introLeft - metrics.sectionLeft)).toBeLessThanOrEqual(1)
+    expect(Math.abs(metrics.introRight - metrics.sectionRight)).toBeLessThanOrEqual(1)
+  })
+}
+
 for (const language of ['en', 'fr'] as const) {
   for (const viewport of introViewports) {
     test(`renders the localized syllable composition intro in ${language} at ${viewport.name}`, async ({
