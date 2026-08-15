@@ -3180,8 +3180,8 @@ h2 {
 
 .pinyin-module-intro {
   margin: 0;
-  max-width: 48rem;
-  white-space: pre-line;
+  width: min(100%, 72rem);
+  text-align: justify;
 }
 
 .pinyin-reference-section__groups {
