@@ -1241,6 +1241,21 @@ h2 {
   gap: 0.1rem;
 }
 
+.lesson-page .lesson-header-card__title .lesson-topic-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.4em;
+  row-gap: 0.1em;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+
+.lesson-page .lesson-header-card__title .lesson-topic-title__primary,
+.lesson-page .lesson-header-card__title .lesson-topic-title__secondary {
+  display: inline;
+  white-space: nowrap;
+}
+
 .lesson-header-card__scenario {
   margin: 0.35rem 0 0;
 }
