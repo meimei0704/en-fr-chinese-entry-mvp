@@ -316,6 +316,76 @@ describe('LessonPage', () => {
     }
   })
 
+  it('persists played dialogue lines and shows lesson dialogue progress', async () => {
+    const user = userEvent.setup()
+    saveProgress({
+      ...createDefaultProgress(),
+      lessonStepProgress: {
+        'self-intro': {
+          completedSections: [],
+          completedDialogueLineIds: ['self-intro-line-01'],
+        },
+      },
+    })
+    renderRoute('/lesson/self-intro')
+
+    const dialogueCards = screen.getAllByLabelText(/dialogue line speaker/i)
+    expect(dialogueCards[0]).toHaveClass('is-completed')
+    expect(dialogueCards[1]).not.toHaveClass('is-completed')
+    expect(screen.getByText(/1 of \d+ lines listened|1 sur \d+ phrases écoutées/i)).toBeVisible()
+
+    const playButtons = screen.getAllByRole('button', { name: /play chinese|écouter le chinois/i })
+    await user.click(playButtons[1])
+
+    expect(screen.getAllByLabelText(/dialogue line speaker/i)[1]).toHaveClass('is-completed')
+    expect(screen.getByText(/2 of \d+ lines listened|2 sur \d+ phrases écoutées/i)).toBeVisible()
+    expect(loadProgress().lessonStepProgress['self-intro']?.completedDialogueLineIds).toEqual([
+      'self-intro-line-01',
+      expect.any(String),
+    ])
+  })
+
+  it('shows a continue action when some but not all dialogue lines are listened', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      lessonStepProgress: {
+        'self-intro': {
+          completedSections: [],
+          completedDialogueLineIds: ['self-intro-line-01'],
+        },
+      },
+    })
+    renderRoute('/lesson/self-intro')
+
+    expect(screen.getByRole('link', { name: /continue|continuer/i })).toHaveAttribute(
+      'href',
+      '#lesson-dialogue',
+    )
+  })
+
+  it('hides the dialogue continue action when every line has been listened', () => {
+    const selfIntroLesson = course.lessons.find((lesson) => lesson.id === 'self-intro')!
+    saveProgress({
+      ...createDefaultProgress(),
+      lessonStepProgress: {
+        'self-intro': {
+          completedSections: [],
+          completedDialogueLineIds: selfIntroLesson.dialogue.lines.map((line) => line.id),
+        },
+      },
+    })
+    renderRoute('/lesson/self-intro')
+
+    expect(screen.queryByRole('link', { name: /continue|continuer/i })).not.toBeInTheDocument()
+    expect(
+      screen.getByText(
+        new RegExp(
+          `^${selfIntroLesson.dialogue.lines.length} of ${selfIntroLesson.dialogue.lines.length} lines listened`,
+        ),
+      ),
+    ).toBeVisible()
+  })
+
   it('renders sentence pattern cards with an index number and highlighted placeholder', () => {
     renderRoute('/lesson/daily-greetings')
 

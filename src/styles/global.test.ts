@@ -377,6 +377,13 @@ describe('global color accessibility tokens', () => {
     expect(css).not.toMatch(
       /\.admin-[^{]*\{[^}]*(?:gap: clamp\(0\.9rem, 2vw, 1\.25rem\)|padding: clamp\(1\.25rem, 3vw, 2rem\))/,
     )
+
+    expect(ruleBlock('.lesson-section-card__heading')).toContain('display: flex;')
+    expect(ruleBlock('.lesson-section-card__heading')).toContain('justify-content: space-between;')
+    expect(ruleBlock('.lesson-dialogue-progress')).toContain('border-radius: 999px;')
+    expect(ruleBlock('.dialogue-card.is-completed')).toContain(
+      'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(224, 242, 232, 0.6));',
+    )
   })
 
   it('keeps the Pinyin syllable intro responsive and tied to module palettes', () => {

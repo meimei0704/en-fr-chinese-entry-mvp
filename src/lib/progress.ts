@@ -9,6 +9,7 @@ const progressStorageKey = 'en-fr-chinese-entry-mvp.progress'
 
 export interface LessonStepProgress {
   completedSections: string[]
+  completedDialogueLineIds?: string[]
 }
 
 export interface LearnerProgress {
@@ -52,6 +53,10 @@ function isLessonStepProgress(value: unknown): value is LessonStepProgress {
   }
 
   if ('shortInputComplete' in value && typeof value.shortInputComplete !== 'boolean') {
+    return false
+  }
+
+  if ('completedDialogueLineIds' in value && !isStringArray(value.completedDialogueLineIds)) {
     return false
   }
 
@@ -150,6 +155,33 @@ export function markPracticeSection(
       [lessonId]: {
         ...lessonProgress,
         completedSections,
+      },
+    },
+  }
+}
+
+export function markDialogueLinePlayed(
+  lessonId: LessonId,
+  lineId: string,
+  progress: LearnerProgress,
+): LearnerProgress {
+  const lessonProgress = progress.lessonStepProgress[lessonId] ?? {
+    completedSections: [],
+  }
+
+  const completedDialogueLineIds = lessonProgress.completedDialogueLineIds ?? []
+
+  const nextCompletedDialogueLineIds = completedDialogueLineIds.includes(lineId)
+    ? completedDialogueLineIds
+    : [...completedDialogueLineIds, lineId]
+
+  return {
+    ...progress,
+    lessonStepProgress: {
+      ...progress.lessonStepProgress,
+      [lessonId]: {
+        ...lessonProgress,
+        completedDialogueLineIds: nextCompletedDialogueLineIds,
       },
     },
   }

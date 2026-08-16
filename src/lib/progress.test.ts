@@ -279,6 +279,89 @@ describe('learner progress', () => {
     expect(afterSecond.lessonStepProgress['self-intro']?.completedSections).toEqual(['practice'])
   })
 
+  it('marks a dialogue line as played without duplicating it', async () => {
+    const { createDefaultProgress, markDialogueLinePlayed } = await importProgressModule()
+
+    const afterFirst = markDialogueLinePlayed('self-intro', 'line-1', createDefaultProgress())
+
+    expect(afterFirst.lessonStepProgress['self-intro']?.completedDialogueLineIds).toEqual([
+      'line-1',
+    ])
+    expect(afterFirst.completedLessons).toEqual([])
+
+    const afterSecond = markDialogueLinePlayed('self-intro', 'line-1', afterFirst)
+
+    expect(afterSecond.lessonStepProgress['self-intro']?.completedDialogueLineIds).toEqual([
+      'line-1',
+    ])
+  })
+
+  it('keeps existing completed sections when marking a dialogue line played', async () => {
+    const { createDefaultProgress, markDialogueLinePlayed } = await importProgressModule()
+
+    const result = markDialogueLinePlayed('self-intro', 'line-2', {
+      ...createDefaultProgress(),
+      lessonStepProgress: {
+        'self-intro': {
+          completedSections: ['dialogue', 'practice'],
+          completedDialogueLineIds: ['line-1'],
+        },
+      },
+    })
+
+    expect(result.lessonStepProgress['self-intro']?.completedSections).toEqual([
+      'dialogue',
+      'practice',
+    ])
+    expect(result.lessonStepProgress['self-intro']?.completedDialogueLineIds).toEqual([
+      'line-1',
+      'line-2',
+    ])
+  })
+
+  it('loads progress that carries completedDialogueLineIds and rejects malformed values', async () => {
+    const { loadProgress } = await importProgressModule()
+
+    localStorage.setItem(
+      'en-fr-chinese-entry-mvp.progress',
+      JSON.stringify({
+        selectedExplanationLanguage: 'en',
+        completedLessons: [],
+        reviewQueue: [],
+        lastVisitedLesson: null,
+        lessonStepProgress: {
+          'self-intro': {
+            completedSections: ['dialogue'],
+            completedDialogueLineIds: ['line-1', 'line-2'],
+          },
+        },
+      }),
+    )
+
+    expect(loadProgress().lessonStepProgress['self-intro']?.completedDialogueLineIds).toEqual([
+      'line-1',
+      'line-2',
+    ])
+
+    localStorage.setItem(
+      'en-fr-chinese-entry-mvp.progress',
+      JSON.stringify({
+        selectedExplanationLanguage: 'en',
+        completedLessons: [],
+        reviewQueue: [],
+        lastVisitedLesson: null,
+        lessonStepProgress: {
+          'self-intro': {
+            completedSections: ['dialogue'],
+            completedDialogueLineIds: 'line-1',
+          },
+        },
+      }),
+    )
+
+    expect(loadProgress().lessonStepProgress['self-intro']?.completedDialogueLineIds).toBeUndefined()
+  })
+
   it('loads legacy progress that still contains the removed shortInputComplete field', async () => {
     const { loadProgress } = await importProgressModule()
 

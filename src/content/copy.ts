@@ -70,6 +70,10 @@ export const uiCopy = {
       lessonProgressPreviewLabel: 'Lesson progress preview',
       dialoguePracticeLabel: 'Dialogue practice',
       dialogueLineLabel: (speaker: string) => `Dialogue line speaker ${speaker}`,
+      dialogueLineCompleted: 'Line listened',
+      dialogueLinesProgress: (completed: number, total: number) =>
+        `${completed} of ${total} lines listened`,
+      continueDialogue: 'Continue',
     },
     practicePage: {
       eyebrow: 'Practice',
@@ -226,6 +230,10 @@ export const uiCopy = {
       lessonProgressPreviewLabel: 'Aperçu de progression de la leçon',
       dialoguePracticeLabel: 'Pratique du dialogue',
       dialogueLineLabel: (speaker: string) => `Ligne de dialogue, interlocuteur ${speaker}`,
+      dialogueLineCompleted: 'Phrase écoutée',
+      dialogueLinesProgress: (completed: number, total: number) =>
+        `${completed} sur ${total} phrases écoutées`,
+      continueDialogue: 'Continuer',
     },
     practicePage: {
       eyebrow: 'Pratique',
