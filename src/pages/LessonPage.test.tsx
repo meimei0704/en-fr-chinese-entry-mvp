@@ -268,12 +268,16 @@ describe('LessonPage', () => {
     const links = within(preview).getAllByRole('link')
     expect(steps[0]).toHaveClass('is-current')
     expect(steps[1]).not.toHaveClass('is-current')
+    expect(links[0]).toHaveAttribute('aria-current', 'location')
+    expect(links[1]).not.toHaveAttribute('aria-current')
 
     await user.click(links[1])
 
     expect(steps[0]).not.toHaveClass('is-current')
     expect(steps[1]).toHaveClass('is-current')
     expect(steps[2]).not.toHaveClass('is-current')
+    expect(links[0]).not.toHaveAttribute('aria-current')
+    expect(links[1]).toHaveAttribute('aria-current', 'location')
 
     window.scrollTo(0, 0)
     expect(steps[1]).toHaveClass('is-current')

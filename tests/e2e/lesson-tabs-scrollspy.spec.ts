@@ -50,7 +50,10 @@ test('scrollspy highlights the study layer whose section is in view while scroll
 
   const rail = page.locator('.lesson-page .lesson-progress-preview__rail')
   const steps = rail.getByRole('listitem')
+  const links = rail.getByRole('link')
   await expect(steps.nth(0)).toHaveClass(/is-current/)
+  await expect(links.nth(0)).toHaveAttribute('aria-current', 'location')
+  await expect(links.nth(1)).not.toHaveAttribute('aria-current')
 
   const scrollSectionToUpperViewport = async (sectionId: string) => {
     await page.evaluate((id) => {
@@ -62,13 +65,16 @@ test('scrollspy highlights the study layer whose section is in view while scroll
 
   await scrollSectionToUpperViewport('lesson-patterns')
   await expect(steps.nth(1)).toHaveClass(/is-current/)
+  await expect(links.nth(1)).toHaveAttribute('aria-current', 'location')
 
   await scrollSectionToUpperViewport('lesson-vocabulary')
   await expect(steps.nth(2)).toHaveClass(/is-current/)
+  await expect(links.nth(2)).toHaveAttribute('aria-current', 'location')
 
   await page.evaluate(() => window.scrollTo(0, 0))
   await page.waitForTimeout(150)
   await expect(steps.nth(0)).toHaveClass(/is-current/)
+  await expect(links.nth(0)).toHaveAttribute('aria-current', 'location')
 })
 
 test('clicking a study layer tab still highlights that tab after scroll settles', async ({

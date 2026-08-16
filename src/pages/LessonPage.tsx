@@ -180,6 +180,7 @@ export function LessonPage() {
                 <a
                   className="lesson-progress-preview__rail-link"
                   href={`#${layer.id}`}
+                  aria-current={layer.id === activeLayerId ? 'location' : undefined}
                   onClick={() => setActiveLayerId(layer.id)}
                 >
                   <span>{index + 1}</span>
