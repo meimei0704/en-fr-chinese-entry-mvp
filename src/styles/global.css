@@ -22,8 +22,12 @@
   --color-paper-strong: #fff1df;
   --radius-xl: 2rem;
   --radius-lg: 1.5rem;
+  --radius-card: 1.35rem;
+  --radius-md: 1.05rem;
+  --radius-chip: 0.9rem;
   --shadow-soft: 0 30px 80px -45px rgba(11, 18, 32, 0.42);
   --shadow-card: 0 20px 55px -42px rgba(11, 18, 32, 0.5);
+  --shadow-card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.72), inset 0 -1px 0 rgba(11, 18, 32, 0.04);
   --shadow-float: 0 26px 80px -52px rgba(95, 143, 247, 0.9);
   --font-size-display: clamp(2.1rem, 6vw, 3.4rem);
   --font-size-lead: clamp(1.6rem, 4vw, 2.2rem);
@@ -1299,8 +1303,10 @@ h2 {
   align-content: start;
   gap: 0.35rem;
   padding: 1rem;
-  border-radius: 1.15rem;
-  background: rgba(255, 255, 255, 0.86);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 251, 253, 0.9));
+  box-shadow: var(--shadow-card), var(--shadow-card-inset);
 }
 
 .study-item--pattern {
@@ -1317,7 +1323,7 @@ h2 {
 .study-item__index {
   justify-self: start;
   padding: 0.1rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-chip);
   color: var(--color-sky-ink);
   background: #eef4ff;
   border: 1px solid rgba(95, 143, 247, 0.2);
@@ -1360,8 +1366,10 @@ h2 {
   gap: 0.2rem;
   padding: 1rem;
   border: 1px solid rgba(231, 234, 240, 0.92);
-  border-radius: 1.15rem;
-  background: rgba(255, 255, 255, 0.86);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 251, 253, 0.9));
+  box-shadow: var(--shadow-card), var(--shadow-card-inset);
 }
 
 .vocabulary-list__hanzi-row {
@@ -1400,9 +1408,10 @@ h2 {
   display: grid;
   gap: 0.45rem;
   padding: 1.1rem;
-  border-radius: 1.25rem;
+  border-radius: var(--radius-card);
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(238, 244, 255, 0.78));
+  box-shadow: var(--shadow-card), var(--shadow-card-inset);
 }
 
 .dialogue-card__hanzi-row {
@@ -1414,7 +1423,7 @@ h2 {
 
 .dialogue-card__speaker {
   justify-self: start;
-  border-radius: 999px;
+  border-radius: var(--radius-chip);
   padding: 0.15rem 0.6rem;
   color: var(--color-sky-ink);
   background: #eef4ff;
