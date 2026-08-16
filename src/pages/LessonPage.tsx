@@ -10,7 +10,7 @@ import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { SpeechButton } from '../components/SpeechButton'
 import type { LessonContent } from '../content/types'
 import { fetchLesson } from '../lib/contentApi'
-import { loadProgress, markDialogueLinePlayed, saveProgress } from '../lib/progress'
+import { loadProgress, saveProgress } from '../lib/progress'
 import { useCourse } from '../lib/contentProvider'
 
 function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: string): LessonContent | undefined {
@@ -50,33 +50,6 @@ export function LessonPage() {
   const [activeLayerId, setActiveLayerId] = useState<(typeof studyLayerIds)[number]>(
     studyLayers[0].id,
   )
-  const [completedDialogueLineIds, setCompletedDialogueLineIds] = useState<string[]>([])
-
-  useEffect(() => {
-    if (!lesson) {
-      setCompletedDialogueLineIds([])
-      return
-    }
-
-    setCompletedDialogueLineIds(
-      loadProgress().lessonStepProgress[lesson.id]?.completedDialogueLineIds ?? [],
-    )
-  }, [lesson])
-
-  const handleLinePlayed = (lineId: string) => {
-    if (!lesson) {
-      return
-    }
-
-    setCompletedDialogueLineIds((completed) => {
-      if (completed.includes(lineId)) {
-        return completed
-      }
-
-      saveProgress(markDialogueLinePlayed(lesson.id, lineId, loadProgress()))
-      return [...completed, lineId]
-    })
-  }
 
   useEffect(() => {
     if (!lessonId) {
@@ -224,31 +197,8 @@ export function LessonPage() {
             className="surface-card lesson-section-card"
             aria-label={copy.lessonPage.dialoguePracticeLabel}
           >
-            <div className="lesson-section-card__heading">
-              <h2>{copy.lessonPage.dialogue}</h2>
-              <span className="lesson-dialogue-progress">
-                {copy.lessonPage.dialogueLinesProgress(
-                  completedDialogueLineIds.length,
-                  lesson.dialogue.lines.length,
-                )}
-              </span>
-            </div>
-            {completedDialogueLineIds.length > 0 &&
-              completedDialogueLineIds.length < lesson.dialogue.lines.length && (
-                <a
-                  className="secondary-link lesson-dialogue-continue"
-                  href="#lesson-dialogue"
-                  onClick={() => setActiveLayerId('lesson-dialogue')}
-                >
-                  {copy.lessonPage.continueDialogue}
-                </a>
-              )}
-            <DialoguePlayer
-              lines={lesson.dialogue.lines}
-              language={selectedLanguage}
-              completedLineIds={completedDialogueLineIds}
-              onLinePlayed={handleLinePlayed}
-            />
+            <h2>{copy.lessonPage.dialogue}</h2>
+            <DialoguePlayer lines={lesson.dialogue.lines} language={selectedLanguage} />
           </section>
 
           <section id="lesson-patterns" className="surface-card lesson-section-card">
