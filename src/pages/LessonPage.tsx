@@ -17,6 +17,8 @@ function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: s
   return course?.lessons.find((lesson) => lesson.id === lessonId)
 }
 
+const studyLayerIds = ['lesson-dialogue', 'lesson-patterns', 'lesson-vocabulary'] as const
+
 function renderPatternFormula(pattern: string) {
   const segments = pattern.split('……')
   if (segments.length < 2) {
@@ -39,12 +41,15 @@ export function LessonPage() {
   const lesson = fallbackLesson ?? findLesson(course, lessonId)
   const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
-  const studyLayers = [
-    { id: 'lesson-dialogue', label: copy.lessonPage.dialogue },
-    { id: 'lesson-patterns', label: copy.lessonPage.sentencePatterns },
-    { id: 'lesson-vocabulary', label: copy.lessonPage.vocabulary },
-  ]
-  const [activeLayerId, setActiveLayerId] = useState(studyLayers[0].id)
+  const studyLayers = studyLayerIds.map((id, index) => ({
+    id,
+    label: [copy.lessonPage.dialogue, copy.lessonPage.sentencePatterns, copy.lessonPage.vocabulary][
+      index
+    ],
+  }))
+  const [activeLayerId, setActiveLayerId] = useState<(typeof studyLayerIds)[number]>(
+    studyLayers[0].id,
+  )
 
   useEffect(() => {
     if (!lessonId) {
@@ -87,6 +92,40 @@ export function LessonPage() {
       ...progress,
       lastVisitedLesson: lesson.id,
     })
+  }, [lesson])
+
+  useEffect(() => {
+    if (!lesson || typeof IntersectionObserver === 'undefined') {
+      return
+    }
+
+    const sections = studyLayerIds
+      .map((id) => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null)
+
+    if (sections.length !== studyLayerIds.length) {
+      return
+    }
+
+    const referenceY = () => window.innerHeight * 0.35
+
+    const updateActiveSection = () => {
+      const line = referenceY()
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect()
+        if (rect.top <= line && rect.bottom > line) {
+          setActiveLayerId(section.id as (typeof studyLayerIds)[number])
+          break
+        }
+      }
+    }
+
+    const observer = new IntersectionObserver(updateActiveSection, {
+      rootMargin: '0px 0px -65% 0px',
+      threshold: [0, 1],
+    })
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
   }, [lesson])
 
   if (error) {

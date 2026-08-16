@@ -1264,6 +1264,9 @@ h2 {
 }
 
 .lesson-page .lesson-progress-preview {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 5;
   gap: 0.75rem;
   padding: 0.85rem;
 }
@@ -1276,7 +1279,7 @@ h2 {
 .lesson-section-card {
   display: grid;
   gap: 1rem;
-  scroll-margin-block-start: 1rem;
+  scroll-margin-block-start: clamp(4.5rem, 12vw, 6rem);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 251, 253, 0.94));
 }

@@ -279,6 +279,39 @@ describe('LessonPage', () => {
     expect(steps[1]).toHaveClass('is-current')
   })
 
+  it('watches the study layer sections with an IntersectionObserver scrollspy', () => {
+    const observe = vi.fn()
+    let constructedOptions: IntersectionObserverInit | undefined
+    class MockIntersectionObserver implements IntersectionObserver {
+      readonly root = null
+      readonly rootMargin = ''
+      readonly thresholds: ReadonlyArray<number> = []
+      observe = observe
+      unobserve = vi.fn()
+      disconnect = vi.fn()
+      takeRecords = vi.fn(() => [])
+      constructor(_callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+        constructedOptions = options
+      }
+    }
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver)
+
+    try {
+      renderRoute('/lesson/self-intro')
+
+      expect(constructedOptions?.rootMargin).toBe('0px 0px -65% 0px')
+      expect(constructedOptions?.threshold).toEqual([0, 1])
+
+      const sectionIds = ['lesson-dialogue', 'lesson-patterns', 'lesson-vocabulary']
+      for (const id of sectionIds) {
+        expect(observe).toHaveBeenCalledWith(expect.objectContaining({ id }))
+      }
+      expect(observe).toHaveBeenCalledTimes(sectionIds.length)
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
   it('renders sentence pattern cards with an index number and highlighted placeholder', () => {
     renderRoute('/lesson/daily-greetings')
 

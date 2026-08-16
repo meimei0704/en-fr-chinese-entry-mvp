@@ -349,10 +349,17 @@ describe('global color accessibility tokens', () => {
       ['.lesson-page .lesson-header-card__title', 'gap: 0.1rem;'],
       ['.lesson-page .lesson-progress-preview', 'gap: 0.75rem;'],
       ['.lesson-page .lesson-progress-preview', 'padding: 0.85rem;'],
+      ['.lesson-page .lesson-progress-preview', 'position: sticky;'],
+      ['.lesson-page .lesson-progress-preview', 'top: 0.75rem;'],
+      ['.lesson-page .lesson-progress-preview', 'z-index: 5;'],
     ] as const
     for (const [selector, declaration] of scoped) {
       expect(ruleBlock(selector)).toContain(declaration)
     }
+
+    expect(ruleBlock('.lesson-section-card')).toContain(
+      'scroll-margin-block-start: clamp(4.5rem, 12vw, 6rem);',
+    )
 
     expect(ruleBlock('.lesson-progress-preview__rail')).toContain('display: flex;')
     expect(ruleBlock('.lesson-progress-preview__rail')).toContain('flex-wrap: wrap;')

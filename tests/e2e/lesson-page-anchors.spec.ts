@@ -81,5 +81,7 @@ test('study layer links scroll to their matching sections', async ({ page }) => 
   }
 
   await page.evaluate(() => window.scrollTo(0, 0))
-  await expect(rail.getByRole('listitem').nth(2)).toHaveClass(/is-current/)
+  await expect.poll(() => rail.getByRole('listitem').nth(0).getAttribute('class')).toMatch(
+    /is-current/,
+  )
 })
