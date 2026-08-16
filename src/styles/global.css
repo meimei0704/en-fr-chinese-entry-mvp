@@ -38,6 +38,7 @@
   --radius-chip: 0.9rem;
   --shadow-soft: 0 30px 80px -45px rgba(11, 18, 32, 0.42);
   --shadow-card: 0 20px 55px -42px rgba(11, 18, 32, 0.5);
+  --shadow-card-hover: 0 30px 64px -44px rgba(11, 18, 32, 0.56);
   --shadow-card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.72), inset 0 -1px 0 rgba(11, 18, 32, 0.04);
   --shadow-float: 0 26px 80px -52px rgba(var(--color-primary-rgb), 0.9);
   --font-size-display: clamp(2.1rem, 6vw, 3.4rem);
@@ -138,6 +139,40 @@ a:focus-visible {
   border: 1px solid rgba(231, 234, 240, 0.92);
   background: rgba(255, 255, 255, 0.92);
   box-shadow: var(--shadow-card);
+}
+
+.study-item,
+.vocabulary-list__item,
+.dialogue-card,
+.lesson-card,
+.review-flashcard,
+.practice-challenge__question {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+}
+
+.study-item:hover,
+.study-item:focus-within,
+.vocabulary-list__item:hover,
+.vocabulary-list__item:focus-within,
+.dialogue-card:hover,
+.dialogue-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover), var(--shadow-card-inset);
+  border-color: rgba(var(--color-primary-rgb), 0.3);
+}
+
+.lesson-card:hover,
+.lesson-card:focus-within,
+.review-flashcard:hover,
+.review-flashcard:focus-within,
+.practice-challenge__question:hover,
+.practice-challenge__question:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(var(--color-primary-rgb), 0.3);
 }
 
 .hero-card {
@@ -3184,7 +3219,13 @@ h2 {
   .chip-button,
   .course-series__pinyin-link,
   .course-series__journey-link,
-  .journey-node {
+  .journey-node,
+  .study-item,
+  .vocabulary-list__item,
+  .dialogue-card,
+  .lesson-card,
+  .review-flashcard,
+  .practice-challenge__question {
     transition: none;
   }
 }

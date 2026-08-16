@@ -343,6 +343,43 @@ describe('global color accessibility tokens', () => {
     ).toBe(true)
   })
 
+  it('adds a shared card hover lift with deepened shadow and reduced-motion guard', () => {
+    const motionSelectors = [
+      '.study-item',
+      '.vocabulary-list__item',
+      '.dialogue-card',
+      '.lesson-card',
+      '.review-flashcard',
+      '.practice-challenge__question',
+    ]
+
+    const combinedMotionSelector = [
+      '.study-item',
+      '.vocabulary-list__item',
+      '.dialogue-card',
+      '.lesson-card',
+      '.review-flashcard',
+      '.practice-challenge__question',
+    ].join(',\n')
+
+    expect(hasRuleWithDeclaration(combinedMotionSelector, 'transition:')).toBe(true)
+
+    const hoverWithInsetSelectors = [
+      '.study-item:hover,\n.study-item:focus-within,\n.vocabulary-list__item:hover,\n.vocabulary-list__item:focus-within,\n.dialogue-card:hover,\n.dialogue-card:focus-within',
+      '.lesson-card:hover,\n.lesson-card:focus-within,\n.review-flashcard:hover,\n.review-flashcard:focus-within,\n.practice-challenge__question:hover,\n.practice-challenge__question:focus-within',
+    ]
+    for (const selector of hoverWithInsetSelectors) {
+      expect(hasRuleWithDeclaration(selector, 'transform: translateY(-2px);')).toBe(true)
+    }
+
+    expect(css).toContain('--shadow-card-hover:')
+    for (const selector of motionSelectors) {
+      expect(
+        hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', selector, 'transition: none;'),
+      ).toBe(true)
+    }
+  })
+
   it('scopes compact three-layer lesson layout away from shared and admin cards', () => {
     const scoped = [
       ['.lesson-page .lesson-header-card', 'gap: clamp(0.9rem, 2vw, 1.25rem);'],
