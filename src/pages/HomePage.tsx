@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
+import { CultureAdvice } from '../components/CultureAdvice'
 import { ContentLoading } from '../components/ContentState'
 import { HomeHeroIllustration } from '../components/HomeHeroIllustration'
 import { JourneyNodeCourseImage } from '../components/JourneyNodeCourseImage'
@@ -76,6 +77,8 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <CultureAdvice language={language} />
 
       <section
         className="page-grid course-series"
