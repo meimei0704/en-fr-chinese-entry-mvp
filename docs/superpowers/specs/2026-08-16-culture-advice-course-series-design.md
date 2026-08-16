@@ -1,7 +1,7 @@
 # Culture Advice as Course Series Third Course — Design
 
 Date: 2026-08-16
-Status: Draft (awaiting user confirmation on open questions)
+Status: Approved by user (@Dylan, 2026-08-16)
 
 ## Problem
 
@@ -40,20 +40,16 @@ accordion on the homepage.
 4. Content reuse: consume `src/content/cultureAdvice.ts` unchanged; no data
    schema changes, no changes to lesson/pinyin/course data.
 
-## Open questions (need user/coder confirmation)
+## Open questions (resolved)
 
-1. **Homepage accordion fate**: replace the homepage `CultureAdvice` accordion
-   with the new entry card (recommended: move content to `/culture` and drop
-   the accordion), or keep both (accordion as teaser + entry card)? Proposal:
-   remove the accordion, add the entry card — single source, no duplication.
-2. **Route name**: proposal `/culture` (consistent with `/pinyin`).
+1. **Homepage accordion fate**: **Remove** the homepage `CultureAdvice`
+   accordion; content moves to `/culture`; homepage keeps only the entry card.
+2. **Route name**: **`/culture`**.
 3. **Tab accent color**: keep the A2 teal `--color-primary-*` for tab active
    state (preserves the unified primary system; do not start a separate warm
    tab palette). Only the entry-card badge/icon and hero subtitle carry a
    warm gold accent for course distinction. (t1 review alignment.)
-4. **Tab count**: 7 tabs is more than Pinyin's 4; proposal keep all 7 (badges
-   ①–⑦). Alternative: group into fewer tabs. Recommend keeping 7 for parity
-   with the delivered content.
+4. **Tab count**: keep all **7** tabs (badges ①–⑦), one per section.
 
 ## Data model
 
