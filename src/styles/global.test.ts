@@ -95,16 +95,17 @@ function backgroundVariableFor(selector: string) {
 describe('global color accessibility tokens', () => {
   it('keeps text-facing accent tokens readable on white and tinted surfaces', () => {
     const muted = cssVariable('--color-muted')
-    const skyInk = cssVariable('--color-sky-ink')
+    const primaryInk = cssVariable('--color-primary-ink')
+    const primary100 = cssVariable('--color-primary-100')
     const jadeInk = cssVariable('--color-jade-ink')
     const cinnabarDark = cssVariable('--color-cinnabar-dark')
 
     expect(contrastRatio(muted, '#ffffff')).toBeGreaterThanOrEqual(4.5)
     expect(contrastRatio(muted, '#f7f8fb')).toBeGreaterThanOrEqual(4.5)
-    expect(contrastRatio(muted, '#eef4ff')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(muted, primary100)).toBeGreaterThanOrEqual(4.5)
     expect(contrastRatio(muted, '#ebf6f1')).toBeGreaterThanOrEqual(4.5)
-    expect(contrastRatio(skyInk, '#ffffff')).toBeGreaterThanOrEqual(4.5)
-    expect(contrastRatio(skyInk, '#eef4ff')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(primaryInk, '#ffffff')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(primaryInk, primary100)).toBeGreaterThanOrEqual(4.5)
     expect(contrastRatio(jadeInk, '#ffffff')).toBeGreaterThanOrEqual(4.5)
     expect(contrastRatio(cinnabarDark, '#ffffff')).toBeGreaterThanOrEqual(4.5)
   })
@@ -147,7 +148,7 @@ describe('global color accessibility tokens', () => {
     const progressBaselineSelectors = [
       ['.progress-journey-card .journey-node__cta', 'padding: 0.5rem 0.85rem;'],
       ['.progress-journey-card .journey-node__cta', 'border-radius: 999px;'],
-      ['.progress-journey-card .journey-node__cta', 'background: rgba(238, 244, 255, 0.9);'],
+      ['.progress-journey-card .journey-node__cta', 'background: rgba(var(--color-primary-50-rgb), 0.9);'],
       ['.progress-journey-card .journey-node--preview .journey-node__cta', 'background: rgba(255, 244, 230, 0.92);'],
       ['.progress-journey-card .journey-node--preview .journey-node__cta', 'border-color: rgba(194, 65, 45, 0.16);'],
       ['.progress-journey-card .journey-node .muted-text', 'margin-top: 0.45rem;'],
@@ -205,7 +206,7 @@ describe('global color accessibility tokens', () => {
     expect(entryCard).toContain('text-decoration: none;')
     expect(entryCard).toContain('border-radius: var(--radius-lg);')
     expect(ruleBlock('.course-series__entry-card:focus-visible')).toContain(
-      'outline: 3px solid rgba(47, 111, 186, 0.5);',
+      'outline: 3px solid rgba(var(--color-primary-ink-rgb), 0.5);',
     )
     expect(ruleBlock('.course-series__entry-card:focus-visible')).toContain('outline-offset: 3px;')
 
@@ -366,7 +367,7 @@ describe('global color accessibility tokens', () => {
     expect(ruleBlock('.lesson-progress-preview__rail')).not.toContain('grid-template-columns')
     expect(ruleBlock('.lesson-progress-preview__rail li')).toContain('border-radius: 999px;')
     expect(ruleBlock('.lesson-progress-preview__rail li.is-current')).toContain(
-      'background: #eef4ff;',
+      'background: var(--color-primary-100);',
     )
     expect(ruleBlock('.lesson-header-card,\n.review-card')).not.toContain(
       'gap: clamp(0.9rem, 2vw, 1.25rem);',
