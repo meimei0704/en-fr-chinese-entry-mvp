@@ -110,6 +110,9 @@ export function LessonPage() {
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
+          <p className="lede lesson-header-card__scenario">
+            {getLocalizedText(lesson.scenario, selectedLanguage)}
+          </p>
         </header>
 
         <section
@@ -149,7 +152,7 @@ export function LessonPage() {
                 <article key={pattern.id} className="study-item study-item--pattern">
                   <p className="study-item__title">{pattern.pattern}</p>
                   <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
-                  <p className="pinyin-line">{pattern.example}</p>
+                  <p className="study-item__example">{pattern.example}</p>
                   <SpeechButton
                     label={copy.lessonPage.listenChinese}
                     text={pattern.example}

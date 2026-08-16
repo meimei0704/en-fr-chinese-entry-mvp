@@ -28,9 +28,10 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
               fallbackAudioSrc={line.audioFallback}
             />
           </div>
+          <span className="dialogue-card__speaker">{getLocalizedText(line.speaker, language)}</span>
           <p className="pinyin-line">{line.pinyin}</p>
           <p className="muted-text">{getLocalizedText(line.translation, language)}</p>
-          <ExplanationBlock explanation={line.explanation} language={language} />
+          <ExplanationBlock collapsible explanation={line.explanation} language={language} />
         </article>
       ))}
     </div>

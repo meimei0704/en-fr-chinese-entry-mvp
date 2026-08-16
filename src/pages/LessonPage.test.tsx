@@ -144,7 +144,7 @@ describe('LessonPage', () => {
     expect(screen.getByText(/voici mon passeport/i)).toBeVisible()
     expect(screen.getByRole('link', { name: /passer à la pratique/i })).toBeVisible()
     expect(screen.getByRole('link', { name: /retour à l’accueil/i })).toBeVisible()
-    expect(screen.queryByRole('group', { name: /explication/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('group', { name: /explanation language|langue d’explication/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Français' })).not.toBeInTheDocument()
     expect(loadProgress().selectedExplanationLanguage).toBe('fr')
