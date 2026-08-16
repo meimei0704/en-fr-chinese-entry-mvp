@@ -20,6 +20,14 @@ export const uiCopy = {
       label: 'Course series',
       pinyinTitle: 'Mandarin tones and pinyin',
       basicExpressionsTitle: 'Useful sentences, expressions and Hanzi recognition',
+      cultureTitle: 'Culture advice for travelers in China',
+    },
+    culturePage: {
+      heading: 'Culture advice for travelers in China',
+      subtitle: 'Practical etiquette and customs for a smooth trip',
+      tablistLabel: 'Culture topics',
+      backToHome: 'Back to home',
+      lessonActions: 'Culture course actions',
     },
     homePage: {
       heading: '轻松学中文',
@@ -176,6 +184,14 @@ export const uiCopy = {
       label: 'Séries de cours',
       pinyinTitle: 'Tons et pinyin du mandarin',
       basicExpressionsTitle: 'Expressions chinoises essentielles pour voyager sereinement',
+      cultureTitle: 'Conseils culturels pour les voyageurs en Chine',
+    },
+    culturePage: {
+      heading: 'Conseils culturels pour les voyageurs en Chine',
+      subtitle: 'Étiquette et coutumes pratiques pour un voyage serein',
+      tablistLabel: 'Sujets culturels',
+      backToHome: 'Retour à l’accueil',
+      lessonActions: 'Actions du cours de culture',
     },
     homePage: {
       heading: '轻松学中文',

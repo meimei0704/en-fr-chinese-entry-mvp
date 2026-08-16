@@ -635,7 +635,7 @@ h2 {
 .course-series__list {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: repeat(2, minmax(auto, 1fr)) auto;
+  grid-template-rows: repeat(3, minmax(auto, 1fr)) auto;
   gap: 1rem;
   align-items: stretch;
 }
@@ -660,8 +660,14 @@ h2 {
   grid-template-rows: minmax(0, 1fr);
 }
 
+.course-series__panel--culture {
+  grid-row: 2;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+}
+
 .course-series__panel--journey {
-  grid-row: 2 / span 2;
+  grid-row: 3 / span 2;
   display: grid;
   grid-template-rows: subgrid;
 }
@@ -707,6 +713,13 @@ h2 {
     linear-gradient(145deg, rgba(255, 253, 248, 0.98), rgba(255, 248, 238, 0.94));
 }
 
+.course-series__culture-link {
+  border-color: rgba(243, 165, 63, 0.34);
+  background:
+    radial-gradient(circle at top right, rgba(243, 165, 63, 0.12), transparent 14rem),
+    linear-gradient(145deg, rgba(255, 253, 248, 0.98), rgba(255, 248, 238, 0.94));
+}
+
 .course-series__entry-card:focus-visible {
   outline: 3px solid rgba(var(--color-primary-ink-rgb), 0.5);
   outline-offset: 3px;
@@ -738,7 +751,8 @@ h2 {
 }
 
 .course-series__pinyin-mark,
-.course-series__journey-mark {
+.course-series__journey-mark,
+.course-series__culture-mark {
   grid-row: 1 / -1;
   display: inline-grid;
   place-items: center;
@@ -762,6 +776,13 @@ h2 {
   color: var(--color-cinnabar-dark);
   background: rgba(255, 244, 230, 0.94);
   transform: rotate(4deg);
+}
+
+.course-series__culture-mark {
+  border: 1px solid rgba(243, 165, 63, 0.42);
+  color: #8a5a16;
+  background: rgba(255, 246, 224, 0.96);
+  transform: rotate(-2deg);
 }
 
 .course-series__progress {
@@ -1577,62 +1598,29 @@ h2 {
   align-content: start;
 }
 
-.culture-advice__label {
-  margin: 0 0 0.25rem;
+.culture-course__hero-subtitle {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--color-muted);
+  font-weight: 700;
+  line-height: 1.4;
 }
 
-.culture-advice__list {
+.culture-course__tab-badge {
+  width: 1.5rem;
+}
+
+.culture-course__panel {
   display: grid;
   gap: 0.85rem;
+  align-content: start;
 }
 
-.culture-advice__card {
-  border: 1px solid rgba(231, 234, 240, 0.92);
-  border-radius: var(--radius-card);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 251, 253, 0.92));
-  box-shadow: var(--shadow-card), var(--shadow-card-inset);
-}
-
-.culture-advice__heading {
+.culture-course__panel-title {
   margin: 0;
-}
-
-.culture-advice__toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-  padding: 1rem 1.15rem;
-  border: 0;
-  border-radius: inherit;
+  font-size: var(--font-size-title);
+  font-weight: 850;
   color: var(--color-ink);
-  background: transparent;
-  text-align: left;
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.culture-advice__toggle-icon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 1.5rem;
-  aspect-ratio: 1;
-  border-radius: var(--radius-chip);
-  color: var(--color-primary-ink);
-  background: var(--color-primary-100);
-  border: 1px solid rgba(var(--color-primary-rgb), 0.2);
-  font-size: 1rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.culture-advice__panel {
-  display: grid;
-  gap: 0.6rem;
-  padding: 0 1.15rem 1.1rem;
 }
 
 .culture-advice__intro {
@@ -3219,6 +3207,7 @@ h2 {
   .chip-button,
   .course-series__pinyin-link,
   .course-series__journey-link,
+  .course-series__culture-link,
   .journey-node,
   .study-item,
   .vocabulary-list__item,

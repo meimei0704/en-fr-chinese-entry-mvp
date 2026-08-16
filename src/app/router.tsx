@@ -4,6 +4,7 @@ import { ScrollRestorationLayout } from './ScrollRestorationLayout'
 import { AdminLessonEditorPage } from '../pages/AdminLessonEditorPage'
 import { AdminLessonsPage } from '../pages/AdminLessonsPage'
 import { AdminVoiceGenerationPage } from '../pages/AdminVoiceGenerationPage'
+import { CulturePage } from '../pages/CulturePage'
 import { HomePage } from '../pages/HomePage'
 import { LessonPage } from '../pages/LessonPage'
 import { PinyinPage } from '../pages/PinyinPage'
@@ -23,6 +24,7 @@ export const appRoutes: RouteObject[] = [
       { path: '/lesson/:lessonId', element: <LessonPage /> },
       { path: '/lesson/:lessonId/practice', element: <PracticePage /> },
       { path: '/pinyin', element: <PinyinPage /> },
+      { path: '/culture', element: <CulturePage /> },
       { path: '/review', element: <ReviewPage /> },
       { path: '/progress', element: <ProgressPage /> },
     ],

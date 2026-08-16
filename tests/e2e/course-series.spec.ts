@@ -8,6 +8,7 @@ const seriesCopy = {
     label: 'Course series',
     pinyin: 'Mandarin tones and pinyin',
     journey: 'Useful sentences, expressions and Hanzi recognition',
+    culture: 'Culture advice for travelers in China',
     pinyinProgress: '1 of 2 sections complete',
     journeyProgress: '1 of 12 lessons completed',
   },
@@ -15,6 +16,7 @@ const seriesCopy = {
     label: 'Séries de cours',
     pinyin: 'Tons et pinyin du mandarin',
     journey: 'Expressions chinoises essentielles pour voyager sereinement',
+    culture: 'Conseils culturels pour les voyageurs en Chine',
     pinyinProgress: '1 section sur 2 terminée',
     journeyProgress: '1 leçon sur 12 terminée',
   },
@@ -135,19 +137,23 @@ for (const pageCase of pageCases) {
         const courses = page.getByRole('region', { name: copy.label })
         const list = courses.locator(':scope > .course-series__list')
         const pinyinSection = list.getByRole('region', { name: copy.pinyin })
+        const cultureSection = list.getByRole('region', { name: copy.culture })
         const journeySection = list.getByRole('region', { name: copy.journey })
         const pinyinLink = pinyinSection.getByRole('link', { name: copy.pinyin })
+        const cultureLink = cultureSection.getByRole('link', { name: copy.culture })
         const journeyLink = journeySection.getByRole('link', { name: copy.journey })
         const path = journeySection.locator(`#${pageCase.pathId}`)
         const journeyNodes = path.locator(pageCase.nodeSelector)
         const lessonLinks = path.locator('a[href^="/lesson/"]')
 
-        await expect(list.locator(':scope > .course-series__panel')).toHaveCount(2)
+        await expect(list.locator(':scope > .course-series__panel')).toHaveCount(3)
         await expect(list.locator(':scope > .course-series__entry-card')).toHaveCount(0)
-        await expect(courses.locator('.course-series__entry-card')).toHaveCount(2)
+        await expect(courses.locator('.course-series__entry-card')).toHaveCount(3)
         await expect(pinyinLink).toHaveAttribute('href', '/pinyin')
+        await expect(cultureLink).toHaveAttribute('href', '/culture')
         await expect(journeyLink).toHaveAttribute('href', `#${pageCase.pathId}`)
         await expect(pinyinLink).toHaveAccessibleName(copy.pinyin)
+        await expect(cultureLink).toHaveAccessibleName(copy.culture)
         await expect(journeyLink).toHaveAccessibleName(copy.journey)
         await expect(path).toBeVisible()
         await expect(journeyNodes).toHaveCount(12)
@@ -158,17 +164,21 @@ for (const pageCase of pageCases) {
         const order = await list.evaluate((element, pathId) => {
           const panels = Array.from(element.children)
           const pinyin = element.querySelector('.course-series__pinyin-link')
+          const culture = element.querySelector('.course-series__culture-link')
           const journey = element.querySelector('.course-series__journey-link')
           const pathElement = document.getElementById(pathId)
 
-          if (!pinyin || !journey || !pathElement) {
+          if (!pinyin || !culture || !journey || !pathElement) {
             throw new Error('Missing course-series ordering target')
           }
 
           return {
             directPanelCount: panels.length,
-            pinyinBeforeJourney: Boolean(
-              pinyin.compareDocumentPosition(journey) & Node.DOCUMENT_POSITION_FOLLOWING,
+            pinyinBeforeCulture: Boolean(
+              pinyin.compareDocumentPosition(culture) & Node.DOCUMENT_POSITION_FOLLOWING,
+            ),
+            cultureBeforeJourney: Boolean(
+              culture.compareDocumentPosition(journey) & Node.DOCUMENT_POSITION_FOLLOWING,
             ),
             journeyBeforePath: Boolean(
               journey.compareDocumentPosition(pathElement) & Node.DOCUMENT_POSITION_FOLLOWING,
@@ -177,19 +187,22 @@ for (const pageCase of pageCases) {
         }, pageCase.pathId)
 
         expect(order).toEqual({
-          directPanelCount: 2,
-          pinyinBeforeJourney: true,
+          directPanelCount: 3,
+          pinyinBeforeCulture: true,
+          cultureBeforeJourney: true,
           journeyBeforePath: true,
         })
 
         const geometry = await list.evaluate((element, pathId) => {
           const pinyin = element.querySelector<HTMLElement>('.course-series__pinyin-link')
+          const culture = element.querySelector<HTMLElement>('.course-series__culture-link')
           const journey = element.querySelector<HTMLElement>('.course-series__journey-link')
           const pinyinPanel = element.querySelector<HTMLElement>('.course-series__panel--pinyin')
+          const culturePanel = element.querySelector<HTMLElement>('.course-series__panel--culture')
           const journeyPanel = element.querySelector<HTMLElement>('.course-series__panel--journey')
           const pathElement = document.getElementById(pathId)
 
-          if (!pinyin || !journey || !pinyinPanel || !journeyPanel || !pathElement) {
+          if (!pinyin || !culture || !journey || !pinyinPanel || !culturePanel || !journeyPanel || !pathElement) {
             throw new Error('Missing course-series geometry target')
           }
 
@@ -204,6 +217,8 @@ for (const pageCase of pageCases) {
           return {
             basic: box(journey),
             basicPanel: box(journeyPanel),
+            culture: box(culture),
+            culturePanel: box(culturePanel),
             list: box(element),
             path: box(pathElement),
             pinyin: box(pinyin),
@@ -212,26 +227,34 @@ for (const pageCase of pageCases) {
           }
         }, pageCase.pathId)
 
-        expect(geometry.rowSizes).toHaveLength(3)
+        expect(geometry.rowSizes).toHaveLength(4)
         expect(Math.abs(geometry.rowSizes[0] - geometry.rowSizes[1])).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.pinyin.x - geometry.basic.x)).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.pinyin.width - geometry.basic.width)).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.pinyin.height - geometry.basic.height)).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.rowSizes[1] - geometry.rowSizes[2])).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.pinyin.x - geometry.culture.x)).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.pinyin.width - geometry.culture.width)).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.pinyin.height - geometry.culture.height)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.height - geometry.rowSizes[0])).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.basic.height - geometry.rowSizes[1])).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.culture.height - geometry.rowSizes[1])).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.basic.height - geometry.rowSizes[2])).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.height - geometry.pinyinPanel.height)).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.culture.height - geometry.culturePanel.height)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.x - geometry.list.x)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.basic.x - geometry.list.x)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.width - geometry.list.width)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.basic.width - geometry.list.width)).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.culture.y - geometry.culturePanel.y)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.basic.y - geometry.basicPanel.y)).toBeLessThanOrEqual(1)
-        expect(geometry.basic.y).toBeGreaterThanOrEqual(
+        expect(geometry.culture.y).toBeGreaterThanOrEqual(
           geometry.pinyin.y + geometry.pinyin.height,
+        )
+        expect(geometry.basic.y).toBeGreaterThanOrEqual(
+          geometry.culture.y + geometry.culture.height,
         )
         expect(geometry.path.y).toBeGreaterThanOrEqual(geometry.basic.y + geometry.basic.height)
 
         for (const [title, link] of [
           [copy.pinyin, pinyinLink],
+          [copy.culture, cultureLink],
           [copy.journey, journeyLink],
         ] as const) {
           const heading = courses.getByRole('heading', { level: 2, name: title })
@@ -291,10 +314,12 @@ for (const pageCase of pageCases) {
         }
 
         await expectKeyboardFocusVisible(page, pinyinLink)
+        await expectKeyboardFocusVisible(page, cultureLink)
         await expectKeyboardFocusVisible(page, journeyLink)
 
         if (pageCase.name === 'home') {
           await expect(pinyinLink).not.toContainText(copy.pinyinProgress)
+          await expect(cultureLink).not.toContainText(copy.journeyProgress)
           await expect(journeyLink).not.toContainText(copy.journeyProgress)
         } else {
           await expect(pinyinLink).toContainText(copy.pinyinProgress)

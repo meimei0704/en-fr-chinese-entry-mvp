@@ -21,11 +21,13 @@ const expectedSeriesCopy = {
     label: 'Course series',
     pinyin: 'Mandarin tones and pinyin',
     journey: 'Useful sentences, expressions and Hanzi recognition',
+    culture: 'Culture advice for travelers in China',
   },
   fr: {
     label: 'Séries de cours',
     pinyin: 'Tons et pinyin du mandarin',
     journey: 'Expressions chinoises essentielles pour voyager sereinement',
+    culture: 'Conseils culturels pour les voyageurs en Chine',
   },
 } as const
 
@@ -39,6 +41,10 @@ function getHomePinyinSeries(language: keyof typeof expectedSeriesCopy = 'en') {
 
 function getHomeJourneySeries(language: keyof typeof expectedSeriesCopy = 'en') {
   return screen.getByRole('region', { name: expectedSeriesCopy[language].journey })
+}
+
+function getHomeCultureSeries(language: keyof typeof expectedSeriesCopy = 'en') {
+  return screen.getByRole('region', { name: expectedSeriesCopy[language].culture })
 }
 
 function expectTokenizedSeriesTitle(section: HTMLElement, title: string) {
@@ -76,10 +82,14 @@ describe('HomePage', () => {
 
     const courseSeries = getHomeCourseSeries()
     const pinyinSection = getHomePinyinSeries()
+    const cultureSection = getHomeCultureSeries()
     const journeySection = getHomeJourneySeries()
     const list = courseSeries.querySelector<HTMLElement>('.course-series__list')
     const pinyinEntry = within(pinyinSection).getByRole('link', {
       name: expectedSeriesCopy.en.pinyin,
+    })
+    const cultureEntry = within(cultureSection).getByRole('link', {
+      name: expectedSeriesCopy.en.culture,
     })
     const journeyEntry = within(journeySection).getByRole('link', {
       name: expectedSeriesCopy.en.journey,
@@ -95,10 +105,13 @@ describe('HomePage', () => {
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
     expect(within(courseSeries).getByText(expectedSeriesCopy.en.label)).toBeVisible()
-    expect(Array.from(list.children)).toEqual([pinyinSection, journeySection])
-    expect(pinyinSection.parentElement).toBe(journeySection.parentElement)
+    expect(Array.from(list.children)).toEqual([pinyinSection, cultureSection, journeySection])
+    expect(pinyinSection.parentElement).toBe(cultureSection.parentElement)
+    expect(cultureSection.parentElement).toBe(journeySection.parentElement)
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(pinyinEntry).toHaveClass('course-series__entry-card', 'course-series__pinyin-link')
+    expect(cultureEntry).toHaveAttribute('href', '/culture')
+    expect(cultureEntry).toHaveClass('course-series__entry-card', 'course-series__culture-link')
     expect(journeyEntry.tagName).toBe('A')
     expect(journeyEntry).toHaveAttribute('href', '#home-basic-expressions-path')
     expect(journeyEntry).toHaveClass('course-series__entry-card', 'course-series__journey-link')
@@ -107,15 +120,23 @@ describe('HomePage', () => {
     expect(journeySection.children[0]).toBe(journeyEntry)
     expect(journeySection.children[1]).toBe(journeyPath)
     expect(
-      pinyinEntry.compareDocumentPosition(journeyEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
+      pinyinEntry.compareDocumentPosition(cultureEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(
+      cultureEntry.compareDocumentPosition(journeyEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
     expect(
       journeyEntry.compareDocumentPosition(journeyPath) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
 
     expectTokenizedSeriesTitle(pinyinSection, expectedSeriesCopy.en.pinyin)
+    expectTokenizedSeriesTitle(cultureSection, expectedSeriesCopy.en.culture)
     expectTokenizedSeriesTitle(journeySection, expectedSeriesCopy.en.journey)
     expect(pinyinEntry.querySelector('.course-series__pinyin-mark')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
+    expect(cultureEntry.querySelector('.course-series__culture-mark')).toHaveAttribute(
       'aria-hidden',
       'true',
     )
@@ -225,12 +246,17 @@ describe('HomePage', () => {
 
     const courseSeries = getHomeCourseSeries('fr')
     const pinyinSeries = getHomePinyinSeries('fr')
+    const cultureSeries = getHomeCultureSeries('fr')
     const journeySeries = getHomeJourneySeries('fr')
 
     expect(within(courseSeries).getByText(expectedSeriesCopy.fr.label)).toBeVisible()
     expect(within(pinyinSeries).getByRole('heading', {
       level: 2,
       name: expectedSeriesCopy.fr.pinyin,
+    })).toBeVisible()
+    expect(within(cultureSeries).getByRole('heading', {
+      level: 2,
+      name: expectedSeriesCopy.fr.culture,
     })).toBeVisible()
     expect(within(journeySeries).getByRole('heading', {
       level: 2,
@@ -239,8 +265,12 @@ describe('HomePage', () => {
     expect(within(pinyinSeries).getByRole('link', {
       name: expectedSeriesCopy.fr.pinyin,
     })).toHaveAttribute('href', '/pinyin')
+    expect(within(cultureSeries).getByRole('link', {
+      name: expectedSeriesCopy.fr.culture,
+    })).toHaveAttribute('href', '/culture')
     expect(screen.queryByText(expectedSeriesCopy.en.label)).not.toBeInTheDocument()
     expect(screen.queryByText(expectedSeriesCopy.en.pinyin)).not.toBeInTheDocument()
+    expect(screen.queryByText(expectedSeriesCopy.en.culture)).not.toBeInTheDocument()
     expect(screen.queryByText(expectedSeriesCopy.en.journey)).not.toBeInTheDocument()
     expect(screen.queryByText('Carte du parcours')).not.toBeInTheDocument()
     expect(screen.queryByText('Arriver en Chine étape par étape')).not.toBeInTheDocument()

@@ -210,6 +210,25 @@ export function ProgressPage() {
             </section>
 
             <section
+              className="course-series__panel course-series__panel--culture"
+              aria-labelledby="progress-culture-series-title"
+            >
+              <Link
+                className="course-series__entry-card course-series__culture-link"
+                to="/culture"
+                aria-labelledby="progress-culture-series-title"
+              >
+                <span className="course-series__culture-mark" aria-hidden="true">
+                  文
+                </span>
+                <CourseSeriesTitle
+                  id="progress-culture-series-title"
+                  title={copy.courseSeries.cultureTitle}
+                />
+              </Link>
+            </section>
+
+            <section
               className="course-series__panel course-series__panel--journey"
               aria-labelledby="progress-journey-series-title"
             >
