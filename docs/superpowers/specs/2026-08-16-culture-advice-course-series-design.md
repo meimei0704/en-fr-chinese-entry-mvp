@@ -26,14 +26,17 @@ accordion on the homepage.
      bold lead-ins, nested sub-items),
    - back-to-home action dock.
 3. UI polish (optimization) on top of the Pinyin reference:
-   - tabs reuse the A2 teal `--color-primary-*` tokens for selected state;
+   - tabs reuse the A2 teal `--color-primary-*` tokens for the selected state
+     (keeps the unified primary color system intact — no separate warm-gold
+     tab palette, per t1 review; differentiation comes from the entry-card
+     badge/icon and the hero subtitle);
    - each section's content renders inside a card using the A1/B4 card
      tokens (`--radius-card`, `--shadow-card`, hover lift), consistent with
      lesson/content cards;
-   - hero uses a distinct but on-palette accent so the Culture course is
-     visually distinct from Pinyin (teal) and Journey (cinnabar): proposal is
-     gold/cinnabar-gold blend anchored on `--color-gold` (#f3a53f) with warm
-     paper gradients — pending user confirmation.
+   - the course-series entry card and hero use a warm gold/cinnabar-gold
+     accent anchored on `--color-gold` (#f3a53f) so the Culture course reads
+     as distinct from Pinyin (teal) and Journey (cinnabar) without touching
+     the primary tab system.
 4. Content reuse: consume `src/content/cultureAdvice.ts` unchanged; no data
    schema changes, no changes to lesson/pinyin/course data.
 
@@ -44,9 +47,10 @@ accordion on the homepage.
    the accordion), or keep both (accordion as teaser + entry card)? Proposal:
    remove the accordion, add the entry card — single source, no duplication.
 2. **Route name**: proposal `/culture` (consistent with `/pinyin`).
-3. **Tab accent color**: proposal warm gold (`--color-gold`-anchored) to
-   differentiate from Pinyin (teal) and Journey (cinnabar). Alternative: keep
-   teal for tab selected state and only tint the hero.
+3. **Tab accent color**: keep the A2 teal `--color-primary-*` for tab active
+   state (preserves the unified primary system; do not start a separate warm
+   tab palette). Only the entry-card badge/icon and hero subtitle carry a
+   warm gold accent for course distinction. (t1 review alignment.)
 4. **Tab count**: 7 tabs is more than Pinyin's 4; proposal keep all 7 (badges
    ①–⑦). Alternative: group into fewer tabs. Recommend keeping 7 for parity
    with the delivered content.
