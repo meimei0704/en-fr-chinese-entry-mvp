@@ -175,7 +175,7 @@ describe('global color accessibility tokens', () => {
     const journeyPath = ruleBlock('.course-series__journey-path')
 
     expect(list).toContain('grid-template-columns: minmax(0, 1fr);')
-    expect(list).toContain('grid-template-rows: repeat(3, minmax(auto, 1fr)) auto;')
+    expect(list).toContain('grid-template-rows: repeat(2, minmax(auto, 1fr)) auto minmax(auto, 1fr);')
     expect(list).toContain('align-items: stretch;')
 
     expect(panel).toContain('align-self: stretch;')
@@ -191,11 +191,11 @@ describe('global color accessibility tokens', () => {
     expect(pinyinPanel).toContain('display: grid;')
     expect(pinyinPanel).toContain('grid-template-rows: minmax(0, 1fr);')
     expect(pinyinPanel).not.toContain('background:')
-    expect(culturePanel).toContain('grid-row: 2;')
+    expect(culturePanel).toContain('grid-row: 4;')
     expect(culturePanel).toContain('display: grid;')
     expect(culturePanel).toContain('grid-template-rows: minmax(0, 1fr);')
     expect(culturePanel).not.toContain('background:')
-    expect(journeyPanel).toContain('grid-row: 3 / span 2;')
+    expect(journeyPanel).toContain('grid-row: 2 / span 2;')
     expect(journeyPanel).toContain('display: grid;')
     expect(journeyPanel).toContain('grid-template-rows: subgrid;')
     expect(journeyPanel).not.toContain('background:')

@@ -104,25 +104,6 @@ export function HomePage() {
           </section>
 
           <section
-            aria-labelledby="home-culture-series-title"
-            className="course-series__panel course-series__panel--culture"
-          >
-            <Link
-              className="course-series__entry-card course-series__culture-link"
-              to="/culture"
-              aria-labelledby="home-culture-series-title"
-            >
-              <span className="course-series__culture-mark" aria-hidden="true">
-                文
-              </span>
-              <CourseSeriesTitle
-                id="home-culture-series-title"
-                title={copy.courseSeries.cultureTitle}
-              />
-            </Link>
-          </section>
-
-          <section
             aria-labelledby="home-journey-series-title"
             className="course-series__panel course-series__panel--journey"
           >
@@ -250,6 +231,25 @@ export function HomePage() {
                 })}
               </div>
             </div>
+          </section>
+
+          <section
+            aria-labelledby="home-culture-series-title"
+            className="course-series__panel course-series__panel--culture"
+          >
+            <Link
+              className="course-series__entry-card course-series__culture-link"
+              to="/culture"
+              aria-labelledby="home-culture-series-title"
+            >
+              <span className="course-series__culture-mark" aria-hidden="true">
+                文
+              </span>
+              <CourseSeriesTitle
+                id="home-culture-series-title"
+                title={copy.courseSeries.cultureTitle}
+              />
+            </Link>
           </section>
         </div>
       </section>

@@ -174,11 +174,11 @@ for (const pageCase of pageCases) {
 
           return {
             directPanelCount: panels.length,
-            pinyinBeforeCulture: Boolean(
-              pinyin.compareDocumentPosition(culture) & Node.DOCUMENT_POSITION_FOLLOWING,
+            pinyinBeforeJourney: Boolean(
+              pinyin.compareDocumentPosition(journey) & Node.DOCUMENT_POSITION_FOLLOWING,
             ),
-            cultureBeforeJourney: Boolean(
-              culture.compareDocumentPosition(journey) & Node.DOCUMENT_POSITION_FOLLOWING,
+            journeyBeforeCulture: Boolean(
+              journey.compareDocumentPosition(culture) & Node.DOCUMENT_POSITION_FOLLOWING,
             ),
             journeyBeforePath: Boolean(
               journey.compareDocumentPosition(pathElement) & Node.DOCUMENT_POSITION_FOLLOWING,
@@ -188,8 +188,8 @@ for (const pageCase of pageCases) {
 
         expect(order).toEqual({
           directPanelCount: 3,
-          pinyinBeforeCulture: true,
-          cultureBeforeJourney: true,
+          pinyinBeforeJourney: true,
+          journeyBeforeCulture: true,
           journeyBeforePath: true,
         })
 
@@ -229,13 +229,13 @@ for (const pageCase of pageCases) {
 
         expect(geometry.rowSizes).toHaveLength(4)
         expect(Math.abs(geometry.rowSizes[0] - geometry.rowSizes[1])).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.rowSizes[1] - geometry.rowSizes[2])).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.rowSizes[1] - geometry.rowSizes[3])).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.x - geometry.culture.x)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.width - geometry.culture.width)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.height - geometry.culture.height)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.height - geometry.rowSizes[0])).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.culture.height - geometry.rowSizes[1])).toBeLessThanOrEqual(1)
-        expect(Math.abs(geometry.basic.height - geometry.rowSizes[2])).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.culture.height - geometry.rowSizes[3])).toBeLessThanOrEqual(1)
+        expect(Math.abs(geometry.basic.height - geometry.rowSizes[1])).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.height - geometry.pinyinPanel.height)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.culture.height - geometry.culturePanel.height)).toBeLessThanOrEqual(1)
         expect(Math.abs(geometry.pinyin.x - geometry.list.x)).toBeLessThanOrEqual(1)
@@ -247,8 +247,8 @@ for (const pageCase of pageCases) {
         expect(geometry.culture.y).toBeGreaterThanOrEqual(
           geometry.pinyin.y + geometry.pinyin.height,
         )
-        expect(geometry.basic.y).toBeGreaterThanOrEqual(
-          geometry.culture.y + geometry.culture.height,
+        expect(geometry.culture.y).toBeGreaterThanOrEqual(
+          geometry.basic.y + geometry.basic.height,
         )
         expect(geometry.path.y).toBeGreaterThanOrEqual(geometry.basic.y + geometry.basic.height)
 

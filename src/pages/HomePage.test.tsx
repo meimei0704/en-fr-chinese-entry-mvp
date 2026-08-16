@@ -105,9 +105,9 @@ describe('HomePage', () => {
       .filter((link) => link.getAttribute('href')?.startsWith('/lesson/'))
 
     expect(within(courseSeries).getByText(expectedSeriesCopy.en.label)).toBeVisible()
-    expect(Array.from(list.children)).toEqual([pinyinSection, cultureSection, journeySection])
-    expect(pinyinSection.parentElement).toBe(cultureSection.parentElement)
-    expect(cultureSection.parentElement).toBe(journeySection.parentElement)
+    expect(Array.from(list.children)).toEqual([pinyinSection, journeySection, cultureSection])
+    expect(pinyinSection.parentElement).toBe(journeySection.parentElement)
+    expect(journeySection.parentElement).toBe(cultureSection.parentElement)
     expect(pinyinEntry).toHaveAttribute('href', '/pinyin')
     expect(pinyinEntry).toHaveClass('course-series__entry-card', 'course-series__pinyin-link')
     expect(cultureEntry).toHaveAttribute('href', '/culture')
@@ -120,10 +120,10 @@ describe('HomePage', () => {
     expect(journeySection.children[0]).toBe(journeyEntry)
     expect(journeySection.children[1]).toBe(journeyPath)
     expect(
-      pinyinEntry.compareDocumentPosition(cultureEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
+      pinyinEntry.compareDocumentPosition(journeyEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
     expect(
-      cultureEntry.compareDocumentPosition(journeyEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
+      journeyEntry.compareDocumentPosition(cultureEntry) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy()
     expect(
       journeyEntry.compareDocumentPosition(journeyPath) & Node.DOCUMENT_POSITION_FOLLOWING,
