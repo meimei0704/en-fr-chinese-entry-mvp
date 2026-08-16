@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import type { JSX } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
@@ -14,6 +15,21 @@ import { useCourse } from '../lib/contentProvider'
 
 function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: string): LessonContent | undefined {
   return course?.lessons.find((lesson) => lesson.id === lessonId)
+}
+
+function renderPatternFormula(pattern: string) {
+  const segments = pattern.split('……')
+  if (segments.length < 2) {
+    return pattern
+  }
+
+  return segments.flatMap((segment, index) => {
+    const children: Array<string | JSX.Element> = segment ? [segment] : []
+    if (index < segments.length - 1) {
+      children.push(<em key={`slot-${index}`} className="pattern-slot">……</em>)
+    }
+    return children
+  })
 }
 
 export function LessonPage() {
@@ -148,9 +164,10 @@ export function LessonPage() {
           <section id="lesson-patterns" className="surface-card lesson-section-card">
             <h2>{copy.lessonPage.sentencePatterns}</h2>
             <div className="card-grid">
-              {lesson.sentencePatterns.map((pattern) => (
+              {lesson.sentencePatterns.map((pattern, index) => (
                 <article key={pattern.id} className="study-item study-item--pattern">
-                  <p className="study-item__title">{pattern.pattern}</p>
+                  <span className="study-item__index">{String(index + 1).padStart(2, '0')}</span>
+                  <p className="study-item__title">{renderPatternFormula(pattern.pattern)}</p>
                   <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
                   <p className="study-item__example">{pattern.example}</p>
                   <SpeechButton

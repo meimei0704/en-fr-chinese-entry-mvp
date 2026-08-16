@@ -279,6 +279,24 @@ describe('LessonPage', () => {
     expect(steps[1]).toHaveClass('is-current')
   })
 
+  it('renders sentence pattern cards with an index number and highlighted placeholder', () => {
+    renderRoute('/lesson/daily-greetings')
+
+    const patternSection = screen.getByRole('heading', { level: 2, name: /useful patterns|structures utiles/i })
+      .closest('section')!
+
+    const cards = within(patternSection).getAllByRole('article')
+    expect(cards.length).toBeGreaterThan(0)
+
+    const first = cards[0]
+    expect(within(first).getByText('01')).toBeVisible()
+    expect(first).toHaveClass('study-item--pattern')
+
+    const placeholder = within(first).getByText('……')
+    expect(placeholder).toBeVisible()
+    expect(placeholder).not.toHaveClass('study-item__title')
+  })
+
   it('keeps only Practice and Home in the lesson action dock', () => {
     renderRoute('/lesson/self-intro')
     const actions = screen.getByRole('navigation', { name: /lesson actions/i })

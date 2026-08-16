@@ -1307,6 +1307,23 @@ h2 {
   color: var(--color-ink);
 }
 
+.study-item__index {
+  justify-self: start;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  color: var(--color-sky-ink);
+  background: #eef4ff;
+  border: 1px solid rgba(95, 143, 247, 0.2);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.study-item__title .pattern-slot {
+  color: var(--color-sky-ink);
+  font-style: normal;
+}
+
 .study-item__title span {
   margin-left: 0.35rem;
   color: var(--color-sky-ink);
