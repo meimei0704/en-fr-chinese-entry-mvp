@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { course } from '../content/course'
 import { DialoguePlayer } from './DialoguePlayer'
+import { speakerKey } from './speakerKey'
 
 class MockUtterance {
   lang = ''
@@ -110,5 +111,38 @@ describe('DialoguePlayer', () => {
     expect(
       screen.queryByRole('article', { name: /dialogue line speaker traveler/i }),
     ).not.toBeInTheDocument()
+  })
+
+  it('adds a normalized data-speaker key for chip color assignment', () => {
+    render(
+      <DialoguePlayer
+        language="fr"
+        lines={[
+          {
+            id: 'line-1',
+            speaker: {
+              en: 'Front desk',
+              fr: 'Réception',
+            },
+            hanzi: '请问，房间号？',
+            pinyin: 'Qǐngwèn, fángjiān hào?',
+            translation: 'Votre numéro de chambre ?',
+            explanation: {
+              en: 'Test explanation',
+              fr: 'Explication de test',
+            },
+            audio: '/audio/test.mp3',
+          },
+        ]}
+      />,
+    )
+
+    expect(screen.getByText('Réception')).toHaveAttribute('data-speaker', 'front-desk')
+  })
+
+  it('normalizes speaker keys to lowercase dashed tokens', () => {
+    expect(speakerKey('Traveler')).toBe('traveler')
+    expect(speakerKey('Front desk')).toBe('front-desk')
+    expect(speakerKey('  Clerk  ')).toBe('clerk')
   })
 })

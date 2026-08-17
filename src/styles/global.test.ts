@@ -110,6 +110,34 @@ describe('global color accessibility tokens', () => {
     expect(contrastRatio(cinnabarDark, '#ffffff')).toBeGreaterThanOrEqual(4.5)
   })
 
+  it('keeps future speaker chip families soft, low-saturation, and readable', () => {
+    const families: Array<[string, string]> = [
+      ['--color-speaker-service-ink', '--color-speaker-service-bg'],
+      ['--color-speaker-guest-ink', '--color-speaker-guest-bg'],
+      ['--color-speaker-friend-ink', '--color-speaker-friend-bg'],
+    ]
+    const roleSelectors = [
+      "[data-speaker='clerk']",
+      "[data-speaker='server']",
+      "[data-speaker='front-desk']",
+      "[data-speaker='pharmacist']",
+      "[data-speaker='driver']",
+      "[data-speaker='guest']",
+      "[data-speaker='customer']",
+      "[data-speaker='friend']",
+    ]
+
+    for (const [inkVariable, backgroundVariable] of families) {
+      expect(contrastRatio(cssVariable(inkVariable), cssVariable(backgroundVariable))).toBeGreaterThanOrEqual(
+        4.5,
+      )
+    }
+
+    for (const selector of roleSelectors) {
+      expect(css).toContain(selector)
+    }
+  })
+
   it('keeps small current-step markers readable against their accent fill', () => {
     const currentStepBackground = cssVariable(
       backgroundVariableFor('.lesson-progress-preview__rail li.is-current span'),

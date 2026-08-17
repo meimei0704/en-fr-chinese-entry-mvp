@@ -31,6 +31,12 @@
   --color-gold: #f3a53f;
   --color-paper: #fff8ef;
   --color-paper-strong: #fff1df;
+  --color-speaker-service-bg: #e6eef8;
+  --color-speaker-service-ink: #22466b;
+  --color-speaker-guest-bg: #fcf0e0;
+  --color-speaker-guest-ink: #7d4410;
+  --color-speaker-friend-bg: #e6f4ea;
+  --color-speaker-friend-ink: #1c6644;
   --radius-xl: 2rem;
   --radius-lg: 1.5rem;
   --radius-card: 1.35rem;
@@ -1497,6 +1503,29 @@ h2 {
   border: 1px solid rgba(var(--color-primary-rgb), 0.2);
   font-size: 0.8rem;
   font-weight: 800;
+}
+
+.dialogue-card__speaker[data-speaker='clerk'],
+.dialogue-card__speaker[data-speaker='server'],
+.dialogue-card__speaker[data-speaker='front-desk'],
+.dialogue-card__speaker[data-speaker='pharmacist'],
+.dialogue-card__speaker[data-speaker='driver'] {
+  color: var(--color-speaker-service-ink);
+  background: var(--color-speaker-service-bg);
+  border-color: rgba(34, 70, 107, 0.24);
+}
+
+.dialogue-card__speaker[data-speaker='guest'],
+.dialogue-card__speaker[data-speaker='customer'] {
+  color: var(--color-speaker-guest-ink);
+  background: var(--color-speaker-guest-bg);
+  border-color: rgba(125, 68, 16, 0.24);
+}
+
+.dialogue-card__speaker[data-speaker='friend'] {
+  color: var(--color-speaker-friend-ink);
+  background: var(--color-speaker-friend-bg);
+  border-color: rgba(28, 102, 68, 0.24);
 }
 
 .dialogue-card__hanzi-row .hanzi-display--dialogue {
