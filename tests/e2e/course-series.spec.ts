@@ -318,7 +318,7 @@ for (const pageCase of pageCases) {
         await expectKeyboardFocusVisible(page, journeyLink)
 
         if (pageCase.name === 'home') {
-          await expect(pinyinLink).toContainText(copy.pinyinProgress)
+          await expect(pinyinLink).not.toContainText(copy.pinyinProgress)
           await expect(cultureLink).not.toContainText(copy.journeyProgress)
           await expect(journeyLink).not.toContainText(copy.journeyProgress)
         } else {

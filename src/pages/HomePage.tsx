@@ -11,15 +11,11 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { buildJourney, journeyNodeIcons, journeyNodeImages } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
-import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { useCourse } from '../lib/contentProvider'
 
 export function HomePage() {
   const { course, error, reload } = useCourse()
   const [progress, setProgress] = useState(() => loadProgress())
-  const pinyinProgress = loadPinyinProgress()
-  const completedPinyinSectionsCount = pinyinProgress.completedSections.length
-  const totalPinyinSections = 2
   const language = progress.selectedExplanationLanguage
   const copy = getUiCopy(language)
   const [expandedPreviewNodeId, setExpandedPreviewNodeId] = useState<JourneyNodeId | null>(null)
@@ -105,18 +101,6 @@ export function HomePage() {
                 id="home-pinyin-series-title"
                 title={copy.courseSeries.pinyinTitle}
               />
-              <p
-                className={`course-series__progress${
-                  completedPinyinSectionsCount >= totalPinyinSections
-                    ? ' course-series__progress--complete'
-                    : ''
-                }`}
-              >
-                {copy.pinyinPage.sectionProgress(
-                  completedPinyinSectionsCount,
-                  totalPinyinSections,
-                )}
-              </p>
             </Link>
           </section>
 

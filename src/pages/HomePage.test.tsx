@@ -5,11 +5,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
 import { appRoutes } from '../app/router'
-import {
-  createDefaultLessonProgress,
-  createDefaultPinyinProgress,
-  savePinyinProgress,
-} from '../lib/pinyinProgress'
+import { createDefaultPinyinProgress, savePinyinProgress } from '../lib/pinyinProgress'
 import { createDefaultProgress, loadProgress, saveProgress } from '../lib/progress'
 import { expectedLessonTopicOrder, expectedLessonTopicPattern } from '../test/lessonTopicExpectations'
 import { MockCourseProvider, MockPinyinCourseProvider } from '../test/mockContentProvider'
@@ -164,17 +160,11 @@ describe('HomePage', () => {
     }
   })
 
-  it('shows pinyin section progress on Home and keeps journey entry count-free with non-zero progress in both stores', () => {
+  it('keeps both Home entry cards count-free with non-zero progress in both stores', () => {
     savePinyinProgress({
       ...createDefaultPinyinProgress(),
       visited: true,
-      moduleProgress: {
-        initials: {
-          ...createDefaultLessonProgress(),
-          visited: true,
-          completedSections: ['reference'],
-        },
-      },
+      completedSections: ['reference'],
     })
     saveProgress({
       ...createDefaultProgress(),
@@ -191,36 +181,8 @@ describe('HomePage', () => {
       name: expectedSeriesCopy.en.journey,
     })
 
-    expect(pinyinEntry).toHaveTextContent('1 of 2 sections complete')
+    expect(pinyinEntry).not.toHaveTextContent('1 of 2 sections complete')
     expect(journeyEntry).not.toHaveTextContent('1 of 10 lessons completed')
-  })
-
-  it('marks the pinyin entry progress complete when all pinyin sections are done', () => {
-    savePinyinProgress({
-      ...createDefaultPinyinProgress(),
-      visited: true,
-      moduleProgress: {
-        initials: {
-          ...createDefaultLessonProgress(),
-          visited: true,
-          completedSections: ['reference'],
-        },
-        finals: {
-          ...createDefaultLessonProgress(),
-          visited: true,
-          completedSections: ['practice'],
-        },
-      },
-    })
-
-    renderRoute('/home')
-
-    const pinyinEntry = within(getHomePinyinSeries()).getByRole('link', {
-      name: expectedSeriesCopy.en.pinyin,
-    })
-    const progress = within(pinyinEntry).getByText('2 of 2 sections complete')
-
-    expect(progress).toHaveClass('course-series__progress--complete')
   })
 
   it('centers the hero theme and removes the old right-side learning mockup', () => {
