@@ -163,6 +163,20 @@ describe('global color accessibility tokens', () => {
     expect(hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.speech-button--is-playing', 'animation: none'))
   })
 
+  it('keeps the B6 page entry transition CSS-only with stagger and reduced-motion guard', () => {
+    expect(css).toContain('@keyframes page-entry-fade-up')
+    expect(css).toContain('from {')
+    expect(css).toContain('opacity: 0;')
+    expect(css).toContain('transform: translateY(8px);')
+    expect(hasRuleWithDeclaration('.lesson-page > *', 'animation: page-entry-fade-up 220ms ease-out both'))
+    expect(hasRuleWithDeclaration('.pinyin-page__content > *', 'animation: page-entry-fade-up 220ms ease-out both'))
+    expect(hasRuleWithDeclaration('.lesson-page > *:nth-child(2)', 'animation-delay: 50ms'))
+    expect(hasRuleWithDeclaration('.lesson-page > *:nth-child(3)', 'animation-delay: 100ms'))
+    expect(hasRuleWithDeclaration('.lesson-page > *:nth-child(n + 4)', 'animation-delay: 150ms'))
+    expect(hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.lesson-page > *', 'animation: none'))
+    expect(hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.pinyin-page__content > *', 'animation: none'))
+  })
+
   it('keeps small current-step markers readable against their accent fill', () => {
     const currentStepBackground = cssVariable(
       backgroundVariableFor('.lesson-progress-preview__rail li.is-current span'),

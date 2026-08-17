@@ -3287,6 +3287,43 @@ h2 {
   .speech-button--is-playing {
     animation: none;
   }
+
+  .lesson-page > *,
+  .pinyin-page__content > * {
+    animation: none;
+  }
+}
+
+@keyframes page-entry-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.lesson-page > *,
+.pinyin-page__content > * {
+  animation: page-entry-fade-up 220ms ease-out both;
+}
+
+.lesson-page > *:nth-child(2),
+.pinyin-page__content > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+
+.lesson-page > *:nth-child(3),
+.pinyin-page__content > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+
+.lesson-page > *:nth-child(n + 4),
+.pinyin-page__content > *:nth-child(n + 4) {
+  animation-delay: 150ms;
 }
 
 .pinyin-page {
