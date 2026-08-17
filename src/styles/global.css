@@ -2127,6 +2127,10 @@ h2 {
   color: var(--color-muted);
 }
 
+.review-empty-state__cta {
+  margin-top: 0.9rem;
+}
+
 .success-chip {
   margin: 0;
 }
@@ -2185,6 +2189,18 @@ h2 {
   font-size: clamp(1.25rem, 3vw, 1.65rem);
   font-weight: 850;
   letter-spacing: -0.02em;
+}
+
+.progress-empty-state {
+  margin-top: 0.75rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--color-jade-tint-c-solid);
+  border: 1px solid rgba(var(--color-jade-rgb), 0.22);
+}
+
+.progress-empty-state__cta {
+  margin-top: 0.9rem;
 }
 
 .progress-stats-grid {

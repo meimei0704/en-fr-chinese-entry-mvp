@@ -115,6 +115,7 @@ export const uiCopy = {
       finishedCount: (count: number) => `${count} ${count === 1 ? 'card finished.' : 'cards finished.'}`,
       queueClear: 'Queue clear',
       noCards: 'No cards due right now.',
+      startLearning: 'Start learning',
       viewProgress: 'View progress',
       backToHome: 'Back to home',
       reviewActions: 'Review actions',
@@ -138,6 +139,7 @@ export const uiCopy = {
         `${done} of ${total} lesson${total === 1 ? '' : 's'} completed`,
       currentLesson: 'Current lesson',
       notStartedYet: 'Not started yet',
+      startLearning: 'Start learning',
       reviewQueue: 'Review queue',
       reviewItemsWaiting: (count: number) =>
         `${count} review item${count === 1 ? '' : 's'} waiting`,
@@ -281,6 +283,7 @@ export const uiCopy = {
       finishedCount: (count: number) => `${count} ${count === 1 ? 'carte terminée.' : 'cartes terminées.'}`,
       queueClear: 'File vide',
       noCards: 'Aucune carte à revoir pour le moment.',
+      startLearning: 'Commencer à apprendre',
       viewProgress: 'Voir les progrès',
       backToHome: 'Retour à l’accueil',
       reviewActions: 'Actions de révision',
@@ -304,6 +307,7 @@ export const uiCopy = {
         `${done} leçon${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       currentLesson: 'Leçon en cours',
       notStartedYet: 'Pas encore commencée',
+      startLearning: 'Commencer à apprendre',
       reviewQueue: 'File de révision',
       reviewItemsWaiting: (count: number) =>
         `${count} carte${count > 1 ? 's' : ''} en attente`,

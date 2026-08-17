@@ -37,4 +37,11 @@ describe('course-series UI copy', () => {
     expect(getUiCopy('en').lessonPage.lessonComplete).toBe('Lesson complete')
     expect(getUiCopy('fr').lessonPage.lessonComplete).toBe('Leçon terminée')
   })
+
+  it('pins the start-learning empty-state CTA labels', () => {
+    expect(getUiCopy('en').reviewPage.startLearning).toBe('Start learning')
+    expect(getUiCopy('fr').reviewPage.startLearning).toBe('Commencer à apprendre')
+    expect(getUiCopy('en').progressPage.startLearning).toBe('Start learning')
+    expect(getUiCopy('fr').progressPage.startLearning).toBe('Commencer à apprendre')
+  })
 })

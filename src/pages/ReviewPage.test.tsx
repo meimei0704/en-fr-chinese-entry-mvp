@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 
@@ -54,6 +54,25 @@ describe('ReviewPage', () => {
     expect(loadProgress().reviewQueue).toEqual(['self-intro-review-2', 'self-intro-review-3'])
   })
 
+
+
+  it('renders an empty state with a start-learning CTA when no cards are due', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      selectedExplanationLanguage: 'en',
+    })
+
+    renderRoute('/review')
+
+    const emptyState = screen.getByText('No cards due right now.').closest('section')
+
+    expect(emptyState).toHaveClass('review-empty-state')
+    expect(within(emptyState!).getByRole('heading', { name: /queue clear/i })).toBeVisible()
+    expect(within(emptyState!).getByRole('link', { name: /start learning/i })).toHaveAttribute(
+      'href',
+      '/home',
+    )
+  })
 
 
   it('shows review cards enqueued by the fourth and fifth formal lessons after progress reload', async () => {

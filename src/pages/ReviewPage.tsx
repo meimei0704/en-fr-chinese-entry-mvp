@@ -117,6 +117,9 @@ export function ReviewPage() {
           <section className="review-empty-state">
             <h2>{copy.reviewPage.queueClear}</h2>
             <p>{copy.reviewPage.noCards}</p>
+            <Link className="primary-button review-empty-state__cta" to="/home">
+              {copy.reviewPage.startLearning}
+            </Link>
           </section>
         )}
 

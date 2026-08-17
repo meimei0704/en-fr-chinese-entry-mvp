@@ -123,7 +123,12 @@ export function ProgressPage() {
                 className="progress-current-lesson"
               />
             ) : (
-              <p className="progress-current-lesson">{copy.progressPage.notStartedYet}</p>
+              <div className="progress-empty-state">
+                <p className="progress-current-lesson">{copy.progressPage.notStartedYet}</p>
+                <Link className="primary-button progress-empty-state__cta" to="/home">
+                  {copy.progressPage.startLearning}
+                </Link>
+              </div>
             )}
             <p className="muted-text">
               {copy.progressPage.reviewItemsWaiting(progress.reviewQueue.length)}

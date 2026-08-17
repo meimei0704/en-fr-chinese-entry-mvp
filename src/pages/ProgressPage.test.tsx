@@ -114,6 +114,24 @@ describe('ProgressPage', () => {
     localStorage.clear()
   })
 
+  it('shows an empty state with a start-learning CTA when no lesson has been started', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      selectedExplanationLanguage: 'en',
+    })
+
+    renderRoute('/progress')
+
+    const summary = screen.getByRole('region', { name: /learning path summary/i })
+    const emptyState = within(summary).getByText('Not started yet').closest('div')
+
+    expect(emptyState).toHaveClass('progress-empty-state')
+    expect(within(emptyState!).getByRole('link', { name: /start learning/i })).toHaveAttribute(
+      'href',
+      '/home',
+    )
+  })
+
   it('shows completed lessons, current lesson, review count, and refreshed progress sections', () => {
     saveProgress({
       ...createDefaultProgress(),
