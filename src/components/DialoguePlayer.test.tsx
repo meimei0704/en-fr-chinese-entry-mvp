@@ -201,4 +201,30 @@ describe('DialoguePlayer', () => {
     expect(card).not.toHaveClass('dialogue-card--is-playing')
     expect(playbackButton).not.toHaveClass('speech-button--is-playing')
   })
+
+  it('moves the playing highlight when a newer line interrupts the current one', async () => {
+    const user = userEvent.setup()
+    const [firstLine, secondLine] = course.lessons[0].dialogue.lines
+
+    render(
+      <DialoguePlayer
+        language="en"
+        lines={[firstLine, secondLine]}
+      />,
+    )
+
+    const cards = screen.getAllByRole('article', { name: /dialogue line speaker traveler/i })
+    const buttons = screen.getAllByRole('button', { name: /play chinese/i })
+
+    expect(cards).toHaveLength(2)
+    expect(buttons).toHaveLength(2)
+
+    await user.click(buttons[0])
+    expect(cards[0]).toHaveClass('dialogue-card--is-playing')
+    expect(cards[1]).not.toHaveClass('dialogue-card--is-playing')
+
+    await user.click(buttons[1])
+    expect(cards[0]).not.toHaveClass('dialogue-card--is-playing')
+    expect(cards[1]).toHaveClass('dialogue-card--is-playing')
+  })
 })
