@@ -16,6 +16,14 @@ export const uiCopy = {
   en: {
     explanationLabel: 'Explanation',
     languageToggleLabel: 'Explanation language',
+    nav: {
+      siteNavLabel: 'Main navigation',
+      home: 'Home',
+      pinyin: 'Pinyin',
+      culture: 'Culture',
+      review: 'Review',
+      progress: 'Progress',
+    },
     courseSeries: {
       label: 'Course series',
       pinyinTitle: 'Mandarin tones and pinyin',
@@ -184,6 +192,14 @@ export const uiCopy = {
   fr: {
     explanationLabel: 'Explication',
     languageToggleLabel: 'Langue d’explication',
+    nav: {
+      siteNavLabel: 'Navigation principale',
+      home: 'Accueil',
+      pinyin: 'Pinyin',
+      culture: 'Culture',
+      review: 'Révision',
+      progress: 'Progrès',
+    },
     courseSeries: {
       label: 'Séries de cours',
       pinyinTitle: 'Tons et pinyin du mandarin',

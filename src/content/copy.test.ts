@@ -44,4 +44,23 @@ describe('course-series UI copy', () => {
     expect(getUiCopy('en').progressPage.startLearning).toBe('Start learning')
     expect(getUiCopy('fr').progressPage.startLearning).toBe('Commencer à apprendre')
   })
+
+  it('pins the global site navigation labels', () => {
+    expect(getUiCopy('en').nav).toEqual({
+      siteNavLabel: 'Main navigation',
+      home: 'Home',
+      pinyin: 'Pinyin',
+      culture: 'Culture',
+      review: 'Review',
+      progress: 'Progress',
+    })
+    expect(getUiCopy('fr').nav).toEqual({
+      siteNavLabel: 'Navigation principale',
+      home: 'Accueil',
+      pinyin: 'Pinyin',
+      culture: 'Culture',
+      review: 'Révision',
+      progress: 'Progrès',
+    })
+  })
 })

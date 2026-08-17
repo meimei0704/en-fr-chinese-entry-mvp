@@ -115,13 +115,16 @@ export function LessonPage() {
 
     const updateActiveSection = () => {
       const line = referenceY()
+      let nextActiveLayerId: (typeof studyLayerIds)[number] = studyLayerIds[0]
       for (const section of sections) {
         const rect = section.getBoundingClientRect()
-        if (rect.top <= line && rect.bottom > line) {
-          setActiveLayerId(section.id as (typeof studyLayerIds)[number])
+        if (rect.top <= line) {
+          nextActiveLayerId = section.id as (typeof studyLayerIds)[number]
+        } else {
           break
         }
       }
+      setActiveLayerId(nextActiveLayerId)
     }
 
     const observer = new IntersectionObserver(updateActiveSection, {

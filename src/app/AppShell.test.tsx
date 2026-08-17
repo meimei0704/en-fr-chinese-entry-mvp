@@ -70,4 +70,13 @@ describe('App shell', () => {
       name: expectedLessonTopicPattern(expectedLessonTopicOrder[0], 'en'),
     })).toHaveAttribute('href', '/lesson/daily-greetings')
   })
+
+  it('shows the global site header with main navigation links', () => {
+    renderRoute('/')
+
+    const nav = screen.getByRole('navigation', { name: 'Main navigation' })
+    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/')
+    expect(within(nav).getByRole('link', { name: 'Review' })).toHaveAttribute('href', '/review')
+    expect(within(nav).getByRole('link', { name: 'Progress' })).toHaveAttribute('href', '/progress')
+  })
 })

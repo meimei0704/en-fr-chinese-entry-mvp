@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
@@ -311,6 +311,75 @@ describe('LessonPage', () => {
         expect(observe).toHaveBeenCalledWith(expect.objectContaining({ id }))
       }
       expect(observe).toHaveBeenCalledTimes(sectionIds.length)
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('keeps the first study layer current when scrolled above its section after layout drift', () => {
+    let callback: IntersectionObserverCallback | undefined
+    class MockIntersectionObserver implements IntersectionObserver {
+      readonly root = null
+      readonly rootMargin = ''
+      readonly thresholds: ReadonlyArray<number> = []
+      observe = vi.fn()
+      unobserve = vi.fn()
+      disconnect = vi.fn()
+      takeRecords = vi.fn(() => [])
+      constructor(observerCallback: IntersectionObserverCallback) {
+        callback = observerCallback
+      }
+    }
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver)
+
+    try {
+      window.innerHeight = 900
+      renderRoute('/lesson/self-intro')
+      const preview = screen.getByRole('region', { name: /lesson progress preview/i })
+      const steps = within(preview).getAllByRole('listitem')
+
+      const rectsBySectionId: Record<string, { top: number; bottom: number }> = {
+        'lesson-dialogue': { top: -2500, bottom: -300 },
+        'lesson-patterns': { top: 200, bottom: 1200 },
+        'lesson-vocabulary': { top: 3000, bottom: 4200 },
+      }
+
+      const mockRects = (rects: Record<string, { top: number; bottom: number }>) => {
+        for (const id of Object.keys(rects)) {
+          const element = document.getElementById(id)
+          expect(element).not.toBeNull()
+          Object.defineProperty(element, 'getBoundingClientRect', {
+            configurable: true,
+            value: () => ({
+              x: 0,
+              y: 0,
+              width: 0,
+              height: 0,
+              left: 0,
+              right: 0,
+              top: rects[id].top,
+              bottom: rects[id].bottom,
+            }),
+          })
+        }
+      }
+
+      mockRects(rectsBySectionId)
+      act(() => {
+        callback?.([] as unknown as IntersectionObserverEntry[], undefined as never)
+      })
+      expect(steps[1]).toHaveClass('is-current')
+
+      mockRects({
+        'lesson-dialogue': { top: 317, bottom: 2731 },
+        'lesson-patterns': { top: 2747, bottom: 3773 },
+        'lesson-vocabulary': { top: 3789, bottom: 5079 },
+      })
+      act(() => {
+        callback?.([] as unknown as IntersectionObserverEntry[], undefined as never)
+      })
+      expect(steps[0]).toHaveClass('is-current')
+      expect(steps[1]).not.toHaveClass('is-current')
     } finally {
       vi.unstubAllGlobals()
     }
