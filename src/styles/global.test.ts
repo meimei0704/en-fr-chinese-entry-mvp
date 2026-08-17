@@ -175,6 +175,9 @@ describe('global color accessibility tokens', () => {
     expect(hasRuleWithDeclaration('.lesson-page > *:nth-child(n + 4)', 'animation-delay: 150ms'))
     expect(hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.lesson-page > *', 'animation: none'))
     expect(hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.pinyin-page__content > *', 'animation: none'))
+    expect(css.indexOf('animation: page-entry-fade-up 220ms ease-out both')).toBeLessThan(
+      css.indexOf('@media (prefers-reduced-motion: reduce)'),
+    )
   })
 
   it('keeps small current-step markers readable against their accent fill', () => {

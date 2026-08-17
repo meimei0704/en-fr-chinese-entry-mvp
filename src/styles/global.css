@@ -3266,34 +3266,6 @@ h2 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .option-button,
-  .primary-button,
-  .secondary-link,
-  .chip-button,
-  .course-series__pinyin-link,
-  .course-series__journey-link,
-  .course-series__culture-link,
-  .journey-node,
-  .study-item,
-  .vocabulary-list__item,
-  .dialogue-card,
-  .lesson-card,
-  .review-flashcard,
-  .practice-challenge__question {
-    transition: none;
-  }
-
-  .speech-button--is-playing {
-    animation: none;
-  }
-
-  .lesson-page > *,
-  .pinyin-page__content > * {
-    animation: none;
-  }
-}
-
 @keyframes page-entry-fade-up {
   from {
     opacity: 0;
@@ -3324,6 +3296,34 @@ h2 {
 .lesson-page > *:nth-child(n + 4),
 .pinyin-page__content > *:nth-child(n + 4) {
   animation-delay: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option-button,
+  .primary-button,
+  .secondary-link,
+  .chip-button,
+  .course-series__pinyin-link,
+  .course-series__journey-link,
+  .course-series__culture-link,
+  .journey-node,
+  .study-item,
+  .vocabulary-list__item,
+  .dialogue-card,
+  .lesson-card,
+  .review-flashcard,
+  .practice-challenge__question {
+    transition: none;
+  }
+
+  .speech-button--is-playing {
+    animation: none;
+  }
+
+  .lesson-page > *,
+  .pinyin-page__content > * {
+    animation: none;
+  }
 }
 
 .pinyin-page {
