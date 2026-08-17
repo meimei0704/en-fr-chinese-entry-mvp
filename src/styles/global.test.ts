@@ -180,6 +180,17 @@ describe('global color accessibility tokens', () => {
     )
   })
 
+  it('keeps the C8 pattern card aligned to the primary teal system with readable slot chips', () => {
+    expect(contrastRatio(cssVariable('--color-primary-ink'), cssVariable('--color-primary-100'))).toBeGreaterThanOrEqual(
+      4.5,
+    )
+    expect(hasRuleWithDeclaration('.study-item--pattern', 'border-left: 4px solid rgba(var(--color-primary-rgb), 0.35)'))
+    expect(css).not.toContain('border-left: 4px solid rgba(255, 138, 61, 0.62)')
+    expect(hasRuleWithDeclaration('.study-item__title .pattern-slot', 'background: var(--color-primary-100)'))
+    expect(hasRuleWithDeclaration('.study-item__title .pattern-slot', 'border-radius: var(--radius-chip)'))
+    expect(hasRuleWithDeclaration('.study-item__title', 'line-height: 1.5'))
+  })
+
   it('keeps small current-step markers readable against their accent fill', () => {
     const currentStepBackground = cssVariable(
       backgroundVariableFor('.lesson-progress-preview__rail li.is-current span'),

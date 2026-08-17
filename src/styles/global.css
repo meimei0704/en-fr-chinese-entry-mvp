@@ -1386,13 +1386,14 @@ h2 {
 }
 
 .study-item--pattern {
-  border-left: 4px solid rgba(255, 138, 61, 0.62);
+  border-left: 4px solid rgba(var(--color-primary-rgb), 0.35);
 }
 
 .study-item__title {
   margin: 0;
   font-size: var(--font-size-title);
   font-weight: 850;
+  line-height: 1.5;
   color: var(--color-ink);
 }
 
@@ -1409,8 +1410,13 @@ h2 {
 }
 
 .study-item__title .pattern-slot {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-chip);
   color: var(--color-primary-ink);
+  background: var(--color-primary-100);
   font-style: normal;
+  font-weight: 800;
 }
 
 .study-item__title span {
