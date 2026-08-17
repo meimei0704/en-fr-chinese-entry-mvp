@@ -30,4 +30,11 @@ describe('course-series UI copy', () => {
       expect(copy.progressPage).not.toHaveProperty('progressJourneyMapLabel')
     }
   })
+
+  it('pins the lesson completion badge labels', () => {
+    expect(getUiCopy('en').homePage.lessonComplete).toBe('Complete')
+    expect(getUiCopy('fr').homePage.lessonComplete).toBe('Terminée')
+    expect(getUiCopy('en').lessonPage.lessonComplete).toBe('Lesson complete')
+    expect(getUiCopy('fr').lessonPage.lessonComplete).toBe('Leçon terminée')
+  })
 })

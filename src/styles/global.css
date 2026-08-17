@@ -1286,6 +1286,30 @@ h2 {
   box-shadow: 0 18px 44px -34px rgba(var(--color-shadow-warm-rgb), 0.32);
 }
 
+.journey-map .journey-node--is-complete {
+  border-color: rgba(var(--color-jade-rgb), 0.62);
+}
+
+.journey-node__complete-badge {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--color-jade-rgb), 0.42);
+  padding: 0.3rem 0.6rem;
+  color: var(--color-jade-ink);
+  background: var(--color-jade-tint-c-solid);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.journey-node__complete-badge::before {
+  content: '✓';
+}
+
 .journey-map .journey-node--preview {
   background:
     repeating-linear-gradient(
@@ -1564,6 +1588,27 @@ h2 {
 
 .lesson-header-card__scenario {
   margin: 0.35rem 0 0;
+}
+
+.lesson-header-card__complete-badge {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--color-jade-rgb), 0.42);
+  padding: 0.35rem 0.7rem;
+  color: var(--color-jade-ink);
+  background: var(--color-jade-tint-c-solid);
+  font-size: 0.8rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.lesson-header-card__complete-badge::before {
+  content: '✓';
 }
 
 .lesson-page .lesson-progress-preview {

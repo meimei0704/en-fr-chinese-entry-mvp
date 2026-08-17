@@ -38,8 +38,9 @@ export function LessonPage() {
   const { lessonId } = useParams()
   const { course, error, reload } = useCourse()
   const [fallbackLesson, setFallbackLesson] = useState<LessonContent | undefined>(undefined)
+  const [progress, setProgress] = useState(() => loadProgress())
   const lesson = fallbackLesson ?? findLesson(course, lessonId)
-  const selectedLanguage = loadProgress().selectedExplanationLanguage
+  const selectedLanguage = progress.selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
   const studyLayers = studyLayerIds.map((id, index) => ({
     id,
@@ -82,15 +83,18 @@ export function LessonPage() {
       return
     }
 
-    const progress = loadProgress()
+    setProgress((currentProgress) => {
+      if (currentProgress.lastVisitedLesson === lesson.id) {
+        return currentProgress
+      }
 
-    if (progress.lastVisitedLesson === lesson.id) {
-      return
-    }
+      const nextProgress = {
+        ...currentProgress,
+        lastVisitedLesson: lesson.id,
+      }
 
-    saveProgress({
-      ...progress,
-      lastVisitedLesson: lesson.id,
+      saveProgress(nextProgress)
+      return nextProgress
     })
   }, [lesson])
 
@@ -165,6 +169,11 @@ export function LessonPage() {
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
+          {progress.completedLessons.includes(lesson.id) ? (
+            <span className="lesson-header-card__complete-badge">
+              {copy.lessonPage.lessonComplete}
+            </span>
+          ) : null}
           <p className="lede lesson-header-card__scenario">
             {getLocalizedText(lesson.scenario, selectedLanguage)}
           </p>

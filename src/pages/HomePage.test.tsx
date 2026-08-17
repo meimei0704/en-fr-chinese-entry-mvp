@@ -394,8 +394,7 @@ describe('HomePage', () => {
     ).toHaveAttribute('href', '/lesson/restaurant-order')
   })
 
-  it('does not expose next-lesson state on the home page even after lessons are complete', () => {
-    saveProgress({
+  it('does not expose next-lesson state on the home page even after lessons are complete', () => {    saveProgress({
       ...createDefaultProgress(),
       completedLessons: [
         'self-intro',
@@ -435,6 +434,29 @@ describe('HomePage', () => {
 
     expect(within(journeyMap).queryAllByText(/open lesson/i)).toHaveLength(0)
     expect(within(journeyMap).queryByRole('link', { name: /^open lesson$/i })).not.toBeInTheDocument()
+  })
+
+  it('marks completed journey lesson cards with a completion badge', () => {
+    saveProgress({
+      ...createDefaultProgress(),
+      completedLessons: ['self-intro'],
+    })
+
+    renderRoute('/home')
+
+    const journeyMap = getHomeJourneySeries()
+    const completedCard = within(journeyMap).getByRole('link', {
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[1], 'en'),
+    })
+    const upcomingCard = within(journeyMap).getByRole('link', {
+      name: expectedLessonTopicPattern(expectedLessonTopicOrder[2], 'en'),
+    })
+
+    expect(completedCard).toHaveClass('journey-node--is-complete')
+    expect(within(completedCard).getByText('Complete')).toBeVisible()
+    expect(upcomingCard).not.toHaveClass('journey-node--is-complete')
+    expect(within(upcomingCard).queryByText('Complete')).not.toBeInTheDocument()
+    expect(completedCard).toHaveAttribute('href', '/lesson/self-intro')
   })
 
   it('keeps the journey map as the only lesson entry section and exposes a stamp illustration slot on each card', () => {
