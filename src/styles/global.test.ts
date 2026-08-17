@@ -153,6 +153,16 @@ describe('global color accessibility tokens', () => {
     expect(css).not.toContain('border-color: rgba(28, 102, 68')
   })
 
+  it('keeps the B5 dialogue playing state styled with motion off by default and reduced-motion aware', () => {
+    expect(hasRule('.dialogue-card--is-playing')).toBe(true)
+    expect(hasRule('.speech-button--is-playing')).toBe(true)
+    expect(css).toContain('animation: speech-button-pulse 1.4s ease-in-out infinite;')
+    expect(css).toContain('@keyframes speech-button-pulse')
+    expect(css).toContain('.dialogue-card {')
+    expect(css).toContain('border-color 150ms ease')
+    expect(hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.speech-button--is-playing', 'animation: none'))
+  })
+
   it('keeps small current-step markers readable against their accent fill', () => {
     const currentStepBackground = cssVariable(
       backgroundVariableFor('.lesson-progress-preview__rail li.is-current span'),

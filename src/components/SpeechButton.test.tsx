@@ -96,4 +96,31 @@ describe('SpeechButton', () => {
 
     expect(speakChineseMock).not.toHaveBeenCalled()
   })
+
+  it('applies the playing modifier class and forwards playback end handler', async () => {
+    const user = userEvent.setup()
+    const onPlaybackEnd = vi.fn()
+
+    render(
+      <SpeechButton
+        label="Play Chinese"
+        text="你好"
+        audioSrc="/audio/self-intro/line-01.mp3"
+        isPlaying
+        onPlaybackEnd={onPlaybackEnd}
+      />,
+    )
+
+    const button = screen.getByRole('button', { name: 'Play Chinese' })
+
+    expect(button).toHaveClass('speech-button', 'speech-button--is-playing')
+
+    await user.click(button)
+
+    expect(speakChineseMock).toHaveBeenCalledWith({
+      text: '你好',
+      audioSrc: '/audio/self-intro/line-01.mp3',
+      onEnd: onPlaybackEnd,
+    })
+  })
 })

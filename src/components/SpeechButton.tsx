@@ -6,7 +6,9 @@ interface SpeechButtonProps {
   audioSrc?: string
   fallbackAudioSrc?: string
   disabled?: boolean
+  isPlaying?: boolean
   onActivate?: () => void
+  onPlaybackEnd?: () => void
 }
 
 export function SpeechButton({
@@ -15,18 +17,20 @@ export function SpeechButton({
   audioSrc,
   fallbackAudioSrc,
   disabled = false,
+  isPlaying = false,
   onActivate,
+  onPlaybackEnd,
 }: SpeechButtonProps) {
   return (
     <button
       type="button"
-      className="speech-button"
+      className={`speech-button${isPlaying ? ' speech-button--is-playing' : ''}`}
       aria-label={label}
       title={label}
       disabled={disabled}
       onClick={() => {
         onActivate?.()
-        speakChinese({ text, audioSrc, fallbackAudioSrc })
+        speakChinese({ text, audioSrc, fallbackAudioSrc, onEnd: onPlaybackEnd })
       }}
     >
       <svg

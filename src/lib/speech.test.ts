@@ -215,4 +215,62 @@ describe('speakChinese', () => {
 
     vi.useRealTimers()
   })
+
+  it('fires onEnd when playback finishes naturally', () => {
+    const { instances } = installMockAudio()
+    const onEnd = vi.fn()
+
+    speakChinese({
+      text: '你好。',
+      audioSrc: '/audio/daily-greetings/line-01.mp3',
+      onEnd,
+    })
+
+    expect(onEnd).not.toHaveBeenCalled()
+    instances[0].listeners.ended()
+    expect(onEnd).toHaveBeenCalledTimes(1)
+  })
+
+  it('fires onEnd when a newer playback interrupts the current one', () => {
+    const { instances } = installMockAudio()
+    const firstEnd = vi.fn()
+    const secondEnd = vi.fn()
+
+    speakChinese({
+      text: '第一段音频。',
+      audioSrc: '/audio/self-intro/line-01.mp3',
+      onEnd: firstEnd,
+    })
+
+    speakChinese({
+      text: '第二段音频。',
+      audioSrc: '/audio/self-intro/line-02.mp3',
+      onEnd: secondEnd,
+    })
+
+    expect(firstEnd).toHaveBeenCalledTimes(1)
+    expect(secondEnd).not.toHaveBeenCalled()
+    expect(instances[0].listeners.ended).toBeDefined()
+  })
+
+  it('fires onEnd after all retries are exhausted without a fallback', async () => {
+    vi.useFakeTimers()
+    const rejectPlay = vi.fn().mockRejectedValue(new Error('decode failed'))
+    installMockAudio(rejectPlay)
+    const onEnd = vi.fn()
+
+    speakChinese({
+      text: '请问，地铁票在哪儿买？',
+      audioSrc: '/audio/ask-directions/line-01.mp3',
+      onEnd,
+    })
+
+    await vi.advanceTimersByTimeAsync(200)
+    await vi.advanceTimersByTimeAsync(500)
+    await vi.advanceTimersByTimeAsync(1000)
+
+    expect(onEnd).toHaveBeenCalledTimes(1)
+
+    vi.useRealTimers()
+  })
 })
