@@ -12,6 +12,15 @@ function cssVariable(name: string) {
   return match[1]
 }
 
+function darkVariable(name: string) {
+  const dark = mediaBlock('(prefers-color-scheme: dark)')
+  const match = dark.match(new RegExp(`${name}:\\s*(#[0-9a-fA-F]{6})`))
+  if (!match) {
+    throw new Error(`Missing dark CSS variable ${name}`)
+  }
+  return match[1]
+}
+
 function relativeLuminance(hex: string) {
   const [red, green, blue] = [0, 2, 4]
     .map((offset) => Number.parseInt(hex.slice(1 + offset, 3 + offset), 16) / 255)
@@ -208,6 +217,53 @@ describe('global color accessibility tokens', () => {
     )
 
     expect(contrastRatio('#ffffff', currentStepBackground)).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('keeps the C10 dark mode fully tokenized with readable contrast and safe ordering', () => {
+    const dark = mediaBlock('(prefers-color-scheme: dark)')
+
+    expect(css).toContain('color-scheme: light;')
+    expect(dark).toContain('color-scheme: dark;')
+    expect(dark).toContain('--color-bg:')
+    expect(dark).toContain('--color-surface:')
+    expect(dark).toContain('--color-ink:')
+    expect(dark).toContain('--color-muted:')
+    expect(dark).toContain('--color-border:')
+    expect(dark).toContain('--color-primary-ink:')
+    expect(dark).toContain('--color-pinyin-initials:')
+    expect(dark).toContain('--color-pinyin-finals:')
+    expect(dark).toContain('--color-pinyin-tones:')
+    expect(dark).toContain('--color-pinyin-whole:')
+    expect(dark).toContain('--color-speaker-service-ink:')
+    expect(dark).toContain('--color-speaker-guest-ink:')
+    expect(dark).toContain('--color-speaker-friend-ink:')
+
+    expect(contrastRatio(darkVariable('--color-ink'), darkVariable('--color-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-ink'), darkVariable('--color-surface'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-muted'), darkVariable('--color-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-muted'), darkVariable('--color-surface'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-primary-ink'), darkVariable('--color-primary-100'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-pinyin-initials'), darkVariable('--color-pinyin-initials-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-pinyin-finals'), darkVariable('--color-pinyin-finals-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-pinyin-tones'), darkVariable('--color-pinyin-tones-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-pinyin-whole'), darkVariable('--color-pinyin-whole-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-speaker-service-ink'), darkVariable('--color-speaker-service-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-speaker-guest-ink'), darkVariable('--color-speaker-guest-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkVariable('--color-speaker-friend-ink'), darkVariable('--color-speaker-friend-bg'))).toBeGreaterThanOrEqual(4.5)
+
+    expect(css.indexOf('(prefers-color-scheme: dark)')).toBeLessThan(
+      css.indexOf('(prefers-reduced-motion: reduce)'),
+    )
+  })
+
+  it('keeps the C10 tokenization with zero stray literal colors outside the root palette', () => {
+    const outsideRoot = css.replace(/^:root\s*{[^}]*}/m, '')
+
+    for (const stray of ['#fff3e0', '#c2571c', '#e8f5e9', '#2e7d32', '#e3f2fd', '#1565c0', '#f3e5f5', '#6a1b9a']) {
+      expect(outsideRoot).not.toContain(stray)
+    }
+    expect(outsideRoot).not.toContain('rgba(255, 138, 61')
+    expect(outsideRoot).not.toContain('rgba(231, 234, 240')
   })
 
   it('keeps Home-only journey card polish scoped away from Progress journey nodes', () => {
