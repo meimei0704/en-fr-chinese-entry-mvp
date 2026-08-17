@@ -1028,6 +1028,10 @@ h2 {
   word-break: normal;
 }
 
+.course-series__progress--complete {
+  color: var(--color-jade-ink);
+}
+
 .course-series__journey-path {
   min-width: 0;
   display: grid;

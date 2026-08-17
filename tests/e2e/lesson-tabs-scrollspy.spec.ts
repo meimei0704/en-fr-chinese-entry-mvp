@@ -30,14 +30,15 @@ test('study layer tab bar stays stuck near the top of the viewport while scrolli
   await expect(preview).toBeVisible()
 
   await page.evaluate(() => {
-    const section = document.getElementById('lesson-patterns')!
-    window.scrollTo(0, section.offsetTop - window.innerHeight * 0.3)
+    document.getElementById('lesson-patterns')!.scrollIntoView({ block: 'start' })
   })
-  await page.waitForTimeout(150)
 
-  const stuckTop = await preview.evaluate((element) => element.getBoundingClientRect().top)
-  expect(stuckTop).toBeGreaterThanOrEqual(0)
-  expect(stuckTop).toBeLessThan(60)
+  await expect
+    .poll(async () => {
+      const stuckTop = await preview.evaluate((element) => element.getBoundingClientRect().top)
+      return stuckTop >= 0 && stuckTop < 60
+    })
+    .toBe(true)
   await expect(preview).toBeInViewport()
 })
 
@@ -55,25 +56,25 @@ test('scrollspy highlights the study layer whose section is in view while scroll
   await expect(links.nth(0)).toHaveAttribute('aria-current', 'location')
   await expect(links.nth(1)).not.toHaveAttribute('aria-current')
 
-  const scrollSectionToUpperViewport = async (sectionId: string) => {
+  const scrollSectionToUpperViewport = async (sectionId: string, stepIndex: number) => {
     await page.evaluate((id) => {
-      const section = document.getElementById(id)!
-      window.scrollTo(0, section.offsetTop - window.innerHeight * 0.3)
+      document.getElementById(id)!.scrollIntoView({ block: 'start' })
     }, sectionId)
-    await page.waitForTimeout(150)
+    await expect
+      .poll(async () => (await steps.nth(stepIndex).getAttribute('class')) ?? '')
+      .toMatch(/is-current/)
   }
 
-  await scrollSectionToUpperViewport('lesson-patterns')
-  await expect(steps.nth(1)).toHaveClass(/is-current/)
+  await scrollSectionToUpperViewport('lesson-patterns', 1)
   await expect(links.nth(1)).toHaveAttribute('aria-current', 'location')
 
-  await scrollSectionToUpperViewport('lesson-vocabulary')
-  await expect(steps.nth(2)).toHaveClass(/is-current/)
+  await scrollSectionToUpperViewport('lesson-vocabulary', 2)
   await expect(links.nth(2)).toHaveAttribute('aria-current', 'location')
 
   await page.evaluate(() => window.scrollTo(0, 0))
-  await page.waitForTimeout(150)
-  await expect(steps.nth(0)).toHaveClass(/is-current/)
+  await expect
+    .poll(async () => (await steps.nth(0).getAttribute('class')) ?? '')
+    .toMatch(/is-current/)
   await expect(links.nth(0)).toHaveAttribute('aria-current', 'location')
 })
 
