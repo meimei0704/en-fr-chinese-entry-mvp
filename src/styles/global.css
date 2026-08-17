@@ -1448,6 +1448,7 @@ h2 {
   gap: 0.2rem;
   padding: 1rem;
   border: 1px solid rgba(231, 234, 240, 0.92);
+  border-left: 4px solid rgba(var(--color-primary-rgb), 0.25);
   border-radius: var(--radius-card);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 251, 253, 0.9));
@@ -1474,8 +1475,12 @@ h2 {
 }
 
 .vocabulary-list__pinyin {
-  margin: 0;
+  justify-self: start;
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-chip);
   color: var(--color-primary-ink);
+  background: var(--color-primary-100);
   font-weight: 800;
   letter-spacing: 0.04em;
 }

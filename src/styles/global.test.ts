@@ -191,6 +191,17 @@ describe('global color accessibility tokens', () => {
     expect(hasRuleWithDeclaration('.study-item__title', 'line-height: 1.5'))
   })
 
+  it('keeps the C9 vocabulary card with a primary accent border and pinyin chip', () => {
+    expect(contrastRatio(cssVariable('--color-primary-ink'), cssVariable('--color-primary-100'))).toBeGreaterThanOrEqual(
+      4.5,
+    )
+    expect(hasRuleWithDeclaration('.vocabulary-list__item', 'border-left: 4px solid rgba(var(--color-primary-rgb), 0.25)'))
+    expect(hasRuleWithDeclaration('.vocabulary-list__pinyin', 'background: var(--color-primary-100)'))
+    expect(hasRuleWithDeclaration('.vocabulary-list__pinyin', 'border-radius: var(--radius-chip)'))
+    expect(hasRuleWithDeclaration('.vocabulary-list__pinyin', 'justify-self: start'))
+    expect(hasRuleWithDeclaration('.vocabulary-list__pinyin', 'color: var(--color-primary-ink)'))
+  })
+
   it('keeps small current-step markers readable against their accent fill', () => {
     const currentStepBackground = cssVariable(
       backgroundVariableFor('.lesson-progress-preview__rail li.is-current span'),
