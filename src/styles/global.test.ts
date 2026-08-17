@@ -136,6 +136,21 @@ describe('global color accessibility tokens', () => {
     for (const selector of roleSelectors) {
       expect(css).toContain(selector)
     }
+
+    for (const borderVariable of [
+      '--color-speaker-service-border:',
+      '--color-speaker-guest-border:',
+      '--color-speaker-friend-border:',
+    ]) {
+      expect(css).toContain(borderVariable)
+    }
+
+    expect(css).toContain('border-color: var(--color-speaker-service-border);')
+    expect(css).toContain('border-color: var(--color-speaker-guest-border);')
+    expect(css).toContain('border-color: var(--color-speaker-friend-border);')
+    expect(css).not.toContain('border-color: rgba(34, 70, 107')
+    expect(css).not.toContain('border-color: rgba(125, 68, 16')
+    expect(css).not.toContain('border-color: rgba(28, 102, 68')
   })
 
   it('keeps small current-step markers readable against their accent fill', () => {
