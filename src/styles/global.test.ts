@@ -215,15 +215,15 @@ describe('global color accessibility tokens', () => {
       ['.journey-map .journey-node .muted-text', 'line-height: 1.5;'],
       ['.journey-map .journey-node__cta', 'margin-top: auto;'],
       ['.journey-map .journey-node--preview .journey-node__cta', 'color: var(--color-cinnabar-dark);'],
-      ['.journey-map .journey-node--lesson', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
-      ['.journey-map .journey-node--preview', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
+      ['.journey-map .journey-node--lesson', 'box-shadow: 0 18px 44px -34px rgba(var(--color-shadow-warm-rgb), 0.32);'],
+      ['.journey-map .journey-node--preview', 'box-shadow: 0 18px 44px -34px rgba(var(--color-shadow-warm-rgb), 0.32);'],
     ]
     const leakedProgressSelectors = [
       ['.journey-node .muted-text', 'line-height: 1.5;'],
       ['.journey-node__cta', 'margin-top: auto;'],
       ['.journey-node--preview .journey-node__cta', 'color: var(--color-cinnabar-dark);'],
-      ['.journey-node--lesson', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
-      ['.journey-node--preview', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.32);'],
+      ['.journey-node--lesson', 'box-shadow: 0 18px 44px -34px rgba(var(--color-shadow-warm-rgb), 0.32);'],
+      ['.journey-node--preview', 'box-shadow: 0 18px 44px -34px rgba(var(--color-shadow-warm-rgb), 0.32);'],
     ]
 
     for (const [selector, declaration] of homeScopedSelectors) {
@@ -241,12 +241,12 @@ describe('global color accessibility tokens', () => {
       ['.progress-journey-card .journey-node__cta', 'padding: 0.5rem 0.85rem;'],
       ['.progress-journey-card .journey-node__cta', 'border-radius: 999px;'],
       ['.progress-journey-card .journey-node__cta', 'background: rgba(var(--color-primary-50-rgb), 0.9);'],
-      ['.progress-journey-card .journey-node--preview .journey-node__cta', 'background: rgba(255, 244, 230, 0.92);'],
-      ['.progress-journey-card .journey-node--preview .journey-node__cta', 'border-color: rgba(194, 65, 45, 0.16);'],
+      ['.progress-journey-card .journey-node--preview .journey-node__cta', 'background: rgba(var(--color-gold-tint-rgb), 0.92);'],
+      ['.progress-journey-card .journey-node--preview .journey-node__cta', 'border-color: rgba(var(--color-red-ink-rgb), 0.16);'],
       ['.progress-journey-card .journey-node .muted-text', 'margin-top: 0.45rem;'],
       ['.progress-journey-card .journey-node .muted-text', 'color: var(--color-ink-soft);'],
       ['.progress-journey-card .journey-node .muted-text', 'line-height: 1.55;'],
-      ['.progress-journey-card .journey-node', 'box-shadow: 0 18px 44px -34px rgba(67, 40, 20, 0.35);'],
+      ['.progress-journey-card .journey-node', 'box-shadow: 0 18px 44px -34px rgba(var(--color-shadow-warm-rgb), 0.35);'],
     ]
 
     for (const [selector, declaration] of progressBaselineSelectors) {
@@ -531,19 +531,19 @@ describe('global color accessibility tokens', () => {
     expect(diagram).toContain('min-width: 0;')
     expect(parts).toContain('grid-template-columns: repeat(3, minmax(0, 1fr));')
     expect(parts).toContain('min-width: 0;')
-    expect(initial).toContain('background: #fff3e0;')
-    expect(initial).toContain('color: #c2571c;')
-    expect(initialLabel).toContain('color: #a34a16;')
-    expect(final).toContain('background: #e8f5e9;')
-    expect(final).toContain('color: #2e7d32;')
-    expect(tone).toContain('background: #e3f2fd;')
-    expect(tone).toContain('color: #1565c0;')
-    expect(heading).toContain('background: #f3e5f5;')
-    expect(heading).toContain('color: #6a1b9a;')
-    expect(contrastRatio('#a34a16', '#fff3e0')).toBeGreaterThanOrEqual(4.5)
-    expect(contrastRatio('#2e7d32', '#e8f5e9')).toBeGreaterThanOrEqual(4.5)
-    expect(contrastRatio('#1565c0', '#e3f2fd')).toBeGreaterThanOrEqual(4.5)
-    expect(contrastRatio('#6a1b9a', '#f3e5f5')).toBeGreaterThanOrEqual(4.5)
+    expect(initial).toContain('background: var(--color-pinyin-initials-bg);')
+    expect(initial).toContain('color: var(--color-pinyin-initials);')
+    expect(initialLabel).toContain('color: var(--color-cinnabar-deep-2);')
+    expect(final).toContain('background: var(--color-pinyin-finals-bg);')
+    expect(final).toContain('color: var(--color-pinyin-finals);')
+    expect(tone).toContain('background: var(--color-pinyin-tones-bg);')
+    expect(tone).toContain('color: var(--color-pinyin-tones);')
+    expect(heading).toContain('background: var(--color-pinyin-whole-bg);')
+    expect(heading).toContain('color: var(--color-pinyin-whole);')
+    expect(contrastRatio(cssVariable('--color-cinnabar-deep-2'), cssVariable('--color-pinyin-initials-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(cssVariable('--color-pinyin-finals'), cssVariable('--color-pinyin-finals-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(cssVariable('--color-pinyin-tones'), cssVariable('--color-pinyin-tones-bg'))).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(cssVariable('--color-pinyin-whole'), cssVariable('--color-pinyin-whole-bg'))).toBeGreaterThanOrEqual(4.5)
     expect(
       hasMediaRuleWithDeclaration(
         '(max-width: 640px)',
