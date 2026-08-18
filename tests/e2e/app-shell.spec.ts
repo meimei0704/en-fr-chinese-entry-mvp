@@ -56,6 +56,10 @@ test('keeps the top navigation visible when clicking Journey scrolls to the cour
 
   await expect(page).toHaveURL(/#home-basic-expressions-path$/)
   await expect(page.getByRole('link', { name: 'Journey' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Journey' })).toHaveClass(/site-header__link--active/)
+  await expect(page.getByRole('link', { name: 'Home' })).not.toHaveClass(
+    /site-header__link--active/,
+  )
   await expect(nav).toBeVisible()
 
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))

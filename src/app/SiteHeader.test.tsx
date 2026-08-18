@@ -52,6 +52,24 @@ describe('SiteHeader', () => {
     )
   })
 
+  it('marks the Journey link active when the journey hash is present and leaves Home inactive', () => {
+    renderRoute('/#home-basic-expressions-path')
+
+    expect(screen.getByRole('link', { name: 'Journey' })).toHaveClass('site-header__link--active')
+    expect(screen.getByRole('link', { name: 'Home' })).not.toHaveClass(
+      'site-header__link--active',
+    )
+  })
+
+  it('marks the Home link active on other root hashes', () => {
+    renderRoute('/#other-anchor')
+
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveClass('site-header__link--active')
+    expect(screen.getByRole('link', { name: 'Journey' })).not.toHaveClass(
+      'site-header__link--active',
+    )
+  })
+
   it('marks the Culture link active on the /culture route without highlighting Home', () => {
     renderRoute('/culture')
 
