@@ -43,3 +43,21 @@ test('shows the Home page on root and keeps /home compatible', async ({ page }) 
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
 })
+
+test('keeps the top navigation visible when clicking Journey scrolls to the course path', async ({
+  page,
+}) => {
+  await page.goto('/')
+
+  const nav = page.getByRole('navigation', { name: 'Main navigation' })
+  await expect(nav).toBeVisible()
+
+  await page.getByRole('link', { name: 'Journey' }).click()
+
+  await expect(page).toHaveURL(/#home-basic-expressions-path$/)
+  await expect(page.getByRole('link', { name: 'Journey' })).toBeVisible()
+  await expect(nav).toBeVisible()
+
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+  await expect(nav).toBeVisible()
+})
