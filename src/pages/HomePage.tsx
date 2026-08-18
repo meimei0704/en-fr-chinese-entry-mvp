@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CourseSeriesTitle } from '../components/CourseSeriesTitle'
-import { ContentLoading } from '../components/ContentState'
+import { ContentError, ContentLoading } from '../components/ContentState'
 import { HomeHeroIllustration } from '../components/HomeHeroIllustration'
 import { JourneyNodeCourseImage } from '../components/JourneyNodeCourseImage'
 import { LanguageToggle } from '../components/LanguageToggle'
@@ -37,17 +37,7 @@ export function HomePage() {
   }
 
   if (error) {
-    return (
-      <main className="page-shell">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
-          <h1>{copy.contentState.errorHeading}</h1>
-          <button type="button" className="primary-button" onClick={reload}>
-            {copy.contentState.retry}
-          </button>
-        </section>
-      </main>
-    )
+    return <ContentError language={language} onRetry={reload} />
   }
 
   if (!course) {

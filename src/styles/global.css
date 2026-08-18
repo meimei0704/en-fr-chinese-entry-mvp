@@ -418,6 +418,41 @@ a:focus-visible {
   width: min(100%, 32rem);
 }
 
+.content-error-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.content-error-card__badge {
+  width: 5.5rem;
+  height: 5.5rem;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  background: var(--color-primary-50);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.25);
+}
+
+.content-error-card__logo {
+  width: 3rem;
+  height: auto;
+}
+
+.content-error-card__actions {
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.content-error-card__actions .secondary-link {
+  color: var(--color-primary-ink);
+  background: var(--color-primary-100);
+  border-color: rgba(var(--color-primary-rgb), 0.2);
+  font-weight: 700;
+}
+
 .surface-card {
   border-radius: var(--radius-lg);
   padding: clamp(1rem, 3vw, 1.35rem);

@@ -177,6 +177,7 @@ export const uiCopy = {
       errorHeading: 'We couldn’t load the course.',
       errorBody: 'Check your connection and try again.',
       retry: 'Retry',
+      backToHome: 'Back to home',
     },
     common: {
       explanation: 'Explanation',
@@ -346,6 +347,7 @@ export const uiCopy = {
       errorHeading: 'Impossible de charger le cours.',
       errorBody: 'Vérifie ta connexion puis réessaie.',
       retry: 'Réessayer',
+      backToHome: 'Retour à l’accueil',
     },
     common: {
       explanation: 'Explication',
