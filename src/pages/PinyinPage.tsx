@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { ContentLoading } from '../components/ContentState'
@@ -15,7 +14,8 @@ import {
 } from '../lib/pinyinProgress'
 import { loadProgress } from '../lib/progress'
 import { preloadAudioSources } from '../lib/speech'
-import { usePinyinCourse } from '../lib/pinyinContentProvider'
+import { handleTablistKeyDown } from '../lib/tablistKeyboard'
+import { usePinyinCourse } from '../lib/pinyinContentContext'
 
 const moduleKeys: PinyinModuleKey[] = ['initials', 'finals', 'whole-syllables', 'tones']
 
@@ -92,7 +92,25 @@ export function PinyinPage() {
           <PinyinSyllableIntro copy={pinyinCopy.syllableIntro} />
         </PinyinHero>
 
-        <nav role="tablist" aria-label="Pinyin modules" className="pinyin-lesson-tabs">
+        <nav
+          role="tablist"
+          aria-label="Pinyin modules"
+          className="pinyin-lesson-tabs"
+          onKeyDown={(event) =>
+            handleTablistKeyDown(event, {
+              tabCount: pinyinCourse.modules.length,
+              selectedIndex: Math.max(
+                0,
+                pinyinCourse.modules.findIndex((m) => m.id === selectedModuleKey),
+              ),
+              onSelect: (index) => {
+                const nextModule = pinyinCourse.modules[index]
+                setProgress(loadPinyinProgress())
+                setSelectedModuleKey(nextModule.id)
+              },
+            })
+          }
+        >
           {pinyinCourse.modules.map((m) => (
             <button
               key={m.id}
@@ -135,11 +153,6 @@ export function PinyinPage() {
           />
         )}
 
-        <nav className="button-row lesson-actions lesson-action-dock" aria-label={pinyinCopy.lessonActions}>
-          <Link className="secondary-link" to="/home">
-            {pinyinCopy.backToHome}
-          </Link>
-        </nav>
       </div>
     </main>
   )

@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 
-import { CourseContext, type CourseContextValue } from '../lib/contentProvider'
-import { PinyinCourseContext, type PinyinCourseContextValue } from '../lib/pinyinContentProvider'
+import { CourseContext, type CourseContextValue } from '../lib/contentContext'
+import { PinyinCourseContext, type PinyinCourseContextValue } from '../lib/pinyinContentContext'
 
 export function MockCourseProvider({
   course,

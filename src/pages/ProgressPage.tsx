@@ -11,7 +11,7 @@ import { getLessonTopicText } from '../content/lessonTopics'
 import type { JourneyNode, LessonId } from '../content/types'
 import { loadPinyinProgress } from '../lib/pinyinProgress'
 import { getContinueLessonId, loadProgress } from '../lib/progress'
-import { useCourse } from '../lib/contentProvider'
+import { useCourse } from '../lib/contentContext'
 
 type LessonJourneyNode = JourneyNode & { kind: 'lesson'; lessonId: LessonId }
 type JourneyNodeStatus = 'complete' | 'current' | 'upcoming' | 'preview'
@@ -136,9 +136,6 @@ export function ProgressPage() {
           </div>
 
           <nav className="button-row" aria-label={copy.progressPage.progressActionsLabel}>
-            <Link className="primary-button" to="/home">
-              {copy.progressPage.backToHome}
-            </Link>
             <Link className="secondary-link" to="/review">
               {copy.progressPage.goToReview}
             </Link>

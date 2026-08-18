@@ -1,6 +1,7 @@
 import { expect, test, type Page } from 'playwright/test'
 
 import { course } from '../../src/content/course'
+import { collectCourseVoiceAudioTargets } from '../../src/admin/voiceTargets'
 import type { LessonContent } from '../../src/content/types'
 
 function lessonSummaries() {
@@ -69,7 +70,9 @@ async function installVoiceAdminRoutes(page: Page) {
 }
 
 async function expectVoiceLayoutPolish(page: Page) {
-  await expect(page.getByRole('heading', { name: /359 audio targets/i })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: new RegExp(`${collectCourseVoiceAudioTargets(course.lessons).length} audio targets`) }),
+  ).toBeVisible()
 
   const consentField = page.locator('.admin-voice-consent-field').first()
   const consentCheckbox = page.getByLabel(/i confirm this voice sample is mine or explicitly authorized/i)

@@ -62,6 +62,39 @@ describe('CulturePage', () => {
     expect(screen.getByText(/Do not start eating until the host/)).toBeInTheDocument()
   })
 
+  it('supports ArrowRight/ArrowLeft/Home/End keyboard navigation on the tablist', async () => {
+    const user = userEvent.setup()
+    renderRoute('/culture')
+
+    const tablist = screen.getByRole('tablist', { name: tablistLabel })
+    const selected = within(tablist).getByRole('tab', { selected: true })
+
+    selected.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByRole('tab', { name: 'Dining Etiquette' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByRole('tab', { name: 'General Social Tips' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+
+    await user.keyboard('{End}')
+    expect(screen.getByRole('tab', { name: 'Number Superstitions & Symbolism' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+
+    await user.keyboard('{Home}')
+    expect(screen.getByRole('tab', { name: 'General Social Tips' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    )
+  })
+
   it('renders bold lead-ins and nested sub-items in General Social Tips', () => {
     renderRoute('/culture')
 
@@ -112,10 +145,9 @@ describe('CulturePage', () => {
     expect(screen.getByRole('tab', { name: 'Conseils sociaux généraux' })).toBeInTheDocument()
   })
 
-  it('links back to the home page', () => {
+  it('omits the bottom back-to-home action since the top nav covers Home', () => {
     renderRoute('/culture')
 
-    const backLink = screen.getByRole('link', { name: 'Back to home' })
-    expect(backLink).toHaveAttribute('href', '/home')
+    expect(screen.queryByRole('link', { name: 'Back to home' })).not.toBeInTheDocument()
   })
 })

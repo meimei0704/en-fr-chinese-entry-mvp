@@ -1,19 +1,8 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 import type { PinyinCourseContent } from '../content/types'
 import { fetchPinyinCourse } from './contentApi'
-
-export interface PinyinCourseContextValue {
-  course: PinyinCourseContent | null
-  error: Error | null
-  reload: () => void
-}
-
-export const PinyinCourseContext = createContext<PinyinCourseContextValue>({
-  course: null,
-  error: null,
-  reload: () => {},
-})
+import { PinyinCourseContext } from './pinyinContentContext'
 
 export function PinyinCourseProvider({ children }: { children: ReactNode }) {
   const [course, setCourse] = useState<PinyinCourseContent | null>(null)
@@ -46,8 +35,4 @@ export function PinyinCourseProvider({ children }: { children: ReactNode }) {
       {children}
     </PinyinCourseContext.Provider>
   )
-}
-
-export function usePinyinCourse() {
-  return useContext(PinyinCourseContext)
 }

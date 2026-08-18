@@ -47,7 +47,10 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
     `${expectedReviewItemsWaiting} review items waiting`,
   )
 
-  await page.getByRole('link', { name: /back to home/i }).click()
+  await page
+    .getByRole('navigation', { name: /main navigation/i })
+    .getByRole('link', { name: /^home$/i })
+    .click()
   await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
   await page.getByRole('link', { name: /打车\s+Take a taxi/i }).click()
   await expect(page).toHaveURL(/\/lesson\/ask-directions$/)

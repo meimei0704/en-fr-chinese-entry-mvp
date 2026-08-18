@@ -11,7 +11,7 @@ import { getLocalizedText, getUiCopy } from '../content/copy'
 import { buildJourney, journeyNodeIcons, journeyNodeImages } from '../content/journey'
 import type { ExplanationLanguage, JourneyNodeId } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
-import { useCourse } from '../lib/contentProvider'
+import { useCourse } from '../lib/contentContext'
 
 export function HomePage() {
   const { course, error, reload } = useCourse()

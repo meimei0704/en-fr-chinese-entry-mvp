@@ -10,14 +10,15 @@ test('keeps the three-layer Lesson layout aligned across responsive widths', asy
 
       const dock = page.getByRole('navigation', { name: /lesson actions/i })
       const practice = dock.getByRole('link', { name: /go to practice/i })
-      const home = dock.getByRole('link', { name: /back to home/i })
       const rail = page.locator('.lesson-page .lesson-progress-preview__rail')
       const steps = rail.getByRole('listitem')
 
       await expect(dock).toBeVisible()
-      await expect(dock.getByRole('link')).toHaveCount(2)
+      await expect(dock.getByRole('link')).toHaveCount(1)
       await expect(practice).toHaveAttribute('href', `/lesson/${lessonId}/practice`)
-      await expect(home).toHaveAttribute('href', '/home')
+      await expect(
+        dock.getByRole('link', { name: /back to home/i }),
+      ).toHaveCount(0)
       await expect(
         page.getByRole('link', { name: /finish with short input/i }),
       ).toHaveCount(0)
@@ -25,19 +26,17 @@ test('keeps the three-layer Lesson layout aligned across responsive widths', asy
 
       await dock.scrollIntoViewIfNeeded()
 
-      const [dockBox, practiceBox, homeBox, railBox] = await Promise.all([
+      const [dockBox, practiceBox, railBox] = await Promise.all([
         dock.boundingBox(),
         practice.boundingBox(),
-        home.boundingBox(),
         rail.boundingBox(),
       ])
 
       expect(dockBox).not.toBeNull()
       expect(practiceBox).not.toBeNull()
-      expect(homeBox).not.toBeNull()
       expect(railBox).not.toBeNull()
 
-      const buttonBoxes = [practiceBox!, homeBox!]
+      const buttonBoxes = [practiceBox!]
       const buttonLeft = Math.min(...buttonBoxes.map((box) => box.x))
       const buttonRight = Math.max(...buttonBoxes.map((box) => box.x + box.width))
       const buttonGroupCenter = (buttonLeft + buttonRight) / 2

@@ -9,7 +9,7 @@ import type { LessonContent } from '../content/types'
 import { fetchLesson } from '../lib/contentApi'
 import { buildPracticeChallenge } from '../lib/practiceChallenge'
 import { loadProgress, markPracticeSection, saveProgress, completeLesson } from '../lib/progress'
-import { useCourse } from '../lib/contentProvider'
+import { useCourse } from '../lib/contentContext'
 
 function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: string): LessonContent | undefined {
   return course?.lessons.find((lesson) => lesson.id === lessonId)
