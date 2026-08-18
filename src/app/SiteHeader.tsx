@@ -7,7 +7,7 @@ export function SiteHeader() {
   const copy = getUiCopy(loadProgress().selectedExplanationLanguage)
 
   return (
-    <header className="site-header">
+    <header className="site-header site-header--sticky">
       <nav className="site-header__nav" aria-label={copy.nav.siteNavLabel}>
         <NavLink
           className={({ isActive }) =>

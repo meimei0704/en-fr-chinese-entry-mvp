@@ -27,6 +27,14 @@ describe('SiteHeader', () => {
     }
   })
 
+  it('renders the header with the sticky class so it stays on screen while scrolling', () => {
+    renderRoute('/')
+
+    const header = document.querySelector('.site-header')
+    expect(header).toBeInTheDocument()
+    expect(header).toHaveClass('site-header--sticky')
+  })
+
   it('omits the Review and Progress entries from the main navigation', () => {
     renderRoute('/')
 
