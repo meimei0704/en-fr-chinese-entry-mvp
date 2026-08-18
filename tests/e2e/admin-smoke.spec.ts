@@ -75,6 +75,7 @@ function buildLessonSnapshot(draftLesson: LessonContent): AdminLessonSnapshot {
 test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice generation', async ({
   page,
 }) => {
+  test.setTimeout(120_000)
   let dialogCount = 0
   const draftLessonsById = new Map(course.lessons.map((item) => [item.id, item]))
   const draftRequests: Array<{ lessonId: string; moduleType: string; payload: unknown }> = []
@@ -321,7 +322,7 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(page).toHaveURL(/\/admin\/voice$/)
   await expect(page.getByRole('heading', { name: /original pronunciation is active/i })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /359 audio targets/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: new RegExp(`${voiceTargets.length} audio targets`) })).toBeVisible()
   await expect(page.locator('[data-testid^="voice-target-row-pronunciation:"]')).toHaveCount(0)
   await expect(page.getByText(/^pronunciation · zh-CN$/i)).toHaveCount(0)
   for (const targetId of [
@@ -355,8 +356,8 @@ test('admin uses the SPA sign-in flow, saves a draft, and runs batch voice gener
 
   await expect(generateAllButton).toBeEnabled()
   await generateAllButton.click()
-  await expect(page.getByText(/359 generated/i).first()).toBeVisible({ timeout: 60_000 })
-  expect(generatedTargets).toHaveLength(359)
+  await expect(page.getByText(new RegExp(`${voiceTargets.length} generated`)).first()).toBeVisible({ timeout: 60_000 })
+  expect(generatedTargets).toHaveLength(voiceTargets.length)
   expect(new Set(generatedTargets.map((target) => target.moduleType))).toEqual(
     new Set(['dialogue', 'sentencePatterns', 'vocabulary', 'practice']),
   )

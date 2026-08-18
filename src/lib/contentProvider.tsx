@@ -1,19 +1,8 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 import type { CourseContent } from '../content/types'
 import { fetchCourse } from './contentApi'
-
-export interface CourseContextValue {
-  course: CourseContent | null
-  error: Error | null
-  reload: () => void
-}
-
-export const CourseContext = createContext<CourseContextValue>({
-  course: null,
-  error: null,
-  reload: () => {},
-})
+import { CourseContext } from './contentContext'
 
 export function CourseProvider({ children }: { children: ReactNode }) {
   const [course, setCourse] = useState<CourseContent | null>(null)
@@ -44,8 +33,4 @@ export function CourseProvider({ children }: { children: ReactNode }) {
       {children}
     </CourseContext.Provider>
   )
-}
-
-export function useCourse() {
-  return useContext(CourseContext)
 }

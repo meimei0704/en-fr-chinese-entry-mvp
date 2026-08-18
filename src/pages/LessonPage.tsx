@@ -11,7 +11,7 @@ import { SpeechButton } from '../components/SpeechButton'
 import type { LessonContent } from '../content/types'
 import { fetchLesson } from '../lib/contentApi'
 import { loadProgress, saveProgress } from '../lib/progress'
-import { useCourse } from '../lib/contentProvider'
+import { useCourse } from '../lib/contentContext'
 
 function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: string): LessonContent | undefined {
   return course?.lessons.find((lesson) => lesson.id === lessonId)
@@ -264,9 +264,6 @@ export function LessonPage() {
         >
           <Link className="primary-button" to={`/lesson/${lesson.id}/practice`}>
             {copy.lessonPage.goToPractice}
-          </Link>
-          <Link className="secondary-link" to="/home">
-            {copy.lessonPage.backToHome}
           </Link>
         </nav>
       </section>

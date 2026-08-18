@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import { cultureAdvice } from '../content/cultureAdvice'
 import type { CultureAdviceItem, CultureAdviceSubItem } from '../content/cultureAdvice'
 import type { ExplanationLanguage } from '../content/types'
 import { loadProgress } from '../lib/progress'
+import { handleTablistKeyDown } from '../lib/tablistKeyboard'
 
 function CultureAdviceItemContent({
   item,
@@ -43,7 +43,21 @@ export function CulturePage() {
           <p className="culture-course__hero-subtitle">{copy.subtitle}</p>
         </section>
 
-        <nav role="tablist" aria-label={copy.tablistLabel} className="pinyin-lesson-tabs">
+        <nav
+          role="tablist"
+          aria-label={copy.tablistLabel}
+          className="pinyin-lesson-tabs"
+          onKeyDown={(event) =>
+            handleTablistKeyDown(event, {
+              tabCount: cultureAdvice.sections.length,
+              selectedIndex: Math.max(
+                0,
+                cultureAdvice.sections.findIndex((section) => section.id === selectedSection.id),
+              ),
+              onSelect: (index) => setSelectedSectionId(cultureAdvice.sections[index].id),
+            })
+          }
+        >
           {cultureAdvice.sections.map((section, index) => {
             const sectionTitle = getLocalizedText(section.title, language)
 
@@ -108,11 +122,6 @@ export function CulturePage() {
           )}
         </section>
 
-        <nav className="button-row lesson-actions lesson-action-dock" aria-label={copy.lessonActions}>
-          <Link className="secondary-link" to="/home">
-            {copy.backToHome}
-          </Link>
-        </nav>
       </div>
     </main>
   )

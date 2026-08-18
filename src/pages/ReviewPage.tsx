@@ -6,7 +6,7 @@ import { ContentLoading } from '../components/ContentState'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import type { ReviewCard } from '../content/types'
 import { loadProgress, saveProgress } from '../lib/progress'
-import { useCourse } from '../lib/contentProvider'
+import { useCourse } from '../lib/contentContext'
 
 function findReviewCard(course: ReturnType<typeof useCourse>['course'], cardId: string): ReviewCard | undefined {
   return course?.lessons
@@ -126,9 +126,6 @@ export function ReviewPage() {
         <nav className="button-row" aria-label={copy.reviewPage.reviewActions}>
           <Link className="secondary-link" to="/progress">
             {copy.reviewPage.viewProgress}
-          </Link>
-          <Link className="secondary-link" to="/home">
-            {copy.reviewPage.backToHome}
           </Link>
         </nav>
       </section>

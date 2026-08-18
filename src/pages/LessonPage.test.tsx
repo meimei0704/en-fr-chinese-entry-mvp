@@ -143,7 +143,7 @@ describe('LessonPage', () => {
     ).toBeVisible()
     expect(screen.getByText(/voici mon passeport/i)).toBeVisible()
     expect(screen.getByRole('link', { name: /passer à la pratique/i })).toBeVisible()
-    expect(screen.getByRole('link', { name: /retour à l’accueil/i })).toBeVisible()
+    expect(screen.queryByRole('link', { name: /retour à l’accueil/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('group', { name: /explanation language|langue d’explication/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'English' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Français' })).not.toBeInTheDocument()
@@ -420,18 +420,15 @@ describe('LessonPage', () => {
     expect(screen.queryByText('Lesson complete')).not.toBeInTheDocument()
   })
 
-  it('keeps only Practice and Home in the lesson action dock', () => {    renderRoute('/lesson/self-intro')
+  it('keeps only Practice in the lesson action dock', () => {    renderRoute('/lesson/self-intro')
     const actions = screen.getByRole('navigation', { name: /lesson actions/i })
 
-    expect(within(actions).getAllByRole('link')).toHaveLength(2)
+    expect(within(actions).getAllByRole('link')).toHaveLength(1)
     expect(within(actions).getByRole('link', { name: /go to practice/i })).toHaveAttribute(
       'href',
       '/lesson/self-intro/practice',
     )
-    expect(within(actions).getByRole('link', { name: /back to home/i })).toHaveAttribute(
-      'href',
-      '/home',
-    )
+    expect(within(actions).queryByRole('link', { name: /back to home/i })).not.toBeInTheDocument()
     expect(
       within(actions).queryByRole('link', { name: /finish with short input/i }),
     ).not.toBeInTheDocument()

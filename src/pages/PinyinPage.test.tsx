@@ -126,6 +126,30 @@ describe('PinyinPage', () => {
     ])
   })
 
+  it('supports ArrowRight/ArrowLeft/Home/End keyboard navigation on the module tablist', async () => {
+    const user = userEvent.setup()
+    renderRoute('/pinyin')
+
+    const tablist = screen.getByRole('tablist', { name: 'Pinyin modules' })
+    const selected = within(tablist).getByRole('tab', { selected: true })
+
+    selected.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByRole('tab', { name: 'Finals' })).toHaveAttribute('aria-selected', 'true')
+
+    await user.keyboard('{End}')
+    expect(screen.getByRole('tab', { name: 'Tones' })).toHaveAttribute('aria-selected', 'true')
+
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByRole('tab', { name: 'Initials' })).toHaveAttribute('aria-selected', 'true')
+
+    await user.keyboard('{ArrowLeft}')
+    expect(screen.getByRole('tab', { name: 'Tones' })).toHaveAttribute('aria-selected', 'true')
+
+    await user.keyboard('{Home}')
+    expect(screen.getByRole('tab', { name: 'Initials' })).toHaveAttribute('aria-selected', 'true')
+  })
+
   it('renders reference cards with audio playback entry points for the default module', () => {
     renderRoute('/pinyin')
 
@@ -181,10 +205,10 @@ describe('PinyinPage', () => {
     expect(localStorage.getItem(courseProgressStorageKey)).toBe(existingCourseProgress)
   })
 
-  it('links back to home', () => {
+  it('omits the bottom back-to-home action since the top nav covers Home', () => {
     renderRoute('/pinyin')
 
-    expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/home')
+    expect(screen.queryByRole('link', { name: 'Back to home' })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Go to practice' })).not.toBeInTheDocument()
   })
 
@@ -198,10 +222,7 @@ describe('PinyinPage', () => {
 
     expect(screen.getByRole('heading', { level: 2, name: 'Bilabiales' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Écouter bā' })).toBeVisible()
-    expect(screen.getByRole('link', { name: 'Retour à l’accueil' })).toHaveAttribute(
-      'href',
-      '/home',
-    )
+    expect(screen.queryByRole('link', { name: 'Retour à l’accueil' })).not.toBeInTheDocument()
 
     const figure = screen.getByRole('figure', {
       name: syllableIntroCopy.fr.figureLabel,

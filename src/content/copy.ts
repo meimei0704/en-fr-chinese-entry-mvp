@@ -33,8 +33,6 @@ export const uiCopy = {
       heading: 'Culture advice for travelers in China',
       subtitle: 'Practical etiquette and customs for a smooth trip',
       tablistLabel: 'Culture topics',
-      backToHome: 'Back to home',
-      lessonActions: 'Culture course actions',
     },
     homePage: {
       heading: '轻松学中文',
@@ -124,7 +122,6 @@ export const uiCopy = {
       noCards: 'No cards due right now.',
       startLearning: 'Start learning',
       viewProgress: 'View progress',
-      backToHome: 'Back to home',
       reviewActions: 'Review actions',
       currentFlashcardLabel: 'Current review flashcard',
       frontSideLabel: 'Flashcard front',
@@ -157,7 +154,6 @@ export const uiCopy = {
       previewDisplayOnly: 'Display-only preview',
       openLesson: 'Open lesson',
       openJourneyLesson: (title: string) => `Open ${title}`,
-      backToHome: 'Back to home',
       goToReview: 'Go to review',
     },
     pinyinPage: {
@@ -175,8 +171,6 @@ export const uiCopy = {
       sectionProgress: (done: number, total: number) =>
         `${done} of ${total} section${total === 1 ? '' : 's'} complete`,
       playReferenceAudio: (label: string) => `Play ${label}`,
-      backToHome: 'Back to home',
-      lessonActions: 'Pinyin lesson actions',
     },
     contentState: {
       errorEyebrow: 'Content unavailable',
@@ -208,8 +202,6 @@ export const uiCopy = {
       heading: 'Conseils culturels pour les voyageurs en Chine',
       subtitle: 'Étiquette et coutumes pratiques pour un voyage serein',
       tablistLabel: 'Sujets culturels',
-      backToHome: 'Retour à l’accueil',
-      lessonActions: 'Actions du cours de culture',
     },
     homePage: {
       heading: '轻松学中文',
@@ -299,7 +291,6 @@ export const uiCopy = {
       noCards: 'Aucune carte à revoir pour le moment.',
       startLearning: 'Commencer à apprendre',
       viewProgress: 'Voir les progrès',
-      backToHome: 'Retour à l’accueil',
       reviewActions: 'Actions de révision',
       currentFlashcardLabel: 'Carte de révision en cours',
       frontSideLabel: 'Recto de la carte',
@@ -332,7 +323,6 @@ export const uiCopy = {
       previewDisplayOnly: 'Aperçu sans lien',
       openLesson: 'Ouvrir la leçon',
       openJourneyLesson: (title: string) => `Ouvrir ${title}`,
-      backToHome: 'Retour à l’accueil',
       goToReview: 'Aller à la révision',
     },
     pinyinPage: {
@@ -350,8 +340,6 @@ export const uiCopy = {
       sectionProgress: (done: number, total: number) =>
         `${done} section${done > 1 ? 's' : ''} sur ${total} terminée${done > 1 ? 's' : ''}`,
       playReferenceAudio: (label: string) => `Écouter ${label}`,
-      backToHome: 'Retour à l’accueil',
-      lessonActions: 'Actions de la leçon de pinyin',
     },
     contentState: {
       errorEyebrow: 'Contenu indisponible',
