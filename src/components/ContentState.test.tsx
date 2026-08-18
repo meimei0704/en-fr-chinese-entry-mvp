@@ -19,10 +19,12 @@ describe('ContentState', () => {
     const user = userEvent.setup()
     const onRetry = vi.fn()
 
-    render(<ContentError onRetry={onRetry} />)
+    const { container } = render(<ContentError onRetry={onRetry} />)
 
     expect(screen.getByText("We couldn’t load the course.")).toBeVisible()
     expect(screen.getByRole('button', { name: 'Retry' })).toBeVisible()
+    expect(container.querySelector('.content-error__icon')).toBeInTheDocument()
+    expect(container.querySelector('.content-error__logo')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Retry' }))
 

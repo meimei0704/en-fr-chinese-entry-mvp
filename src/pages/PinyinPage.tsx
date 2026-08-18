@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { ContentLoading } from '../components/ContentState'
+import { ContentError, ContentLoading } from '../components/ContentState'
 import type { PinyinModuleKey } from '../content/types'
 import { PinyinHero } from '../components/pinyin/PinyinHero'
 import { PinyinReferenceSection } from '../components/pinyin/PinyinReferenceSection'
@@ -61,17 +61,7 @@ export function PinyinPage() {
   }, [module])
 
   if (error) {
-    return (
-      <main className="page-shell">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
-          <h1>{copy.contentState.errorHeading}</h1>
-          <button type="button" className="primary-button" onClick={reload}>
-            {copy.contentState.retry}
-          </button>
-        </section>
-      </main>
-    )
+    return <ContentError language={language} onRetry={reload} />
   }
 
   if (!pinyinCourse || !module) {

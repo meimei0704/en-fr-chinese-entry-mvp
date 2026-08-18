@@ -3,7 +3,7 @@ import type { JSX } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getLocalizedText, getUiCopy } from '../content/copy'
-import { ContentLoading } from '../components/ContentState'
+import { ContentError, ContentLoading } from '../components/ContentState'
 import { DialoguePlayer } from '../components/DialoguePlayer'
 import { ExplanationBlock } from '../components/ExplanationBlock'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
@@ -136,17 +136,7 @@ export function LessonPage() {
   }, [lesson])
 
   if (error) {
-    return (
-      <main className="page-shell">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
-          <h1>{copy.contentState.errorHeading}</h1>
-          <button type="button" className="primary-button" onClick={reload}>
-            {copy.contentState.retry}
-          </button>
-        </section>
-      </main>
-    )
+    return <ContentError language={selectedLanguage} onRetry={reload} />
   }
 
   if (!course && !fallbackLesson) {

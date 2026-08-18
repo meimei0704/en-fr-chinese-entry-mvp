@@ -21,7 +21,10 @@ export function ContentError({
 
   return (
     <main className="page-shell">
-      <section className="hero-card hero-card--compact">
+      <section className="hero-card hero-card--compact content-error">
+        <span className="content-error__icon" aria-hidden="true">
+          <img className="content-error__logo" src="/favicon.svg" alt="" width="72" height="69" />
+        </span>
         <p className="eyebrow">{copy.errorEyebrow}</p>
         <h1>{copy.errorHeading}</h1>
         <p className="muted-text">{copy.errorBody}</p>

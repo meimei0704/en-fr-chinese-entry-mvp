@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getUiCopy } from '../content/copy'
-import { ContentLoading } from '../components/ContentState'
+import { ContentError, ContentLoading } from '../components/ContentState'
 import { LessonTopicTitle } from '../components/LessonTopicTitle'
 import { PracticeChallenge } from '../components/PracticeChallenge'
 import type { LessonContent } from '../content/types'
@@ -77,17 +77,7 @@ export function PracticePage() {
   }, [lesson])
 
   if (error) {
-    return (
-      <main className="page-shell">
-        <section className="hero-card hero-card--compact">
-          <p className="eyebrow">{copy.contentState.errorEyebrow}</p>
-          <h1>{copy.contentState.errorHeading}</h1>
-          <button type="button" className="primary-button" onClick={reload}>
-            {copy.contentState.retry}
-          </button>
-        </section>
-      </main>
-    )
+    return <ContentError language={selectedLanguage} onRetry={reload} />
   }
 
   if (!course && !fallbackLesson) {
