@@ -50,17 +50,15 @@ describe('course-series UI copy', () => {
       siteNavLabel: 'Main navigation',
       home: 'Home',
       pinyin: 'Pinyin',
+      journey: 'Journey',
       culture: 'Culture',
-      review: 'Review',
-      progress: 'Progress',
     })
     expect(getUiCopy('fr').nav).toEqual({
       siteNavLabel: 'Navigation principale',
       home: 'Accueil',
       pinyin: 'Pinyin',
+      journey: 'Parcours',
       culture: 'Culture',
-      review: 'Révision',
-      progress: 'Progrès',
     })
   })
 })

@@ -76,7 +76,10 @@ describe('App shell', () => {
 
     const nav = screen.getByRole('navigation', { name: 'Main navigation' })
     expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/')
-    expect(within(nav).getByRole('link', { name: 'Review' })).toHaveAttribute('href', '/review')
-    expect(within(nav).getByRole('link', { name: 'Progress' })).toHaveAttribute('href', '/progress')
+    expect(within(nav).getByRole('link', { name: 'Journey' })).toHaveAttribute(
+      'href',
+      '/#home-basic-expressions-path',
+    )
+    expect(within(nav).getByRole('link', { name: 'Culture' })).toHaveAttribute('href', '/culture')
   })
 })

@@ -8,9 +8,8 @@ import { renderRoute } from '../test/renderRoute'
 const expectedNavLinks = [
   ['Home', '/'],
   ['Pinyin', '/pinyin'],
+  ['Journey', '/#home-basic-expressions-path'],
   ['Culture', '/culture'],
-  ['Review', '/review'],
-  ['Progress', '/progress'],
 ] as const
 
 describe('SiteHeader', () => {
@@ -28,21 +27,27 @@ describe('SiteHeader', () => {
     }
   })
 
+  it('omits the Review and Progress entries from the main navigation', () => {
+    renderRoute('/')
+
+    const nav = screen.getByRole('navigation', { name: 'Main navigation' })
+    expect(within(nav).queryByRole('link', { name: 'Review' })).not.toBeInTheDocument()
+    expect(within(nav).queryByRole('link', { name: 'Progress' })).not.toBeInTheDocument()
+  })
+
   it('marks the Home link active only on the root route', () => {
     renderRoute('/')
 
     expect(screen.getByRole('link', { name: 'Home' })).toHaveClass('site-header__link--active')
-    expect(screen.getByRole('link', { name: 'Review' })).not.toHaveClass(
+    expect(screen.getByRole('link', { name: 'Culture' })).not.toHaveClass(
       'site-header__link--active',
     )
   })
 
-  it('marks the Review link active on the /review route without highlighting Home', () => {
-    renderRoute('/review')
+  it('marks the Culture link active on the /culture route without highlighting Home', () => {
+    renderRoute('/culture')
 
-    expect(screen.getByRole('link', { name: 'Review' })).toHaveClass(
-      'site-header__link--active',
-    )
+    expect(screen.getByRole('link', { name: 'Culture' })).toHaveClass('site-header__link--active')
     expect(screen.getByRole('link', { name: 'Home' })).not.toHaveClass(
       'site-header__link--active',
     )
@@ -55,8 +60,11 @@ describe('SiteHeader', () => {
 
     const nav = screen.getByRole('navigation', { name: 'Navigation principale' })
     expect(within(nav).getByRole('link', { name: 'Accueil' })).toHaveAttribute('href', '/')
-    expect(within(nav).getByRole('link', { name: 'Révision' })).toHaveAttribute('href', '/review')
-    expect(within(nav).getByRole('link', { name: 'Progrès' })).toHaveAttribute('href', '/progress')
+    expect(within(nav).getByRole('link', { name: 'Parcours' })).toHaveAttribute(
+      'href',
+      '/#home-basic-expressions-path',
+    )
+    expect(within(nav).getByRole('link', { name: 'Culture' })).toHaveAttribute('href', '/culture')
   })
 
   it('hides the header on admin routes', () => {

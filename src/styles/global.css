@@ -2001,7 +2001,7 @@ h2 {
 }
 
 .review-card {
-  max-width: 46rem;
+  max-width: 68rem;
   background:
     radial-gradient(circle at 92% 10%, rgba(var(--color-jade-bright-rgb), 0.12), transparent 18rem),
     rgba(var(--color-surface-white-rgb), 0.92);

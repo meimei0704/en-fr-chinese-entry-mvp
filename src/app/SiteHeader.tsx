@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 import { getUiCopy } from '../content/copy'
 import { loadProgress } from '../lib/progress'
@@ -26,6 +26,9 @@ export function SiteHeader() {
         >
           {copy.nav.pinyin}
         </NavLink>
+        <Link className="site-header__link" to="/#home-basic-expressions-path">
+          {copy.nav.journey}
+        </Link>
         <NavLink
           className={({ isActive }) =>
             `site-header__link${isActive ? ' site-header__link--active' : ''}`
@@ -33,22 +36,6 @@ export function SiteHeader() {
           to="/culture"
         >
           {copy.nav.culture}
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            `site-header__link${isActive ? ' site-header__link--active' : ''}`
-          }
-          to="/review"
-        >
-          {copy.nav.review}
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            `site-header__link${isActive ? ' site-header__link--active' : ''}`
-          }
-          to="/progress"
-        >
-          {copy.nav.progress}
         </NavLink>
       </nav>
     </header>

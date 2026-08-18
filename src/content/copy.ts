@@ -20,9 +20,8 @@ export const uiCopy = {
       siteNavLabel: 'Main navigation',
       home: 'Home',
       pinyin: 'Pinyin',
+      journey: 'Journey',
       culture: 'Culture',
-      review: 'Review',
-      progress: 'Progress',
     },
     courseSeries: {
       label: 'Course series',
@@ -196,9 +195,8 @@ export const uiCopy = {
       siteNavLabel: 'Navigation principale',
       home: 'Accueil',
       pinyin: 'Pinyin',
+      journey: 'Parcours',
       culture: 'Culture',
-      review: 'Révision',
-      progress: 'Progrès',
     },
     courseSeries: {
       label: 'Séries de cours',
