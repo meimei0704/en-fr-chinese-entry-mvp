@@ -41,11 +41,11 @@ function assertNever(value: never): never {
   throw new Error(`Unsupported voice generation target: ${String(value)}`)
 }
 
-function originalAudioFor(item: { audio: string; audioFallback?: string }) {
-  return item.audioFallback?.trim() || item.audio
+function originalAudioFor(item: { audio?: string; audioFallback?: string }) {
+  return item.audioFallback?.trim() || item.audio || ''
 }
 
-function withGeneratedAudio<T extends { audio: string; audioFallback?: string }>(item: T, generatedAudioUrl: string): T {
+function withGeneratedAudio<T extends { audio?: string; audioFallback?: string }>(item: T, generatedAudioUrl: string): T {
   return {
     ...item,
     audio: generatedAudioUrl,
@@ -53,14 +53,14 @@ function withGeneratedAudio<T extends { audio: string; audioFallback?: string }>
   }
 }
 
-function replaceManyById<T extends { id: string; audio: string; audioFallback?: string }>(
+function replaceManyById<T extends { id: string; audio?: string; audioFallback?: string }>(
   items: readonly T[],
   replacements: ReadonlyMap<string, string>,
 ) {
   return items.map((item) => {
     const generatedAudioUrl = replacements.get(item.id)
 
-    if (!generatedAudioUrl) {
+    if (!generatedAudioUrl || !item.audio) {
       return item
     }
 
@@ -136,17 +136,19 @@ export function collectLessonVoiceAudioTargets(lesson: LessonContent): VoiceAudi
         item: line,
       }),
     ),
-    ...lesson.sentencePatterns.map((pattern, index) =>
-      createTarget({
-        lessonId: lesson.id,
-        targetId: targetId(`sentencePatterns:${pattern.id}`),
-        moduleType: 'sentencePatterns',
-        itemId: pattern.id,
-        label: `${lesson.id} · Sentence pattern ${index + 1}`,
-        text: pattern.example,
-        item: pattern,
-      }),
-    ),
+    ...lesson.sentencePatterns
+      .filter((pattern): pattern is SentencePattern & { audio: string } => Boolean(pattern.audio))
+      .map((pattern, index) =>
+        createTarget({
+          lessonId: lesson.id,
+          targetId: targetId(`sentencePatterns:${pattern.id}`),
+          moduleType: 'sentencePatterns',
+          itemId: pattern.id,
+          label: `${lesson.id} · Sentence pattern ${index + 1}`,
+          text: pattern.examples?.[0]?.hanzi ?? pattern.pattern,
+          item: pattern,
+        }),
+      ),
     ...lesson.vocabulary.map((item, index) =>
       createTarget({
         lessonId: lesson.id,

@@ -437,6 +437,10 @@ describe('LessonPage', () => {
   it('adds MP3-first playback controls for retained lesson materials', async () => {
     const user = userEvent.setup()
     const lesson = course.lessons[0]
+    const patternExampleCount = lesson.sentencePatterns.reduce(
+      (count, pattern) => count + (pattern.examples?.length ?? 0),
+      0,
+    )
 
     renderRoute(`/lesson/${lesson.id}`)
 
@@ -444,6 +448,7 @@ describe('LessonPage', () => {
     expect(playbackButtons).toHaveLength(
       lesson.dialogue.lines.length +
         lesson.sentencePatterns.length +
+        patternExampleCount +
         lesson.vocabulary.length,
     )
     expect(screen.queryAllByText(/^Play Chinese$/i)).toHaveLength(0)
@@ -453,10 +458,10 @@ describe('LessonPage', () => {
     })
 
     await user.click(playbackButtons[0])
-    await user.click(playbackButtons[lesson.dialogue.lines.length])
     await user.click(
-      playbackButtons[lesson.dialogue.lines.length + lesson.sentencePatterns.length],
+      playbackButtons[lesson.dialogue.lines.length + (lesson.sentencePatterns[0]?.examples?.length ?? 0)],
     )
+    await user.click(playbackButtons[playbackButtons.length - 1])
 
     expect(audioPlay).toHaveBeenCalledTimes(3)
     expect(speak).not.toHaveBeenCalled()

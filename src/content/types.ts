@@ -56,14 +56,23 @@ export interface DialogueSection {
   lines: DialogueLine[]
 }
 
+export interface SentencePatternExample {
+  fill: string
+  fillPinyin: string
+  hanzi: string
+  pinyin: string
+  en: string
+  fr: string
+}
+
 export interface SentencePattern {
   id: string
   pattern: string
+  pinyin: string
   meaning: LocalizedField
-  example: string
-  audio: string
+  audio?: string
   audioFallback?: string
-  explanation: BilingualExplanation
+  examples?: SentencePatternExample[]
 }
 
 export interface VocabularyItem {

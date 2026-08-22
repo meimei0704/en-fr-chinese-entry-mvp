@@ -14,10 +14,9 @@ export type StructuredFieldConfig<T extends { id: string }> = {
 
 export const sentencePatternFields: readonly StructuredFieldConfig<SentencePattern>[] = [
   { key: 'pattern', label: 'Pattern', kind: 'text' },
+  { key: 'pinyin', label: 'Pinyin', kind: 'text', multiline: true },
   { key: 'meaning', label: 'Meaning', kind: 'localized', multiline: true },
-  { key: 'example', label: 'Example', kind: 'text', multiline: true },
   { key: 'audio', label: 'Audio URL', kind: 'text' },
-  { key: 'explanation', label: 'Explanation', kind: 'localized', multiline: true },
 ]
 
 export const vocabularyFields: readonly StructuredFieldConfig<VocabularyItem>[] = [

@@ -210,15 +210,37 @@ export function LessonPage() {
                 <article key={pattern.id} className="study-item study-item--pattern">
                   <span className="study-item__index">{String(index + 1).padStart(2, '0')}</span>
                   <p className="study-item__title">{renderPatternFormula(pattern.pattern)}</p>
+                  <p className="study-item__pinyin">{pattern.pinyin}</p>
                   <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
-                  <p className="study-item__example">{pattern.example}</p>
+                  {pattern.examples && pattern.examples.length > 0 ? (
+                    <ul className="pattern-examples">
+                      {pattern.examples.map((example) => (
+                        <li key={example.hanzi} className="pattern-example">
+                          <div className="pattern-example__fill">
+                            <span className="pattern-example__fill-hanzi">{example.fill}</span>
+                            <span className="pattern-example__fill-pinyin">{example.fillPinyin}</span>
+                            <span className="pattern-example__fill-translation">
+                              {selectedLanguage === 'en' ? example.en : example.fr}
+                            </span>
+                          </div>
+                          <div className="pattern-example__sentence">
+                            <p>{example.hanzi}</p>
+                            <p className="pattern-example__pinyin">{example.pinyin}</p>
+                            <SpeechButton
+                              label={copy.lessonPage.listenChinese}
+                              text={example.hanzi}
+                            />
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                   <SpeechButton
                     label={copy.lessonPage.listenChinese}
-                    text={pattern.example}
+                    text={pattern.examples?.[0]?.hanzi ?? pattern.pattern}
                     audioSrc={pattern.audio}
                     fallbackAudioSrc={pattern.audioFallback}
                   />
-                  <ExplanationBlock explanation={pattern.explanation} language={selectedLanguage} />
                 </article>
               ))}
             </div>

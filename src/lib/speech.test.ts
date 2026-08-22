@@ -166,8 +166,16 @@ describe('speakChinese', () => {
     vi.useRealTimers()
   })
 
-  it('does not fall back to browser TTS when no audio source is available', () => {
+  it('falls back to browser TTS when no audio source is available', () => {
     const didStart = speakChinese({ text: '我要一瓶水。' })
+
+    expect(didStart).toBe(true)
+    expect(speak).toHaveBeenCalledTimes(1)
+    expect(speak.mock.calls[0]![0]).toBeInstanceOf(MockUtterance)
+  })
+
+  it('does not fall back to browser TTS when no audio source and no text are available', () => {
+    const didStart = speakChinese({ text: '' })
 
     expect(didStart).toBe(false)
     expect(speak).not.toHaveBeenCalled()
