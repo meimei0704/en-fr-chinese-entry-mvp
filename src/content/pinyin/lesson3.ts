@@ -77,6 +77,10 @@ export const pinyinLesson3: PinyinLessonContent = {
           label: 'er',
           pinyin: 'ēr',
           description: {
+            en: 'Curve the tongue tip up and back toward the hard palate.',
+            fr: 'Recourbez la pointe de la langue vers le haut et l’arrière, en direction du palais dur.',
+          },
+          note: {
             en: 'er is an exceptional curled-tongue final. It cannot be combined with any initial consonants. Example: 耳朵 ěr duo — ear.',
             fr: 'er est une finale exceptionnelle à langue recourbée. Elle ne peut se combiner à aucune consonne initiale. Exemple : 耳朵 ěr duo — oreille.',
           },
