@@ -206,9 +206,8 @@ export function LessonPage() {
           <section id="lesson-patterns" className="surface-card lesson-section-card">
             <h2>{copy.lessonPage.sentencePatterns}</h2>
             <div className="card-grid">
-              {lesson.sentencePatterns.map((pattern, index) => (
+              {lesson.sentencePatterns.map((pattern) => (
                 <article key={pattern.id} className="study-item study-item--pattern">
-                  <span className="study-item__index">{String(index + 1).padStart(2, '0')}</span>
                   <p className="study-item__title">{renderPatternFormula(pattern.pattern)}</p>
                   <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
                   <p className="study-item__example">{pattern.example}</p>

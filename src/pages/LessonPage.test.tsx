@@ -385,7 +385,7 @@ describe('LessonPage', () => {
     }
   })
 
-  it('renders sentence pattern cards with an index number and highlighted placeholder', () => {
+  it('renders sentence pattern cards with a highlighted placeholder', () => {
     renderRoute('/lesson/daily-greetings')
 
     const patternSection = screen.getByRole('heading', { level: 2, name: /useful patterns|structures utiles/i })
@@ -395,7 +395,6 @@ describe('LessonPage', () => {
     expect(cards.length).toBeGreaterThan(0)
 
     const first = cards[0]
-    expect(within(first).getByText('01')).toBeVisible()
     expect(first).toHaveClass('study-item--pattern')
 
     const placeholder = within(first).getByText('……')
