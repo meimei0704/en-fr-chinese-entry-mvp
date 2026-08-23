@@ -229,13 +229,14 @@ export function LessonPage() {
                         </li>
                       ))}
                     </ul>
-                  ) : null}
-                  <SpeechButton
-                    label={copy.lessonPage.listenChinese}
-                    text={pattern.examples?.[0]?.hanzi ?? pattern.pattern}
-                    audioSrc={pattern.audio}
-                    fallbackAudioSrc={pattern.audioFallback}
-                  />
+                  ) : (
+                    <SpeechButton
+                      label={copy.lessonPage.listenChinese}
+                      text={pattern.pattern}
+                      audioSrc={pattern.audio}
+                      fallbackAudioSrc={pattern.audioFallback}
+                    />
+                  )}
                 </article>
               ))}
             </div>

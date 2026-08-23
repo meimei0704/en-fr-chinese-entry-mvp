@@ -423,14 +423,17 @@ describe('LessonPage', () => {
       (count, pattern) => count + (pattern.examples?.length ?? 0),
       0,
     )
+    const patternCountWithoutExamples = lesson.sentencePatterns.filter(
+      (pattern) => !pattern.examples?.length,
+    ).length
 
     renderRoute(`/lesson/${lesson.id}`)
 
     const playbackButtons = screen.getAllByRole('button', { name: /play chinese/i })
     expect(playbackButtons).toHaveLength(
       lesson.dialogue.lines.length +
-        lesson.sentencePatterns.length +
         patternExampleCount +
+        patternCountWithoutExamples +
         lesson.vocabulary.length,
     )
     expect(screen.queryAllByText(/^Play Chinese$/i)).toHaveLength(0)
