@@ -56,7 +56,7 @@ const expectedArrivalChinese = [
   '您能帮我一下吗？',
   '这是我的护照。',
   '我是来旅游的。',
-  '我大概呆两个星期。',
+  '我大概待两个星期。',
   '地铁在哪里？',
   '机场快线在哪里？',
   '请问去哪里打车？',
@@ -72,7 +72,9 @@ async function collectAudioPaths() {
 function collectLessonAudioPaths(lesson: Awaited<ReturnType<typeof importCourse>>['lessons'][number]) {
   return [
     ...lesson.dialogue.lines.map((line) => line.audio),
-    ...lesson.sentencePatterns.map((pattern) => pattern.audio),
+    ...lesson.sentencePatterns.flatMap((pattern) =>
+      pattern.audio ? [pattern.audio] : [],
+    ),
     ...lesson.vocabulary.map((item) => item.audio),
     ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
   ]
@@ -123,16 +125,16 @@ describe('course content', () => {
     const expandedCounts: Record<string, Record<string, number>> = {
       'daily-greetings': { dialogue: 17, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'self-intro': { dialogue: 10, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'ask-directions': { dialogue: 11, patterns: 6, vocab: 10, practice: 2, cards: 6 },
-      'order-food': { dialogue: 14, patterns: 7, vocab: 10, practice: 2, cards: 6 },
-      'phone-and-payment': { dialogue: 9, patterns: 5, vocab: 10, practice: 2, cards: 6 },
-      'restaurant-order': { dialogue: 14, patterns: 7, vocab: 10, practice: 2, cards: 6 },
-      'train-station-ticket': { dialogue: 12, patterns: 5, vocab: 15, practice: 2, cards: 6 },
-      'metro-ticket': { dialogue: 9, patterns: 5, vocab: 14, practice: 2, cards: 6 },
-      'convenience-store-run': { dialogue: 14, patterns: 6, vocab: 10, practice: 2, cards: 6 },
-      'ask-for-help-problem': { dialogue: 16, patterns: 7, vocab: 10, practice: 2, cards: 6 },
-      'pharmacy-help': { dialogue: 13, patterns: 6, vocab: 11, practice: 2, cards: 6 },
-      'small-talk': { dialogue: 13, patterns: 7, vocab: 10, practice: 2, cards: 6 },
+      'ask-directions': { dialogue: 11, patterns: 11, vocab: 10, practice: 2, cards: 6 },
+      'order-food': { dialogue: 14, patterns: 13, vocab: 10, practice: 2, cards: 6 },
+      'phone-and-payment': { dialogue: 9, patterns: 9, vocab: 10, practice: 2, cards: 6 },
+      'restaurant-order': { dialogue: 14, patterns: 14, vocab: 10, practice: 2, cards: 6 },
+      'train-station-ticket': { dialogue: 12, patterns: 12, vocab: 15, practice: 2, cards: 6 },
+      'metro-ticket': { dialogue: 9, patterns: 9, vocab: 14, practice: 2, cards: 6 },
+      'convenience-store-run': { dialogue: 14, patterns: 12, vocab: 10, practice: 2, cards: 6 },
+      'ask-for-help-problem': { dialogue: 16, patterns: 14, vocab: 10, practice: 2, cards: 6 },
+      'pharmacy-help': { dialogue: 13, patterns: 13, vocab: 11, practice: 2, cards: 6 },
+      'small-talk': { dialogue: 13, patterns: 11, vocab: 10, practice: 2, cards: 6 },
     }
 
     for (const lesson of course.lessons) {
@@ -168,7 +170,10 @@ describe('course content', () => {
       lesson.dialogue.title.en,
       lesson.dialogue.title.fr,
       ...lesson.dialogue.lines.map((line) => line.hanzi),
-      ...lesson.sentencePatterns.map((pattern) => pattern.example),
+      ...lesson.sentencePatterns.flatMap((pattern) => [
+        pattern.pattern,
+        ...(pattern.examples?.map((example) => example.hanzi) ?? []),
+      ]),
       ...lesson.vocabulary.map((item) => item.hanzi),
       ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
       ...lesson.reviewCards.map((card) => card.front),
@@ -199,7 +204,10 @@ describe('course content', () => {
       lesson.dialogue.title.en,
       lesson.dialogue.title.fr,
       ...lesson.dialogue.lines.map((line) => line.hanzi),
-      ...lesson.sentencePatterns.map((pattern) => pattern.example),
+      ...lesson.sentencePatterns.flatMap((pattern) => [
+        pattern.pattern,
+        ...(pattern.examples?.map((example) => example.hanzi) ?? []),
+      ]),
       ...lesson.vocabulary.map((item) => item.hanzi),
       ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
       ...lesson.reviewCards.map((card) => card.front),
@@ -241,7 +249,10 @@ describe('course content', () => {
       const lesson = byId[lessonId]
       const chineseText = [
         ...lesson.dialogue.lines.map((line) => line.hanzi),
-        ...lesson.sentencePatterns.map((pattern) => pattern.example),
+        ...lesson.sentencePatterns.flatMap((pattern) => [
+          pattern.pattern,
+          ...(pattern.examples?.map((example) => example.hanzi) ?? []),
+        ]),
         ...lesson.vocabulary.map((item) => item.hanzi),
         ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.target)),
       ].join('\n')
@@ -268,7 +279,16 @@ describe('course content', () => {
 
       lesson.sentencePatterns.forEach((pattern) => {
         expectLocalizedField(pattern.meaning, `${pattern.id}.meaning`)
-        expectLocalizedField(pattern.explanation, `${pattern.id}.explanation`)
+        expect(pattern.pinyin, `${pattern.id}.pinyin`).toMatch(/\S/)
+        if (pattern.examples && pattern.examples.length > 0) {
+          pattern.examples.forEach((example, index) => {
+            expect(example.hanzi, `${pattern.id}.examples[${index}].hanzi`).toMatch(/\S/)
+            expect(example.pinyin, `${pattern.id}.examples[${index}].pinyin`).toMatch(/\S/)
+            expect(example.fill, `${pattern.id}.examples[${index}].fill`).toMatch(/\S/)
+            expect(example.en, `${pattern.id}.examples[${index}].en`).toMatch(/\S/)
+            expect(example.fr, `${pattern.id}.examples[${index}].fr`).toMatch(/\S/)
+          })
+        }
       })
 
       lesson.vocabulary.forEach((item) => {
@@ -320,7 +340,7 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(425)
+    expect(audioPaths).toHaveLength(421)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {

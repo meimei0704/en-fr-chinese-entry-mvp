@@ -132,9 +132,40 @@ export function preloadAudioSources(srcs: string[]) {
   }
 }
 
-export function speakChinese({ audioSrc, fallbackAudioSrc, onEnd }: SpeakChineseOptions) {
+function canUseBrowserTts() {
+  return (
+    typeof window !== 'undefined' &&
+    typeof SpeechSynthesisUtterance !== 'undefined' &&
+    'speechSynthesis' in window
+  )
+}
+
+function speakWithBrowserTts(text: string, onEnd?: () => void) {
+  if (!canUseBrowserTts()) {
+    return false
+  }
+
+  stopActiveAudio()
+
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.lang = 'zh-CN'
+  utterance.rate = 0.9
+
+  utterance.onend = () => onEnd?.()
+
+  window.speechSynthesis.cancel()
+  window.speechSynthesis.speak(utterance)
+
+  return true
+}
+
+export function speakChinese({ text, audioSrc, fallbackAudioSrc, onEnd }: SpeakChineseOptions) {
   if (audioSrc) {
     return playAudioSrc(audioSrc, fallbackAudioSrc, onEnd)
+  }
+
+  if (text) {
+    return speakWithBrowserTts(text, onEnd)
   }
 
   return false

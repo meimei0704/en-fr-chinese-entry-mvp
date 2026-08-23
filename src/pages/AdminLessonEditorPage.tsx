@@ -79,7 +79,7 @@ const structuredModuleCopy: Partial<
   sentencePatterns: {
     itemLabel: 'Pattern',
     badgeLabel: 'Pattern cards',
-    description: 'Edit each sentence pattern as a content card with meaning, example, audio, and explanation fields.',
+    description: 'Edit each sentence pattern as a content card with pattern, pinyin, meaning, audio, and example fields.',
   },
   vocabulary: {
     itemLabel: 'Vocabulary item',

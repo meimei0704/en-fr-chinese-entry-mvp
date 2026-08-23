@@ -21,7 +21,7 @@ describe('initial content admin seed', () => {
     const seed = createInitialContentSeed(course)
     const staticAudioRefs = course.lessons.flatMap((lesson) => [
       ...lesson.dialogue.lines.map((line) => line.audio),
-      ...lesson.sentencePatterns.map((pattern) => pattern.audio),
+      ...lesson.sentencePatterns.flatMap((pattern) => (pattern.audio ? [pattern.audio] : [])),
       ...lesson.vocabulary.map((item) => item.audio),
       ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
     ])

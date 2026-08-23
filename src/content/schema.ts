@@ -26,14 +26,23 @@ const dialogueSectionSchema = z.object({
   lines: z.array(dialogueLineSchema),
 })
 
+const sentencePatternExampleSchema = z.object({
+  fill: z.string(),
+  fillPinyin: z.string(),
+  hanzi: z.string(),
+  pinyin: z.string(),
+  en: z.string(),
+  fr: z.string(),
+})
+
 const sentencePatternSchema = z.object({
   id: z.string(),
   pattern: z.string(),
+  pinyin: z.string(),
   meaning: localizedFieldSchema,
-  example: z.string(),
-  audio: z.string(),
+  audio: z.string().optional(),
   audioFallback: z.string().optional(),
-  explanation: bilingualExplanationSchema,
+  examples: z.array(sentencePatternExampleSchema).optional(),
 })
 
 const vocabularyItemSchema = z.object({
