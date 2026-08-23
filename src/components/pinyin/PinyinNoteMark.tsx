@@ -5,7 +5,7 @@ interface PinyinNoteMarkProps {
 export function PinyinNoteMark({ className }: PinyinNoteMarkProps) {
   return (
     <svg
-      className={className}
+      className={className ? `pinyin-note-mark ${className}` : 'pinyin-note-mark'}
       data-testid="pinyin-note-mark"
       viewBox="0 0 24 24"
       fill="none"
