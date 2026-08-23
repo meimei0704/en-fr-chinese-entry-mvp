@@ -4056,8 +4056,8 @@ h2 {
 }
 
 .pinyin-note-marker .pinyin-note-mark {
-  width: 0.52em;
-  height: 0.52em;
+  width: 0.62em;
+  height: 0.62em;
 }
 
 .pinyin-reference-note {
@@ -4081,8 +4081,8 @@ h2 {
 }
 
 .pinyin-reference-note__marker .pinyin-note-mark {
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .pinyin-reference-note__text {
