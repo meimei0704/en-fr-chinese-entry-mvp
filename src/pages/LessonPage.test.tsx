@@ -428,10 +428,7 @@ describe('LessonPage', () => {
 
     const playbackButtons = screen.getAllByRole('button', { name: /play chinese/i })
     expect(playbackButtons).toHaveLength(
-      lesson.dialogue.lines.length +
-        lesson.sentencePatterns.length +
-        patternExampleCount +
-        lesson.vocabulary.length,
+      lesson.dialogue.lines.length + patternExampleCount + lesson.vocabulary.length,
     )
     expect(screen.queryAllByText(/^Play Chinese$/i)).toHaveLength(0)
     playbackButtons.forEach((button) => {
