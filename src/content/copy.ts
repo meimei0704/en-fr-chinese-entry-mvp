@@ -32,7 +32,6 @@ export const uiCopy = {
     culturePage: {
       heading: 'Culture advice for travelers in China',
       subtitle: 'Practical etiquette and customs for a smooth trip',
-      tablistLabel: 'Culture topics',
     },
     homePage: {
       heading: '轻松学中文',
@@ -199,7 +198,6 @@ export const uiCopy = {
     culturePage: {
       heading: 'Conseils culturels pour les voyageurs en Chine',
       subtitle: 'Étiquette et coutumes pratiques pour un voyage serein',
-      tablistLabel: 'Sujets culturels',
     },
     homePage: {
       heading: '轻松学中文',

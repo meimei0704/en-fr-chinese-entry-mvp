@@ -1961,8 +1961,9 @@ h2 {
   line-height: 1.4;
 }
 
-.culture-course__tab-badge {
-  width: 1.5rem;
+.culture-course__panel {
+  display: grid;
+  gap: 1.25rem;
 }
 
 .culture-course__panel {
