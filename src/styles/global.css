@@ -1961,7 +1961,7 @@ h2 {
   line-height: 1.4;
 }
 
-.culture-course__panel {
+.culture-course__sections {
   display: grid;
   gap: 1.25rem;
 }
