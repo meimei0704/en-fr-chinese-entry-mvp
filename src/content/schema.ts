@@ -33,6 +33,7 @@ const sentencePatternExampleSchema = z.object({
   pinyin: z.string(),
   en: z.string(),
   fr: z.string(),
+  audio: z.string(),
 })
 
 const sentencePatternSchema = z.object({

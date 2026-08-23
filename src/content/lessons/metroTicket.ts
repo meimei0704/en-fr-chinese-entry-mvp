@@ -117,6 +117,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Dì tiě zhàn zài nǎ lǐ?',
           en: 'metro station',
           fr: 'station de métro',
+          audio: '/audio/metro-ticket/pattern-01-example-01.mp3',
         },
         {
           fill: '售票处',
@@ -125,6 +126,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Shòu piào chù zài nǎ lǐ?',
           en: 'ticket office',
           fr: 'guichet',
+          audio: '/audio/metro-ticket/pattern-01-example-02.mp3',
         },
         {
           fill: '卫生间',
@@ -133,6 +135,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Wèi shēng jiān zài nǎ lǐ?',
           en: 'toilet',
           fr: 'toilettes',
+          audio: '/audio/metro-ticket/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -153,6 +156,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Wǒ yào qù Tiān ān mén Guǎng chǎng.',
           en: 'Tiananmen Square',
           fr: 'place Tiananmen',
+          audio: '/audio/metro-ticket/pattern-02-example-01.mp3',
         },
         {
           fill: '王府井',
@@ -161,6 +165,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Wǒ yào qù Wáng fǔ jǐng.',
           en: 'Wangfujing',
           fr: 'Wangfujing',
+          audio: '/audio/metro-ticket/pattern-02-example-02.mp3',
         },
         {
           fill: '三里屯',
@@ -169,6 +174,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Wǒ yào qù Sān lǐ tún.',
           en: 'Sanlitun',
           fr: 'Sanlitun',
+          audio: '/audio/metro-ticket/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -189,6 +195,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Zì dòng shòu piào jī zěn me yòng?',
           en: 'ticket vending machine',
           fr: 'distributeur de tickets',
+          audio: '/audio/metro-ticket/pattern-03-example-01.mp3',
         },
         {
           fill: '公交卡',
@@ -197,6 +204,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Gōng jiāo kǎ zěn me yòng?',
           en: 'transit card',
           fr: 'carte de transport',
+          audio: '/audio/metro-ticket/pattern-03-example-02.mp3',
         },
         {
           fill: '共享单车',
@@ -205,6 +213,7 @@ export const metroTicketLesson: LessonContent = {
           pinyin: 'Gòng xiǎng dān chē zěn me yòng?',
           en: 'shared bike',
           fr: 'vélo partagé',
+          audio: '/audio/metro-ticket/pattern-03-example-03.mp3',
         },
       ],
     },

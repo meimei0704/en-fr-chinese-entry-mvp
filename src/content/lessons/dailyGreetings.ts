@@ -342,6 +342,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Nǐ hǎo, zǎo shang hǎo.',
           en: 'good morning',
           fr: 'bonjour, le matin',
+          audio: '/audio/daily-greetings/pattern-01-example-01.mp3',
         },
         {
           fill: '先生',
@@ -350,6 +351,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Nǐ hǎo, xiān sheng.',
           en: 'sir',
           fr: 'monsieur',
+          audio: '/audio/daily-greetings/pattern-01-example-02.mp3',
         },
         {
           fill: '好久不见',
@@ -358,6 +360,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Nǐ hǎo, hǎo jiǔ bú jiàn.',
           en: 'long time no see',
           fr: 'ça fait longtemps',
+          audio: '/audio/daily-greetings/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -378,6 +381,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Nǐ hǎo ma?',
           en: 'you good',
           fr: 'ça va',
+          audio: '/audio/daily-greetings/pattern-02-example-01.mp3',
         },
         {
           fill: '你有空',
@@ -386,6 +390,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Nǐ yǒu kòng ma?',
           en: 'you are free',
           fr: 'tu es libre',
+          audio: '/audio/daily-greetings/pattern-02-example-02.mp3',
         },
         {
           fill: '好吃',
@@ -394,6 +399,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Hǎo chī ma?',
           en: 'tasty',
           fr: 'bon',
+          audio: '/audio/daily-greetings/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -414,6 +420,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Wǒ hěn hǎo, xiè xie.',
           en: 'good',
           fr: 'bien',
+          audio: '/audio/daily-greetings/pattern-03-example-01.mp3',
         },
         {
           fill: '高兴',
@@ -422,6 +429,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Wǒ hěn gāo xìng, xiè xie.',
           en: 'happy',
           fr: 'content',
+          audio: '/audio/daily-greetings/pattern-03-example-02.mp3',
         },
         {
           fill: '忙',
@@ -430,6 +438,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Wǒ hěn máng, xiè xie.',
           en: 'busy',
           fr: 'occupé',
+          audio: '/audio/daily-greetings/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -450,6 +459,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Hěn gāo xìng rèn shi nǐ.',
           en: 'meet you',
           fr: 'faire votre connaissance',
+          audio: '/audio/daily-greetings/pattern-04-example-01.mp3',
         },
         {
           fill: '见到你',
@@ -458,6 +468,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Hěn gāo xìng jiàn dào nǐ.',
           en: 'see you',
           fr: 'vous rencontrer',
+          audio: '/audio/daily-greetings/pattern-04-example-02.mp3',
         },
         {
           fill: '认识大家',
@@ -466,6 +477,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Hěn gāo xìng rèn shi dà jiā.',
           en: 'meet everyone',
           fr: 'rencontrer tout le monde',
+          audio: '/audio/daily-greetings/pattern-04-example-03.mp3',
         },
       ],
     },
@@ -486,6 +498,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Bù hǎo yì si, dǎ rǎo yí xià.',
           en: 'sorry to bother you',
           fr: 'désolé de déranger',
+          audio: '/audio/daily-greetings/pattern-05-example-01.mp3',
         },
         {
           fill: '借过一下',
@@ -494,6 +507,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Bù hǎo yì si, jiè guò yí xià.',
           en: 'let me pass',
           fr: 'laissez-moi passer',
+          audio: '/audio/daily-greetings/pattern-05-example-02.mp3',
         },
         {
           fill: '我不会说中文',
@@ -502,6 +516,7 @@ export const dailyGreetingsLesson: LessonContent = {
           pinyin: 'Bù hǎo yì si, wǒ bú huì shuō Zhōng wén.',
           en: 'I don\'t speak Chinese',
           fr: 'je ne parle pas chinois',
+          audio: '/audio/daily-greetings/pattern-05-example-03.mp3',
         },
       ],
     },

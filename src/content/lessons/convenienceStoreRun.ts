@@ -161,6 +161,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Zhè ge duō shao qián?',
           en: 'this',
           fr: 'ceci',
+          audio: '/audio/convenience-store-run/pattern-01-example-01.mp3',
         },
         {
           fill: '水',
@@ -169,6 +170,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Shuǐ duō shao qián?',
           en: 'water',
           fr: 'l\'eau',
+          audio: '/audio/convenience-store-run/pattern-01-example-02.mp3',
         },
         {
           fill: '面包',
@@ -177,6 +179,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Miàn bāo duō shao qián?',
           en: 'bread',
           fr: 'le pain',
+          audio: '/audio/convenience-store-run/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -197,6 +200,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Tài guì le.',
           en: 'expensive',
           fr: 'cher',
+          audio: '/audio/convenience-store-run/pattern-02-example-01.mp3',
         },
         {
           fill: '便宜',
@@ -205,6 +209,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Tài pián yi le.',
           en: 'cheap',
           fr: 'bon marché',
+          audio: '/audio/convenience-store-run/pattern-02-example-02.mp3',
         },
         {
           fill: '麻烦',
@@ -213,6 +218,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Tài má fan le.',
           en: 'troublesome',
           fr: 'compliqué',
+          audio: '/audio/convenience-store-run/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -232,6 +238,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Kě yǐ pián yi yì diǎn ma?',
           en: 'a bit cheaper',
           fr: 'un peu moins cher',
+          audio: '/audio/convenience-store-run/pattern-03-example-01.mp3',
         },
         {
           fill: '刷卡',
@@ -240,6 +247,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Kě yǐ shuā kǎ ma?',
           en: 'pay by card',
           fr: 'payer par carte',
+          audio: '/audio/convenience-store-run/pattern-03-example-02.mp3',
         },
         {
           fill: '试试',
@@ -248,6 +256,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Kě yǐ shì shi ma?',
           en: 'try it',
           fr: 'essayer',
+          audio: '/audio/convenience-store-run/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -277,6 +286,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Yǒu dài zi ma?',
           en: 'a bag',
           fr: 'un sac',
+          audio: '/audio/convenience-store-run/pattern-05-example-01.mp3',
         },
         {
           fill: '热咖啡',
@@ -285,6 +295,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Yǒu rè kā fēi ma?',
           en: 'hot coffee',
           fr: 'du café chaud',
+          audio: '/audio/convenience-store-run/pattern-05-example-02.mp3',
         },
         {
           fill: '别的颜色',
@@ -293,6 +304,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           pinyin: 'Yǒu bié de yán sè ma?',
           en: 'other colors',
           fr: 'd\'autres couleurs',
+          audio: '/audio/convenience-store-run/pattern-05-example-03.mp3',
         },
       ],
     },

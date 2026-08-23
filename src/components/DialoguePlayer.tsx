@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { getLocalizedText, getUiCopy } from '../content/copy'
 import type { DialogueLine, ExplanationLanguage } from '../content/types'
-import { speakerKeyFromField } from './speakerKey'
 import { ExplanationBlock } from './ExplanationBlock'
 import { SpeechButton } from './SpeechButton'
 
@@ -39,12 +38,6 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
                 }
               />
             </div>
-            <span
-              className="dialogue-card__speaker"
-              data-speaker={speakerKeyFromField(line.speaker)}
-            >
-              {getLocalizedText(line.speaker, language)}
-            </span>
             <p className="pinyin-line">{line.pinyin}</p>
             <p className="muted-text">{getLocalizedText(line.translation, language)}</p>
             <ExplanationBlock collapsible explanation={line.explanation} language={language} />

@@ -162,6 +162,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Qǐng gěi wǒ cài dān.',
           en: 'the menu',
           fr: 'le menu',
+          audio: '/audio/restaurant-order/pattern-01-example-01.mp3',
         },
         {
           fill: '一杯水',
@@ -170,6 +171,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Qǐng gěi wǒ yì bēi shuǐ.',
           en: 'a glass of water',
           fr: 'un verre d\'eau',
+          audio: '/audio/restaurant-order/pattern-01-example-02.mp3',
         },
         {
           fill: '一碗米饭',
@@ -178,6 +180,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Qǐng gěi wǒ yì wǎn mǐ fàn.',
           en: 'a bowl of rice',
           fr: 'un bol de riz',
+          audio: '/audio/restaurant-order/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -198,6 +201,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Wǒ yào yì wǎn miàn tiáo.',
           en: 'noodles',
           fr: 'des nouilles',
+          audio: '/audio/restaurant-order/pattern-02-example-01.mp3',
         },
         {
           fill: '米饭',
@@ -206,6 +210,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Wǒ yào yì wǎn mǐ fàn.',
           en: 'rice',
           fr: 'du riz',
+          audio: '/audio/restaurant-order/pattern-02-example-02.mp3',
         },
         {
           fill: '汤',
@@ -214,6 +219,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Wǒ yào yì wǎn tāng.',
           en: 'soup',
           fr: 'de la soupe',
+          audio: '/audio/restaurant-order/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -234,6 +240,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Bú yào là.',
           en: 'spicy',
           fr: 'pimenté',
+          audio: '/audio/restaurant-order/pattern-03-example-01.mp3',
         },
         {
           fill: '葱',
@@ -242,6 +249,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Bú yào cōng.',
           en: 'onion',
           fr: 'd\'oignon',
+          audio: '/audio/restaurant-order/pattern-03-example-02.mp3',
         },
         {
           fill: '香菜',
@@ -250,6 +258,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Bú yào xiāng cài.',
           en: 'cilantro',
           fr: 'de coriandre',
+          audio: '/audio/restaurant-order/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -270,6 +279,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Wǒ duì huā shēng guò mǐn.',
           en: 'peanuts',
           fr: 'aux cacahuètes',
+          audio: '/audio/restaurant-order/pattern-04-example-01.mp3',
         },
         {
           fill: '海鲜',
@@ -278,6 +288,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Wǒ duì hǎi xiān guò mǐn.',
           en: 'seafood',
           fr: 'aux fruits de mer',
+          audio: '/audio/restaurant-order/pattern-04-example-02.mp3',
         },
         {
           fill: '牛奶',
@@ -286,6 +297,7 @@ export const restaurantOrderLesson: LessonContent = {
           pinyin: 'Wǒ duì niú nǎi guò mǐn.',
           en: 'milk',
           fr: 'au lait',
+          audio: '/audio/restaurant-order/pattern-04-example-03.mp3',
         },
       ],
     },

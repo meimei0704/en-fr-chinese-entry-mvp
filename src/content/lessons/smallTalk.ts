@@ -153,6 +153,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Jīn tiān tiān qì hěn hǎo.',
           en: 'very good',
           fr: 'très bon',
+          audio: '/audio/small-talk/pattern-01-example-01.mp3',
         },
         {
           fill: '不错',
@@ -161,6 +162,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Jīn tiān tiān qì bú cuò.',
           en: 'nice',
           fr: 'pas mal',
+          audio: '/audio/small-talk/pattern-01-example-02.mp3',
         },
         {
           fill: '好冷',
@@ -169,6 +171,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Jīn tiān tiān qì hǎo lěng.',
           en: 'so cold',
           fr: 'très froid',
+          audio: '/audio/small-talk/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -209,6 +212,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Nǐ tài bàng le!',
           en: 'awesome',
           fr: 'génial',
+          audio: '/audio/small-talk/pattern-04-example-01.mp3',
         },
         {
           fill: '幽默',
@@ -217,6 +221,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Nǐ tài yōu mò le.',
           en: 'funny',
           fr: 'drôle',
+          audio: '/audio/small-talk/pattern-04-example-02.mp3',
         },
         {
           fill: '热情',
@@ -225,6 +230,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Nǐ tài rè qíng le.',
           en: 'warm-hearted',
           fr: 'chaleureux',
+          audio: '/audio/small-talk/pattern-04-example-03.mp3',
         },
       ],
     },
@@ -245,6 +251,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Nǐ de pí fū hěn hǎo!',
           en: 'skin',
           fr: 'la peau',
+          audio: '/audio/small-talk/pattern-05-example-01.mp3',
         },
         {
           fill: '中文',
@@ -253,6 +260,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Nǐ de Zhōng wén hěn hǎo!',
           en: 'Chinese',
           fr: 'le chinois',
+          audio: '/audio/small-talk/pattern-05-example-02.mp3',
         },
         {
           fill: '英语',
@@ -261,6 +269,7 @@ export const smallTalkLesson: LessonContent = {
           pinyin: 'Nǐ de Yīng yǔ hěn hǎo!',
           en: 'English',
           fr: 'l\'anglais',
+          audio: '/audio/small-talk/pattern-05-example-03.mp3',
         },
       ],
     },

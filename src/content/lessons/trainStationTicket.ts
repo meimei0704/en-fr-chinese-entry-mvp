@@ -144,6 +144,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Huǒ chē zhàn zài nǎ lǐ?',
           en: 'train station',
           fr: 'la gare',
+          audio: '/audio/train-station-ticket/pattern-01-example-01.mp3',
         },
         {
           fill: '售票处',
@@ -152,6 +153,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Shòu piào chù zài nǎ lǐ?',
           en: 'ticket office',
           fr: 'le guichet',
+          audio: '/audio/train-station-ticket/pattern-01-example-02.mp3',
         },
         {
           fill: '餐车',
@@ -160,6 +162,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Cān chē zài nǎ lǐ?',
           en: 'dining car',
           fr: 'la voiture-restaurant',
+          audio: '/audio/train-station-ticket/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -180,6 +183,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Wǒ yào yì zhāng qù Běi jīng de piào.',
           en: 'Beijing',
           fr: 'Pékin',
+          audio: '/audio/train-station-ticket/pattern-02-example-01.mp3',
         },
         {
           fill: '上海',
@@ -188,6 +192,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Wǒ yào yì zhāng qù Shàng hǎi de piào.',
           en: 'Shanghai',
           fr: 'Shanghai',
+          audio: '/audio/train-station-ticket/pattern-02-example-02.mp3',
         },
         {
           fill: '广州',
@@ -196,6 +201,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Wǒ yào yì zhāng qù Guǎng zhōu de piào.',
           en: 'Guangzhou',
           fr: 'Canton',
+          audio: '/audio/train-station-ticket/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -216,6 +222,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Huǒ chē jǐ diǎn kāi?',
           en: 'the train',
           fr: 'le train',
+          audio: '/audio/train-station-ticket/pattern-03-example-01.mp3',
         },
         {
           fill: '高铁',
@@ -224,6 +231,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Gāo tiě jǐ diǎn kāi?',
           en: 'the high-speed train',
           fr: 'le TGV',
+          audio: '/audio/train-station-ticket/pattern-03-example-02.mp3',
         },
         {
           fill: '动车',
@@ -232,6 +240,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Dòng chē jǐ diǎn kāi?',
           en: 'the bullet train',
           fr: 'le train rapide',
+          audio: '/audio/train-station-ticket/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -252,6 +261,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Huǒ chē wǎn diǎn le ma?',
           en: 'the train',
           fr: 'le train',
+          audio: '/audio/train-station-ticket/pattern-04-example-01.mp3',
         },
         {
           fill: '高铁',
@@ -260,6 +270,7 @@ export const trainStationTicketLesson: LessonContent = {
           pinyin: 'Gāo tiě wǎn diǎn le ma?',
           en: 'the high-speed train',
           fr: 'le TGV',
+          audio: '/audio/train-station-ticket/pattern-04-example-02.mp3',
         },
       ],
     },

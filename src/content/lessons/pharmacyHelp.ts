@@ -153,6 +153,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Qǐng wèn nǎ lǐ yǒu yī yuàn?',
           en: 'hospital',
           fr: 'l\'hôpital',
+          audio: '/audio/pharmacy-help/pattern-01-example-01.mp3',
         },
         {
           fill: '药店',
@@ -161,6 +162,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Qǐng wèn nǎ lǐ yǒu yào diàn?',
           en: 'pharmacy',
           fr: 'la pharmacie',
+          audio: '/audio/pharmacy-help/pattern-01-example-02.mp3',
         },
         {
           fill: '卫生间',
@@ -169,6 +171,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Qǐng wèn nǎ lǐ yǒu wèi shēng jiān?',
           en: 'toilet',
           fr: 'les toilettes',
+          audio: '/audio/pharmacy-help/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -189,6 +192,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ dù zi téng.',
           en: 'stomach',
           fr: 'au ventre',
+          audio: '/audio/pharmacy-help/pattern-02-example-01.mp3',
         },
         {
           fill: '头',
@@ -197,6 +201,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ tóu téng.',
           en: 'head',
           fr: 'à la tête',
+          audio: '/audio/pharmacy-help/pattern-02-example-02.mp3',
         },
         {
           fill: '牙',
@@ -205,6 +210,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ yá téng.',
           en: 'tooth',
           fr: 'à la dent',
+          audio: '/audio/pharmacy-help/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -225,6 +231,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ fā shāo le.',
           en: 'a fever',
           fr: 'de la fièvre',
+          audio: '/audio/pharmacy-help/pattern-03-example-01.mp3',
         },
         {
           fill: '感冒',
@@ -233,6 +240,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ gǎn mào le.',
           en: 'a cold',
           fr: 'un rhume',
+          audio: '/audio/pharmacy-help/pattern-03-example-02.mp3',
         },
         {
           fill: '拉肚子',
@@ -241,6 +249,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ lā dù zi le.',
           en: 'diarrhea',
           fr: 'la diarrhée',
+          audio: '/audio/pharmacy-help/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -261,6 +270,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ xiǎng mǎi yào.',
           en: 'medicine',
           fr: 'des médicaments',
+          audio: '/audio/pharmacy-help/pattern-04-example-01.mp3',
         },
         {
           fill: '感冒药',
@@ -269,6 +279,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ xiǎng mǎi gǎn mào yào.',
           en: 'cold medicine',
           fr: 'un médicament contre le rhume',
+          audio: '/audio/pharmacy-help/pattern-04-example-02.mp3',
         },
         {
           fill: '创可贴',
@@ -277,6 +288,7 @@ export const pharmacyHelpLesson: LessonContent = {
           pinyin: 'Wǒ xiǎng mǎi chuàng kě tiē.',
           en: 'band-aid',
           fr: 'des pansements',
+          audio: '/audio/pharmacy-help/pattern-04-example-03.mp3',
         },
       ],
     },

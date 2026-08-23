@@ -190,6 +190,7 @@ export const askForHelpProblemLesson: LessonContent = {
           pinyin: 'Wǒ de hù zhào diū le.',
           en: 'passport',
           fr: 'passeport',
+          audio: '/audio/ask-for-help-problem/pattern-02-example-01.mp3',
         },
         {
           fill: '手机',
@@ -198,6 +199,7 @@ export const askForHelpProblemLesson: LessonContent = {
           pinyin: 'Wǒ de shǒu jī diū le.',
           en: 'phone',
           fr: 'téléphone',
+          audio: '/audio/ask-for-help-problem/pattern-02-example-02.mp3',
         },
         {
           fill: '钱包',
@@ -206,6 +208,7 @@ export const askForHelpProblemLesson: LessonContent = {
           pinyin: 'Wǒ de qián bāo diū le.',
           en: 'wallet',
           fr: 'portefeuille',
+          audio: '/audio/ask-for-help-problem/pattern-02-example-03.mp3',
         },
       ],
     },

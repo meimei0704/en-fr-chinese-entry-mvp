@@ -402,23 +402,6 @@ describe('LessonPage', () => {
     expect(placeholder).not.toHaveClass('study-item__title')
   })
 
-  it('shows a completion badge on the lesson header for a completed lesson', () => {
-    saveProgress({
-      ...createDefaultProgress(),
-      completedLessons: ['self-intro'],
-    })
-
-    renderRoute('/lesson/self-intro')
-
-    expect(screen.getByText('Lesson complete')).toBeVisible()
-  })
-
-  it('omits the completion badge for a lesson that is not complete', () => {
-    renderRoute('/lesson/self-intro')
-
-    expect(screen.queryByText('Lesson complete')).not.toBeInTheDocument()
-  })
-
   it('keeps only Practice in the lesson action dock', () => {    renderRoute('/lesson/self-intro')
     const actions = screen.getByRole('navigation', { name: /lesson actions/i })
 

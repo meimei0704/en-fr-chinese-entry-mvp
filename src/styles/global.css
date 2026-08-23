@@ -1595,27 +1595,6 @@ h2 {
   margin: 0.35rem 0 0;
 }
 
-.lesson-header-card__complete-badge {
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-top: 0.15rem;
-  border-radius: 999px;
-  border: 1px solid rgba(var(--color-jade-rgb), 0.42);
-  padding: 0.35rem 0.7rem;
-  color: var(--color-jade-ink);
-  background: var(--color-jade-tint-c-solid);
-  font-size: 0.8rem;
-  font-weight: 850;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
-}
-
-.lesson-header-card__complete-badge::before {
-  content: '✓';
-}
-
 .lesson-page .lesson-progress-preview {
   position: sticky;
   top: 0.75rem;
