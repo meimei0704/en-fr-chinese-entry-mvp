@@ -320,7 +320,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'I have a headache.',
         fr: 'J\'ai mal à la tête.',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-03.mp3',},
     {
       id: 'pharmacy-help-pattern-8',
       pattern: '我感冒了。',
@@ -329,7 +330,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'I caught a cold.',
         fr: 'J\'ai attrapé un rhume.',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-05.mp3',},
     {
       id: 'pharmacy-help-pattern-9',
       pattern: '我拉肚子了。',
@@ -338,7 +340,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'I have diarrhea.',
         fr: 'J\'ai la diarrhée.',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-07.mp3',},
     {
       id: 'pharmacy-help-pattern-10',
       pattern: '谢谢医生。谢谢护士。',
@@ -347,7 +350,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'Thank you, doctor. Thank you, nurse.',
         fr: 'Merci, docteur. Merci, infirmière.',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-08.mp3',},
     {
       id: 'pharmacy-help-pattern-11',
       pattern: '请问去哪里结账？',
@@ -356,7 +360,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'Where do I pay the bill?',
         fr: 'Où dois-je payer la facture ?',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-09.mp3',},
     {
       id: 'pharmacy-help-pattern-12',
       pattern: '去哪里取药？',
@@ -365,7 +370,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'Where do I pick up my prescription?',
         fr: 'Où retirer mon médicament ?',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-10.mp3',},
     {
       id: 'pharmacy-help-pattern-13',
       pattern: '多少钱？',
@@ -374,7 +380,8 @@ export const pharmacyHelpLesson: LessonContent = {
         en: 'How much is it?',
         fr: 'Combien ça coûte ?',
       },
-    },
+    
+      audio: '/audio/pharmacy-help/line-13.mp3',},
   ],
   vocabulary: [
     {

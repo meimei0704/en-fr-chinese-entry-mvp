@@ -240,7 +240,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'I am lost.',
         fr: 'Je suis perdu(e).',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-11.mp3',},
     {
       id: 'ask-for-help-problem-pattern-6',
       pattern: '我手机没电了。',
@@ -249,7 +250,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'My phone is dead.',
         fr: 'Mon téléphone n\'a plus de batterie.',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-05.mp3',},
     {
       id: 'ask-for-help-problem-pattern-7',
       pattern: '请问哪里可以给手机充电？',
@@ -258,7 +260,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'Where can I charge my phone?',
         fr: 'Où puis-je recharger mon téléphone ?',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-06.mp3',},
     {
       id: 'ask-for-help-problem-pattern-8',
       pattern: '您好，共享单车怎么用？',
@@ -267,7 +270,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'Hello, how do I use the shared bike?',
         fr: 'Bonjour, comment utiliser le vélo partagé ?',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-07.mp3',},
     {
       id: 'ask-for-help-problem-pattern-9',
       pattern: '能帮我一个忙吗？',
@@ -276,7 +280,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'Could you do me a favor?',
         fr: 'Pouvez-vous me rendre un service ?',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-08.mp3',},
     {
       id: 'ask-for-help-problem-pattern-10',
       pattern: '麻烦你了。',
@@ -285,7 +290,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'Sorry to trouble you.',
         fr: 'Désolé de vous déranger.',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-09.mp3',},
     {
       id: 'ask-for-help-problem-pattern-11',
       pattern: '救命！',
@@ -294,7 +300,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'Help!',
         fr: 'Au secours !',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/line-10.mp3',},
     {
       id: 'ask-for-help-problem-pattern-12',
       pattern: '请给警察打电话。',
@@ -323,7 +330,8 @@ export const askForHelpProblemLesson: LessonContent = {
         en: 'Excuse me, where is the nearest convenience store?',
         fr: 'Excusez-moi, où est la supérette la plus proche ?',
       },
-    },
+    
+      audio: '/audio/ask-for-help-problem/pattern-14.mp3',},
   ],
   vocabulary: [
     {

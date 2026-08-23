@@ -301,7 +301,8 @@ export const smallTalkLesson: LessonContent = {
         en: 'You are so funny.',
         fr: 'Tu es très drôle.',
       },
-    },
+    
+      audio: '/audio/small-talk/pattern-04-example-02.mp3',},
     {
       id: 'small-talk-pattern-9',
       pattern: '你真了不起！',
@@ -310,7 +311,8 @@ export const smallTalkLesson: LessonContent = {
         en: 'You are incredible!',
         fr: 'Tu es incroyable !',
       },
-    },
+    
+      audio: '/audio/small-talk/line-08.mp3',},
     {
       id: 'small-talk-pattern-10',
       pattern: '你太热情了。',
@@ -319,7 +321,8 @@ export const smallTalkLesson: LessonContent = {
         en: 'You are so warm-hearted.',
         fr: 'Tu es très chaleureux.',
       },
-    },
+    
+      audio: '/audio/small-talk/line-10.mp3',},
     {
       id: 'small-talk-pattern-11',
       pattern: '你太乐于助人了。',
@@ -328,7 +331,8 @@ export const smallTalkLesson: LessonContent = {
         en: 'You are kind-hearted and helpful.',
         fr: 'Tu es gentil(le) et serviable.',
       },
-    },
+    
+      audio: '/audio/small-talk/pattern-11.mp3',},
   ],
   vocabulary: [
     {

@@ -303,7 +303,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         en: 'How much is it?',
         fr: 'Combien ça coûte ?',
       },
-    },
+    
+      audio: '/audio/phone-and-payment/line-05.mp3',},
     {
       id: 'phone-and-payment-pattern-7',
       pattern: '帮我设置一下网络好吗？',
@@ -312,7 +313,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         en: 'Could you help me set up the Internet?',
         fr: 'Pouvez-vous m\'aider à configurer Internet ?',
       },
-    },
+    
+      audio: '/audio/phone-and-payment/line-07.mp3',},
     {
       id: 'phone-and-payment-pattern-8',
       pattern: '没有网络。',
@@ -321,7 +323,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         en: 'There is no internet.',
         fr: 'Il n\'y a pas de connexion Internet.',
       },
-    },
+    
+      audio: '/audio/phone-and-payment/line-08.mp3',},
     {
       id: 'phone-and-payment-pattern-9',
       pattern: '没有信号。',
@@ -330,7 +333,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         en: 'There is no signal.',
         fr: 'Il n\'y a pas de signal.',
       },
-    },
+    
+      audio: '/audio/phone-and-payment/line-09.mp3',},
   ],
   vocabulary: [
     {

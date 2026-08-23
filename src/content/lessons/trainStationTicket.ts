@@ -292,7 +292,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'Where is the ticket office?',
         fr: 'Où est le guichet de billets ?',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-02.mp3',},
     {
       id: 'train-station-ticket-pattern-7',
       pattern: '这是我的护照。',
@@ -301,7 +302,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'This is my passport.',
         fr: 'Voici mon passeport.',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-04.mp3',},
     {
       id: 'train-station-ticket-pattern-8',
       pattern: '餐车在哪里？',
@@ -310,7 +312,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'Where is the dining car?',
         fr: 'Où est la voiture-restaurant ?',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-06.mp3',},
     {
       id: 'train-station-ticket-pattern-9',
       pattern: '我误车了。',
@@ -319,7 +322,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'I missed my train.',
         fr: 'J\'ai raté mon train.',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-09.mp3',},
     {
       id: 'train-station-ticket-pattern-10',
       pattern: '我没赶上火车。',
@@ -328,7 +332,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'I missed the train.',
         fr: 'J\'ai raté le train.',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-10.mp3',},
     {
       id: 'train-station-ticket-pattern-11',
       pattern: '能改签下一辆车吗？',
@@ -337,7 +342,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'Can I change my ticket for a later train?',
         fr: 'Puis-je modifier mon billet pour un train suivant ?',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-11.mp3',},
     {
       id: 'train-station-ticket-pattern-12',
       pattern: '如何退票退款呢？',
@@ -346,7 +352,8 @@ export const trainStationTicketLesson: LessonContent = {
         en: 'How can I get a ticket cancellation and refund?',
         fr: 'Comment obtenir l\'annulation et le remboursement du billet ?',
       },
-    },
+    
+      audio: '/audio/train-station-ticket/line-12.mp3',},
   ],
   vocabulary: [
     {

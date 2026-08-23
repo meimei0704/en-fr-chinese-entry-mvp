@@ -292,7 +292,8 @@ export const askDirectionsLesson: LessonContent = {
         en: 'Please drive slower.',
         fr: 'Allez plus lentement, s\'il vous plaît.',
       },
-    },
+    
+      audio: '/audio/ask-directions/line-06.mp3',},
     {
       id: 'ask-directions-pattern-7',
       pattern: '麻烦停下车。',
@@ -301,7 +302,8 @@ export const askDirectionsLesson: LessonContent = {
         en: 'Please stop the car.',
         fr: 'Arrêtez la voiture, s\'il vous plaît.',
       },
-    },
+    
+      audio: '/audio/ask-directions/line-07.mp3',},
     {
       id: 'ask-directions-pattern-8',
       pattern: '一共多少钱？',
@@ -320,7 +322,8 @@ export const askDirectionsLesson: LessonContent = {
         en: 'How should I pay?',
         fr: 'Comment payer ?',
       },
-    },
+    
+      audio: '/audio/ask-directions/line-09.mp3',},
     {
       id: 'ask-directions-pattern-10',
       pattern: '可以用微信/支付宝吗？',
@@ -329,7 +332,8 @@ export const askDirectionsLesson: LessonContent = {
         en: 'Can I use WeChat Pay / Alipay?',
         fr: 'Puis-je payer avec WeChat / Alipay ?',
       },
-    },
+    
+      audio: '/audio/ask-directions/line-10.mp3',},
     {
       id: 'ask-directions-pattern-11',
       pattern: '请给我发票。',
@@ -338,7 +342,8 @@ export const askDirectionsLesson: LessonContent = {
         en: 'Please give me a receipt.',
         fr: 'Un reçu, s\'il vous plaît.',
       },
-    },
+    
+      audio: '/audio/ask-directions/line-11.mp3',},
   ],
   vocabulary: [
     {
