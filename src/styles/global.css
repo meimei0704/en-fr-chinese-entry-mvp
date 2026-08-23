@@ -4047,12 +4047,17 @@ h2 {
 }
 
 .pinyin-note-marker {
+  display: inline-flex;
+  align-items: center;
   margin-left: 0.15rem;
-  color: var(--color-pinyin-finals);
-  font-size: 0.62em;
-  font-weight: 900;
+  color: var(--color-ink-strong);
   line-height: 1;
   vertical-align: super;
+}
+
+.pinyin-note-marker .pinyin-note-mark {
+  width: 0.72em;
+  height: 0.72em;
 }
 
 .pinyin-reference-note {
@@ -4068,11 +4073,16 @@ h2 {
 }
 
 .pinyin-reference-note__marker {
+  display: inline-flex;
+  align-items: center;
   margin: 0;
-  color: var(--color-pinyin-finals);
-  font-size: 0.9rem;
-  font-weight: 900;
+  color: var(--color-ink-strong);
   line-height: 1;
+}
+
+.pinyin-reference-note__marker .pinyin-note-mark {
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .pinyin-reference-note__text {

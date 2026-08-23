@@ -165,7 +165,7 @@ describe('PinyinPage', () => {
 
     await user.click(screen.getByRole('tab', { name: 'Finals' }))
 
-    const noteMarkers = screen.getAllByText('※')
+    const noteMarkers = screen.getAllByTestId('pinyin-note-mark')
     expect(noteMarkers).toHaveLength(4)
 
     expect(screen.getAllByTestId('pinyin-note')).toHaveLength(2)

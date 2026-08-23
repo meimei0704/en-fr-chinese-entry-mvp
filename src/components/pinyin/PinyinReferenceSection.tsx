@@ -7,6 +7,7 @@ import type {
   PinyinReferenceItem,
 } from '../../content/types'
 import { TonePitchVisual } from './TonePitchVisual'
+import { PinyinNoteMark } from './PinyinNoteMark'
 
 interface PinyinReferenceSectionProps {
   groups: PinyinReferenceGroup[]
@@ -53,7 +54,7 @@ export function PinyinReferenceSection({
                             aria-label="annotation"
                             aria-hidden="true"
                           >
-                            ※
+                            <PinyinNoteMark />
                           </sup>
                         ) : null}
                       </p>
@@ -88,7 +89,7 @@ export function PinyinReferenceSection({
                       aria-label={`${referenceCardLabel(item, language)} annotation`}
                     >
                       <p className="pinyin-reference-note__marker" aria-hidden="true">
-                        ※
+                        <PinyinNoteMark />
                       </p>
                       <p className="pinyin-reference-note__text">
                         {getLocalizedText(item.note, language)}
