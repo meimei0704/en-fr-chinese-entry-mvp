@@ -972,6 +972,7 @@ h2 {
 .course-series__title {
   grid-column: 2;
   grid-row: 1;
+  align-self: center;
   min-width: 0;
   max-width: 100%;
   margin: 0;
@@ -990,7 +991,7 @@ h2 {
 .course-series__pinyin-mark,
 .course-series__journey-mark,
 .course-series__culture-mark {
-  grid-row: 1 / -1;
+  grid-row: 1;
   display: inline-grid;
   place-items: center;
   width: 100%;
