@@ -174,6 +174,30 @@ describe('PinyinPage', () => {
     ).toBeVisible()
   })
 
+  it('renders er/ü rule notes beside their cards instead of inside them', async () => {
+    const user = userEvent.setup()
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('tab', { name: 'Finals' }))
+
+    const notedItems = screen.getAllByTestId('pinyin-noted-item')
+    expect(notedItems).toHaveLength(2)
+
+    const spellingRule = screen.getByText(
+      /Spelling rule for ü: when following j, q, x/,
+    )
+    expect(spellingRule).toBeVisible()
+    expect(spellingRule.closest('.pinyin-reference-note')).not.toBeNull()
+
+    const üCard = screen.getByText('ü', { selector: '.pinyin-reference-card__phoneme' }).closest(
+      '.pinyin-reference-card',
+    )
+    expect(üCard).not.toBeNull()
+    expect(üCard?.querySelector('.pinyin-reference-card__description')?.textContent).not.toContain(
+      'Spelling rule for ü',
+    )
+  })
+
   it('switches to the whole syllables module and renders all sixteen cards', async () => {
     const user = userEvent.setup()
     renderRoute('/pinyin')
