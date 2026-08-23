@@ -245,7 +245,8 @@ export const metroTicketLesson: LessonContent = {
         en: 'Where can I buy a ticket?',
         fr: 'Où puis-je acheter un ticket ?',
       },
-    },
+    
+      audio: '/audio/metro-ticket/line-02.mp3',},
     {
       id: 'metro-ticket-pattern-7',
       pattern: '您好，我要一张票。',
@@ -254,7 +255,8 @@ export const metroTicketLesson: LessonContent = {
         en: 'Hello, I want to buy a ticket.',
         fr: 'Bonjour, je voudrais un ticket.',
       },
-    },
+    
+      audio: '/audio/metro-ticket/line-03.mp3',},
     {
       id: 'metro-ticket-pattern-8',
       pattern: '我要去这里。',
@@ -263,7 +265,8 @@ export const metroTicketLesson: LessonContent = {
         en: 'I want to go to this place.',
         fr: 'Je veux aller à cet endroit.',
       },
-    },
+    
+      audio: '/audio/metro-ticket/line-07.mp3',},
     {
       id: 'metro-ticket-pattern-9',
       pattern: '请问，哪个出口去？',
@@ -272,7 +275,8 @@ export const metroTicketLesson: LessonContent = {
         en: 'Excuse me, which exit should I take?',
         fr: 'Excusez-moi, quelle sortie dois-je prendre ?',
       },
-    },
+    
+      audio: '/audio/metro-ticket/line-09.mp3',},
   ],
   vocabulary: [
     {

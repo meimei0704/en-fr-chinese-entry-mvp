@@ -316,7 +316,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'I am just looking.',
         fr: 'Je regarde juste.',
       },
-    },
+    
+      audio: '/audio/convenience-store-run/line-04.mp3',},
     {
       id: 'convenience-store-run-pattern-7',
       pattern: '有别的颜色吗？',
@@ -325,7 +326,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'Do you have other colors?',
         fr: 'Avez-vous d\'autres couleurs ?',
       },
-    },
+    
+      audio: '/audio/convenience-store-run/pattern-05-example-03.mp3',},
     {
       id: 'convenience-store-run-pattern-8',
       pattern: '我可以试试吗？',
@@ -334,7 +336,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'Can I try it on?',
         fr: 'Puis-je l\'essayer ?',
       },
-    },
+    
+      audio: '/audio/convenience-store-run/line-06.mp3',},
     {
       id: 'convenience-store-run-pattern-9',
       pattern: '试衣间在哪里？',
@@ -343,7 +346,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'Where is the fitting room?',
         fr: 'Où est la cabine d\'essayage ?',
       },
-    },
+    
+      audio: '/audio/convenience-store-run/pattern-09.mp3',},
     {
       id: 'convenience-store-run-pattern-10',
       pattern: '有大号/小号吗？',
@@ -352,7 +356,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'Do you have a large/small size?',
         fr: 'Avez-vous une grande/petite taille ?',
       },
-    },
+    
+      audio: '/audio/convenience-store-run/pattern-10.mp3',},
     {
       id: 'convenience-store-run-pattern-11',
       pattern: '可以刷卡吗？',
@@ -361,7 +366,8 @@ export const convenienceStoreRunLesson: LessonContent = {
         en: 'Can I pay by card?',
         fr: 'Puis-je payer par carte ?',
       },
-    },
+    
+      audio: '/audio/convenience-store-run/pattern-03-example-02.mp3',},
     {
       id: 'convenience-store-run-pattern-12',
       pattern: '我用微信支付 / 支付宝。',

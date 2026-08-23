@@ -163,7 +163,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'I have a reservation.',
         fr: 'J\'ai une réservation.',
       },
-    },
+    
+      audio: '/audio/order-food/line-03.mp3',},
     {
       id: 'order-food-pattern-3',
       pattern: '这是我的……。',
@@ -299,7 +300,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'What time is breakfast?',
         fr: 'À quelle heure est le petit-déjeuner ?',
       },
-    },
+    
+      audio: '/audio/order-food/line-06.mp3',},
     {
       id: 'order-food-pattern-8',
       pattern: '电梯在哪里？',
@@ -318,7 +320,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'I need more towels.',
         fr: 'J\'ai besoin de plus de serviettes.',
       },
-    },
+    
+      audio: '/audio/order-food/line-08.mp3',},
     {
       id: 'order-food-pattern-10',
       pattern: '空调坏了。',
@@ -327,7 +330,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'The air conditioner does not work.',
         fr: 'La climatisation ne fonctionne pas.',
       },
-    },
+    
+      audio: '/audio/order-food/line-09.mp3',},
     {
       id: 'order-food-pattern-11',
       pattern: '我的房卡丢了。',
@@ -336,7 +340,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'I lost my room key.',
         fr: 'J\'ai perdu ma carte de chambre.',
       },
-    },
+    
+      audio: '/audio/order-food/line-10.mp3',},
     {
       id: 'order-food-pattern-12',
       pattern: '请打扫房间。',
@@ -355,7 +360,8 @@ export const orderFoodLesson: LessonContent = {
         en: 'Can I store my luggage?',
         fr: 'Puis-je déposer mes bagages ?',
       },
-    },
+    
+      audio: '/audio/order-food/line-12.mp3',},
   ],
   vocabulary: [
     {

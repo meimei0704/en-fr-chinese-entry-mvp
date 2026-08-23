@@ -319,7 +319,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'Waiter!',
         fr: 'Serveur !',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-01.mp3',},
     {
       id: 'restaurant-order-pattern-7',
       pattern: '可以点餐了吗？',
@@ -338,7 +339,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'I want this one.',
         fr: 'Je veux ceci.',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-04.mp3',},
     {
       id: 'restaurant-order-pattern-9',
       pattern: '来一碗米饭。',
@@ -347,7 +349,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'A bowl of rice, please.',
         fr: 'Un bol de riz, s\'il vous plaît.',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-06.mp3',},
     {
       id: 'restaurant-order-pattern-10',
       pattern: '请给我一杯水。',
@@ -356,7 +359,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'Please give me a glass of water.',
         fr: 'Un verre d\'eau, s\'il vous plaît.',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-07.mp3',},
     {
       id: 'restaurant-order-pattern-11',
       pattern: '微辣。',
@@ -365,7 +369,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'Mildly spicy.',
         fr: 'Légèrement épicé.',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-09.mp3',},
     {
       id: 'restaurant-order-pattern-12',
       pattern: '我是素食主义者。',
@@ -374,7 +379,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'I am vegetarian.',
         fr: 'Je suis végétarien(ne).',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-11.mp3',},
     {
       id: 'restaurant-order-pattern-13',
       pattern: '您好，结账。',
@@ -393,7 +399,8 @@ export const restaurantOrderLesson: LessonContent = {
         en: 'I am full.',
         fr: 'Je suis rassasié(e).',
       },
-    },
+    
+      audio: '/audio/restaurant-order/line-13.mp3',},
   ],
   vocabulary: [
     {
