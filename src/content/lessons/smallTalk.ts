@@ -20,7 +20,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-01',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '今天天气很好。',
-        pinyin: 'Jīntiāntiānqì hěn hǎo.',
+        pinyin: 'Jīn tiān tiān qì hěn hǎo.',
         translation: { en: 'The weather is nice today.', fr: 'Le temps est agréable aujourd\'hui.' },
         explanation: { en: 'Open a chat with 今天天气 and a word like 很好.', fr: 'Ouvre une conversation avec 今天天气 et un mot comme 很好.' },
         audio: '/audio/small-talk/line-01.mp3',
@@ -29,7 +29,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-02',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '今天天气好冷啊。',
-        pinyin: 'Jīntiāntiānqì hǎo lěng a.',
+        pinyin: 'Jīn tiān tiān qì hǎo lěng a.',
         translation: { en: 'The weather is cold today.', fr: 'Il fait froid aujourd\'hui.' },
         explanation: { en: 'Comment on the cold weather with 好冷啊 to keep a chat going.', fr: 'Commente le froid avec 好冷啊 pour poursuivre une conversation.' },
         audio: '/audio/small-talk/line-02.mp3',
@@ -47,7 +47,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-04',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你从哪里来的？',
-        pinyin: 'Nǐ cóng nǎlǐ lái de?',
+        pinyin: 'Nǐ cóng nǎ lǐ lái de?',
         translation: { en: 'Where are you from?', fr: 'D’où viens-tu ?' },
         explanation: { en: 'A friendly question about where someone comes from.', fr: 'Une question amicale sur l’origine de quelqu’un.' },
         audio: '/audio/small-talk/line-04.mp3',
@@ -56,7 +56,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-05',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你穿衣真好看.',
-        pinyin: 'Nǐ chuānyī zhēn hǎokàn.',
+        pinyin: 'Nǐ chuān yī zhēn hǎo kàn.',
         translation: { en: 'I like your outfit.', fr: 'J\'aime beaucoup ta tenue.' },
         explanation: { en: 'Compliment someone\'s outfit with 你穿衣真好看.', fr: 'Complimente la tenue de quelqu\'un avec 你穿衣真好看.' },
         audio: '/audio/small-talk/line-05.mp3',
@@ -65,7 +65,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-06',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你太幽默了.',
-        pinyin: 'Nǐ tài yōumò le.',
+        pinyin: 'Nǐ tài yōu mò le.',
         translation: { en: 'You are so funny.', fr: 'Tu es très drôle.' },
         explanation: { en: 'Compliment someone\'s humor with 你太幽默了.', fr: 'Complimente l\'humour de quelqu\'un avec 你太幽默了.' },
         audio: '/audio/small-talk/line-06.mp3',
@@ -83,7 +83,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-08',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你真了不起！',
-        pinyin: 'Nǐ zhēn liǎobùqǐ!',
+        pinyin: 'Nǐ zhēn liǎo bù qǐ!',
         translation: { en: 'You\'re incredible.', fr: 'Tu es incroyable !' },
         explanation: { en: 'Give a strong compliment with 你真了不起.', fr: 'Fais un grand compliment avec 你真了不起.' },
         audio: '/audio/small-talk/line-08.mp3',
@@ -92,7 +92,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-09',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你的皮肤很好！',
-        pinyin: 'Nǐ de pífū hěn hǎo!',
+        pinyin: 'Nǐ de pí fū hěn hǎo!',
         translation: { en: 'Your skin looks great.', fr: 'Ta peau est superbe !' },
         explanation: { en: 'Compliment a trait or feature with 你的……很好.', fr: 'Complimente un trait avec 你的……很好.' },
         audio: '/audio/small-talk/line-09.mp3',
@@ -101,7 +101,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-10',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你太热情了。',
-        pinyin: 'Nǐ tài rèqíng le.',
+        pinyin: 'Nǐ tài rè qíng le.',
         translation: { en: 'You are so warm-hearted.', fr: 'Tu es très chaleureux.' },
         explanation: { en: 'Compliment someone\'s warm personality with 你太热情了.', fr: 'Complimente la chaleur de quelqu\'un avec 你太热情了.' },
         audio: '/audio/small-talk/line-10.mp3',
@@ -110,7 +110,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-11',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你太乐于助人了.',
-        pinyin: 'Nǐ tài lèyúzhùrén le.',
+        pinyin: 'Nǐ tài lè yú zhù rén le.',
         translation: { en: 'You are kind-hearted and helpful.', fr: 'Tu es gentil(le) et serviable.' },
         explanation: { en: 'Thank someone for being helpful with 你太乐于助人了.', fr: 'Remercie quelqu\'un d\'être serviable avec 你太乐于助人了.' },
         audio: '/audio/small-talk/line-11.mp3',
@@ -119,7 +119,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-12',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '你们这里的东西很好吃。',
-        pinyin: 'Nǐmen zhèlǐ de dōngxi hěn hǎochī.',
+        pinyin: 'Nǐ men zhè lǐ de dōng xi hěn hǎo chī.',
         translation: { en: 'Your food is just amazing.', fr: 'La nourriture d\'ici est délicieuse.' },
         explanation: { en: 'Compliment the local food with 很好吃.', fr: 'Complimente la cuisine locale avec 很好吃.' },
         audio: '/audio/small-talk/line-12.mp3',
@@ -128,7 +128,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-13',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '祝你玩得开心！再见！',
-        pinyin: 'Zhù nǐ wán dé kāixīn! zàijiàn!',
+        pinyin: 'Zhù nǐ wán dé kāi xīn! zài jiàn!',
         translation: { en: 'Enjoy your stay! Goodbye', fr: 'Amuse-toi bien ! Au revoir !' },
         explanation: { en: 'Wish someone a good time with 祝你玩得开心 before 再见.', fr: 'Souhaite un bon moment avec 祝你玩得开心 avant 再见.' },
         audio: '/audio/small-talk/line-13.mp3',
@@ -139,7 +139,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-1',
       pattern: '今天天气……。',
-      pinyin: 'Jīntiān tiānqì ... .',
+      pinyin: 'Jīn tiān tiān qì ... .',
       meaning: {
         en: 'The weather is ... today.',
         fr: 'Le temps est ... aujourd\'hui.',
@@ -150,7 +150,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '很好',
           fillPinyin: 'hěn hǎo',
           hanzi: '今天天气很好。',
-          pinyin: 'Jīntiān tiānqì hěn hǎo.',
+          pinyin: 'Jīn tiān tiān qì hěn hǎo.',
           en: 'very good',
           fr: 'très bon',
         },
@@ -158,7 +158,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '不错',
           fillPinyin: 'búcuò',
           hanzi: '今天天气不错。',
-          pinyin: 'Jīntiān tiānqì búcuò.',
+          pinyin: 'Jīn tiān tiān qì bú cuò.',
           en: 'nice',
           fr: 'pas mal',
         },
@@ -166,7 +166,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '好冷',
           fillPinyin: 'hǎo lěng',
           hanzi: '今天天气好冷。',
-          pinyin: 'Jīntiān tiānqì hǎo lěng.',
+          pinyin: 'Jīn tiān tiān qì hǎo lěng.',
           en: 'so cold',
           fr: 'très froid',
         },
@@ -185,7 +185,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-3',
       pattern: '你从哪里来的？',
-      pinyin: 'Nǐ cóng nǎlǐ lái de?',
+      pinyin: 'Nǐ cóng nǎ lǐ lái de?',
       meaning: {
         en: 'Where are you from?',
         fr: 'D\'où viens-tu ?',
@@ -214,7 +214,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '幽默',
           fillPinyin: 'yōumò',
           hanzi: '你太幽默了。',
-          pinyin: 'Nǐ tài yōumò le.',
+          pinyin: 'Nǐ tài yōu mò le.',
           en: 'funny',
           fr: 'drôle',
         },
@@ -222,7 +222,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '热情',
           fillPinyin: 'rèqíng',
           hanzi: '你太热情了。',
-          pinyin: 'Nǐ tài rèqíng le.',
+          pinyin: 'Nǐ tài rè qíng le.',
           en: 'warm-hearted',
           fr: 'chaleureux',
         },
@@ -242,7 +242,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '皮肤',
           fillPinyin: 'pífū',
           hanzi: '你的皮肤很好！',
-          pinyin: 'Nǐ de pífū hěn hǎo!',
+          pinyin: 'Nǐ de pí fū hěn hǎo!',
           en: 'skin',
           fr: 'la peau',
         },
@@ -250,7 +250,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '中文',
           fillPinyin: 'Zhōngwén',
           hanzi: '你的中文很好！',
-          pinyin: 'Nǐ de Zhōngwén hěn hǎo!',
+          pinyin: 'Nǐ de Zhōng wén hěn hǎo!',
           en: 'Chinese',
           fr: 'le chinois',
         },
@@ -258,7 +258,7 @@ export const smallTalkLesson: LessonContent = {
           fill: '英语',
           fillPinyin: 'Yīngyǔ',
           hanzi: '你的英语很好！',
-          pinyin: 'Nǐ de Yīngyǔ hěn hǎo!',
+          pinyin: 'Nǐ de Yīng yǔ hěn hǎo!',
           en: 'English',
           fr: 'l\'anglais',
         },
@@ -267,7 +267,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-6',
       pattern: '今天天气好冷啊。',
-      pinyin: 'Jīntiān tiānqì hǎo lěng a.',
+      pinyin: 'Jīn tiān tiān qì hǎo lěng a.',
       meaning: {
         en: 'The weather is cold today.',
         fr: 'Il fait froid aujourd\'hui.',
@@ -277,7 +277,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-7',
       pattern: '你穿衣真好看。',
-      pinyin: 'Nǐ chuānyī zhēn hǎokàn.',
+      pinyin: 'Nǐ chuān yī zhēn hǎo kàn.',
       meaning: {
         en: 'I like your outfit.',
         fr: 'J\'aime beaucoup ta tenue.',
@@ -287,7 +287,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-8',
       pattern: '你太幽默了。',
-      pinyin: 'Nǐ tài yōumò le.',
+      pinyin: 'Nǐ tài yōu mò le.',
       meaning: {
         en: 'You are so funny.',
         fr: 'Tu es très drôle.',
@@ -296,7 +296,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-9',
       pattern: '你真了不起！',
-      pinyin: 'Nǐ zhēn liǎobuqǐ!',
+      pinyin: 'Nǐ zhēn liǎo bu qǐ!',
       meaning: {
         en: 'You are incredible!',
         fr: 'Tu es incroyable !',
@@ -305,7 +305,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-10',
       pattern: '你太热情了。',
-      pinyin: 'Nǐ tài rèqíng le.',
+      pinyin: 'Nǐ tài rè qíng le.',
       meaning: {
         en: 'You are so warm-hearted.',
         fr: 'Tu es très chaleureux.',
@@ -314,7 +314,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-pattern-11',
       pattern: '你太乐于助人了。',
-      pinyin: 'Nǐ tài lèyú zhùrén le.',
+      pinyin: 'Nǐ tài lè yú zhù rén le.',
       meaning: {
         en: 'You are kind-hearted and helpful.',
         fr: 'Tu es gentil(le) et serviable.',
@@ -325,7 +325,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-1',
       hanzi: '哪里人',
-      pinyin: 'nǎlǐ rén',
+      pinyin: 'nǎ lǐ rén',
       audio: '/audio/small-talk/vocab-01.mp3',
       meaning: {
         en: 'where someone is from',
@@ -339,7 +339,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-2',
       hanzi: '本地',
-      pinyin: 'běndì',
+      pinyin: 'běn dì',
       audio: '/audio/small-talk/vocab-02.mp3',
       meaning: {
         en: 'local',
@@ -353,7 +353,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-3',
       hanzi: '天气',
-      pinyin: 'tiānqì',
+      pinyin: 'tiān qì',
       audio: '/audio/small-talk/vocab-03.mp3',
       meaning: {
         en: 'weather',
@@ -367,7 +367,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-4',
       hanzi: '好吃',
-      pinyin: 'hǎochī',
+      pinyin: 'hǎo chī',
       audio: '/audio/small-talk/vocab-04.mp3',
       meaning: {
         en: 'delicious',
@@ -381,7 +381,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-5',
       hanzi: '计划',
-      pinyin: 'jìhuà',
+      pinyin: 'jì huà',
       audio: '/audio/small-talk/vocab-05.mp3',
       meaning: {
         en: 'plan',
@@ -409,7 +409,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-7',
       hanzi: '聊天',
-      pinyin: 'liáotiān',
+      pinyin: 'liáo tiān',
       audio: '/audio/small-talk/vocab-07.mp3',
       meaning: {
         en: 'to chat',
@@ -437,7 +437,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-9',
       hanzi: '开心',
-      pinyin: 'kāixīn',
+      pinyin: 'kāi xīn',
       audio: '/audio/small-talk/vocab-09.mp3',
       meaning: {
         en: 'happy',
@@ -451,7 +451,7 @@ export const smallTalkLesson: LessonContent = {
     {
       id: 'small-talk-vocab-10',
       hanzi: '上海',
-      pinyin: 'Shànghǎi',
+      pinyin: 'Shàng hǎi',
       audio: '/audio/small-talk/vocab-10.mp3',
       meaning: {
         en: 'Shanghai',
@@ -472,7 +472,7 @@ export const smallTalkLesson: LessonContent = {
           fr: 'Quelle phrase demande « D’où venez-vous » ?',
         },
         target: '你是哪里人？',
-        pinyin: 'Nǐ shì nǎlǐ rén?',
+        pinyin: 'Nǐ shì nǎ lǐ rén?',
         audio: '/audio/small-talk/practice-listening-01.mp3',
         explanation: {
           en: '你是哪里人 is the classic origin question.',
@@ -486,7 +486,7 @@ export const smallTalkLesson: LessonContent = {
           fr: 'Quelle phrase demande le temps qu’il fait ?',
         },
         target: '天气怎么样？',
-        pinyin: 'Tiānqì zěnme yàng?',
+        pinyin: 'Tiān qì zěn me yàng?',
         audio: '/audio/small-talk/practice-listening-02.mp3',
         explanation: {
           en: '天气怎么样 asks how the weather is.',
@@ -502,7 +502,7 @@ export const smallTalkLesson: LessonContent = {
           fr: 'Dites que vous venez de France.',
         },
         target: '我是法国人。',
-        pinyin: 'Wǒ shì Fǎguó rén.',
+        pinyin: 'Wǒ shì Fǎ guó rén.',
         audio: '/audio/small-talk/practice-speaking-01.mp3',
         explanation: {
           en: '我是…人 states your nationality.',
@@ -516,7 +516,7 @@ export const smallTalkLesson: LessonContent = {
           fr: 'Dites que vous comptez rester deux semaines.',
         },
         target: '我打算待两个星期。',
-        pinyin: 'Wǒ dǎsuàn dāi liǎng gè xīngqī.',
+        pinyin: 'Wǒ dǎ suàn dāi liǎng gè xīng qī.',
         audio: '/audio/small-talk/practice-speaking-02.mp3',
         explanation: {
           en: '我打算 states your plan and 两个星期 the duration.',
@@ -532,7 +532,7 @@ export const smallTalkLesson: LessonContent = {
           fr: 'Associe le mot à « temps / météo ».',
         },
         target: '天气',
-        pinyin: 'tiānqì',
+        pinyin: 'tiān qì',
         audio: '/audio/small-talk/practice-reading-01.mp3',
         explanation: {
           en: '天气 means weather.',
@@ -546,7 +546,7 @@ export const smallTalkLesson: LessonContent = {
           fr: 'Associe le mot à « discuter ».',
         },
         target: '聊天',
-        pinyin: 'liáotiān',
+        pinyin: 'liáo tiān',
         audio: '/audio/small-talk/practice-reading-02.mp3',
         explanation: {
           en: '聊天 means to chat.',

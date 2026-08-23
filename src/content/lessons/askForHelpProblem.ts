@@ -20,7 +20,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-01',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请问，你可以帮我吗？',
-        pinyin: 'Qǐngwèn, nǐ kěyǐ bāng wǒ ma?',
+        pinyin: 'Qǐng wèn, nǐ kě yǐ bāng wǒ ma?',
         translation: { en: 'Excuse me, can you help me?', fr: 'Excusez-moi, pouvez-vous m\'aider ?' },
         explanation: { en: 'Use this to open a polite help request in a public place.', fr: 'Utilise cette structure pour ouvrir une demande d’aide polie dans un lieu public.' },
         audio: '/audio/ask-for-help-problem/line-01.mp3',
@@ -29,7 +29,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-02',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我护照丢了。',
-        pinyin: 'Wǒ hùzhào diū le.',
+        pinyin: 'Wǒ hù zhào diū le.',
         translation: { en: 'I lost my passport.', fr: 'J\'ai perdu mon passeport.' },
         explanation: { en: 'Name the lost item after 丢了, like your passport.', fr: 'Nomme l\'objet perdu après 丢了, comme ton passeport.' },
         audio: '/audio/ask-for-help-problem/line-02.mp3',
@@ -38,7 +38,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-03',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请说慢一点。',
-        pinyin: 'Qǐng shuō màn yìdiǎn.',
+        pinyin: 'Qǐng shuō màn yì diǎn.',
         translation: { en: 'Please speak slower.', fr: 'Parlez plus lentement, s\'il vous plaît.' },
         explanation: { en: 'Ask 请说慢一点 when the other person speaks too fast.', fr: 'Demande 请说慢一点 quand l\'autre personne parle trop vite.' },
         audio: '/audio/ask-for-help-problem/line-03.mp3',
@@ -47,7 +47,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-04',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我听不懂。',
-        pinyin: 'Wǒ tīngbùdǒng.',
+        pinyin: 'Wǒ tīng bù dǒng.',
         translation: { en: 'I don\'t understand.', fr: 'Je ne comprends pas.' },
         explanation: { en: 'Say 我听不懂 to let the helper know you need simpler words.', fr: 'Dis 我听不懂 pour indiquer à la personne que tu as besoin de mots plus simples.' },
         audio: '/audio/ask-for-help-problem/line-04.mp3',
@@ -56,7 +56,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-05',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我手机没电了。',
-        pinyin: 'Wǒ shǒujī méidiàn le.',
+        pinyin: 'Wǒ shǒu jī méi diàn le.',
         translation: { en: 'My phone is dead.', fr: 'Mon téléphone n\'a plus de batterie.' },
         explanation: { en: 'Say 我手机没电了 when your phone has run out of battery.', fr: 'Dis 我手机没电了 quand ton téléphone n\'a plus de batterie.' },
         audio: '/audio/ask-for-help-problem/line-05.mp3',
@@ -65,7 +65,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-06',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请问哪里可以给手机充电？',
-        pinyin: 'Qǐngwèn nǎlǐ kěyǐ gěi shǒujī chōngdiàn?',
+        pinyin: 'Qǐng wèn nǎ lǐ kě yǐ gěi shǒu jī chōng diàn?',
         translation: { en: 'Where can I charge my phone?', fr: 'Où puis-je recharger mon téléphone ?' },
         explanation: { en: 'Ask 哪里可以给手机充电 to find a place to charge your phone.', fr: 'Demande 哪里可以给手机充电 pour trouver un endroit où recharger ton téléphone.' },
         audio: '/audio/ask-for-help-problem/line-06.mp3',
@@ -74,7 +74,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-07',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '您好，共享单车怎么用？',
-        pinyin: 'Nín hǎo, gòngxiǎng dānchē zěnme yòng?',
+        pinyin: 'Nín hǎo, gòng xiǎng dān chē zěn me yòng?',
         translation: { en: 'How do I use the shared bike?', fr: 'Bonjour, comment utiliser le vélo partagé ?' },
         explanation: { en: 'Ask 共享单车怎么用 to learn how to use a shared bike.', fr: 'Demande 共享单车怎么用 pour apprendre à utiliser un vélo partagé.' },
         audio: '/audio/ask-for-help-problem/line-07.mp3',
@@ -92,7 +92,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-09',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '麻烦你了。',
-        pinyin: 'Máfan nǐ le.',
+        pinyin: 'Má fan nǐ le.',
         translation: { en: 'Sorry to trouble you.', fr: 'Désolé de vous déranger.' },
         explanation: { en: 'Say 麻烦你了 to thank someone after asking for their help.', fr: 'Dis 麻烦你了 pour remercier quelqu\'un après lui avoir demandé de l\'aide.' },
         audio: '/audio/ask-for-help-problem/line-09.mp3',
@@ -101,7 +101,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-10',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '救命！',
-        pinyin: 'Jiùmìng!',
+        pinyin: 'Jiù mìng!',
         translation: { en: 'Help!', fr: 'Au secours !' },
         explanation: { en: 'Shout 救命 in an emergency to call for urgent help.', fr: 'Crie 救命 en cas d\'urgence pour appeler de l\'aide.' },
         audio: '/audio/ask-for-help-problem/line-10.mp3',
@@ -110,7 +110,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-11',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我迷路了。',
-        pinyin: 'Wǒ mílù le.',
+        pinyin: 'Wǒ mí lù le.',
         translation: { en: 'I am lost.', fr: 'Je suis perdu(e).' },
         explanation: { en: 'Say 我迷路了 when you cannot find your way.', fr: 'Dis 我迷路了 quand tu ne trouves pas ton chemin.' },
         audio: '/audio/ask-for-help-problem/line-11.mp3',
@@ -119,7 +119,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-12',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请给警察打电话。',
-        pinyin: 'Qǐng gěi jǐngchá dǎdiànhuà.',
+        pinyin: 'Qǐng gěi jǐng chá dǎ diàn huà.',
         translation: { en: 'Please call the police.', fr: 'Veuillez appeler la police.' },
         explanation: { en: 'Ask 请给警察打电话 when you need the police in an emergency.', fr: 'Demande 请给警察打电话 quand tu as besoin de la police en urgence.' },
         audio: '/audio/ask-for-help-problem/line-12.mp3',
@@ -128,7 +128,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-13',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '卫生间在哪里？',
-        pinyin: 'Wèishēngjiān zài nǎlǐ?',
+        pinyin: 'Wèi shēng jiān zài nǎ lǐ?',
         translation: { en: 'Where is the toilet?', fr: 'Où sont les toilettes ?' },
         explanation: { en: 'Ask 卫生间在哪里 to find a restroom in a public place.', fr: 'Demande 卫生间在哪里 pour trouver des toilettes dans un lieu public.' },
         audio: '/audio/ask-for-help-problem/line-13.mp3',
@@ -137,7 +137,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-14',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '打扰一下,请问最近的便利店在哪里?',
-        pinyin: 'Dǎrǎo yíxià, qǐngwèn zuìjìn de biànlìdiàn zài nǎlǐ?',
+        pinyin: 'Dǎ rǎo yí xià, qǐng wèn zuì jìn de biàn lì diàn zài nǎ lǐ?',
         translation: { en: 'Excuse me, where is the nearest convenience store?', fr: 'Excusez-moi, où est la supérette la plus proche ?' },
         explanation: { en: 'Ask 最近的便利店在哪里 to find a nearby convenience store.', fr: 'Demande 最近的便利店在哪里 pour trouver une supérette proche.' },
         audio: '/audio/ask-for-help-problem/line-14.mp3',
@@ -146,7 +146,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-15',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我的手机不见了。',
-        pinyin: 'Wǒ de shǒujī bújiàn le.',
+        pinyin: 'Wǒ de shǒu jī bú jiàn le.',
         translation: { en: 'I lost my phone.', fr: 'J\'ai perdu mon téléphone.' },
         explanation: { en: 'Say 我的手机不见了 to report a lost phone.', fr: 'Dis 我的手机不见了 pour signaler un téléphone perdu.' },
         audio: '/audio/ask-for-help-problem/line-15.mp3',
@@ -155,7 +155,7 @@ export const askForHelpProblemLesson: LessonContent = {
         id: 'ask-for-help-problem-line-16',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我的钱包不见了。',
-        pinyin: 'Wǒ de qiánbāo bújiàn le.',
+        pinyin: 'Wǒ de qián bāo bú jiàn le.',
         translation: { en: 'I lost my wallet.', fr: 'J\'ai perdu mon portefeuille.' },
         explanation: { en: 'Say 我的钱包不见了 to report a lost wallet.', fr: 'Dis 我的钱包不见了 pour signaler un portefeuille perdu.' },
         audio: '/audio/ask-for-help-problem/line-16.mp3',
@@ -166,7 +166,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-1',
       pattern: '你可以帮我吗？',
-      pinyin: 'Nǐ kěyǐ bāng wǒ ma?',
+      pinyin: 'Nǐ kě yǐ bāng wǒ ma?',
       meaning: {
         en: 'Excuse me, can you help me?',
         fr: 'Pouvez-vous m\'aider ?',
@@ -187,7 +187,7 @@ export const askForHelpProblemLesson: LessonContent = {
           fill: '护照',
           fillPinyin: 'hùzhào',
           hanzi: '我的护照丢了。',
-          pinyin: 'Wǒ de hùzhào diū le.',
+          pinyin: 'Wǒ de hù zhào diū le.',
           en: 'passport',
           fr: 'passeport',
         },
@@ -195,7 +195,7 @@ export const askForHelpProblemLesson: LessonContent = {
           fill: '手机',
           fillPinyin: 'shǒujī',
           hanzi: '我的手机丢了。',
-          pinyin: 'Wǒ de shǒujī diū le.',
+          pinyin: 'Wǒ de shǒu jī diū le.',
           en: 'phone',
           fr: 'téléphone',
         },
@@ -203,7 +203,7 @@ export const askForHelpProblemLesson: LessonContent = {
           fill: '钱包',
           fillPinyin: 'qiánbāo',
           hanzi: '我的钱包丢了。',
-          pinyin: 'Wǒ de qiánbāo diū le.',
+          pinyin: 'Wǒ de qián bāo diū le.',
           en: 'wallet',
           fr: 'portefeuille',
         },
@@ -212,7 +212,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-3',
       pattern: '请说慢一点。',
-      pinyin: 'Qǐng shuō màn yìdiǎn.',
+      pinyin: 'Qǐng shuō màn yì diǎn.',
       meaning: {
         en: 'Please speak slower.',
         fr: 'Parlez plus lentement, s\'il vous plaît.',
@@ -232,7 +232,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-5',
       pattern: '我迷路了。',
-      pinyin: 'Wǒ mílù le.',
+      pinyin: 'Wǒ mí lù le.',
       meaning: {
         en: 'I am lost.',
         fr: 'Je suis perdu(e).',
@@ -241,7 +241,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-6',
       pattern: '我手机没电了。',
-      pinyin: 'Wǒ shǒujī méi diàn le.',
+      pinyin: 'Wǒ shǒu jī méi diàn le.',
       meaning: {
         en: 'My phone is dead.',
         fr: 'Mon téléphone n\'a plus de batterie.',
@@ -250,7 +250,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-7',
       pattern: '请问哪里可以给手机充电？',
-      pinyin: 'Qǐngwèn nǎlǐ kěyǐ gěi shǒujī chōngdiàn?',
+      pinyin: 'Qǐng wèn nǎ lǐ kě yǐ gěi shǒu jī chōng diàn?',
       meaning: {
         en: 'Where can I charge my phone?',
         fr: 'Où puis-je recharger mon téléphone ?',
@@ -259,7 +259,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-8',
       pattern: '您好，共享单车怎么用？',
-      pinyin: 'Nín hǎo, gòngxiǎng dānchē zěnme yòng?',
+      pinyin: 'Nín hǎo, gòng xiǎng dān chē zěn me yòng?',
       meaning: {
         en: 'Hello, how do I use the shared bike?',
         fr: 'Bonjour, comment utiliser le vélo partagé ?',
@@ -277,7 +277,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-10',
       pattern: '麻烦你了。',
-      pinyin: 'Máfan nǐ le.',
+      pinyin: 'Má fan nǐ le.',
       meaning: {
         en: 'Sorry to trouble you.',
         fr: 'Désolé de vous déranger.',
@@ -286,7 +286,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-11',
       pattern: '救命！',
-      pinyin: 'Jiùmìng!',
+      pinyin: 'Jiù mìng!',
       meaning: {
         en: 'Help!',
         fr: 'Au secours !',
@@ -295,7 +295,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-12',
       pattern: '请给警察打电话。',
-      pinyin: 'Qǐng gěi jǐngchá dǎ diànhuà.',
+      pinyin: 'Qǐng gěi jǐng chá dǎ diàn huà.',
       meaning: {
         en: 'Please call the police.',
         fr: 'Veuillez appeler la police.',
@@ -305,7 +305,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-13',
       pattern: '卫生间在哪里？',
-      pinyin: 'Wèishēngjiān zài nǎlǐ?',
+      pinyin: 'Wèi shēng jiān zài nǎ lǐ?',
       meaning: {
         en: 'Where is the toilet?',
         fr: 'Où sont les toilettes ?',
@@ -315,7 +315,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-pattern-14',
       pattern: '打扰一下，请问最近的便利店在哪里？',
-      pinyin: 'Dǎrǎo yíxià, qǐngwèn zuìjìn de biànlìdiàn zài nǎlǐ?',
+      pinyin: 'Dǎ rǎo yí xià, qǐng wèn zuì jìn de biàn lì diàn zài nǎ lǐ?',
       meaning: {
         en: 'Excuse me, where is the nearest convenience store?',
         fr: 'Excusez-moi, où est la supérette la plus proche ?',
@@ -326,7 +326,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-vocab-1',
       hanzi: '帮忙',
-      pinyin: 'bāngmáng',
+      pinyin: 'bāng máng',
       audio: '/audio/ask-for-help-problem/vocab-01.mp3',
       meaning: {
         en: 'help',
@@ -340,7 +340,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-vocab-2',
       hanzi: '问题',
-      pinyin: 'wèntí',
+      pinyin: 'wèn tí',
       audio: '/audio/ask-for-help-problem/vocab-02.mp3',
       meaning: {
         en: 'problem / question',
@@ -354,7 +354,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-vocab-3',
       hanzi: '手机',
-      pinyin: 'shǒujī',
+      pinyin: 'shǒu jī',
       audio: '/audio/ask-for-help-problem/vocab-03.mp3',
       meaning: {
         en: 'phone',
@@ -382,7 +382,7 @@ export const askForHelpProblemLesson: LessonContent = {
     {
       id: 'ask-for-help-problem-vocab-5',
       hanzi: '慢一点',
-      pinyin: 'màn yìdiǎn',
+      pinyin: 'màn yì diǎn',
       audio: '/audio/ask-for-help-problem/vocab-05.mp3',
       meaning: {
         en: 'a little slower',
@@ -394,10 +394,10 @@ export const askForHelpProblemLesson: LessonContent = {
       },
     },
     { id: 'ask-for-help-problem-vocab-6', hanzi: '没电', pinyin: 'méi diàn', audio: '/audio/ask-for-help-problem/vocab-06.mp3', meaning: { en: 'out of battery / no power', fr: 'plus de batterie / pas d\'électricité' }, explanation: { en: 'The key phrase for a dead phone or device.', fr: 'La phrase clé pour un téléphone ou un appareil déchargé.' } },
-    { id: 'ask-for-help-problem-vocab-7', hanzi: '无线网', pinyin: 'wúxiànwǎng', audio: '/audio/ask-for-help-problem/vocab-07.mp3', meaning: { en: 'WiFi / wireless network', fr: 'WiFi / réseau sans fil' }, explanation: { en: 'A common word for WiFi you will see on signs.', fr: 'Un mot courant pour le WiFi que tu verras sur les panneaux.' } },
-    { id: 'ask-for-help-problem-vocab-8', hanzi: '密码', pinyin: 'mìmǎ', audio: '/audio/ask-for-help-problem/vocab-08.mp3', meaning: { en: 'password / PIN', fr: 'mot de passe / code' }, explanation: { en: 'You will hear this when asking for WiFi access.', fr: 'Tu entendras ce mot en demandant l\'accès au WiFi.' } },
-    { id: 'ask-for-help-problem-vocab-9', hanzi: '充电', pinyin: 'chōngdiàn', audio: '/audio/ask-for-help-problem/vocab-09.mp3', meaning: { en: 'charge / recharge', fr: 'charger / recharger' }, explanation: { en: 'The action to restore battery power.', fr: 'L\'action pour restaurer la batterie.' } },
-    { id: 'ask-for-help-problem-vocab-10', hanzi: '没关系', pinyin: 'méi guānxi', audio: '/audio/ask-for-help-problem/vocab-10.mp3', meaning: { en: 'no problem / it doesn\'t matter', fr: 'pas de problème / ce n\'est pas grave' }, explanation: { en: 'A friendly phrase to keep the help exchange relaxed.', fr: 'Une phrase amicale pour garder l\'échange d\'aide détendu.' } },
+    { id: 'ask-for-help-problem-vocab-7', hanzi: '无线网', pinyin: 'wú xiàn wǎng', audio: '/audio/ask-for-help-problem/vocab-07.mp3', meaning: { en: 'WiFi / wireless network', fr: 'WiFi / réseau sans fil' }, explanation: { en: 'A common word for WiFi you will see on signs.', fr: 'Un mot courant pour le WiFi que tu verras sur les panneaux.' } },
+    { id: 'ask-for-help-problem-vocab-8', hanzi: '密码', pinyin: 'mì mǎ', audio: '/audio/ask-for-help-problem/vocab-08.mp3', meaning: { en: 'password / PIN', fr: 'mot de passe / code' }, explanation: { en: 'You will hear this when asking for WiFi access.', fr: 'Tu entendras ce mot en demandant l\'accès au WiFi.' } },
+    { id: 'ask-for-help-problem-vocab-9', hanzi: '充电', pinyin: 'chōng diàn', audio: '/audio/ask-for-help-problem/vocab-09.mp3', meaning: { en: 'charge / recharge', fr: 'charger / recharger' }, explanation: { en: 'The action to restore battery power.', fr: 'L\'action pour restaurer la batterie.' } },
+    { id: 'ask-for-help-problem-vocab-10', hanzi: '没关系', pinyin: 'méi guān xi', audio: '/audio/ask-for-help-problem/vocab-10.mp3', meaning: { en: 'no problem / it doesn\'t matter', fr: 'pas de problème / ce n\'est pas grave' }, explanation: { en: 'A friendly phrase to keep the help exchange relaxed.', fr: 'Une phrase amicale pour garder l\'échange d\'aide détendu.' } },
   ],
   practice: {
     listening: [

@@ -23,7 +23,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '请问您会说英语吗？',
-        pinyin: 'Qǐngwèn nín huì shuō Yīngyǔ ma?',
+        pinyin: 'Qǐng wèn nín huì shuō Yīng yǔ ma?',
         translation: {
           en: 'Do you speak English?',
           fr: 'Parlez-vous anglais ?',
@@ -41,7 +41,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '行李提取处在哪里？',
-        pinyin: 'Xíngli tíqǔchù zài nǎlǐ?',
+        pinyin: 'Xíng li tí qǔ chù zài nǎ lǐ?',
         translation: {
           en: 'Where is baggage claim?',
           fr: 'Où se trouve la récupération des bagages ?',
@@ -59,7 +59,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '您能帮我一下吗？',
-        pinyin: 'Nín néng bāng wǒ yíxià ma?',
+        pinyin: 'Nín néng bāng wǒ yí xià ma?',
         translation: {
           en: 'Could you help me, please?',
           fr: 'Pourriez-vous m’aider, s’il vous plaît ?',
@@ -77,7 +77,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '这是我的护照。',
-        pinyin: 'Zhè shì wǒ de hùzhào.',
+        pinyin: 'Zhè shì wǒ de hù zhào.',
         translation: {
           en: 'This is my passport.',
           fr: 'Voici mon passeport.',
@@ -95,7 +95,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '我是来旅游的。',
-        pinyin: 'Wǒ shì lái lǚyóu de.',
+        pinyin: 'Wǒ shì lái lǚ yóu de.',
         translation: {
           en: 'I’m here to travel.',
           fr: 'Je suis venu(e) pour le tourisme.',
@@ -113,7 +113,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '我大概待两个星期。',
-        pinyin: 'Wǒ dàgài dāi liǎng gè xīngqī.',
+        pinyin: 'Wǒ dà gài dāi liǎng gè xīng qī.',
         translation: {
           en: 'I’ll stay in China for about two weeks.',
           fr: 'Je resterai en Chine environ deux semaines.',
@@ -131,7 +131,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '地铁在哪里？',
-        pinyin: 'Dìtiě zài nǎlǐ?',
+        pinyin: 'Dì tiě zài nǎ lǐ?',
         translation: {
           en: 'Where is the subway?',
           fr: 'Où est le métro ?',
@@ -149,7 +149,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '机场快线在哪里？',
-        pinyin: 'Jīchǎng kuàixiàn zài nǎlǐ?',
+        pinyin: 'Jī chǎng kuài xiàn zài nǎ lǐ?',
         translation: {
           en: 'Where is the airport express?',
           fr: 'Où est l’express de l’aéroport ?',
@@ -167,7 +167,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '请问去哪里打车？',
-        pinyin: 'Qǐngwèn qù nǎlǐ dǎchē?',
+        pinyin: 'Qǐng wèn qù nǎ lǐ dǎ chē?',
         translation: {
           en: 'Where can I get a taxi?',
           fr: 'Où puis-je prendre un taxi ?',
@@ -185,7 +185,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '去这个酒店怎么走？',
-        pinyin: 'Qù zhège jiǔdiàn zěnme zǒu?',
+        pinyin: 'Qù zhè ge jiǔ diàn zěn me zǒu?',
         translation: {
           en: 'How do I get to this hotel?',
           fr: 'Comment aller à cet hôtel ?',
@@ -202,7 +202,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-pattern-1',
       pattern: '请问……在哪里？',
-      pinyin: 'Qǐngwèn ... zài nǎlǐ?',
+      pinyin: 'Qǐng wèn ... zài nǎ lǐ?',
       meaning: {
         en: 'Excuse me, where is ...?',
         fr: 'Excusez-moi, où est ...?',
@@ -213,7 +213,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '行李提取处',
           fillPinyin: 'xíngli tíqǔchù',
           hanzi: '请问行李提取处在哪里？',
-          pinyin: 'Qǐngwèn xíngli tíqǔchù zài nǎlǐ?',
+          pinyin: 'Qǐng wèn xíng li tí qǔ chù zài nǎ lǐ?',
           en: 'baggage claim',
           fr: 'récupération des bagages',
         },
@@ -221,7 +221,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '卫生间',
           fillPinyin: 'wèishēngjiān',
           hanzi: '请问卫生间在哪里？',
-          pinyin: 'Qǐngwèn wèishēngjiān zài nǎlǐ?',
+          pinyin: 'Qǐng wèn wèi shēng jiān zài nǎ lǐ?',
           en: 'toilet',
           fr: 'toilettes',
         },
@@ -229,7 +229,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '机场快线',
           fillPinyin: 'jīchǎng kuàixiàn',
           hanzi: '请问机场快线在哪里？',
-          pinyin: 'Qǐngwèn jīchǎng kuàixiàn zài nǎlǐ?',
+          pinyin: 'Qǐng wèn jī chǎng kuài xiàn zài nǎ lǐ?',
           en: 'airport express',
           fr: 'express de l\'aéroport',
         },
@@ -249,7 +249,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '一下',
           fillPinyin: 'yíxià',
           hanzi: '您能帮我一下吗？',
-          pinyin: 'Nín néng bāng wǒ yíxià ma?',
+          pinyin: 'Nín néng bāng wǒ yí xià ma?',
           en: 'a bit',
           fr: 'un instant',
         },
@@ -257,7 +257,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '拿行李',
           fillPinyin: 'ná xíngli',
           hanzi: '您能帮我拿行李吗？',
-          pinyin: 'Nín néng bāng wǒ ná xíngli ma?',
+          pinyin: 'Nín néng bāng wǒ ná xíng li ma?',
           en: 'carry my luggage',
           fr: 'porter mes bagages',
         },
@@ -265,7 +265,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '打个电话',
           fillPinyin: 'dǎ gè diànhuà',
           hanzi: '您能帮我打个电话吗？',
-          pinyin: 'Nín néng bāng wǒ dǎ gè diànhuà ma?',
+          pinyin: 'Nín néng bāng wǒ dǎ gè diàn huà ma?',
           en: 'make a phone call',
           fr: 'passer un appel',
         },
@@ -285,7 +285,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '旅游',
           fillPinyin: 'lǚyóu',
           hanzi: '我是来旅游的。',
-          pinyin: 'Wǒ shì lái lǚyóu de.',
+          pinyin: 'Wǒ shì lái lǚ yóu de.',
           en: 'travel',
           fr: 'tourisme',
         },
@@ -293,7 +293,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '工作',
           fillPinyin: 'gōngzuò',
           hanzi: '我是来工作的。',
-          pinyin: 'Wǒ shì lái gōngzuò de.',
+          pinyin: 'Wǒ shì lái gōng zuò de.',
           en: 'work',
           fr: 'travail',
         },
@@ -301,7 +301,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '学习',
           fillPinyin: 'xuéxí',
           hanzi: '我是来学习的。',
-          pinyin: 'Wǒ shì lái xuéxí de.',
+          pinyin: 'Wǒ shì lái xué xí de.',
           en: 'study',
           fr: 'études',
         },
@@ -310,7 +310,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-pattern-4',
       pattern: '我大概待……。',
-      pinyin: 'Wǒ dàgài dāi ... .',
+      pinyin: 'Wǒ dà gài dāi ... .',
       meaning: {
         en: 'I\'ll stay about ...',
         fr: 'Je resterai environ ...',
@@ -321,7 +321,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '两个星期',
           fillPinyin: 'liǎng gè xīngqī',
           hanzi: '我大概待两个星期。',
-          pinyin: 'Wǒ dàgài dāi liǎng gè xīngqī.',
+          pinyin: 'Wǒ dà gài dāi liǎng gè xīng qī.',
           en: 'two weeks',
           fr: 'deux semaines',
         },
@@ -329,7 +329,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '一个月',
           fillPinyin: 'yī gè yuè',
           hanzi: '我大概待一个月。',
-          pinyin: 'Wǒ dàgài dāi yī gè yuè.',
+          pinyin: 'Wǒ dà gài dāi yī gè yuè.',
           en: 'one month',
           fr: 'un mois',
         },
@@ -337,7 +337,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '三天',
           fillPinyin: 'sān tiān',
           hanzi: '我大概待三天。',
-          pinyin: 'Wǒ dàgài dāi sān tiān.',
+          pinyin: 'Wǒ dà gài dāi sān tiān.',
           en: 'three days',
           fr: 'trois jours',
         },
@@ -346,7 +346,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-pattern-5',
       pattern: '……怎么走？',
-      pinyin: '... zěnme zǒu?',
+      pinyin: '... zěn me zǒu?',
       meaning: {
         en: 'How do I get to ...?',
         fr: 'Comment aller à ...?',
@@ -357,7 +357,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '去这个酒店',
           fillPinyin: 'qù zhège jiǔdiàn',
           hanzi: '去这个酒店怎么走？',
-          pinyin: 'Qù zhège jiǔdiàn zěnme zǒu?',
+          pinyin: 'Qù zhè ge jiǔ diàn zěn me zǒu?',
           en: 'to this hotel',
           fr: 'à cet hôtel',
         },
@@ -365,7 +365,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '去火车站',
           fillPinyin: 'qù huǒchēzhàn',
           hanzi: '去火车站怎么走？',
-          pinyin: 'Qù huǒchēzhàn zěnme zǒu?',
+          pinyin: 'Qù huǒ chē zhàn zěn me zǒu?',
           en: 'to the train station',
           fr: 'à la gare',
         },
@@ -373,7 +373,7 @@ export const selfIntroLesson: LessonContent = {
           fill: '去地铁站',
           fillPinyin: 'qù dìtiě zhàn',
           hanzi: '去地铁站怎么走？',
-          pinyin: 'Qù dìtiě zhàn zěnme zǒu?',
+          pinyin: 'Qù dì tiě zhàn zěn me zǒu?',
           en: 'to the metro station',
           fr: 'à la station de métro',
         },
@@ -384,7 +384,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-1',
       hanzi: '护照',
-      pinyin: 'hùzhào',
+      pinyin: 'hù zhào',
       audio: '/audio/self-intro/vocab-01.mp3',
       meaning: {
         en: 'passport',
@@ -398,7 +398,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-2',
       hanzi: '行李提取处',
-      pinyin: 'xíngli tíqǔchù',
+      pinyin: 'xíng li tí qǔ chù',
       audio: '/audio/self-intro/vocab-02.mp3',
       meaning: {
         en: 'baggage claim',
@@ -412,7 +412,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-3',
       hanzi: '帮我一下',
-      pinyin: 'bāng wǒ yíxià',
+      pinyin: 'bāng wǒ yí xià',
       audio: '/audio/self-intro/vocab-03.mp3',
       meaning: {
         en: 'help me',
@@ -440,7 +440,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-5',
       hanzi: '旅游',
-      pinyin: 'lǚyóu',
+      pinyin: 'lǚ yóu',
       audio: '/audio/self-intro/vocab-05.mp3',
       meaning: {
         en: 'tourism / travel',
@@ -468,7 +468,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-7',
       hanzi: '地铁',
-      pinyin: 'dìtiě',
+      pinyin: 'dì tiě',
       audio: '/audio/self-intro/vocab-07.mp3',
       meaning: {
         en: 'subway / metro',
@@ -482,7 +482,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-8',
       hanzi: '机场快线',
-      pinyin: 'jīchǎng kuàixiàn',
+      pinyin: 'jī chǎng kuài xiàn',
       audio: '/audio/self-intro/vocab-08.mp3',
       meaning: {
         en: 'airport express',
@@ -496,7 +496,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-9',
       hanzi: '打车',
-      pinyin: 'dǎchē',
+      pinyin: 'dǎ chē',
       audio: '/audio/self-intro/vocab-09.mp3',
       meaning: {
         en: 'take a taxi',
@@ -510,7 +510,7 @@ export const selfIntroLesson: LessonContent = {
     {
       id: 'self-intro-vocab-10',
       hanzi: '酒店',
-      pinyin: 'jiǔdiàn',
+      pinyin: 'jiǔ diàn',
       audio: '/audio/self-intro/vocab-10.mp3',
       meaning: {
         en: 'hotel',
@@ -531,7 +531,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Quelle phrase demande « Parlez-vous anglais ? » ?',
         },
         target: '请问您会说英语吗？',
-        pinyin: 'Qǐngwèn nín huì shuō Yīngyǔ ma?',
+        pinyin: 'Qǐng wèn nín huì shuō Yīng yǔ ma?',
         audio: '/audio/self-intro/practice-listening-01.mp3',
         explanation: {
           en: 'Use 请问您会说英语吗 when you need someone who can speak English.',
@@ -545,7 +545,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Quelle phrase demande où se trouve la récupération des bagages ?',
         },
         target: '行李提取处在哪里？',
-        pinyin: 'Xíngli tíqǔchù zài nǎlǐ?',
+        pinyin: 'Xíng li tí qǔ chù zài nǎ lǐ?',
         audio: '/audio/self-intro/practice-listening-02.mp3',
         explanation: {
           en: '行李提取处在哪里 is the first thing to ask after landing.',
@@ -561,7 +561,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Dites que vous venez pour le tourisme.',
         },
         target: '我是来旅游的。',
-        pinyin: 'Wǒ shì lái lǚyóu de.',
+        pinyin: 'Wǒ shì lái lǚ yóu de.',
         audio: '/audio/self-intro/practice-speaking-01.mp3',
         explanation: {
           en: '我是来旅游的 states your purpose for the trip.',
@@ -575,7 +575,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Demandez où vous pouvez prendre un taxi.',
         },
         target: '请问去哪里打车？',
-        pinyin: 'Qǐngwèn qù nǎlǐ dǎchē?',
+        pinyin: 'Qǐng wèn qù nǎ lǐ dǎ chē?',
         audio: '/audio/self-intro/practice-speaking-02.mp3',
         explanation: {
           en: '请问去哪里打车 asks the taxi pick-up location.',
@@ -591,7 +591,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Associe le mot de l’aéroport à « récupération des bagages ».',
         },
         target: '行李提取处',
-        pinyin: 'xíngli tíqǔchù',
+        pinyin: 'xíng li tí qǔ chù',
         audio: '/audio/self-intro/practice-reading-01.mp3',
         explanation: {
           en: '行李提取处 is the sign to follow after landing.',
@@ -605,7 +605,7 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Associe le mot à « métro ».',
         },
         target: '地铁',
-        pinyin: 'dìtiě',
+        pinyin: 'dì tiě',
         audio: '/audio/self-intro/practice-reading-02.mp3',
         explanation: {
           en: '地铁 is the subway, useful for city travel.',
