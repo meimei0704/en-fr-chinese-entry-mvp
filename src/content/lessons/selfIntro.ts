@@ -216,6 +216,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Qǐng wèn xíng li tí qǔ chù zài nǎ lǐ?',
           en: 'baggage claim',
           fr: 'récupération des bagages',
+          audio: '/audio/self-intro/pattern-01-example-01.mp3',
         },
         {
           fill: '卫生间',
@@ -224,6 +225,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Qǐng wèn wèi shēng jiān zài nǎ lǐ?',
           en: 'toilet',
           fr: 'toilettes',
+          audio: '/audio/self-intro/pattern-01-example-02.mp3',
         },
         {
           fill: '机场快线',
@@ -232,6 +234,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Qǐng wèn jī chǎng kuài xiàn zài nǎ lǐ?',
           en: 'airport express',
           fr: 'express de l\'aéroport',
+          audio: '/audio/self-intro/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -252,6 +255,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Nín néng bāng wǒ yí xià ma?',
           en: 'a bit',
           fr: 'un instant',
+          audio: '/audio/self-intro/pattern-02-example-01.mp3',
         },
         {
           fill: '拿行李',
@@ -260,6 +264,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Nín néng bāng wǒ ná xíng li ma?',
           en: 'carry my luggage',
           fr: 'porter mes bagages',
+          audio: '/audio/self-intro/pattern-02-example-02.mp3',
         },
         {
           fill: '打个电话',
@@ -268,6 +273,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Nín néng bāng wǒ dǎ gè diàn huà ma?',
           en: 'make a phone call',
           fr: 'passer un appel',
+          audio: '/audio/self-intro/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -288,6 +294,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Wǒ shì lái lǚ yóu de.',
           en: 'travel',
           fr: 'tourisme',
+          audio: '/audio/self-intro/pattern-03-example-01.mp3',
         },
         {
           fill: '工作',
@@ -296,6 +303,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Wǒ shì lái gōng zuò de.',
           en: 'work',
           fr: 'travail',
+          audio: '/audio/self-intro/pattern-03-example-02.mp3',
         },
         {
           fill: '学习',
@@ -304,6 +312,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Wǒ shì lái xué xí de.',
           en: 'study',
           fr: 'études',
+          audio: '/audio/self-intro/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -324,6 +333,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Wǒ dà gài dāi liǎng gè xīng qī.',
           en: 'two weeks',
           fr: 'deux semaines',
+          audio: '/audio/self-intro/pattern-04-example-01.mp3',
         },
         {
           fill: '一个月',
@@ -332,6 +342,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Wǒ dà gài dāi yī gè yuè.',
           en: 'one month',
           fr: 'un mois',
+          audio: '/audio/self-intro/pattern-04-example-02.mp3',
         },
         {
           fill: '三天',
@@ -340,6 +351,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Wǒ dà gài dāi sān tiān.',
           en: 'three days',
           fr: 'trois jours',
+          audio: '/audio/self-intro/pattern-04-example-03.mp3',
         },
       ],
     },
@@ -360,6 +372,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Qù zhè ge jiǔ diàn zěn me zǒu?',
           en: 'to this hotel',
           fr: 'à cet hôtel',
+          audio: '/audio/self-intro/pattern-05-example-01.mp3',
         },
         {
           fill: '去火车站',
@@ -368,6 +381,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Qù huǒ chē zhàn zěn me zǒu?',
           en: 'to the train station',
           fr: 'à la gare',
+          audio: '/audio/self-intro/pattern-05-example-02.mp3',
         },
         {
           fill: '去地铁站',
@@ -376,6 +390,7 @@ export const selfIntroLesson: LessonContent = {
           pinyin: 'Qù dì tiě zhàn zěn me zǒu?',
           en: 'to the metro station',
           fr: 'à la station de métro',
+          audio: '/audio/self-intro/pattern-05-example-03.mp3',
         },
       ],
     },

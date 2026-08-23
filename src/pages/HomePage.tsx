@@ -45,7 +45,6 @@ export function HomePage() {
   }
 
   const journeyNodes = buildJourney(course).nodes
-  const completedLessonIds = new Set(progress.completedLessons)
 
   return (
     <main className="page-shell">
@@ -124,23 +123,15 @@ export function HomePage() {
                   const nodeImage = journeyNodeImages[node.id]
 
                   if (node.kind === 'lesson' && node.lessonId) {
-                    const isComplete = completedLessonIds.has(node.lessonId)
                     return (
                       <Link
                         key={node.id}
-                        className={`journey-node journey-node--lesson journey-node--card-link ${
-                          isComplete ? 'journey-node--is-complete' : ''
-                        }`}
+                        className="journey-node journey-node--lesson journey-node--card-link"
                         to={`/lesson/${node.lessonId}`}
                       >
                         <div className="journey-node__body">
                           <div className="journey-node__header">
                             <span className="badge badge--jade">{nodeEyebrow}</span>
-                            {isComplete ? (
-                              <span className="journey-node__complete-badge">
-                                {copy.homePage.lessonComplete}
-                              </span>
-                            ) : null}
                           </div>
 
                           <LessonTopicTitle as="h3" lessonId={node.lessonId} language={language} />

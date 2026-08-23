@@ -73,7 +73,9 @@ function collectLessonAudioPaths(lesson: Awaited<ReturnType<typeof importCourse>
   return [
     ...lesson.dialogue.lines.map((line) => line.audio),
     ...lesson.sentencePatterns.flatMap((pattern) =>
-      pattern.audio ? [pattern.audio] : [],
+      pattern.audio
+        ? [pattern.audio, ...(pattern.examples ?? []).map((example) => example.audio)]
+        : [...(pattern.examples ?? []).map((example) => example.audio)],
     ),
     ...lesson.vocabulary.map((item) => item.audio),
     ...Object.values(lesson.practice).flatMap((prompts) => prompts.map((prompt) => prompt.audio)),
@@ -340,12 +342,12 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(421)
+    expect(audioPaths).toHaveLength(555)
     expect(new Set(audioPaths).size).toBe(audioPaths.length)
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(
-        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|practice-(?:listening|speaking|reading))-\d{2}\.mp3$/,
+        /^\/audio\/[a-z0-9-]+\/(?:line|pattern|vocab|practice-(?:listening|speaking|reading)|pattern-\d{2}-example)-\d{2}\.mp3$/,
       )
 
       const publicPath = `${process.cwd()}/public${audioPath}`

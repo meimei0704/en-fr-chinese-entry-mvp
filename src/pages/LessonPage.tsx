@@ -162,11 +162,6 @@ export function LessonPage() {
       <section className="hero-card lesson-header-card">
         <header className="lesson-header-card__title">
           <LessonTopicTitle as="h1" lessonId={lesson.id} language={selectedLanguage} />
-          {progress.completedLessons.includes(lesson.id) ? (
-            <span className="lesson-header-card__complete-badge">
-              {copy.lessonPage.lessonComplete}
-            </span>
-          ) : null}
           <p className="lede lesson-header-card__scenario">
             {getLocalizedText(lesson.scenario, selectedLanguage)}
           </p>
@@ -228,6 +223,7 @@ export function LessonPage() {
                             <SpeechButton
                               label={copy.lessonPage.listenChinese}
                               text={example.hanzi}
+                              audioSrc={example.audio}
                             />
                           </div>
                         </li>

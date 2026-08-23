@@ -31,11 +31,11 @@ describe('course-series UI copy', () => {
     }
   })
 
-  it('pins the lesson completion badge labels', () => {
-    expect(getUiCopy('en').homePage.lessonComplete).toBe('Complete')
-    expect(getUiCopy('fr').homePage.lessonComplete).toBe('Terminée')
-    expect(getUiCopy('en').lessonPage.lessonComplete).toBe('Lesson complete')
-    expect(getUiCopy('fr').lessonPage.lessonComplete).toBe('Leçon terminée')
+  it('drops all course-completion badge copy keys', () => {
+    expect(getUiCopy('en').homePage).not.toHaveProperty('lessonComplete')
+    expect(getUiCopy('fr').homePage).not.toHaveProperty('lessonComplete')
+    expect(getUiCopy('en').lessonPage).not.toHaveProperty('lessonComplete')
+    expect(getUiCopy('fr').lessonPage).not.toHaveProperty('lessonComplete')
   })
 
   it('pins the start-learning empty-state CTA labels', () => {

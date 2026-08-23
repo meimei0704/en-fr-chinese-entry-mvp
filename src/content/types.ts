@@ -63,6 +63,7 @@ export interface SentencePatternExample {
   pinyin: string
   en: string
   fr: string
+  audio: string
 }
 
 export interface SentencePattern {

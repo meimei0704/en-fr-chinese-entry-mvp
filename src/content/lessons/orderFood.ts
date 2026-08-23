@@ -181,6 +181,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Zhè shì wǒ de hù zhào.',
           en: 'passport',
           fr: 'passeport',
+          audio: '/audio/order-food/pattern-03-example-01.mp3',
         },
         {
           fill: '身份证',
@@ -189,6 +190,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Zhè shì wǒ de shēn fèn zhèng.',
           en: 'ID card',
           fr: 'carte d\'identité',
+          audio: '/audio/order-food/pattern-03-example-02.mp3',
         },
         {
           fill: '预订确认单',
@@ -197,6 +199,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Zhè shì wǒ de yù dìng què rèn dān.',
           en: 'booking confirmation',
           fr: 'confirmation de réservation',
+          audio: '/audio/order-food/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -217,6 +220,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Wi-Fi mì mǎ shì duō shao?',
           en: 'Wi-Fi password',
           fr: 'mot de passe Wi-Fi',
+          audio: '/audio/order-food/pattern-04-example-01.mp3',
         },
         {
           fill: '房间号',
@@ -225,6 +229,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Fáng jiān hào shì duō shao?',
           en: 'room number',
           fr: 'numéro de chambre',
+          audio: '/audio/order-food/pattern-04-example-02.mp3',
         },
         {
           fill: '房价',
@@ -233,6 +238,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Fáng jià shì duō shao?',
           en: 'room rate',
           fr: 'prix de la chambre',
+          audio: '/audio/order-food/pattern-04-example-03.mp3',
         },
       ],
     },
@@ -253,6 +259,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Jǐ diǎn tuì fáng?',
           en: 'check out',
           fr: 'le check-out',
+          audio: '/audio/order-food/pattern-05-example-01.mp3',
         },
         {
           fill: '吃早餐',
@@ -261,6 +268,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Jǐ diǎn chī zǎo cān?',
           en: 'have breakfast',
           fr: 'prendre le petit-déjeuner',
+          audio: '/audio/order-food/pattern-05-example-02.mp3',
         },
         {
           fill: '开始',
@@ -269,6 +277,7 @@ export const orderFoodLesson: LessonContent = {
           pinyin: 'Jǐ diǎn kāi shǐ?',
           en: 'start',
           fr: 'commencer',
+          audio: '/audio/order-food/pattern-05-example-03.mp3',
         },
       ],
     },

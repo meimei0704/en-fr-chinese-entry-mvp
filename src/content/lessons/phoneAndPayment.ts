@@ -117,6 +117,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Wǒ yào mǎi yí gè SIM kǎ.',
           en: 'SIM card',
           fr: 'carte SIM',
+          audio: '/audio/phone-and-payment/pattern-01-example-01.mp3',
         },
         {
           fill: '手机卡',
@@ -125,6 +126,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Wǒ yào mǎi yí gè shǒu jī kǎ.',
           en: 'phone card',
           fr: 'carte téléphonique',
+          audio: '/audio/phone-and-payment/pattern-01-example-02.mp3',
         },
         {
           fill: '套餐',
@@ -133,6 +135,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Wǒ yào mǎi yí gè tào cān.',
           en: 'plan',
           fr: 'forfait',
+          audio: '/audio/phone-and-payment/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -153,6 +156,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Néng bāng wǒ ān zhuāng yí xià ma?',
           en: 'install it',
           fr: 'installer',
+          audio: '/audio/phone-and-payment/pattern-02-example-01.mp3',
         },
         {
           fill: '设置一下',
@@ -161,6 +165,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Néng bāng wǒ shè zhì yí xià ma?',
           en: 'set it up',
           fr: 'configurer',
+          audio: '/audio/phone-and-payment/pattern-02-example-02.mp3',
         },
         {
           fill: '激活一下',
@@ -169,6 +174,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Néng bāng wǒ jī huó yí xià ma?',
           en: 'activate it',
           fr: 'activer',
+          audio: '/audio/phone-and-payment/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -189,6 +195,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Wǒ xū yào liú liàng.',
           en: 'mobile data',
           fr: 'des données mobiles',
+          audio: '/audio/phone-and-payment/pattern-03-example-01.mp3',
         },
         {
           fill: '一个手机号码',
@@ -197,6 +204,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Wǒ xū yào yí gè shǒu jī hào mǎ.',
           en: 'a phone number',
           fr: 'un numéro de téléphone',
+          audio: '/audio/phone-and-payment/pattern-03-example-02.mp3',
         },
         {
           fill: '更多流量',
@@ -205,6 +213,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Wǒ xū yào gèng duō liú liàng.',
           en: 'more data',
           fr: 'plus de données',
+          audio: '/audio/phone-and-payment/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -225,6 +234,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Zhè ge tào cān yǒu duō shao liú liàng?',
           en: 'this plan',
           fr: 'ce forfait',
+          audio: '/audio/phone-and-payment/pattern-04-example-01.mp3',
         },
         {
           fill: '这个手机卡',
@@ -233,6 +243,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Zhè ge shǒu jī kǎ yǒu duō shao liú liàng?',
           en: 'this phone card',
           fr: 'cette carte téléphonique',
+          audio: '/audio/phone-and-payment/pattern-04-example-02.mp3',
         },
         {
           fill: '每月套餐',
@@ -241,6 +252,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Měi yuè tào cān yǒu duō shao liú liàng?',
           en: 'monthly plan',
           fr: 'forfait mensuel',
+          audio: '/audio/phone-and-payment/pattern-04-example-03.mp3',
         },
       ],
     },
@@ -261,6 +273,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Zěn me chōng zhí?',
           en: 'top up',
           fr: 'recharger',
+          audio: '/audio/phone-and-payment/pattern-05-example-01.mp3',
         },
         {
           fill: '缴费',
@@ -269,6 +282,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Zěn me jiǎo fèi?',
           en: 'pay the bill',
           fr: 'payer la facture',
+          audio: '/audio/phone-and-payment/pattern-05-example-02.mp3',
         },
         {
           fill: '使用',
@@ -277,6 +291,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           pinyin: 'Zěn me shǐ yòng?',
           en: 'use',
           fr: 'utiliser',
+          audio: '/audio/phone-and-payment/pattern-05-example-03.mp3',
         },
       ],
     },

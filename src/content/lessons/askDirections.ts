@@ -135,6 +135,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Shī fu nín hǎo, wǒ yào qù zhè lǐ.',
           en: 'here',
           fr: 'ici',
+          audio: '/audio/ask-directions/pattern-01-example-01.mp3',
         },
         {
           fill: '这个地址',
@@ -143,6 +144,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Shī fu nín hǎo, wǒ yào qù zhè ge dì zhǐ.',
           en: 'this address',
           fr: 'cette adresse',
+          audio: '/audio/ask-directions/pattern-01-example-02.mp3',
         },
         {
           fill: '机场',
@@ -151,6 +153,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Shī fu nín hǎo, wǒ yào qù jī chǎng.',
           en: 'airport',
           fr: 'l\'aéroport',
+          audio: '/audio/ask-directions/pattern-01-example-03.mp3',
         },
       ],
     },
@@ -171,6 +174,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Zhè shì dì zhǐ.',
           en: 'the address',
           fr: 'l\'adresse',
+          audio: '/audio/ask-directions/pattern-02-example-01.mp3',
         },
         {
           fill: '我的护照',
@@ -179,6 +183,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Zhè shì wǒ de hù zhào.',
           en: 'my passport',
           fr: 'mon passeport',
+          audio: '/audio/ask-directions/pattern-02-example-02.mp3',
         },
         {
           fill: '酒店',
@@ -187,6 +192,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Zhè shì jiǔ diàn.',
           en: 'the hotel',
           fr: 'l\'hôtel',
+          audio: '/audio/ask-directions/pattern-02-example-03.mp3',
         },
       ],
     },
@@ -207,6 +213,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Qǐng dǎ biǎo.',
           en: 'turn on the meter',
           fr: 'mettre le compteur',
+          audio: '/audio/ask-directions/pattern-03-example-01.mp3',
         },
         {
           fill: '开空调',
@@ -215,6 +222,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Qǐng kāi kōng tiáo.',
           en: 'turn on the A/C',
           fr: 'allumer la clim',
+          audio: '/audio/ask-directions/pattern-03-example-02.mp3',
         },
         {
           fill: '等一下',
@@ -223,6 +231,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Qǐng děng yí xià.',
           en: 'wait a moment',
           fr: 'attendez un instant',
+          audio: '/audio/ask-directions/pattern-03-example-03.mp3',
         },
       ],
     },
@@ -253,6 +262,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Kě yǐ kāi kōng tiáo ma?',
           en: 'turn on the A/C',
           fr: 'allumer la clim',
+          audio: '/audio/ask-directions/pattern-05-example-01.mp3',
         },
         {
           fill: '用支付宝',
@@ -261,6 +271,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Kě yǐ yòng Zhī fù bǎo ma?',
           en: 'use Alipay',
           fr: 'payer avec Alipay',
+          audio: '/audio/ask-directions/pattern-05-example-02.mp3',
         },
         {
           fill: '下车',
@@ -269,6 +280,7 @@ export const askDirectionsLesson: LessonContent = {
           pinyin: 'Kě yǐ xià chē ma?',
           en: 'get off',
           fr: 'descendre',
+          audio: '/audio/ask-directions/pattern-05-example-03.mp3',
         },
       ],
     },
