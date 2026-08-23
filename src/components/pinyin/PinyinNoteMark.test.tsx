@@ -21,4 +21,20 @@ describe('PinyinNoteMark', () => {
     expect(svg).toBeInTheDocument()
     expect(svg).toHaveClass('extra')
   })
+
+  it('renders 4 continuous ink lines = 8 rays (horizontal, vertical, both diagonals)', () => {
+    const { container } = render(<PinyinNoteMark />)
+
+    const svg = container.querySelector('svg.pinyin-note-mark')
+    const paths = svg!.querySelectorAll('path')
+    expect(paths).toHaveLength(4)
+
+    const d = Array.from(paths).map((p) => p.getAttribute('d'))
+    expect(d).toEqual([
+      'M4 12h16',
+      'M12 4v16',
+      'M6.34 6.34 17.66 17.66',
+      'M17.66 6.34 6.34 17.66',
+    ])
+  })
 })

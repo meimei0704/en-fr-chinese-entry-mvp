@@ -16,8 +16,9 @@ export function PinyinNoteMark({ className }: PinyinNoteMarkProps) {
       focusable="false"
     >
       <path d="M4 12h16" />
-      <path d="M9.15 5.3 14.85 18.7" />
-      <path d="M14.85 5.3 9.15 18.7" />
+      <path d="M12 4v16" />
+      <path d="M6.34 6.34 17.66 17.66" />
+      <path d="M17.66 6.34 6.34 17.66" />
     </svg>
   )
 }
