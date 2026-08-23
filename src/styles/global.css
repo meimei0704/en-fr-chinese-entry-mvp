@@ -4055,44 +4055,36 @@ h2 {
   vertical-align: super;
 }
 
-.pinyin-reference-group__notes {
-  display: grid;
-  gap: 0.45rem;
-  margin: 0.15rem 0 0;
-  padding: 0.85rem 1rem;
-  border: 1px solid rgba(var(--color-pinyin-finals-rgb), 0.22);
-  border-radius: var(--radius-lg);
-  background: rgba(var(--color-pinyin-finals-rgb), 0.06);
-  list-style: none;
-}
-
 .pinyin-reference-note {
   display: grid;
-  grid-template-columns: auto auto 1fr;
-  gap: 0.5rem;
-  align-items: baseline;
-  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-  line-height: 1.5;
+  gap: 0.4rem;
+  align-content: start;
+  min-height: 13.5rem;
+  padding: 0.85rem 0.9rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   text-align: left;
 }
 
 .pinyin-reference-note__marker {
+  margin: 0;
   color: var(--color-pinyin-finals);
+  font-size: 0.9rem;
   font-weight: 900;
-}
-
-.pinyin-reference-note__target {
-  color: var(--color-ink);
-  font-weight: 700;
-  white-space: nowrap;
+  line-height: 1;
 }
 
 .pinyin-reference-note__text {
-  color: var(--color-muted);
+  margin: 0;
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  line-height: 1.5;
 }
 
-.pinyin-reference-note__text .muted-text {
-  margin: 0;
+@media (min-width: 40rem) {
+  .pinyin-reference-note {
+    align-content: center;
+  }
 }
 
 .pinyin-whole-syllables__grid {

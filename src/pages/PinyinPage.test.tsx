@@ -159,7 +159,7 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('button', { name: 'Play bā' })).toBeVisible()
   })
 
-  it('shows annotation markers and footnotes for er and ü in the finals module', async () => {
+  it('shows annotation markers and side-by-side notes for er and ü in the finals module', async () => {
     const user = userEvent.setup()
     renderRoute('/pinyin')
 
@@ -167,6 +167,8 @@ describe('PinyinPage', () => {
 
     const noteMarkers = screen.getAllByText('※')
     expect(noteMarkers).toHaveLength(4)
+
+    expect(screen.getAllByTestId('pinyin-note')).toHaveLength(2)
 
     expect(screen.getByText('Spelling rule for ü: when following j, q, x, the dots are omitted in writing, but we still pronounce it as ü. Examples: ju, qu, xu.')).toBeVisible()
     expect(

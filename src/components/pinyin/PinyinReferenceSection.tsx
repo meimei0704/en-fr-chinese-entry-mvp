@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { SpeechButton } from '../SpeechButton'
 import { getLocalizedText } from '../../content/copy'
 import type {
@@ -27,22 +28,19 @@ export function PinyinReferenceSection({
   return (
     <section id="pinyin-reference" className="surface-card pinyin-reference-section">
       <div className="pinyin-reference-section__groups">
-        {groups.map((group) => {
-          const notedItems = group.items.filter((item) => item.note !== undefined)
+        {groups.map((group) => (
+          <article key={group.id} className={`pinyin-reference-group pinyin-reference-group--${group.id}`}>
+            <header>
+              <h2>{getLocalizedText(group.title, language)}</h2>
+              {group.summary ? (
+                <p className="muted-text">{getLocalizedText(group.summary, language)}</p>
+              ) : null}
+            </header>
 
-          return (
-            <article key={group.id} className={`pinyin-reference-group pinyin-reference-group--${group.id}`}>
-              <header>
-                <h2>{getLocalizedText(group.title, language)}</h2>
-                {group.summary ? (
-                  <p className="muted-text">{getLocalizedText(group.summary, language)}</p>
-                ) : null}
-              </header>
-
-              <div className="pinyin-reference-group__items">
-                {group.items.map((item) => (
+            <div className="pinyin-reference-group__items">
+              {group.items.map((item) => (
+                <Fragment key={item.id}>
                   <article
-                    key={item.id}
                     className={`study-item pinyin-reference-card${item.description ? ' pinyin-reference-card--with-description' : ''}`}
                     data-testid="pinyin-card"
                   >
@@ -83,29 +81,25 @@ export function PinyinReferenceSection({
                       </p>
                     ) : null}
                   </article>
-                ))}
-              </div>
-
-              {notedItems.length > 0 ? (
-                <ul className="pinyin-reference-group__notes">
-                  {notedItems.map((item) => (
-                    <li key={item.id} className="pinyin-reference-note">
-                      <span className="pinyin-reference-note__marker" aria-hidden="true">
+                  {item.note ? (
+                    <aside
+                      className="pinyin-reference-note"
+                      data-testid="pinyin-note"
+                      aria-label={`${referenceCardLabel(item, language)} annotation`}
+                    >
+                      <p className="pinyin-reference-note__marker" aria-hidden="true">
                         ※
-                      </span>
-                      <span className="pinyin-reference-note__target">
-                        {referenceCardLabel(item, language)}
-                      </span>
-                      <span className="pinyin-reference-note__text">
-                        {getLocalizedText(item.note as NonNullable<typeof item.note>, language)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </article>
-          )
-        })}
+                      </p>
+                      <p className="pinyin-reference-note__text">
+                        {getLocalizedText(item.note, language)}
+                      </p>
+                    </aside>
+                  ) : null}
+                </Fragment>
+              ))}
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   )
