@@ -71,7 +71,7 @@ describe('LessonPage', () => {
       '请问您会说英语吗？',
     )
     expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent(
-      'Qǐngwèn nín huì shuō Yīngyǔ ma?',
+      'Qǐng wèn nín huì shuō Yīng yǔ ma?',
     )
   })
 
