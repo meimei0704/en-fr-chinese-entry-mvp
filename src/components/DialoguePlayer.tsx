@@ -40,7 +40,7 @@ export function DialoguePlayer({ lines, language }: DialoguePlayerProps) {
             </div>
             <p className="pinyin-line">{line.pinyin}</p>
             <p className="muted-text">{getLocalizedText(line.translation, language)}</p>
-            <ExplanationBlock collapsible explanation={line.explanation} language={language} />
+            <ExplanationBlock explanation={line.explanation} language={language} />
           </article>
         )
       })}

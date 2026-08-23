@@ -1,98 +1,44 @@
 import '@testing-library/jest-dom/vitest'
-import { screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { renderRoute } from '../test/renderRoute'
 import { createDefaultProgress, saveProgress } from '../lib/progress'
-
-const tablistLabel = 'Culture topics'
 
 describe('CulturePage', () => {
   beforeEach(() => {
     localStorage.clear()
   })
 
-  it('renders the hero and all 7 section tabs, with the first selected', () => {
+  it('renders the hero and all 7 section blocks stacked on one page', () => {
     renderRoute('/culture')
 
     expect(
       screen.getByRole('heading', { level: 1, name: 'Culture advice for travelers in China' }),
     ).toBeVisible()
 
-    const tablist = screen.getByRole('tablist', { name: tablistLabel })
-    const tabs = within(tablist).getAllByRole('tab')
-
-    expect(tabs).toHaveLength(7)
-    expect(tabs.map((tab) => tab.querySelector('span')?.textContent)).toEqual([
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-    ])
-    expect(tabs.map((tab) => tab.textContent)).toEqual([
-      '1General Social Tips',
-      '2Dining Etiquette',
-      '3Conversation Guidelines',
-      "4Visiting Someone's Home",
-      '5Public Conduct and Behaviour',
-      '6Visiting Temples & Cultural Sites',
-      '7Number Superstitions & Symbolism',
-    ])
-    expect(tabs[0]).toHaveAttribute('aria-selected', 'true')
-    expect(screen.getByRole('tabpanel', { name: 'General Social Tips' })).toBeVisible()
+    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(7)
+    expect(screen.getByRole('heading', { level: 2, name: 'General Social Tips' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Dining Etiquette' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Conversation Guidelines' })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: "Visiting Someone's Home" })).toBeVisible()
+    expect(screen.getByRole('heading', { level: 2, name: 'Public Conduct and Behaviour' })).toBeVisible()
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Visiting Temples & Cultural Sites' }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Number Superstitions & Symbolism' }),
+    ).toBeVisible()
   })
 
-  it('switches the tab panel content on selection', async () => {
-    const user = userEvent.setup()
+  it('shows content of multiple sections at once without tabs', () => {
     renderRoute('/culture')
 
     expect(screen.getByText(/Address people by their title plus family name/)).toBeInTheDocument()
-
-    await user.click(screen.getByRole('tab', { name: 'Dining Etiquette' }))
-
-    expect(screen.getByRole('tab', { name: 'Dining Etiquette' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    )
-    expect(screen.getByRole('tabpanel', { name: 'Dining Etiquette' })).toBeVisible()
     expect(screen.getByText(/Do not start eating until the host/)).toBeInTheDocument()
-  })
-
-  it('supports ArrowRight/ArrowLeft/Home/End keyboard navigation on the tablist', async () => {
-    const user = userEvent.setup()
-    renderRoute('/culture')
-
-    const tablist = screen.getByRole('tablist', { name: tablistLabel })
-    const selected = within(tablist).getByRole('tab', { selected: true })
-
-    selected.focus()
-    await user.keyboard('{ArrowRight}')
-    expect(screen.getByRole('tab', { name: 'Dining Etiquette' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    )
-
-    await user.keyboard('{ArrowLeft}')
-    expect(screen.getByRole('tab', { name: 'General Social Tips' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    )
-
-    await user.keyboard('{End}')
-    expect(screen.getByRole('tab', { name: 'Number Superstitions & Symbolism' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    )
-
-    await user.keyboard('{Home}')
-    expect(screen.getByRole('tab', { name: 'General Social Tips' })).toHaveAttribute(
-      'aria-selected',
-      'true',
-    )
+    expect(
+      screen.getByText(/Certain numbers carry cultural associations due to Chinese homophones/),
+    ).toBeInTheDocument()
   })
 
   it('renders bold lead-ins and nested sub-items in General Social Tips', () => {
@@ -110,11 +56,8 @@ describe('CulturePage', () => {
     expect(sublist).not.toBeNull()
   })
 
-  it('renders bold 8/6/4 in Number Superstitions with the intro line', async () => {
-    const user = userEvent.setup()
+  it('renders bold 8/6/4 in Number Superstitions with the intro line', () => {
     renderRoute('/culture')
-
-    await user.click(screen.getByRole('tab', { name: 'Number Superstitions & Symbolism' }))
 
     expect(
       screen.getByText('Certain numbers carry cultural associations due to Chinese homophones:'),
@@ -140,9 +83,8 @@ describe('CulturePage', () => {
       }),
     ).toBeVisible()
     expect(
-      screen.getByRole('tablist', { name: 'Sujets culturels' }),
-    ).toBeInTheDocument()
-    expect(screen.getByRole('tab', { name: 'Conseils sociaux généraux' })).toBeInTheDocument()
+      screen.getByRole('heading', { level: 2, name: 'Conseils sociaux généraux' }),
+    ).toBeVisible()
   })
 
   it('omits the bottom back-to-home action since the top nav covers Home', () => {

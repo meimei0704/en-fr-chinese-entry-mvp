@@ -230,12 +230,6 @@ export function LessonPage() {
                       ))}
                     </ul>
                   ) : null}
-                  <SpeechButton
-                    label={copy.lessonPage.listenChinese}
-                    text={pattern.examples?.[0]?.hanzi ?? pattern.pattern}
-                    audioSrc={pattern.audio}
-                    fallbackAudioSrc={pattern.audioFallback}
-                  />
                 </article>
               ))}
             </div>
