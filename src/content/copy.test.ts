@@ -31,9 +31,9 @@ describe('course-series UI copy', () => {
     }
   })
 
-  it('pins journey completion labels and drops the lesson-page badge key', () => {
-    expect(getUiCopy('en').homePage.lessonComplete).toBe('Complete')
-    expect(getUiCopy('fr').homePage.lessonComplete).toBe('Terminée')
+  it('drops all course-completion badge copy keys', () => {
+    expect(getUiCopy('en').homePage).not.toHaveProperty('lessonComplete')
+    expect(getUiCopy('fr').homePage).not.toHaveProperty('lessonComplete')
     expect(getUiCopy('en').lessonPage).not.toHaveProperty('lessonComplete')
     expect(getUiCopy('fr').lessonPage).not.toHaveProperty('lessonComplete')
   })
