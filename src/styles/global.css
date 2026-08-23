@@ -1666,6 +1666,10 @@ h2 {
   border: 1px solid rgba(95, 143, 247, 0.14);
 }
 
+.pattern-example--standalone {
+  margin-top: 0.35rem;
+}
+
 .pattern-example__fill {
   display: flex;
   flex-wrap: wrap;

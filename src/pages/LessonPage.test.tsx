@@ -446,6 +446,21 @@ describe('LessonPage', () => {
     expect(speak).not.toHaveBeenCalled()
   })
 
+  it('keeps playback for single-sentence pattern cards and per-example playback for multi-example cards', () => {
+    renderRoute('/lesson/metro-ticket')
+
+    const singleTitle = screen.getByText('在哪儿换乘？', { selector: '.study-item__title' })
+    const singleCard = singleTitle.closest('article.study-item--pattern')!
+    expect(within(singleCard).getByRole('button', { name: /play chinese/i })).toBeInTheDocument()
+
+    const multiCard = screen.getByText('Excuse me, where is ...?').closest('article.study-item--pattern')!
+    expect(within(multiCard).getAllByRole('button', { name: /play chinese/i })).toHaveLength(3)
+
+    const noAudioTitle = screen.getByText('在哪儿买票？', { selector: '.study-item__title' })
+    const noAudioCard = noAudioTitle.closest('article.study-item--pattern')!
+    expect(within(noAudioCard).queryByRole('button', { name: /play chinese/i })).not.toBeInTheDocument()
+  })
+
   it('fetches the lesson from the API when it is missing from the course context', async () => {
     const lesson = course.lessons.find((entry) => entry.id === 'self-intro')
     if (!lesson) {
