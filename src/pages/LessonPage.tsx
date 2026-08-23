@@ -229,6 +229,18 @@ export function LessonPage() {
                         </li>
                       ))}
                     </ul>
+                  ) : pattern.audio ? (
+                    <div className="pattern-example pattern-example--standalone">
+                      <div className="pattern-example__sentence">
+                        <p>{pattern.pattern}</p>
+                        <SpeechButton
+                          label={copy.lessonPage.listenChinese}
+                          text={pattern.pattern}
+                          audioSrc={pattern.audio}
+                          fallbackAudioSrc={pattern.audioFallback}
+                        />
+                      </div>
+                    </div>
                   ) : null}
                 </article>
               ))}
