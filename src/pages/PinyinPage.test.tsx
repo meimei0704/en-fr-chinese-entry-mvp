@@ -159,6 +159,23 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('button', { name: 'Play bā' })).toBeVisible()
   })
 
+  it('shows annotation markers and side-by-side notes for er and ü in the finals module', async () => {
+    const user = userEvent.setup()
+    renderRoute('/pinyin')
+
+    await user.click(screen.getByRole('tab', { name: 'Finals' }))
+
+    const noteMarkers = screen.getAllByTestId('pinyin-note-mark')
+    expect(noteMarkers).toHaveLength(4)
+
+    expect(screen.getAllByTestId('pinyin-note')).toHaveLength(2)
+
+    expect(screen.getByText('Spelling rule for ü: when following j, q, x, the dots are omitted in writing, but we still pronounce it as ü. Examples: ju, qu, xu.')).toBeVisible()
+    expect(
+      screen.getByText('er is an exceptional curled-tongue final. It cannot be combined with any initial consonants. Example: 耳朵 ěr duo — ear.'),
+    ).toBeVisible()
+  })
+
   it('switches to the whole syllables module and renders all sixteen cards', async () => {
     const user = userEvent.setup()
     renderRoute('/pinyin')

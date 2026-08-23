@@ -184,6 +184,7 @@ export interface PinyinReferenceItem {
   label: LocalizedField
   pinyin: string
   description?: LocalizedField
+  note?: LocalizedField
   audio: string
   tone?: number
 }
