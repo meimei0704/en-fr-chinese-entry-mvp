@@ -1,5 +1,96 @@
 import { expect, test } from 'playwright/test'
 
+test('keeps answer audio on the options without leaking it from the question', async ({ page }) => {
+  await page.addInitScript(() => {
+    Math.random = () => 1 / 2 ** 31
+
+    const audioEvents: Array<{ src: string; type: string }> = []
+    ;(window as typeof window & { __practiceAudioEvents: typeof audioEvents }).__practiceAudioEvents =
+      audioEvents
+
+    class MockAudio {
+      currentTime = 0
+      preload = ''
+      private source = ''
+
+      get src() {
+        return this.source
+      }
+
+      set src(value: string) {
+        this.source = value
+        audioEvents.push({ src: value, type: 'src' })
+      }
+
+      addEventListener() {}
+
+      getAttribute(name: string) {
+        return name === 'src' ? this.source : null
+      }
+
+      load() {
+        audioEvents.push({ src: this.source, type: 'load' })
+      }
+
+      pause() {
+        audioEvents.push({ src: this.source, type: 'pause' })
+      }
+
+      play() {
+        audioEvents.push({ src: this.source, type: 'play' })
+        return Promise.resolve()
+      }
+
+      removeAttribute(name: string) {
+        if (name === 'src') this.source = ''
+      }
+    }
+
+    Object.defineProperty(window, 'Audio', {
+      configurable: true,
+      value: MockAudio,
+    })
+  })
+
+  await page.goto('/lesson/daily-greetings/practice')
+
+  const challenge = page.locator('.practice-challenge')
+  const optionSpeechButtons = challenge.locator('.practice-challenge__option .speech-button')
+
+  await expect(challenge.locator('.practice-challenge__prompt .speech-button')).toHaveCount(0)
+  await expect(optionSpeechButtons).toHaveCount(4)
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (
+            window as typeof window & {
+              __practiceAudioEvents: Array<{ src: string; type: string }>
+            }
+          ).__practiceAudioEvents.filter((event) => event.type === 'play').length,
+      ),
+    )
+    .toBe(0)
+
+  const firstOptionLabel = await optionSpeechButtons.first().getAttribute('aria-label')
+  await optionSpeechButtons.first().click()
+
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (
+            window as typeof window & {
+              __practiceAudioEvents: Array<{ src: string; type: string }>
+            }
+          ).__practiceAudioEvents.filter((event) => event.type === 'play'),
+      ),
+    )
+    .toHaveLength(1)
+  await expect(challenge.locator('.practice-challenge__feedback')).toHaveCount(0)
+  expect(firstOptionLabel).toMatch(/^Play /)
+})
+
 test('keeps the practice challenge layout flat and adaptive across widths', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/lesson/self-intro/practice')
@@ -15,28 +106,7 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
   await expect(statTiles).toHaveCount(0)
 
   const promptText = prompt.locator('p')
-  const promptSpeech = prompt.locator('.speech-button')
-
-  for (let attempts = 0; attempts < 5 && (await promptSpeech.count()) === 0; attempts += 1) {
-    await page.locator('.practice-challenge__option .option-button').first().click()
-    const nextButton = page.locator('.practice-challenge__feedback .primary-button')
-    if (await nextButton.count()) {
-      await nextButton.click()
-    }
-  }
-
-  await expect(promptSpeech).toHaveCount(1)
-
-  const promptContentRight = await promptText.evaluate((node) => {
-    const range = document.createRange()
-    range.selectNodeContents(node)
-    const box = range.getBoundingClientRect()
-    return box.right
-  })
-  const initialPromptSpeechBox = await promptSpeech.boundingBox()
-  expect(initialPromptSpeechBox).not.toBeNull()
-  expect(initialPromptSpeechBox!.x - promptContentRight).toBeGreaterThanOrEqual(8)
-  expect(initialPromptSpeechBox!.x - promptContentRight).toBeLessThanOrEqual(14)
+  await expect(prompt.locator('.speech-button')).toHaveCount(0)
 
   await promptText.evaluate((node) => {
     node.textContent =
@@ -75,17 +145,7 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
     expect(optionsBox!.y).toBeGreaterThanOrEqual(promptBox!.y + promptBox!.height - 1)
 
     const textBox = await promptText.boundingBox()
-    const promptSpeechBox = await promptSpeech.boundingBox()
     expect(textBox).not.toBeNull()
-    expect(promptSpeechBox).not.toBeNull()
-    expect(promptSpeechBox!.x).toBeGreaterThanOrEqual(textBox!.x + textBox!.width - 1)
-    expect(
-      Math.abs(
-        promptSpeechBox!.y +
-          promptSpeechBox!.height / 2 -
-          (promptBox!.y + promptBox!.height / 2),
-      ),
-    ).toBeLessThanOrEqual(2)
 
     for (const option of await page.locator('.practice-challenge__option').all()) {
       const optionBox = await option.boundingBox()

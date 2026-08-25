@@ -328,6 +328,9 @@ export function buildPracticeChallenge(
   const meaningPool = meaningCandidates(lesson, language)
   const pinyinMap = hanziToPinyinMap(lesson)
   const audioMap = hanziToAudioMap(lesson)
+  const audibleHanziPool = hanziPool.filter((candidate) =>
+    audioMap.has(hanziLookupKey(candidate)),
+  )
 
   const pairs: StructuredPair[] = lesson.vocabulary.map((item) => ({
     id: item.id,
@@ -344,14 +347,28 @@ export function buildPracticeChallenge(
   }))
 
   const listenQuestions = lesson.practice.listening.map((item) =>
-    listenQuestion(item, hanziPool, rng),
+    listenQuestion(item, audibleHanziPool, rng),
   )
   const readQuestions = pairs.map((pair) =>
     readQuestionFromPair(pair, 'hanzi-to-meaning', language, hanziPool, meaningPool, rng, 'read'),
   )
   const reviewQuestions = reviewPairs.flatMap((card, index) => {
-    const direction: 'front-to-back' | 'back-to-front' = index % 2 === 0 ? 'front-to-back' : 'back-to-front'
-    return [reviewQuestionFromCard(card, direction, language, hanziPool, meaningPool, rng)]
+    const preferredDirection: 'front-to-back' | 'back-to-front' =
+      index % 2 === 0 ? 'front-to-back' : 'back-to-front'
+    const direction =
+      preferredDirection === 'back-to-front' && !audioMap.has(hanziLookupKey(card.hanzi))
+        ? 'front-to-back'
+        : preferredDirection
+    return [
+      reviewQuestionFromCard(
+        card,
+        direction,
+        language,
+        audibleHanziPool,
+        meaningPool,
+        rng,
+      ),
+    ]
   })
 
   const groups: Record<PracticeChallengeKind, PracticeChallengeQuestion[]> = {

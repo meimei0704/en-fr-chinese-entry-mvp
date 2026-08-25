@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { course } from '../content/course'
 import { selfIntroLesson } from '../content/lessons/selfIntro'
 import { buildPracticeChallenge, createSeededRandom, shuffle } from './practiceChallenge'
 
@@ -125,6 +126,27 @@ describe('buildPracticeChallenge', () => {
       for (const option of baggageQuestion!.options) {
         if (hanziPattern.test(option.label)) {
           expect(option.audio, `${option.label} should carry pronunciation audio`).toBeDefined()
+        }
+      }
+    }
+  })
+
+  it('attaches pronunciation audio to every hanzi option across the course', () => {
+    const hanziPattern = /[\u3400-\u9fff]/
+
+    for (const lesson of course.lessons) {
+      for (let seed = 1; seed <= 20; seed += 1) {
+        const challenge = buildPracticeChallenge(lesson, 'en', 1000, seed)
+
+        for (const question of challenge.questions) {
+          for (const option of question.options) {
+            if (hanziPattern.test(option.label)) {
+              expect(
+                option.audio,
+                `${lesson.id}/${question.id}/${option.label} should carry pronunciation audio`,
+              ).toBeDefined()
+            }
+          }
         }
       }
     }
