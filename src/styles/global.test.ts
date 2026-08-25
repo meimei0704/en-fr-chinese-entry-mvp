@@ -520,14 +520,13 @@ describe('global color accessibility tokens', () => {
     ).toBe(true)
   })
 
-  it('adds a shared card hover lift with deepened shadow and reduced-motion guard', () => {
+  it('adds a shared card hover lift while keeping the practice question container static', () => {
     const motionSelectors = [
       '.study-item',
       '.vocabulary-list__item',
       '.dialogue-card',
       '.lesson-card',
       '.review-flashcard',
-      '.practice-challenge__question',
     ]
 
     const combinedMotionSelector = [
@@ -536,14 +535,13 @@ describe('global color accessibility tokens', () => {
       '.dialogue-card',
       '.lesson-card',
       '.review-flashcard',
-      '.practice-challenge__question',
     ].join(',\n')
 
     expect(hasRuleWithDeclaration(combinedMotionSelector, 'transition:')).toBe(true)
 
     const hoverWithInsetSelectors = [
       '.study-item:hover,\n.study-item:focus-within,\n.vocabulary-list__item:hover,\n.vocabulary-list__item:focus-within,\n.dialogue-card:hover,\n.dialogue-card:focus-within',
-      '.lesson-card:hover,\n.lesson-card:focus-within,\n.review-flashcard:hover,\n.review-flashcard:focus-within,\n.practice-challenge__question:hover,\n.practice-challenge__question:focus-within',
+      '.lesson-card:hover,\n.lesson-card:focus-within,\n.review-flashcard:hover,\n.review-flashcard:focus-within',
     ]
     for (const selector of hoverWithInsetSelectors) {
       expect(hasRuleWithDeclaration(selector, 'transform: translateY(-2px);')).toBe(true)
@@ -555,6 +553,13 @@ describe('global color accessibility tokens', () => {
         hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', selector, 'transition: none;'),
       ).toBe(true)
     }
+
+    expect(css).not.toMatch(
+      /\.practice-challenge__question[^{}]*\{[^}]*(?:transition|transform|box-shadow)\s*:/,
+    )
+    expect(css).not.toMatch(
+      /\.practice-challenge__question:(?:hover|focus-within)[^{}]*\{[^}]*(?:transform|box-shadow)\s*:/,
+    )
   })
 
   it('scopes compact three-layer lesson layout away from shared and admin cards', () => {

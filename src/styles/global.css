@@ -382,8 +382,7 @@ a:focus-visible {
 .vocabulary-list__item,
 .dialogue-card,
 .lesson-card,
-.review-flashcard,
-.practice-challenge__question {
+.review-flashcard {
   transition:
     transform 150ms ease,
     box-shadow 150ms ease,
@@ -404,9 +403,7 @@ a:focus-visible {
 .lesson-card:hover,
 .lesson-card:focus-within,
 .review-flashcard:hover,
-.review-flashcard:focus-within,
-.practice-challenge__question:hover,
-.practice-challenge__question:focus-within {
+.review-flashcard:focus-within {
   transform: translateY(-2px);
   box-shadow: var(--shadow-card-hover);
   border-color: rgba(var(--color-primary-rgb), 0.3);
@@ -3621,8 +3618,7 @@ h2 {
   .vocabulary-list__item,
   .dialogue-card,
   .lesson-card,
-  .review-flashcard,
-  .practice-challenge__question {
+  .review-flashcard {
     transition: none;
   }
 
