@@ -112,6 +112,32 @@ describe('PracticeChallenge', () => {
     }
   })
 
+  it('plays option audio without submitting the answer', async () => {
+    const user = userEvent.setup()
+    const seed = Array.from({ length: 100 }, (_, candidate) => candidate).find((candidate) =>
+      buildPracticeChallenge(selfIntroLesson, 'en', 5, candidate)
+        .questions[0].options.some((option) => option.audio),
+    )
+    expect(seed).toBeDefined()
+
+    const challenge = renderChallenge({ seed: seed! })
+    const audibleOption = challenge.questions[0].options.find((option) => option.audio)
+
+    expect(audibleOption).toBeDefined()
+    vi.mocked(speakChinese).mockClear()
+
+    await user.click(screen.getByRole('button', { name: `Play ${audibleOption!.label}` }))
+
+    expect(speakChinese).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: audibleOption!.label,
+        audioSrc: audibleOption!.audio,
+      }),
+    )
+    expect(screen.queryByText(copy.correctFeedback)).not.toBeInTheDocument()
+    expect(screen.queryByText(copy.incorrectFeedback)).not.toBeInTheDocument()
+  })
+
   it('auto-plays the target audio for listen questions', async () => {
     const user = userEvent.setup()
     const challenge = renderChallenge()

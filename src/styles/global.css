@@ -4244,7 +4244,7 @@ h2 {
 .practice-challenge__prompt {
   display: flex;
   flex-wrap: nowrap;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.4rem 0.75rem;
   padding: clamp(1rem, 2.5vw, 1.35rem);
   border: 1px solid rgba(var(--color-border-rgb), 0.94);
@@ -4259,6 +4259,7 @@ h2 {
   flex: 1 1 auto;
   min-width: 0;
   margin: 0;
+  overflow-wrap: anywhere;
   font-size: clamp(1.1rem, 2.5vw, 1.35rem);
 }
 
@@ -4286,8 +4287,8 @@ h2 {
 }
 
 .practice-challenge__options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   align-content: start;
 }
@@ -4299,27 +4300,60 @@ h2 {
 }
 
 .practice-challenge__option {
+  flex: 1 0 max-content;
+  min-width: min(100%, 12rem);
+  max-width: 100%;
+  min-height: 3.5rem;
   display: flex;
-  gap: 0.5rem;
   align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.practice-challenge__option:hover,
+.practice-challenge__option:focus-within {
+  border-color: rgba(var(--color-primary-rgb), 0.48);
+  box-shadow: var(--shadow-card-inset);
 }
 
 .practice-challenge__option .option-button {
-  flex: 1;
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
   justify-content: center;
+  flex-wrap: wrap;
+  border: 0;
+  background: transparent;
+  padding: 0.72rem 0.35rem 0.72rem 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.practice-challenge__option .option-button:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
 }
 
 .practice-challenge__option .speech-button {
   flex: 0 0 auto;
-  width: 2.05rem;
-  min-width: 2.05rem;
-  min-height: 2.05rem;
+  width: 1.75rem;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
   margin-top: 0;
+  margin-right: 0.65rem;
+  margin-bottom: 0;
+  margin-left: 0;
 }
 
 .practice-challenge__option .speech-button__icon {
-  width: 0.92rem;
-  height: 0.92rem;
+  width: 0.8rem;
+  height: 0.8rem;
 }
 
 .option-button__letter {
@@ -4339,6 +4373,12 @@ h2 {
 
 .option-button__label {
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.practice-challenge__option .option-button__pinyin {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .practice-challenge__feedback {
