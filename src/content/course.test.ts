@@ -196,6 +196,55 @@ describe('course content', () => {
     }
   })
 
+  it('pins the revised daily-greetings explanations, reply, and useful patterns', async () => {
+    const { course } = await import('./course')
+    const lesson = course.lessons[0]
+    const linesByHanzi = new Map(lesson.dialogue.lines.map((line) => [line.hanzi, line]))
+    const vocabularyByHanzi = new Map(lesson.vocabulary.map((item) => [item.hanzi, item]))
+
+    expect(linesByHanzi.get('您好。')?.explanation.en).toBe(
+      '您好 is the polite Chinese greeting. It is used for elders, service-staff, superiors, and strangers, whenever you want to be courteous or show respect.',
+    )
+    expect(linesByHanzi.get('早上好。')?.explanation.en).toBe(
+      '早上好 is a common greeting used in the morning, roughly from waking up until about noon.',
+    )
+    expect(linesByHanzi.get('很高兴认识你。')?.explanation.en).toBe(
+      '很 = very｜高兴 = glad/happy｜认识 = get to know｜你 = you. Use it when you meet someone for the first time.',
+    )
+
+    const apologyIndex = lesson.dialogue.lines.findIndex((line) => line.hanzi === '对不起。')
+    expect(lesson.dialogue.lines[apologyIndex + 1]).toEqual(
+      expect.objectContaining({
+        id: 'daily-greetings-line-15',
+        hanzi: '没关系。',
+        audio: '/audio/daily-greetings/line-15.mp3',
+      }),
+    )
+    expect(vocabularyByHanzi.get('没关系')).toEqual(
+      expect.objectContaining({
+        id: 'daily-greetings-vocab-9',
+        audio: '/audio/daily-greetings/vocab-09.mp3',
+      }),
+    )
+
+    expect(lesson.sentencePatterns.map((pattern) => pattern.id)).toEqual([
+      'daily-greetings-pattern-2',
+      'daily-greetings-pattern-4',
+      'daily-greetings-pattern-5',
+    ])
+    expect(lesson.sentencePatterns.map((pattern) => pattern.pattern)).toEqual([
+      '……吗？',
+      '很高兴……。',
+      '不好意思，……。',
+    ])
+    expect(lesson.sentencePatterns[0]?.meaning.en).toBe(
+      'A particle at the end of a sentence, to make a yes-no question. No real meaning.',
+    )
+    expect(
+      lesson.sentencePatterns[0]?.examples?.find((example) => example.fill === '你有空')?.en,
+    ).toBe('you have time')
+  })
+
   it('uses lesson two as the arrival-at-the-airport lesson with the approved sentences', async () => {
     const { course } = await import('./course')
     const lesson = course.lessons[1]
