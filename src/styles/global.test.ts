@@ -696,6 +696,13 @@ describe('global color accessibility tokens', () => {
     expect(paragraph).toContain('flex: 0 1 auto;')
     expect(paragraph).toContain('min-width: 0;')
     expect(paragraph).toContain('overflow-wrap: anywhere;')
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 760px)',
+        '.practice-challenge__question',
+        'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
   })
 
   it('flows left-aligned practice options as nowrap cards with compact audio', () => {
