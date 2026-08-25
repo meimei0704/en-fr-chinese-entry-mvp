@@ -687,10 +687,14 @@ describe('global color accessibility tokens', () => {
 
   it('lays the practice prompt out inline with its speech button', () => {
     const prompt = ruleBlock('.practice-challenge__prompt')
+    const paragraph = ruleBlock('.practice-challenge__prompt p')
 
     expect(prompt).toContain('display: flex;')
-    expect(prompt).toContain('flex-wrap: wrap;')
-    expect(prompt).toContain('align-items: center;')
+    expect(prompt).toContain('flex-wrap: nowrap;')
+    expect(prompt).toContain('align-items: flex-start;')
+    expect(prompt).not.toContain('flex-wrap: wrap;')
+    expect(paragraph).toContain('flex: 1 1 auto;')
+    expect(paragraph).toContain('min-width: 0;')
   })
 
   it('keeps the practice option speech buttons smaller and center-aligned with letter badges', () => {
