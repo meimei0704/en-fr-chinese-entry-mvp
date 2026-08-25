@@ -29,8 +29,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonjour.',
         },
         explanation: {
-          en: '你好 is the everyday greeting you can use with anyone your own age or in casual situations.',
-          fr: '你好 est la salutation quotidienne à utiliser avec des personnes de votre âge ou en situation informelle.',
+          en: '你 = you｜好 = good / well. Together, 你好 is the standard everyday greeting in casual situations.',
+          fr: '你 = tu / vous｜好 = bien. Ensemble, 你好 est la salutation courante dans les situations informelles.',
         },
         audio: '/audio/daily-greetings/line-01.mp3',
       },
@@ -47,8 +47,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonjour (formel).',
         },
         explanation: {
-          en: '您好 is the polite Chinese greeting. It is used for elders, service-staff, superiors, and strangers, whenever you want to be courteous or show respect.',
-          fr: '您好 est la salutation polie en chinois. Elle s’utilise avec les aînés, le personnel de service, les supérieurs et les inconnus, chaque fois que vous voulez être courtois ou montrer du respect.',
+          en: '您 = polite ‘you’｜好 = good / well. 您好 is a respectful greeting for elders, service staff, superiors, or strangers.',
+          fr: '您 = « vous » de politesse｜好 = bien. 您好 est une salutation respectueuse pour les aînés, le personnel de service, les supérieurs ou les inconnus.',
         },
         audio: '/audio/daily-greetings/line-02.mp3',
       },
@@ -65,8 +65,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonjour à tous.',
         },
         explanation: {
-          en: 'Use 大家好 to greet a group of people at once.',
-          fr: 'Utilisez 大家好 pour saluer tout un groupe d’un coup.',
+          en: '大家 = everyone｜好 = hello / good. Use 大家好 to greet a whole group at once.',
+          fr: '大家 = tout le monde｜好 = bonjour / bien. Utilisez 大家好 pour saluer tout un groupe à la fois.',
         },
         audio: '/audio/daily-greetings/line-03.mp3',
       },
@@ -83,8 +83,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonjour (le matin).',
         },
         explanation: {
-          en: '早上好 is a common greeting used in the morning, roughly from waking up until about noon.',
-          fr: '早上好 est une salutation courante utilisée le matin, à peu près du réveil jusqu’à midi environ.',
+          en: '早上 = morning｜好 = good. Use 早上好 as a morning greeting, roughly from waking up until noon.',
+          fr: '早上 = matin｜好 = bon / bien. Utilisez 早上好 comme salutation du réveil jusqu’à midi environ.',
         },
         audio: '/audio/daily-greetings/line-04.mp3',
       },
@@ -101,8 +101,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonjour (l’après-midi).',
         },
         explanation: {
-          en: '下午好 is the polite greeting for the afternoon.',
-          fr: '下午好 est la salutation polie de l’après-midi.',
+          en: '下午 = afternoon｜好 = good. Use 下午好 as a polite greeting in the afternoon.',
+          fr: '下午 = après-midi｜好 = bon / bien. Utilisez 下午好 comme salutation polie l’après-midi.',
         },
         audio: '/audio/daily-greetings/line-05.mp3',
       },
@@ -119,8 +119,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonsoir.',
         },
         explanation: {
-          en: '晚上好 is the greeting used in the evening when you meet someone.',
-          fr: '晚上好 est la salutation utilisée le soir lorsque vous rencontrez quelqu’un.',
+          en: '晚上 = evening｜好 = good. Use 晚上好 when greeting someone in the evening.',
+          fr: '晚上 = soir｜好 = bon / bien. Utilisez 晚上好 pour saluer quelqu’un le soir.',
         },
         audio: '/audio/daily-greetings/line-06.mp3',
       },
@@ -137,8 +137,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Bonne nuit.',
         },
         explanation: {
-          en: '晚安 is what you say when leaving or going to sleep at night.',
-          fr: '晚安 se dit lorsque vous partez ou que vous allez dormir le soir.',
+          en: '晚 = night / late｜安 = peaceful. Say 晚安 when parting late in the evening or going to bed.',
+          fr: '晚 = soir / tard｜安 = paisible. Dites 晚安 en prenant congé tard le soir ou avant de dormir.',
         },
         audio: '/audio/daily-greetings/line-07.mp3',
       },
@@ -155,8 +155,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Comment allez-vous ?',
         },
         explanation: {
-          en: 'Add 吗 to a statement to turn it into a yes-or-no question.',
-          fr: 'Ajoutez 吗 à une phrase pour en faire une question à réponse oui ou non.',
+          en: '你 = you｜好 = well｜吗 = yes-or-no question particle. Use 你好吗？ to ask how someone is doing.',
+          fr: '你 = tu / vous｜好 = bien｜吗 = particule de question fermée. Utilisez 你好吗？ pour demander comment va quelqu’un.',
         },
         audio: '/audio/daily-greetings/line-08.mp3',
       },
@@ -169,12 +169,12 @@ export const dailyGreetingsLesson: LessonContent = {
         hanzi: '我很好，谢谢。',
         pinyin: 'Wǒ hěn hǎo, xiè xie.',
         translation: {
-          en: 'I am very good, thank you.',
+          en: 'I’m very well, thank you.',
           fr: 'Je vais très bien, merci.',
         },
         explanation: {
-          en: '我很好 replies that you are doing well, and 谢谢 adds thanks.',
-          fr: '我很好 répond que tout va bien, et 谢谢 ajoute un merci.',
+          en: '我 = I｜很 = very｜好 = well｜谢谢 = thank you. Use this as a polite reply when someone asks how you are.',
+          fr: '我 = je｜很 = très｜好 = bien｜谢谢 = merci. Utilisez cette phrase pour répondre poliment quand on vous demande comment vous allez.',
         },
         audio: '/audio/daily-greetings/line-09.mp3',
       },
@@ -191,8 +191,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Enchanté de faire votre connaissance.',
         },
         explanation: {
-          en: '很 = very｜高兴 = glad/happy｜认识 = get to know｜你 = you. Use it when you meet someone for the first time.',
-          fr: '很 = très｜高兴 = content/heureux｜认识 = faire connaissance｜你 = toi. Utilisez-la lorsque vous rencontrez quelqu’un pour la première fois.',
+          en: '很 = very｜高兴 = glad / happy｜认识 = meet / get to know｜你 = you. Use this when meeting someone for the first time.',
+          fr: '很 = très｜高兴 = heureux｜认识 = faire connaissance｜你 = tu / vous. Utilisez cette phrase lorsque vous rencontrez quelqu’un pour la première fois.',
         },
         audio: '/audio/daily-greetings/line-10.mp3',
       },
@@ -209,8 +209,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Merci.',
         },
         explanation: {
-          en: '谢谢 is the most useful polite word in any everyday exchange.',
-          fr: '谢谢 est le mot de politesse le plus utile dans tout échange quotidien.',
+          en: '谢谢 = thank you. Use it to express thanks in almost any everyday exchange.',
+          fr: '谢谢 = merci. Utilisez-le pour remercier quelqu’un dans presque toutes les situations quotidiennes.',
         },
         audio: '/audio/daily-greetings/line-11.mp3',
       },
@@ -227,8 +227,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Je vous en prie.',
         },
         explanation: {
-          en: '不客气 is the standard reply when someone thanks you.',
-          fr: '不客气 est la réponse standard quand quelqu’un vous remercie.',
+          en: '不客气 = you’re welcome. Use it as the standard reply when someone thanks you.',
+          fr: '不客气 = je vous en prie. Utilisez cette réponse lorsque quelqu’un vous remercie.',
         },
         audio: '/audio/daily-greetings/line-12.mp3',
       },
@@ -245,8 +245,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Excusez-moi.',
         },
         explanation: {
-          en: '不好意思 politely gets someone’s attention or apologizes lightly.',
-          fr: '不好意思 permet d’attirer poliment l’attention de quelqu’un ou de s’excuser légèrement.',
+          en: '不好意思 = excuse me / sorry. Use it to get someone’s attention politely or make a light apology.',
+          fr: '不好意思 = excusez-moi / désolé. Utilisez cette expression pour attirer poliment l’attention ou présenter une excuse légère.',
         },
         audio: '/audio/daily-greetings/line-13.mp3',
       },
@@ -263,8 +263,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Je suis désolé.',
         },
         explanation: {
-          en: '对不起 is a sincere apology when you have made a mistake.',
-          fr: '对不起 est une excuse sincère lorsque vous avez fait une erreur.',
+          en: '对不起 = I’m sorry. Use it for a sincere apology after making a mistake.',
+          fr: '对不起 = je suis désolé. Utilisez cette expression pour présenter des excuses sincères après une erreur.',
         },
         audio: '/audio/daily-greetings/line-14.mp3',
       },
@@ -281,8 +281,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Ce n\'est pas grave.',
         },
         explanation: {
-          en: '没关系 is the standard reply when someone apologizes to you.',
-          fr: '没关系 est la réponse standard quand quelqu’un s’excuse auprès de vous.',
+          en: '没关系 = it’s okay / no problem. Use it to reassure someone who has apologized to you.',
+          fr: '没关系 = ce n’est pas grave / pas de problème. Utilisez cette réponse pour rassurer quelqu’un qui s’est excusé.',
         },
         audio: '/audio/daily-greetings/line-15.mp3',
       },
@@ -299,8 +299,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Oui.',
         },
         explanation: {
-          en: '是的 is a clear way to confirm or say yes.',
-          fr: '是的 est une façon claire de confirmer ou de dire oui.',
+          en: '是的 = yes / that’s right. Use it to confirm something clearly.',
+          fr: '是的 = oui / c’est exact. Utilisez cette expression pour confirmer clairement quelque chose.',
         },
         audio: '/audio/daily-greetings/line-16.mp3',
       },
@@ -317,8 +317,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Non.',
         },
         explanation: {
-          en: '不是 politely says no when something is not the case.',
-          fr: '不是 dit poliment non lorsque quelque chose n’est pas le cas.',
+          en: '不 = not｜是 = be / be correct. Use 不是 to deny or correct something that is not the case.',
+          fr: '不 = ne… pas｜是 = être / être exact. Utilisez 不是 pour nier ou corriger une information inexacte.',
         },
         audio: '/audio/daily-greetings/line-17.mp3',
       },
@@ -335,8 +335,8 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Au revoir.',
         },
         explanation: {
-          en: '再见 is the everyday way to say goodbye when leaving.',
-          fr: '再见 est la façon quotidienne de dire au revoir en partant.',
+          en: '再 = again｜见 = see. Say 再见 when leaving, with the sense of ‘see you again.’',
+          fr: '再 = de nouveau｜见 = voir. Dites 再见 en partant, au sens de « à la prochaine ».',
         },
         audio: '/audio/daily-greetings/line-18.mp3',
       },
@@ -348,8 +348,8 @@ export const dailyGreetingsLesson: LessonContent = {
       pattern: '……吗？',
       pinyin: '... ma?',
       meaning: {
-        en: 'A particle at the end of a sentence, to make a yes-no question. No real meaning.',
-        fr: 'Une particule à la fin d’une phrase pour former une question à réponse oui ou non. Sans signification réelle.',
+        en: 'A sentence-final particle that turns a statement into a yes-or-no question.',
+        fr: 'Une particule finale qui transforme une affirmation en question à réponse oui ou non.',
       },
       audio: '/audio/daily-greetings/pattern-02.mp3',
       examples: [
@@ -373,7 +373,7 @@ export const dailyGreetingsLesson: LessonContent = {
         },
         {
           fill: '好吃',
-          fillPinyin: 'hǎochī',
+          fillPinyin: 'hǎo chī',
           hanzi: '好吃吗？',
           pinyin: 'Hǎo chī ma?',
           en: 'Is it tasty?',
@@ -394,7 +394,7 @@ export const dailyGreetingsLesson: LessonContent = {
       examples: [
         {
           fill: '认识你',
-          fillPinyin: 'rènshi nǐ',
+          fillPinyin: 'rèn shi nǐ',
           hanzi: '很高兴认识你。',
           pinyin: 'Hěn gāo xìng rèn shi nǐ.',
           en: 'Nice to meet you.',
@@ -403,7 +403,7 @@ export const dailyGreetingsLesson: LessonContent = {
         },
         {
           fill: '见到你',
-          fillPinyin: 'jiàndào nǐ',
+          fillPinyin: 'jiàn dào nǐ',
           hanzi: '很高兴见到你。',
           pinyin: 'Hěn gāo xìng jiàn dào nǐ.',
           en: 'Nice to see you.',
@@ -412,7 +412,7 @@ export const dailyGreetingsLesson: LessonContent = {
         },
         {
           fill: '认识大家',
-          fillPinyin: 'rènshi dàjiā',
+          fillPinyin: 'rèn shi dà jiā',
           hanzi: '很高兴认识大家。',
           pinyin: 'Hěn gāo xìng rèn shi dà jiā.',
           en: 'Nice to meet everyone.',
@@ -433,7 +433,7 @@ export const dailyGreetingsLesson: LessonContent = {
       examples: [
         {
           fill: '打扰一下',
-          fillPinyin: 'dǎrǎo yíxià',
+          fillPinyin: 'dǎ rǎo yí xià',
           hanzi: '不好意思，打扰一下。',
           pinyin: 'Bù hǎo yì si, dǎ rǎo yí xià.',
           en: 'Excuse me for bothering you.',
@@ -442,7 +442,7 @@ export const dailyGreetingsLesson: LessonContent = {
         },
         {
           fill: '借过一下',
-          fillPinyin: 'jiè guò yíxià',
+          fillPinyin: 'jiè guò yí xià',
           hanzi: '不好意思，借过一下。',
           pinyin: 'Bù hǎo yì si, jiè guò yí xià.',
           en: 'Excuse me, may I pass?',
@@ -451,7 +451,7 @@ export const dailyGreetingsLesson: LessonContent = {
         },
         {
           fill: '我不会说中文',
-          fillPinyin: 'wǒ bú huì shuō Zhōngwén',
+          fillPinyin: 'wǒ bú huì shuō Zhōng wén',
           hanzi: '不好意思，我不会说中文。',
           pinyin: 'Bù hǎo yì si, wǒ bú huì shuō Zhōng wén.',
           en: 'Excuse me, I don\'t speak Chinese.',
@@ -514,8 +514,8 @@ export const dailyGreetingsLesson: LessonContent = {
         fr: 'bonne nuit',
       },
       explanation: {
-        en: 'Say this when leaving at night.',
-        fr: 'Dites ceci en partant le soir.',
+        en: 'Say this when parting late at night or before going to sleep.',
+        fr: 'Dites cette expression en prenant congé tard le soir ou avant de dormir.',
       },
     },
     {
@@ -629,8 +629,8 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'Dà jiā hǎo.',
         audio: '/audio/daily-greetings/practice-listening-01.mp3',
         explanation: {
-          en: '大家好 greets a whole group at once.',
-          fr: '大家好 salue tout un groupe d’un coup.',
+          en: '大家 = everyone｜好 = hello / good. Use this greeting when addressing a group.',
+          fr: '大家 = tout le monde｜好 = bonjour / bien. Utilisez cette salutation pour vous adresser à un groupe.',
         },
       },
       {
@@ -643,8 +643,8 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'Nín hǎo.',
         audio: '/audio/daily-greetings/practice-listening-02.mp3',
         explanation: {
-          en: '您好 shows respect, perfect for staff and elders.',
-          fr: '您好 montre du respect, parfait pour le personnel et les aînés.',
+          en: '您 = polite ‘you’｜好 = good / well. Use 您好 to greet staff, elders, or strangers respectfully.',
+          fr: '您 = « vous » de politesse｜好 = bien. Utilisez 您好 pour saluer respectueusement le personnel, les aînés ou les inconnus.',
         },
       },
     ],
@@ -659,8 +659,8 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'Zǎo shang hǎo.',
         audio: '/audio/daily-greetings/practice-speaking-01.mp3',
         explanation: {
-          en: 'Use 早上好 as the morning greeting.',
-          fr: 'Utilisez 早上好 comme salutation du matin.',
+          en: '早上 = morning｜好 = good. Use 早上好 to greet someone in the morning.',
+          fr: '早上 = matin｜好 = bon / bien. Utilisez 早上好 pour saluer quelqu’un le matin.',
         },
       },
       {
@@ -673,8 +673,8 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'Xiè xie. Bú kè qi.',
         audio: '/audio/daily-greetings/practice-speaking-02.mp3',
         explanation: {
-          en: '谢谢 thanks the other person and 不客气 is the reply.',
-          fr: '谢谢 remercie l’autre personne et 不客气 est la réponse.',
+          en: '谢谢 = thank you｜不客气 = you’re welcome. Use these two phrases as a natural exchange of thanks and response.',
+          fr: '谢谢 = merci｜不客气 = je vous en prie. Utilisez ces deux expressions dans un échange naturel de remerciement et de réponse.',
         },
       },
     ],
@@ -689,8 +689,8 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'xiè xie',
         audio: '/audio/daily-greetings/practice-reading-01.mp3',
         explanation: {
-          en: '谢谢 is the word for thank you.',
-          fr: '谢谢 est le mot pour merci.',
+          en: 'Use 谢谢 to thank someone in an everyday exchange.',
+          fr: 'Utilisez 谢谢 pour remercier quelqu’un dans un échange quotidien.',
         },
       },
       {
@@ -703,8 +703,8 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'zài jiàn',
         audio: '/audio/daily-greetings/practice-reading-02.mp3',
         explanation: {
-          en: '再见 is the everyday goodbye.',
-          fr: '再见 est l’au revoir quotidien.',
+          en: 'Use 再见 when saying goodbye and leaving.',
+          fr: 'Utilisez 再见 pour dire au revoir en partant.',
         },
       },
     ],
