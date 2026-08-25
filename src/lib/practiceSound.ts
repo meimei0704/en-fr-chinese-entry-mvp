@@ -28,10 +28,10 @@ export function soundParamsFor(kind: PracticeSoundKind): ToneParams {
       }
     case 'incorrect':
       return {
-        frequency: 220,
-        endFrequency: 180,
-        durationSeconds: 0.2,
-        gain: 0.14,
+        frequency: 165,
+        endFrequency: 123,
+        durationSeconds: 0.3,
+        gain: 0.2,
         waveform: 'sawtooth',
       }
     case 'complete':
@@ -94,12 +94,24 @@ export function playPracticeSound(kind: PracticeSoundKind) {
   const now = audioContext.currentTime
 
   if (kind === 'correct') {
-    const notes: ToneParams[] = [
-      { frequency: 587, endFrequency: 587, durationSeconds: 0.1, gain: 0.16, waveform: 'sine' },
-      { frequency: 880, endFrequency: 880, durationSeconds: 0.16, gain: 0.16, waveform: 'sine' },
+    const arpeggio: ToneParams[] = [
+      { frequency: 523.25, endFrequency: 523.25, durationSeconds: 0.12, gain: 0.16, waveform: 'triangle' },
+      { frequency: 659.25, endFrequency: 659.25, durationSeconds: 0.12, gain: 0.16, waveform: 'triangle' },
+      { frequency: 783.99, endFrequency: 783.99, durationSeconds: 0.12, gain: 0.16, waveform: 'triangle' },
+      { frequency: 1046.5, endFrequency: 1046.5, durationSeconds: 0.2, gain: 0.18, waveform: 'triangle' },
     ]
 
-    notes.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.1))
+    arpeggio.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.09))
+    return
+  }
+
+  if (kind === 'incorrect') {
+    const buzz: ToneParams[] = [
+      { frequency: 196, endFrequency: 196, durationSeconds: 0.13, gain: 0.2, waveform: 'sawtooth' },
+      { frequency: 147, endFrequency: 147, durationSeconds: 0.22, gain: 0.2, waveform: 'sawtooth' },
+    ]
+
+    buzz.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.14))
     return
   }
 

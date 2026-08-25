@@ -39,14 +39,8 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
     expect(promptBox).not.toBeNull()
     expect(optionsBox).not.toBeNull()
 
-    if (width > 760) {
-      expect(optionsBox!.y).toBeGreaterThanOrEqual(promptBox!.y - 1)
-      expect(optionsBox!.y).toBeLessThanOrEqual(promptBox!.y + promptBox!.height + 1)
-      expect(optionsBox!.x).toBeGreaterThanOrEqual(promptBox!.x + promptBox!.width - 1)
-    } else {
-      expect(Math.abs(promptBox!.x - optionsBox!.x)).toBeLessThanOrEqual(2)
-      expect(optionsBox!.y).toBeGreaterThanOrEqual(promptBox!.y + promptBox!.height - 1)
-    }
+    expect(Math.abs(promptBox!.x - optionsBox!.x)).toBeLessThanOrEqual(2)
+    expect(optionsBox!.y).toBeGreaterThanOrEqual(promptBox!.y + promptBox!.height - 1)
 
     const noOverflow = await page.evaluate(() => {
       return document.documentElement.scrollWidth === document.documentElement.clientWidth

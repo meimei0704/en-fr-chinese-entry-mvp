@@ -24,6 +24,15 @@ describe('soundParamsFor', () => {
     expect(incorrect.endFrequency).toBeLessThan(incorrect.frequency)
   })
 
+  it('makes the incorrect cue harsher and lower for clear contrast', () => {
+    const incorrect = soundParamsFor('incorrect')
+    const correct = soundParamsFor('correct')
+
+    expect(incorrect.waveform).toBe('sawtooth')
+    expect(incorrect.frequency).toBeLessThan(correct.frequency / 2)
+    expect(incorrect.durationSeconds).toBeGreaterThanOrEqual(correct.durationSeconds)
+  })
+
   it('keeps all sounds short so they feel like UI cues', () => {
     for (const kind of ['correct', 'incorrect', 'streak', 'complete'] as const) {
       expect(soundParamsFor(kind).durationSeconds).toBeLessThanOrEqual(0.3)

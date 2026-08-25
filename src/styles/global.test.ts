@@ -48,6 +48,12 @@ function ruleBlock(selector: string) {
   return match[1]
 }
 
+function ruleBlocks(selector: string) {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`${escapedSelector}\\s*{([\\s\\S]*?)}`, 'g')
+  return Array.from(css.matchAll(regex), (match) => match[1])
+}
+
 function hasRule(selector: string) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   return new RegExp(`(^|\\n)\\s*${escapedSelector}\\s*{`, 'm').test(css)
@@ -80,13 +86,31 @@ function mediaBlock(query: string) {
   throw new Error(`Unclosed CSS media query ${query}`)
 }
 
-function hasMediaRuleWithDeclaration(query: string, selector: string, declaration: string) {
-  const rules = mediaBlock(query).matchAll(/([^{}]+)\{([^{}]*)}/g)
+function mediaBlocks(query: string) {
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const matches = Array.from(css.matchAll(new RegExp(`@media\\s*${escapedQuery}\\s*{`, 'g')))
 
-  for (const rule of rules) {
-    const selectors = rule[1].split(',').map((candidate) => candidate.trim())
-    if (selectors.includes(selector) && rule[2].includes(declaration)) {
-      return true
+  return matches.map((match) => {
+    const openingBrace = match.index + match[0].lastIndexOf('{')
+    let depth = 1
+    for (let index = openingBrace + 1; index < css.length; index += 1) {
+      if (css[index] === '{') depth += 1
+      if (css[index] === '}') depth -= 1
+      if (depth === 0) return css.slice(openingBrace + 1, index)
+    }
+    throw new Error(`Unclosed CSS media query ${query}`)
+  })
+}
+
+function hasMediaRuleWithDeclaration(query: string, selector: string, declaration: string) {
+  for (const block of mediaBlocks(query)) {
+    const rules = block.matchAll(/([^{}]+)\{([^{}]*)}/g)
+
+    for (const rule of rules) {
+      const selectors = rule[1].split(',').map((candidate) => candidate.trim())
+      if (selectors.includes(selector) && rule[2].includes(declaration)) {
+        return true
+      }
     }
   }
 
@@ -621,5 +645,40 @@ describe('global color accessibility tokens', () => {
         'grid-template-columns: minmax(0, 1fr);',
       ),
     ).toBe(true)
+  })
+
+  it('renders the pinyin reference note marker inline with its rule text', () => {
+    const note = ruleBlock('.pinyin-reference-note')
+
+    expect(note).toContain('display: flex;')
+    expect(note).toContain('flex-wrap: wrap;')
+    expect(note).toContain('align-items: baseline;')
+    expect(note).not.toContain('display: grid;')
+  })
+
+  it('stacks practice challenge questions above their options in one column', () => {
+    const questionBlocks = ruleBlocks('.practice-challenge__question')
+
+    expect(questionBlocks.length).toBeGreaterThan(0)
+    expect(
+      questionBlocks.some((block) => block.includes('grid-template-columns: minmax(0, 1fr);')),
+    ).toBe(true)
+    expect(questionBlocks.some((block) => block.includes('minmax(0, 1.05fr)'))).toBe(false)
+    expect(questionBlocks.some((block) => block.includes('minmax(0, 0.95fr)'))).toBe(false)
+  })
+
+  it('keeps celebration and error feedback animations behind a reduced-motion guard', () => {
+    expect(hasRuleWithDeclaration('.practice-challenge__feedback--correct', 'animation: practice-celebrate-glow 700ms ease-out;')).toBe(true)
+    expect(hasRuleWithDeclaration('.practice-challenge__feedback--incorrect', 'animation: practice-incorrect-shake 400ms ease;')).toBe(true)
+
+    for (const selector of [
+      '.practice-challenge__feedback--correct .practice-challenge__feedback-heading',
+      '.practice-challenge__feedback--correct',
+      '.practice-challenge__feedback--incorrect',
+    ]) {
+      expect(
+        hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', selector, 'animation: none;'),
+      ).toBe(true)
+    }
   })
 })
