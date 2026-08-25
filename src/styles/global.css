@@ -4046,20 +4046,6 @@ h2 {
   line-height: 1.5;
 }
 
-.pinyin-note-marker {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 0.15rem;
-  color: var(--color-ink-strong);
-  line-height: 1;
-  vertical-align: super;
-}
-
-.pinyin-note-marker .pinyin-note-mark {
-  width: 0.62em;
-  height: 0.62em;
-}
-
 .pinyin-reference-note {
   display: flex;
   flex-wrap: nowrap;

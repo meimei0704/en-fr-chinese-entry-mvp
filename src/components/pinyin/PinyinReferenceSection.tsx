@@ -48,15 +48,6 @@ export function PinyinReferenceSection({
                     <div className="pinyin-reference-card__target">
                       <p className="pinyin-reference-card__phoneme">
                         {referenceCardLabel(item, language)}
-                        {item.note ? (
-                          <sup
-                            className="pinyin-note-marker"
-                            aria-label="annotation"
-                            aria-hidden="true"
-                          >
-                            <PinyinNoteMark />
-                          </sup>
-                        ) : null}
                       </p>
                       <SpeechButton
                         label={playAudioLabel(item.pinyin)}
