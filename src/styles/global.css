@@ -4256,7 +4256,7 @@ h2 {
 }
 
 .practice-challenge__prompt p {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
@@ -4327,12 +4327,13 @@ h2 {
   flex: 1 1 auto;
   align-self: stretch;
   min-width: 0;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
   border: 0;
   background: transparent;
   padding: 0.72rem 0.35rem 0.72rem 0.8rem;
-  overflow-wrap: anywhere;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .practice-challenge__option .option-button:hover:not(:disabled) {
@@ -4373,12 +4374,21 @@ h2 {
 
 .option-button__label {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .practice-challenge__option .option-button__pinyin {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .practice-challenge__option .option-button {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
 }
 
 .practice-challenge__feedback {

@@ -2,18 +2,21 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace equal-width practice options with readable intrinsic-width flow cards, shrink option audio controls to 28px, and keep prompt audio fixed to the prompt's right side.
+**Goal:** Replace equal-width practice options with left-aligned intrinsic-width flow cards, shrink option audio controls to 28px, and keep prompt audio immediately beside the prompt text.
 
-**Architecture:** Preserve `PracticeChallenge`'s existing sibling answer/audio buttons and all state behavior. Implement the visual change in scoped CSS: a wrapping flex container sizes each composite option from its rendered content, caps it to the container, and lets internal text wrap safely. Lock the contract with CSS rule tests, component interaction tests, and Playwright geometry checks.
+**Architecture:** Preserve `PracticeChallenge`'s existing sibling answer/audio buttons and all state behavior. Implement the visual change in scoped CSS: a wrapping flex container sizes each composite option from rendered content and wraps whole cards before fragmenting text. Desktop/tablet cards are `nowrap`; a mobile-only fallback may stack the Chinese label and pinyin as complete, individually unbroken units when a single card cannot fit the viewport.
 
 **Tech Stack:** React 19, TypeScript 6, CSS, Vitest + Testing Library, Playwright
 
 ## Global Constraints
 
 - Option audio controls must be no larger than `1.75rem` (28px); icons must be `0.78rem`–`0.8rem`.
-- Prompt audio must stay to the right of prompt text in one non-wrapping flex row, including long prompts.
+- Prompt audio must immediately follow prompt text in one non-wrapping flex row, including long prompts.
 - Answer and audio controls remain separate native buttons with non-overlapping click targets.
 - Option wrappers must use `max-width: 100%`; answer/text regions must use `min-width: 0`.
+- A/B/C/D and answer content must be left-aligned.
+- Desktop/tablet option text must use `nowrap`; at 390/320 only, complete label/pinyin
+  units may stack when their combined max-content width exceeds one card.
 - A/B/C/D badges, answer feedback, sounds, and reduced-motion behavior must not change.
 - Verify 1280, 760, 390, and 320 widths without document or option overflow.
 - Do not add JavaScript text measurement, localization heuristics, or global `SpeechButton` changes.
@@ -69,7 +72,7 @@ it('plays option audio without submitting the answer', async () => {
 Update the prompt assertion to require `align-items: center`. Replace the option assertion with:
 
 ```ts
-it('flows practice options by intrinsic width with bounded text and compact audio', () => {
+it('flows left-aligned practice options as nowrap cards with compact audio', () => {
   const options = ruleBlock('.practice-challenge__options')
   const option = ruleBlock('.practice-challenge__option')
   const answerButton = ruleBlock('.practice-challenge__option .option-button')
@@ -83,6 +86,10 @@ it('flows practice options by intrinsic width with bounded text and compact audi
   expect(option).toContain('max-width: 100%;')
   expect(option).toContain('align-items: center;')
   expect(answerButton).toContain('min-width: 0;')
+  expect(answerButton).toContain('justify-content: flex-start;')
+  expect(answerButton).toContain('flex-wrap: nowrap;')
+  expect(answerButton).toContain('text-align: left;')
+  expect(answerButton).toContain('white-space: nowrap;')
   expect(speechButton).toContain('width: 1.75rem;')
   expect(speechButton).toContain('min-width: 1.75rem;')
   expect(speechIcon).toContain('width: 0.8rem;')
@@ -210,7 +217,7 @@ Replace the relevant rules with:
 }
 
 .practice-challenge__prompt p {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
@@ -252,12 +259,13 @@ Replace the relevant rules with:
   flex: 1 1 auto;
   align-self: stretch;
   min-width: 0;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
   border: 0;
   background: transparent;
   padding: 0.72rem 0.35rem 0.72rem 0.8rem;
-  overflow-wrap: anywhere;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .practice-challenge__option .speech-button {
@@ -276,7 +284,15 @@ Replace the relevant rules with:
 .option-button__label,
 .practice-challenge__option .option-button__pinyin {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .practice-challenge__option .option-button {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
 }
 ```
 

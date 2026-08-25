@@ -1,6 +1,7 @@
 import { expect, test } from 'playwright/test'
 
 test('keeps the practice challenge layout flat and adaptive across widths', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/lesson/self-intro/practice')
 
   const challenge = page.locator('.practice-challenge')
@@ -25,6 +26,18 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
   }
 
   await expect(promptSpeech).toHaveCount(1)
+
+  const promptContentRight = await promptText.evaluate((node) => {
+    const range = document.createRange()
+    range.selectNodeContents(node)
+    const box = range.getBoundingClientRect()
+    return box.right
+  })
+  const initialPromptSpeechBox = await promptSpeech.boundingBox()
+  expect(initialPromptSpeechBox).not.toBeNull()
+  expect(initialPromptSpeechBox!.x - promptContentRight).toBeGreaterThanOrEqual(8)
+  expect(initialPromptSpeechBox!.x - promptContentRight).toBeLessThanOrEqual(14)
+
   await promptText.evaluate((node) => {
     node.textContent =
       'Which phrase would you use when you want to ask this deliberately long practice question? '.repeat(
@@ -77,11 +90,23 @@ test('keeps the practice challenge layout flat and adaptive across widths', asyn
     for (const option of await page.locator('.practice-challenge__option').all()) {
       const optionBox = await option.boundingBox()
       const speech = option.locator('.speech-button')
+      const letter = option.locator('.option-button__letter')
+      const label = option.locator('.option-button__label')
       expect(optionBox).not.toBeNull()
       expect(optionBox!.x).toBeGreaterThanOrEqual(optionsBox!.x - 1)
       expect(optionBox!.x + optionBox!.width).toBeLessThanOrEqual(
         optionsBox!.x + optionsBox!.width + 1,
       )
+
+      const letterBox = await letter.boundingBox()
+      expect(letterBox).not.toBeNull()
+      expect(letterBox!.x - optionBox!.x).toBeLessThanOrEqual(16)
+      expect(await label.evaluate((node) => getComputedStyle(node).whiteSpace)).toBe('nowrap')
+
+      const pinyin = option.locator('.option-button__pinyin')
+      if (await pinyin.count()) {
+        expect(await pinyin.evaluate((node) => getComputedStyle(node).whiteSpace)).toBe('nowrap')
+      }
 
       if (await speech.count()) {
         const speechBox = await speech.boundingBox()
@@ -115,12 +140,13 @@ test('lets rendered option content choose one row or multiple rows', async ({ pa
 
   await labels.evaluateAll((nodes) => {
     for (const [index, node] of nodes.entries()) {
-      node.textContent = ['一', '二', '三', '四'][index]
+      node.textContent = ['晚安。', '您好。', '谢谢。', '早上好。'][index]
     }
   })
   await page.locator('.option-button__pinyin').evaluateAll((nodes) => {
-    for (const node of nodes) {
-      node.textContent = ''
+    const values = ['Wǎn ān.', 'Nín hǎo.', 'Xièxie.', 'Zǎoshang hǎo.']
+    for (const [index, node] of nodes.entries()) {
+      node.textContent = values[index] ?? 'Zǎoshang hǎo.'
     }
   })
 
@@ -129,21 +155,23 @@ test('lets rendered option content choose one row or multiple rows', async ({ pa
   )
   expect(new Set(compactTops).size).toBe(1)
 
-  await labels.first().evaluate((node) => {
-    node.textContent =
-      '这是一个用于验证超长选项能够独占整行并在卡片内部安全换行而不会溢出的练习答案'.repeat(
-        4,
-      )
-  })
+  await page.setViewportSize({ width: 760, height: 900 })
 
   const optionsBox = await options.boundingBox()
-  const longBox = await cards.first().boundingBox()
-  const secondBox = await cards.nth(1).boundingBox()
   expect(optionsBox).not.toBeNull()
-  expect(longBox).not.toBeNull()
-  expect(secondBox).not.toBeNull()
-  expect(Math.abs(longBox!.width - optionsBox!.width)).toBeLessThanOrEqual(2)
-  expect(secondBox!.y).toBeGreaterThanOrEqual(longBox!.y + longBox!.height - 1)
+
+  const wrappedTops = await cards.evaluateAll((nodes) =>
+    nodes.map((node) => Math.round(node.getBoundingClientRect().top)),
+  )
+  expect(new Set(wrappedTops).size).toBeGreaterThan(1)
+
+  for (const label of await labels.all()) {
+    expect(await label.evaluate((node) => getComputedStyle(node).whiteSpace)).toBe('nowrap')
+    const labelBox = await label.boundingBox()
+    expect(labelBox).not.toBeNull()
+    expect(labelBox!.height).toBeLessThanOrEqual(24)
+  }
+
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth === document.documentElement.clientWidth,

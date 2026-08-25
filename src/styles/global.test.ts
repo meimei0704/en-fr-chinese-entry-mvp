@@ -693,18 +693,19 @@ describe('global color accessibility tokens', () => {
     expect(prompt).toContain('flex-wrap: nowrap;')
     expect(prompt).toContain('align-items: center;')
     expect(prompt).not.toContain('flex-wrap: wrap;')
-    expect(paragraph).toContain('flex: 1 1 auto;')
+    expect(paragraph).toContain('flex: 0 1 auto;')
     expect(paragraph).toContain('min-width: 0;')
     expect(paragraph).toContain('overflow-wrap: anywhere;')
   })
 
-  it('flows practice options by intrinsic width with bounded text and compact audio', () => {
+  it('flows left-aligned practice options as nowrap cards with compact audio', () => {
     const options = ruleBlock('.practice-challenge__options')
     const option = ruleBlock('.practice-challenge__option')
     const answerButton = ruleBlock('.practice-challenge__option .option-button')
     const speechButton = ruleBlock('.practice-challenge__option .speech-button')
     const speechIcon = ruleBlock('.practice-challenge__option .speech-button__icon')
     const label = ruleBlock('.option-button__label')
+    const pinyin = ruleBlock('.practice-challenge__option .option-button__pinyin')
 
     expect(options).toContain('display: flex;')
     expect(options).toContain('flex-wrap: wrap;')
@@ -713,11 +714,32 @@ describe('global color accessibility tokens', () => {
     expect(option).toContain('max-width: 100%;')
     expect(option).toContain('align-items: center;')
     expect(answerButton).toContain('min-width: 0;')
+    expect(answerButton).toContain('justify-content: flex-start;')
+    expect(answerButton).toContain('flex-wrap: nowrap;')
+    expect(answerButton).toContain('text-align: left;')
+    expect(answerButton).toContain('white-space: nowrap;')
     expect(speechButton).toContain('width: 1.75rem;')
     expect(speechButton).toContain('min-width: 1.75rem;')
     expect(speechButton).toContain('margin-top: 0;')
     expect(speechIcon).toContain('width: 0.8rem;')
     expect(label).toContain('min-width: 0;')
-    expect(label).toContain('overflow-wrap: anywhere;')
+    expect(label).toContain('white-space: nowrap;')
+    expect(label).toContain('overflow-wrap: normal;')
+    expect(pinyin).toContain('white-space: nowrap;')
+    expect(pinyin).toContain('overflow-wrap: normal;')
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 480px)',
+        '.practice-challenge__option .option-button',
+        'flex-wrap: wrap;',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 480px)',
+        '.practice-challenge__option .option-button',
+        'white-space: normal;',
+      ),
+    ).toBe(true)
   })
 })

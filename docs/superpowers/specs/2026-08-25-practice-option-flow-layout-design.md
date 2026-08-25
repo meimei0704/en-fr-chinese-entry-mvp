@@ -9,9 +9,9 @@ Make practice answers readable at every supported width:
 
 - short options may share a row;
 - wider options receive more horizontal room and wrap to another row when the available space is insufficient;
-- very wide options are capped to the container and wrap internally instead of overflowing;
+- option cards move to another row before their answer text is compressed or fragmented;
 - option audio controls are visually secondary and no larger than `1.75rem` (28px);
-- the prompt audio control always remains to the right of the prompt text in the same flex row.
+- the prompt audio control sits immediately after the prompt text in the same flex row.
 
 The existing A/B/C/D badges, answer behavior, audio behavior, feedback animation, and reduced-motion behavior remain unchanged.
 
@@ -48,8 +48,12 @@ No answer, sound, feedback, or completion state logic changes are required.
 
 - The wrapper supplies the shared border, background, radius, and hover/focus surface.
 - The answer button uses a transparent internal surface and `min-width: 0`.
-- The A/B/C/D badge remains at the leading edge.
-- Label and pinyin may wrap normally; long unbroken content uses safe overflow wrapping.
+- The A/B/C/D badge and answer content are left-aligned at the leading edge.
+- At desktop and tablet widths, the answer button, label, and pinyin use `nowrap`; the
+  browser wraps whole option cards instead of breaking answer text.
+- At 390px and 320px, a single card can be narrower than the max-content width of its
+  Chinese plus pinyin. In that physical edge case, the Chinese label and pinyin may stack
+  as two complete units, but neither unit may split internally.
 - The audio button sits at the trailing edge, vertically centered.
 - The audio control is `1.75rem` square with a `0.78rem`–`0.8rem` icon.
 - Gaps and padding are tightened so audio does not dominate the card.
@@ -60,8 +64,8 @@ At wide widths, multiple short options can share one row. As intrinsic widths or
 
 The prompt remains a non-wrapping flex row:
 
-- the text region is flexible, `min-width: 0`, and may wrap internally;
-- the audio button is non-shrinking and stays at the trailing edge;
+- the text region uses content width, `min-width: 0`, and may wrap internally;
+- the audio button is non-shrinking and immediately follows the text region;
 - both regions are vertically centered;
 - long text cannot push the audio button onto a second flex line.
 
@@ -69,7 +73,8 @@ The prompt remains a non-wrapping flex row:
 
 - Option wrappers use `max-width: 100%`.
 - Answer buttons and text spans use `min-width: 0`.
-- Long tokens receive safe wrapping rather than page overflow.
+- Whole cards wrap in source order before text fragments.
+- The mobile-only fallback stacks complete label/pinyin units to prevent page overflow.
 - Source order and A/B/C/D order remain identical at every width.
 - No `grid-auto-flow: dense` or visual reordering is used.
 
@@ -85,12 +90,14 @@ The prompt remains a non-wrapping flex row:
 
 ### Automated
 
-- Update CSS unit assertions for the wrapping intrinsic-width container, long-item bounds, smaller audio control, and inline prompt.
+- Update CSS unit assertions for intrinsic card wrapping, left alignment, desktop
+  `nowrap`, mobile whole-unit fallback, smaller audio, and adjacent prompt audio.
 - Keep component tests proving A/B/C/D rendering and separate answer/audio controls.
 - Extend Playwright coverage across 1280, 760, 390, and 320 widths:
   - no document or option overflow;
-  - prompt audio remains to the right of prompt text;
+  - prompt audio sits within the defined gap immediately after prompt text;
   - option audio is at most 28px and vertically centered;
+  - letter badges stay left-aligned and labels remain internally unbroken;
   - source order is unchanged;
   - short and long content can wrap into the browser-selected row count.
 - Run focused tests, full unit tests, oxlint, `tsc -b`, and the existing practice/pinyin E2E suites.
