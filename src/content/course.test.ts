@@ -45,6 +45,7 @@ const expectedDailyGreetingsChinese = [
   '不客气。',
   '不好意思。',
   '对不起。',
+  '没关系',
   '是的。',
   '不是。',
   '再见。',
@@ -125,7 +126,7 @@ describe('course content', () => {
     expect(course.lessons.map((lesson) => lesson.id)).toEqual(expectedLessonIds)
 
     const expandedCounts: Record<string, Record<string, number>> = {
-      'daily-greetings': { dialogue: 17, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'daily-greetings': { dialogue: 17, patterns: 3, vocab: 11, practice: 2, cards: 6 },
       'self-intro': { dialogue: 10, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'ask-directions': { dialogue: 11, patterns: 11, vocab: 10, practice: 2, cards: 6 },
       'order-food': { dialogue: 14, patterns: 13, vocab: 10, practice: 2, cards: 6 },
@@ -342,8 +343,8 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(613)
-    expect(new Set(audioPaths).size).toBe(559)
+    expect(audioPaths).toHaveLength(606)
+    expect(new Set(audioPaths).size).toBe(552)
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(

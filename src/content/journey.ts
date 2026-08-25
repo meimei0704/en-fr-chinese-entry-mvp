@@ -86,7 +86,7 @@ export function buildJourney(course: CourseContent): {
       lessonId: dailyGreetingsLesson.id,
       title: dailyGreetingsLesson.title,
       eyebrow: {
-        en: 'Hello',
+        en: 'Etiquette',
         fr: 'Bonjour',
       },
       summary: dailyGreetingsLesson.scenario,
