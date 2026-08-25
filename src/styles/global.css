@@ -1695,10 +1695,29 @@ h2 {
   gap: 0.5rem;
 }
 
+.pattern-example__sentence > div {
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
 .pattern-example__sentence p:first-child {
   margin: 0;
   font-weight: 700;
   color: var(--color-ink);
+}
+
+.pattern-example__sentence > div .pinyin-line,
+.pattern-example__sentence > div .muted-text {
+  margin: 0;
+}
+
+.pattern-example__sentence > div .pinyin-line {
+  font-size: 0.88rem;
+}
+
+.pattern-example__sentence > div .muted-text {
+  font-size: 0.82rem;
 }
 
 .pattern-example__pinyin {
