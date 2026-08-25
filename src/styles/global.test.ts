@@ -684,4 +684,26 @@ describe('global color accessibility tokens', () => {
       ).toBe(true)
     }
   })
+
+  it('lays the practice prompt out inline with its speech button', () => {
+    const prompt = ruleBlock('.practice-challenge__prompt')
+
+    expect(prompt).toContain('display: flex;')
+    expect(prompt).toContain('flex-wrap: wrap;')
+    expect(prompt).toContain('align-items: center;')
+  })
+
+  it('keeps the practice option speech buttons smaller and center-aligned with letter badges', () => {
+    const option = ruleBlock('.practice-challenge__option')
+    const speechButton = ruleBlock('.practice-challenge__option .speech-button')
+    const letter = ruleBlock('.option-button__letter')
+    const label = ruleBlock('.option-button__label')
+
+    expect(option).toContain('align-items: center;')
+    expect(speechButton).toContain('width: 2.05rem;')
+    expect(speechButton).toContain('margin-top: 0;')
+    expect(letter).toContain('border-radius: 999px;')
+    expect(letter).toContain('font-weight: 800;')
+    expect(label).toContain('min-width: 0;')
+  })
 })

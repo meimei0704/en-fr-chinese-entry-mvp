@@ -204,14 +204,17 @@ export function PracticeChallenge({
         </div>
 
         <div className="practice-challenge__options" role="group" aria-label={copy.answerOptions}>
-          {currentQuestion.options.map((option) => (
+          {currentQuestion.options.map((option, index) => (
             <div className="practice-challenge__option" key={option.id}>
               <button
                 type="button"
                 className="option-button"
                 onClick={() => handleChoice(currentQuestion, option.id)}
               >
-                {option.label}
+                <span className="option-button__letter" aria-hidden="true">
+                  {String.fromCharCode(65 + index)}
+                </span>
+                <span className="option-button__label">{option.label}</span>
                 {option.pinyin ? (
                   <span className="option-button__pinyin" aria-hidden="true">
                     {option.pinyin}

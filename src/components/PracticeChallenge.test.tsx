@@ -79,6 +79,20 @@ describe('PracticeChallenge', () => {
     }
   })
 
+  it('labels every option with an A/B/C letter badge', () => {
+    const challenge = renderChallenge()
+
+    const optionLetters = screen.getAllByText(/^[A-D]$/, { selector: '.option-button__letter' })
+    expect(optionLetters.map((node) => node.textContent)).toEqual(['A', 'B', 'C', 'D'])
+
+    for (const question of challenge.questions) {
+      for (const option of question.options) {
+        expect(screen.getByText(option.label, { selector: '.option-button__label' })).toBeVisible()
+      }
+      break
+    }
+  })
+
   it('shows a pronunciation button on hanzi options only', async () => {
     const challenge = renderChallenge()
     const hanziOptions = challenge.questions[0].options.filter((option) =>

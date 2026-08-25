@@ -4242,8 +4242,10 @@ h2 {
 }
 
 .practice-challenge__prompt {
-  display: grid;
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
   padding: clamp(1rem, 2.5vw, 1.35rem);
   border: 1px solid rgba(var(--color-border-rgb), 0.94);
   border-radius: var(--radius-lg);
@@ -4256,6 +4258,10 @@ h2 {
 .practice-challenge__prompt p {
   margin: 0;
   font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+}
+
+.practice-challenge__prompt .speech-button {
+  margin-top: 0;
 }
 
 .practice-challenge__sentence {
@@ -4292,15 +4298,44 @@ h2 {
 .practice-challenge__option {
   display: flex;
   gap: 0.5rem;
-  align-items: stretch;
+  align-items: center;
 }
 
 .practice-challenge__option .option-button {
   flex: 1;
+  justify-content: center;
 }
 
 .practice-challenge__option .speech-button {
   flex: 0 0 auto;
+  width: 2.05rem;
+  min-width: 2.05rem;
+  min-height: 2.05rem;
+  margin-top: 0;
+}
+
+.practice-challenge__option .speech-button__icon {
+  width: 0.92rem;
+  height: 0.92rem;
+}
+
+.option-button__letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 1.55rem;
+  height: 1.55rem;
+  margin-right: 0.4rem;
+  border-radius: 999px;
+  background: var(--color-primary-100);
+  color: var(--color-primary-ink);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.option-button__label {
+  min-width: 0;
 }
 
 .practice-challenge__feedback {
