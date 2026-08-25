@@ -15,23 +15,23 @@ export function soundParamsFor(kind: PracticeSoundKind): ToneParams {
         frequency: 587,
         endFrequency: 1175,
         durationSeconds: 0.18,
-        gain: 0.18,
-        waveform: 'sine',
+        gain: 0.24,
+        waveform: 'square',
       }
     case 'streak':
       return {
         frequency: 784,
-        endFrequency: 990,
-        durationSeconds: 0.24,
-        gain: 0.18,
-        waveform: 'triangle',
+        endFrequency: 1175,
+        durationSeconds: 0.26,
+        gain: 0.22,
+        waveform: 'square',
       }
     case 'incorrect':
       return {
-        frequency: 165,
-        endFrequency: 123,
+        frequency: 155,
+        endFrequency: 110,
         durationSeconds: 0.3,
-        gain: 0.2,
+        gain: 0.28,
         waveform: 'sawtooth',
       }
     case 'complete':
@@ -39,8 +39,8 @@ export function soundParamsFor(kind: PracticeSoundKind): ToneParams {
         frequency: 523,
         endFrequency: 784,
         durationSeconds: 0.3,
-        gain: 0.18,
-        waveform: 'sine',
+        gain: 0.22,
+        waveform: 'square',
       }
   }
 }
@@ -95,24 +95,26 @@ export function playPracticeSound(kind: PracticeSoundKind) {
 
   if (kind === 'correct') {
     const arpeggio: ToneParams[] = [
-      { frequency: 523.25, endFrequency: 523.25, durationSeconds: 0.12, gain: 0.16, waveform: 'triangle' },
-      { frequency: 659.25, endFrequency: 659.25, durationSeconds: 0.12, gain: 0.16, waveform: 'triangle' },
-      { frequency: 783.99, endFrequency: 783.99, durationSeconds: 0.12, gain: 0.16, waveform: 'triangle' },
-      { frequency: 1046.5, endFrequency: 1046.5, durationSeconds: 0.2, gain: 0.18, waveform: 'triangle' },
+      { frequency: 523.25, endFrequency: 523.25, durationSeconds: 0.1, gain: 0.24, waveform: 'square' },
+      { frequency: 659.25, endFrequency: 659.25, durationSeconds: 0.1, gain: 0.24, waveform: 'square' },
+      { frequency: 783.99, endFrequency: 783.99, durationSeconds: 0.1, gain: 0.24, waveform: 'square' },
+      { frequency: 1046.5, endFrequency: 1046.5, durationSeconds: 0.12, gain: 0.26, waveform: 'square' },
+      { frequency: 1318.51, endFrequency: 1318.51, durationSeconds: 0.22, gain: 0.26, waveform: 'square' },
     ]
 
-    arpeggio.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.09))
+    arpeggio.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.07))
     return
   }
 
   if (kind === 'incorrect') {
     const params = soundParamsFor('incorrect')
     const buzz: ToneParams[] = [
-      { ...params, endFrequency: params.frequency, durationSeconds: 0.13 },
-      { ...params, durationSeconds: 0.22 },
+      { ...params, endFrequency: params.frequency, durationSeconds: 0.16 },
+      { ...params, durationSeconds: 0.3 },
+      { ...params, frequency: params.endFrequency * 0.9, endFrequency: params.endFrequency * 0.75, durationSeconds: 0.24 },
     ]
 
-    buzz.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.14))
+    buzz.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.15))
     return
   }
 

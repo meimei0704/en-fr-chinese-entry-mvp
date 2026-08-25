@@ -33,6 +33,17 @@ describe('soundParamsFor', () => {
     expect(incorrect.durationSeconds).toBeGreaterThanOrEqual(correct.durationSeconds)
   })
 
+  it('keeps the celebratory and error cues bright and punchy', () => {
+    const correct = soundParamsFor('correct')
+    const incorrect = soundParamsFor('incorrect')
+
+    expect(correct.waveform).toBe('square')
+    expect(incorrect.waveform).toBe('sawtooth')
+    expect(correct.gain).toBeGreaterThanOrEqual(0.2)
+    expect(incorrect.gain).toBeGreaterThanOrEqual(0.2)
+    expect(incorrect.frequency).toBeLessThan(correct.frequency / 2)
+  })
+
   it('keeps all sounds short so they feel like UI cues', () => {
     for (const kind of ['correct', 'incorrect', 'streak', 'complete'] as const) {
       expect(soundParamsFor(kind).durationSeconds).toBeLessThanOrEqual(0.3)
