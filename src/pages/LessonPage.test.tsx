@@ -498,6 +498,11 @@ describe('LessonPage', () => {
   })
 
   it('keeps playback for single-sentence pattern cards and per-example playback for multi-example cards', () => {
+    const lesson = course.lessons.find((entry) => entry.id === 'metro-ticket')!
+    const multiPattern = lesson.sentencePatterns.find(
+      (pattern) => (pattern.examples?.length ?? 0) > 1,
+    )!
+
     renderRoute('/lesson/metro-ticket')
 
     const singleTitle = screen.getByText('在哪儿换乘？', { selector: '.study-item__title' })
@@ -508,7 +513,9 @@ describe('LessonPage', () => {
     const boughtCard = boughtTitle.closest('article.study-item--pattern')!
     expect(within(boughtCard).getByRole('button', { name: /play chinese/i })).toBeInTheDocument()
 
-    const multiCard = screen.getByText('Excuse me, where is ...?').closest('article.study-item--pattern')!
+    const multiCard = screen
+      .getByText(multiPattern.meaning.en)
+      .closest('article.study-item--pattern')!
     expect(within(multiCard).getAllByRole('button', { name: /play chinese/i })).toHaveLength(3)
   })
 
