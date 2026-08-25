@@ -1639,13 +1639,6 @@ h2 {
   font-size: 0.92rem;
 }
 
-.study-item__pinyin {
-  margin: 0;
-  color: var(--color-ink-muted, #5b6472);
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
 .pattern-examples {
   display: grid;
   gap: 0.6rem;
@@ -1665,28 +1658,6 @@ h2 {
 
 .pattern-example--standalone {
   margin-top: 0.35rem;
-}
-
-.pattern-example__fill {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.4rem;
-}
-
-.pattern-example__fill-hanzi {
-  font-weight: 800;
-  color: var(--color-sky-ink, #1f3d7d);
-}
-
-.pattern-example__fill-pinyin {
-  color: var(--color-ink-muted, #5b6472);
-  font-size: 0.85rem;
-}
-
-.pattern-example__fill-translation {
-  color: var(--color-ink-muted, #5b6472);
-  font-size: 0.82rem;
 }
 
 .pattern-example__sentence {
@@ -1718,12 +1689,6 @@ h2 {
 
 .pattern-example__sentence > div .muted-text {
   font-size: 0.82rem;
-}
-
-.pattern-example__pinyin {
-  margin: 0;
-  color: var(--color-ink-muted, #5b6472);
-  font-size: 0.88rem;
 }
 
 .pattern-example__sentence .speech-button {
