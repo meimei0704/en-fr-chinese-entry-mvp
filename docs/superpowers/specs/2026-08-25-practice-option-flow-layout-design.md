@@ -1,6 +1,6 @@
 # Practice Option Flow Layout Design
 
-**Date:** 2026-08-25  
+**Date:** 2026-08-25
 **Scope:** PR #77, `PracticeChallenge` option and prompt audio layout
 
 ## Goal
