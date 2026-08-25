@@ -106,9 +106,10 @@ export function playPracticeSound(kind: PracticeSoundKind) {
   }
 
   if (kind === 'incorrect') {
+    const params = soundParamsFor('incorrect')
     const buzz: ToneParams[] = [
-      { frequency: 196, endFrequency: 196, durationSeconds: 0.13, gain: 0.2, waveform: 'sawtooth' },
-      { frequency: 147, endFrequency: 147, durationSeconds: 0.22, gain: 0.2, waveform: 'sawtooth' },
+      { ...params, endFrequency: params.frequency, durationSeconds: 0.13 },
+      { ...params, durationSeconds: 0.22 },
     ]
 
     buzz.forEach((note, index) => scheduleTone(audioContext, note, now + index * 0.14))

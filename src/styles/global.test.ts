@@ -649,11 +649,14 @@ describe('global color accessibility tokens', () => {
 
   it('renders the pinyin reference note marker inline with its rule text', () => {
     const note = ruleBlock('.pinyin-reference-note')
+    const text = ruleBlock('.pinyin-reference-note__text')
 
     expect(note).toContain('display: flex;')
-    expect(note).toContain('flex-wrap: wrap;')
+    expect(note).toContain('flex-wrap: nowrap;')
     expect(note).toContain('align-items: baseline;')
-    expect(note).not.toContain('display: grid;')
+    expect(note).not.toContain('flex-wrap: wrap;')
+    expect(text).toContain('flex: 1 1 auto;')
+    expect(text).toContain('min-width: 0;')
   })
 
   it('stacks practice challenge questions above their options in one column', () => {
