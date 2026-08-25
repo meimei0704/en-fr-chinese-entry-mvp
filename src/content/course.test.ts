@@ -203,13 +203,13 @@ describe('course content', () => {
     const vocabularyByHanzi = new Map(lesson.vocabulary.map((item) => [item.hanzi, item]))
 
     expect(linesByHanzi.get('您好。')?.explanation.en).toBe(
-      '您好 is the polite Chinese greeting. It is used for elders, service-staff, superiors, and strangers, whenever you want to be courteous or show respect.',
+      '您 = polite ‘you’｜好 = good / well. 您好 is a respectful greeting for elders, service staff, superiors, or strangers.',
     )
     expect(linesByHanzi.get('早上好。')?.explanation.en).toBe(
-      '早上好 is a common greeting used in the morning, roughly from waking up until about noon.',
+      '早上 = morning｜好 = good. Use 早上好 as a morning greeting, roughly from waking up until noon.',
     )
     expect(linesByHanzi.get('很高兴认识你。')?.explanation.en).toBe(
-      '很 = very｜高兴 = glad/happy｜认识 = get to know｜你 = you. Use it when you meet someone for the first time.',
+      '很 = very｜高兴 = glad / happy｜认识 = meet / get to know｜你 = you. Use this when meeting someone for the first time.',
     )
 
     const apologyIndex = lesson.dialogue.lines.findIndex((line) => line.hanzi === '对不起。')

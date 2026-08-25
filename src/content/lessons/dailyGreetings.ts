@@ -348,8 +348,8 @@ export const dailyGreetingsLesson: LessonContent = {
       pattern: '……吗？',
       pinyin: '... ma?',
       meaning: {
-        en: 'A sentence-final particle that turns a statement into a yes-or-no question.',
-        fr: 'Une particule finale qui transforme une affirmation en question à réponse oui ou non.',
+        en: 'A particle at the end of a sentence, to make a yes-no question. No real meaning.',
+        fr: 'Une particule à la fin d’une phrase pour former une question à réponse oui ou non. Sans signification réelle.',
       },
       audio: '/audio/daily-greetings/pattern-02.mp3',
       examples: [

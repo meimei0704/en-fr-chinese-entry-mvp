@@ -51,11 +51,18 @@ describe('course pinyin spacing', () => {
           pinyin: pattern.pinyin,
         })),
         ...lesson.sentencePatterns.flatMap((pattern) =>
-          (pattern.examples ?? []).map((example, index) => ({
-            id: `${pattern.id}.examples[${index}]`,
-            hanzi: example.hanzi,
-            pinyin: example.pinyin,
-          })),
+          (pattern.examples ?? []).flatMap((example, index) => [
+            {
+              id: `${pattern.id}.examples[${index}]`,
+              hanzi: example.hanzi,
+              pinyin: example.pinyin,
+            },
+            {
+              id: `${pattern.id}.examples[${index}].fill`,
+              hanzi: example.fill,
+              pinyin: example.fillPinyin,
+            },
+          ]),
         ),
         ...Object.values(lesson.practice).flatMap((prompts) =>
           prompts.flatMap((prompt) =>
