@@ -241,8 +241,44 @@ describe('course content', () => {
       'A particle at the end of a sentence, to make a yes-no question. No real meaning.',
     )
     expect(
-      lesson.sentencePatterns[0]?.examples?.find((example) => example.fill === '你有空')?.en,
-    ).toBe('you have time')
+      lesson.sentencePatterns.flatMap((pattern) =>
+        (pattern.examples ?? []).map(({ hanzi, en, fr }) => ({ hanzi, en, fr })),
+      ),
+    ).toEqual([
+      { hanzi: '你好吗？', en: 'How are you?', fr: 'Comment allez-vous ?' },
+      { hanzi: '你有空吗？', en: 'Are you free?', fr: 'Êtes-vous libre ?' },
+      { hanzi: '好吃吗？', en: 'Is it tasty?', fr: "Est-ce que c'est bon ?" },
+      {
+        hanzi: '很高兴认识你。',
+        en: 'Nice to meet you.',
+        fr: 'Enchanté de faire votre connaissance.',
+      },
+      {
+        hanzi: '很高兴见到你。',
+        en: 'Nice to see you.',
+        fr: 'Je suis ravi de vous voir.',
+      },
+      {
+        hanzi: '很高兴认识大家。',
+        en: 'Nice to meet everyone.',
+        fr: 'Enchanté de faire connaissance avec tout le monde.',
+      },
+      {
+        hanzi: '不好意思，打扰一下。',
+        en: 'Excuse me for bothering you.',
+        fr: 'Excusez-moi de vous déranger.',
+      },
+      {
+        hanzi: '不好意思，借过一下。',
+        en: 'Excuse me, may I pass?',
+        fr: 'Excusez-moi, puis-je passer ?',
+      },
+      {
+        hanzi: '不好意思，我不会说中文。',
+        en: "Excuse me, I don't speak Chinese.",
+        fr: 'Excusez-moi, je ne parle pas chinois.',
+      },
+    ])
   })
 
   it('uses lesson two as the arrival-at-the-airport lesson with the approved sentences', async () => {
