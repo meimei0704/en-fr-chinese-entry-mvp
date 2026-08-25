@@ -4224,10 +4224,6 @@ h2 {
 }
 
 .practice-challenge__prompt {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 0.4rem 0.75rem;
   padding: clamp(1rem, 2.5vw, 1.35rem);
   border: 1px solid rgba(var(--color-border-rgb), 0.94);
   border-radius: var(--radius-lg);
@@ -4238,16 +4234,9 @@ h2 {
 }
 
 .practice-challenge__prompt p {
-  flex: 0 1 auto;
-  min-width: 0;
   margin: 0;
   overflow-wrap: anywhere;
   font-size: clamp(1.1rem, 2.5vw, 1.35rem);
-}
-
-.practice-challenge__prompt .speech-button {
-  flex: 0 0 auto;
-  margin-top: 0;
 }
 
 .practice-challenge__sentence {

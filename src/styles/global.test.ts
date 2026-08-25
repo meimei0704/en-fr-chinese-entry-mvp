@@ -690,16 +690,13 @@ describe('global color accessibility tokens', () => {
     }
   })
 
-  it('lays the practice prompt out inline with its speech button', () => {
+  it('renders the practice prompt as a text-only static block', () => {
     const prompt = ruleBlock('.practice-challenge__prompt')
     const paragraph = ruleBlock('.practice-challenge__prompt p')
 
-    expect(prompt).toContain('display: flex;')
-    expect(prompt).toContain('flex-wrap: nowrap;')
-    expect(prompt).toContain('align-items: center;')
-    expect(prompt).not.toContain('flex-wrap: wrap;')
-    expect(paragraph).toContain('flex: 0 1 auto;')
-    expect(paragraph).toContain('min-width: 0;')
+    expect(prompt).not.toContain('display: flex;')
+    expect(prompt).not.toContain('flex-wrap:')
+    expect(hasRule('.practice-challenge__prompt .speech-button')).toBe(false)
     expect(paragraph).toContain('overflow-wrap: anywhere;')
     expect(
       hasMediaRuleWithDeclaration(
