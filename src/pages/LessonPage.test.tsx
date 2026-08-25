@@ -402,38 +402,40 @@ describe('LessonPage', () => {
     expect(placeholder).not.toHaveClass('study-item__title')
   })
 
-  it('renders the approved complete-example template for daily greetings', () => {
-    const lesson = course.lessons.find((entry) => entry.id === 'daily-greetings')!
-    renderRoute('/lesson/daily-greetings')
+  it.each(course.lessons)(
+    'renders only complete examples with green pinyin in $id useful patterns',
+    (lesson) => {
+      renderRoute(`/lesson/${lesson.id}`)
 
-    const patternSection = screen
-      .getByRole('heading', { level: 2, name: /useful patterns|structures utiles/i })
-      .closest('section')!
-    const cards = within(patternSection).getAllByRole('article')
+      const patternSection = screen
+        .getByRole('heading', { level: 2, name: /useful patterns|structures utiles/i })
+        .closest('section')!
+      const cards = within(patternSection).getAllByRole('article')
 
-    expect(cards).toHaveLength(lesson.sentencePatterns.length)
-    lesson.sentencePatterns.forEach((pattern, patternIndex) => {
-      const card = cards[patternIndex]!
-      expect(within(card).getByText(pattern.pinyin, { selector: '.pinyin-line' })).toBeVisible()
-      expect(card).toHaveTextContent(pattern.meaning.en)
+      expect(cards).toHaveLength(lesson.sentencePatterns.length)
+      lesson.sentencePatterns.forEach((pattern, patternIndex) => {
+        const card = cards[patternIndex]!
+        expect(within(card).getByText(pattern.pinyin, { selector: '.pinyin-line' })).toBeVisible()
+        expect(card).toHaveTextContent(pattern.meaning.en)
 
-      const examples = card.querySelectorAll('li.pattern-example')
-      expect(examples).toHaveLength(pattern.examples?.length ?? 0)
-      pattern.examples?.forEach((example, exampleIndex) => {
-        const exampleRow = examples[exampleIndex] as HTMLElement
+        const examples = card.querySelectorAll('li.pattern-example')
+        expect(examples).toHaveLength(pattern.examples?.length ?? 0)
+        pattern.examples?.forEach((example, exampleIndex) => {
+          const exampleRow = examples[exampleIndex] as HTMLElement
 
-        expect(exampleRow.querySelector('.pattern-example__fill')).not.toBeInTheDocument()
-        expect(within(exampleRow).getByText(example.hanzi)).toBeVisible()
-        expect(
-          within(exampleRow).getByText(example.pinyin, { selector: '.pinyin-line' }),
-        ).toBeVisible()
-        expect(within(exampleRow).getByText(example.en)).toBeVisible()
-        expect(
-          within(exampleRow).getByRole('button', { name: /play chinese/i }),
-        ).toBeInTheDocument()
+          expect(exampleRow.querySelector('.pattern-example__fill')).not.toBeInTheDocument()
+          expect(within(exampleRow).getByText(example.hanzi)).toBeVisible()
+          expect(
+            within(exampleRow).getByText(example.pinyin, { selector: '.pinyin-line' }),
+          ).toBeVisible()
+          expect(within(exampleRow).getByText(example.en)).toBeVisible()
+          expect(
+            within(exampleRow).getByRole('button', { name: /play chinese/i }),
+          ).toBeInTheDocument()
+        })
       })
-    })
-  })
+    },
+  )
 
   it('does not expose unfinished daily-greetings fragments as example annotations', () => {
     renderRoute('/lesson/daily-greetings')
@@ -449,17 +451,6 @@ describe('LessonPage', () => {
     expect(within(completeExample).getByText('How are you?')).toBeVisible()
     expect(within(completeExample).queryByText('你好', { exact: true })).not.toBeInTheDocument()
     expect(within(completeExample).queryByText('nǐ hǎo')).not.toBeInTheDocument()
-  })
-
-  it('leaves later lessons on the existing pattern template until daily greetings is approved', () => {
-    renderRoute('/lesson/self-intro')
-
-    const patternSection = screen
-      .getByRole('heading', { level: 2, name: /useful patterns|structures utiles/i })
-      .closest('section')!
-
-    expect(within(patternSection).getByText('行李提取处', { exact: true })).toBeVisible()
-    expect(within(patternSection).getByText('xíngli tíqǔchù')).toBeVisible()
   })
 
   it('keeps only Practice in the lesson action dock', () => {    renderRoute('/lesson/self-intro')

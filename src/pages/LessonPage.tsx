@@ -42,7 +42,6 @@ export function LessonPage() {
   const lesson = fallbackLesson ?? findLesson(course, lessonId)
   const selectedLanguage = progress.selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
-  const usesApprovedPatternTemplate = lesson?.id === 'daily-greetings'
   const studyLayers = studyLayerIds.map((id, index) => ({
     id,
     label: [copy.lessonPage.dialogue, copy.lessonPage.sentencePatterns, copy.lessonPage.vocabulary][
@@ -205,40 +204,20 @@ export function LessonPage() {
               {lesson.sentencePatterns.map((pattern) => (
                 <article key={pattern.id} className="study-item study-item--pattern">
                   <p className="study-item__title">{renderPatternFormula(pattern.pattern)}</p>
-                  <p className={usesApprovedPatternTemplate ? 'pinyin-line' : 'study-item__pinyin'}>
-                    {pattern.pinyin}
-                  </p>
+                  <p className="pinyin-line">{pattern.pinyin}</p>
                   <p className="muted-text">{getLocalizedText(pattern.meaning, selectedLanguage)}</p>
                   {pattern.examples && pattern.examples.length > 0 ? (
                     <ul className="pattern-examples">
                       {pattern.examples.map((example) => (
                         <li key={example.hanzi} className="pattern-example">
-                          {!usesApprovedPatternTemplate ? (
-                            <div className="pattern-example__fill">
-                              <span className="pattern-example__fill-hanzi">{example.fill}</span>
-                              <span className="pattern-example__fill-pinyin">
-                                {example.fillPinyin}
-                              </span>
-                              <span className="pattern-example__fill-translation">
-                                {selectedLanguage === 'en' ? example.en : example.fr}
-                              </span>
-                            </div>
-                          ) : null}
                           <div className="pattern-example__sentence">
-                            {usesApprovedPatternTemplate ? (
-                              <div>
-                                <p>{example.hanzi}</p>
-                                <p className="pinyin-line">{example.pinyin}</p>
-                                <p className="muted-text">
-                                  {selectedLanguage === 'en' ? example.en : example.fr}
-                                </p>
-                              </div>
-                            ) : (
-                              <>
-                                <p>{example.hanzi}</p>
-                                <p className="pattern-example__pinyin">{example.pinyin}</p>
-                              </>
-                            )}
+                            <div>
+                              <p>{example.hanzi}</p>
+                              <p className="pinyin-line">{example.pinyin}</p>
+                              <p className="muted-text">
+                                {selectedLanguage === 'en' ? example.en : example.fr}
+                              </p>
+                            </div>
                             <SpeechButton
                               label={copy.lessonPage.listenChinese}
                               text={example.hanzi}
