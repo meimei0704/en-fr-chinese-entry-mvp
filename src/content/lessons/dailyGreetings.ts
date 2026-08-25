@@ -274,6 +274,24 @@ export const dailyGreetingsLesson: LessonContent = {
           en: 'Traveler',
           fr: 'Voyageur',
         },
+        hanzi: '没关系。',
+        pinyin: 'Méi guān xi.',
+        translation: {
+          en: 'It doesn\'t matter.',
+          fr: 'Ce n\'est pas grave.',
+        },
+        explanation: {
+          en: '没关系 is the standard reply when someone apologizes to you.',
+          fr: '没关系 est la réponse standard quand quelqu’un s’excuse auprès de vous.',
+        },
+        audio: '/audio/daily-greetings/line-15.mp3',
+      },
+      {
+        id: 'daily-greetings-line-16',
+        speaker: {
+          en: 'Traveler',
+          fr: 'Voyageur',
+        },
         hanzi: '是的。',
         pinyin: 'Shì de.',
         translation: {
@@ -284,10 +302,10 @@ export const dailyGreetingsLesson: LessonContent = {
           en: '是的 is a clear way to confirm or say yes.',
           fr: '是的 est une façon claire de confirmer ou de dire oui.',
         },
-        audio: '/audio/daily-greetings/line-15.mp3',
+        audio: '/audio/daily-greetings/line-16.mp3',
       },
       {
-        id: 'daily-greetings-line-16',
+        id: 'daily-greetings-line-17',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -302,10 +320,10 @@ export const dailyGreetingsLesson: LessonContent = {
           en: '不是 politely says no when something is not the case.',
           fr: '不是 dit poliment non lorsque quelque chose n’est pas le cas.',
         },
-        audio: '/audio/daily-greetings/line-16.mp3',
+        audio: '/audio/daily-greetings/line-17.mp3',
       },
       {
-        id: 'daily-greetings-line-17',
+        id: 'daily-greetings-line-18',
         speaker: {
           en: 'Traveler',
           fr: 'Voyageur',
@@ -320,7 +338,7 @@ export const dailyGreetingsLesson: LessonContent = {
           en: '再见 is the everyday way to say goodbye when leaving.',
           fr: '再见 est la façon quotidienne de dire au revoir en partant.',
         },
-        audio: '/audio/daily-greetings/line-17.mp3',
+        audio: '/audio/daily-greetings/line-18.mp3',
       },
     ],
   },
