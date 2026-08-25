@@ -9,13 +9,26 @@ function countSourceUnits(value: string) {
   return hanziCount + latinTerms.length
 }
 
-function countPinyinTokens(value: string) {
+function pinyinTokens(value: string) {
   return value
     .replace(/\.{3}|…/g, ' ')
-    .replace(/[,.!?;:，。！？；：“”‘’（）()\/\[\]]/g, ' ')
+    .replace(/[,.!?;:，。！？；：“”‘’（）()]/g, ' ')
+    .replaceAll('/', ' ')
+    .replaceAll('[', ' ')
+    .replaceAll(']', ' ')
     .trim()
     .split(/\s+/)
-    .filter(Boolean).length
+    .filter(Boolean)
+}
+
+function countExpectedPinyinTokens(hanzi: string, pinyin: string) {
+  const erhuaCharacters = [...hanzi].filter((character) => character === '儿').length
+  const erhuaTokens = pinyinTokens(pinyin).filter(
+    (token) =>
+      !/^[eēéěè]r$/i.test(token) && /[a-züāáǎàēéěèīíǐìōóǒòūúǔù]r$/i.test(token),
+  ).length
+
+  return countSourceUnits(hanzi) - Math.min(erhuaCharacters, erhuaTokens)
 }
 
 describe('course pinyin spacing', () => {
@@ -31,6 +44,11 @@ describe('course pinyin spacing', () => {
           id: item.id,
           hanzi: item.hanzi,
           pinyin: item.pinyin,
+        })),
+        ...lesson.sentencePatterns.map((pattern) => ({
+          id: pattern.id,
+          hanzi: pattern.pattern,
+          pinyin: pattern.pinyin,
         })),
         ...lesson.sentencePatterns.flatMap((pattern) =>
           (pattern.examples ?? []).map((example, index) => ({
@@ -50,9 +68,9 @@ describe('course pinyin spacing', () => {
 
       for (const entry of entries) {
         expect(
-          countPinyinTokens(entry.pinyin),
+          pinyinTokens(entry.pinyin).length,
           `${lesson.id}/${entry.id} must separate every spoken unit: ${entry.pinyin}`,
-        ).toBe(countSourceUnits(entry.hanzi))
+        ).toBe(countExpectedPinyinTokens(entry.hanzi, entry.pinyin))
       }
     }
   })
