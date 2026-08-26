@@ -128,7 +128,7 @@ export const smallTalkLesson: LessonContent = {
         id: 'small-talk-line-13',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '祝你玩得开心！再见！',
-        pinyin: 'Zhù nǐ wán dé kāi xīn! zài jiàn!',
+        pinyin: 'Zhù nǐ wán de kāi xīn! Zài jiàn!',
         translation: { en: 'Have fun! Goodbye!', fr: 'Amuse-toi bien ! Au revoir !' },
         explanation: { en: '祝 = wish｜你 = you｜玩得开心 = have fun｜再见 = goodbye. Use this friendly wish when parting from someone who is going out or travelling.', fr: '祝 = souhaiter｜你 = à toi / à vous｜玩得开心 = bien s’amuser｜再见 = au revoir. Utilisez ce souhait amical en quittant quelqu’un qui va sortir ou voyager.' },
         audio: '/audio/small-talk/line-13.mp3',

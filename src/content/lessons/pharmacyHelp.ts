@@ -119,7 +119,7 @@ export const pharmacyHelpLesson: LessonContent = {
         id: 'pharmacy-help-line-12',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '饭前吃还是饭后吃？',
-        pinyin: 'Fàn qián chī hái shi fàn hòu chī?',
+        pinyin: 'Fàn qián chī hái shì fàn hòu chī?',
         translation: { en: 'Should I take it before or after meals?', fr: 'Dois-je le prendre avant ou après les repas ?' },
         explanation: { en: '饭前 = before meals｜吃 = take / eat｜还是 = or｜饭后 = after meals. Ask this to confirm when the medicine should be taken.', fr: '饭前 = avant les repas｜吃 = prendre / manger｜还是 = ou｜饭后 = après les repas. Posez cette question pour confirmer quand prendre le médicament.' },
         audio: '/audio/pharmacy-help/line-12.mp3',
@@ -375,7 +375,7 @@ export const pharmacyHelpLesson: LessonContent = {
     {
       id: 'pharmacy-help-pattern-13',
       pattern: '多少钱？',
-      pinyin: 'Duō shao qián?',
+      pinyin: 'Duō shǎo qián?',
       meaning: {
         en: 'How much is it?',
         fr: 'Combien ça coûte ?',

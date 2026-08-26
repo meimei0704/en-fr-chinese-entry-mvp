@@ -21,7 +21,7 @@ export const orderFoodLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '您好，我要办理入住。',
         pinyin: 'Nín hǎo, wǒ yào bàn lǐ rù zhù.',
-        translation: { en: 'Hello, I want to check in.', fr: 'Bonjour, je veux faire le check-in.' },
+        translation: { en: 'Hello, I’d like to check in.', fr: 'Bonjour, je voudrais m’enregistrer.' },
         explanation: { en: '您 = you (polite)｜好 = good｜我 = I｜要 = want to｜办理 = to handle / go through｜入住 = to check in. Use it to start the check-in at the front desk.', fr: '您 = vous (poli)｜好 = bon｜我 = je｜要 = vouloir｜办理 = effectuer / s’occuper de｜入住 = s’enregistrer. Utilisez-la pour commencer le check-in à la réception.' },
         audio: '/audio/order-food/line-01.mp3',
       },
@@ -102,8 +102,8 @@ export const orderFoodLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我的房卡丢了。',
         pinyin: 'Wǒ de fáng kǎ diū le.',
-        translation: { en: 'I lost my room key.', fr: 'J\'ai perdu ma carte de chambre.' },
-        explanation: { en: '我的 = my｜房卡 = room card｜丢 = to lose｜了 = (completed-action particle). Use it to tell the front desk you lost your room key.', fr: '我的 = mon / ma｜房卡 = carte de chambre｜丢 = perdre｜了 = (particule d’action accomplie). Utilisez-la pour dire à la réception que vous avez perdu votre carte de chambre.' },
+        translation: { en: 'I lost my room key.', fr: 'J’ai perdu la carte d’accès à ma chambre.' },
+        explanation: { en: '我的 = my｜房卡 = room key card｜丢 = to lose｜了 = (completed-action particle). Use it to tell the front desk you lost your room key card.', fr: '我的 = mon / ma｜房卡 = carte d’accès à la chambre｜丢 = perdre｜了 = (particule d’action accomplie). Utilisez-la pour dire à la réception que vous avez perdu la carte d’accès à votre chambre.' },
         audio: '/audio/order-food/line-10.mp3',
       },
       {
@@ -150,8 +150,8 @@ export const orderFoodLesson: LessonContent = {
       pattern: '我要办理入住。',
       pinyin: 'Wǒ yào bàn lǐ rù zhù.',
       meaning: {
-        en: 'Hello, I want to check in.',
-        fr: 'Bonjour, je veux faire le check-in.',
+        en: 'I’d like to check in.',
+        fr: 'Je voudrais m’enregistrer.',
       },
       audio: '/audio/order-food/pattern-01.mp3',
     },
@@ -207,7 +207,7 @@ export const orderFoodLesson: LessonContent = {
     {
       id: 'order-food-pattern-4',
       pattern: '……是多少？',
-      pinyin: '... shì duō shao?',
+      pinyin: '... shì duō shǎo?',
       meaning: {
         en: 'What is ...?',
         fr: 'Quel est ... ?',
@@ -218,7 +218,7 @@ export const orderFoodLesson: LessonContent = {
           fill: 'Wi-Fi',
           fillPinyin: 'Wi-Fi',
           hanzi: 'Wi-Fi 密码是多少？',
-          pinyin: 'Wi-Fi mì mǎ shì duō shao?',
+          pinyin: 'Wi-Fi mì mǎ shì duō shǎo?',
           en: 'What is the Wi-Fi password?',
           fr: 'Quel est le mot de passe Wi-Fi ?',
           audio: '/audio/order-food/pattern-04-example-01.mp3',
@@ -227,7 +227,7 @@ export const orderFoodLesson: LessonContent = {
           fill: '房间号',
           fillPinyin: 'fáng jiān hào',
           hanzi: '房间号是多少？',
-          pinyin: 'Fáng jiān hào shì duō shao?',
+          pinyin: 'Fáng jiān hào shì duō shǎo?',
           en: 'What is the room number?',
           fr: 'Quel est le numéro de chambre ?',
           audio: '/audio/order-food/pattern-04-example-02.mp3',
@@ -236,7 +236,7 @@ export const orderFoodLesson: LessonContent = {
           fill: '房价',
           fillPinyin: 'fáng jià',
           hanzi: '房价是多少？',
-          pinyin: 'Fáng jià shì duō shao?',
+          pinyin: 'Fáng jià shì duō shǎo?',
           en: 'What is the room rate?',
           fr: 'Quel est le prix de la chambre ?',
           audio: '/audio/order-food/pattern-04-example-03.mp3',
@@ -338,7 +338,7 @@ export const orderFoodLesson: LessonContent = {
       pinyin: 'Wǒ de fáng kǎ diū le.',
       meaning: {
         en: 'I lost my room key.',
-        fr: 'J\'ai perdu ma carte de chambre.',
+        fr: 'J’ai perdu la carte d’accès à ma chambre.',
       },
     
       audio: '/audio/order-food/line-10.mp3',},
@@ -412,8 +412,8 @@ export const orderFoodLesson: LessonContent = {
       pinyin: 'fáng kǎ',
       audio: '/audio/order-food/vocab-04.mp3',
       meaning: {
-        en: 'room card',
-        fr: 'carte de chambre',
+        en: 'room key card',
+        fr: 'carte d’accès à la chambre',
       },
       explanation: {
         en: 'The card you use to enter your hotel room.',
@@ -479,7 +479,7 @@ export const orderFoodLesson: LessonContent = {
         id: 'order-food-listening-2',
         prompt: { en: 'Which phrase asks for the WiFi password?', fr: 'Quelle phrase demande le mot de passe WiFi ?' },
         target: 'WiFi密码是多少？', audio: '/audio/order-food/practice-listening-02.mp3',
-        explanation: { en: 'WiFi = Wi-Fi｜密码 = password｜是 = is / to be｜多少 = how much / what (number). Use it right after receiving your room card to ask the Wi-Fi password.', fr: 'WiFi = Wi-Fi｜密码 = mot de passe｜是 = est / être｜多少 = combien. Utilisez-la juste après avoir reçu votre carte de chambre pour demander le mot de passe Wi-Fi.' },
+        explanation: { en: 'WiFi = Wi-Fi｜密码 = password｜是 = is / to be｜多少 = how much / what (number). Use it right after receiving your room key card to ask for the Wi-Fi password.', fr: 'WiFi = Wi-Fi｜密码 = mot de passe｜是 = est / être｜多少 = combien. Utilisez-la juste après avoir reçu votre carte d’accès à la chambre pour demander le mot de passe Wi-Fi.' },
       },
     ],
     speaking: [
@@ -554,8 +554,8 @@ export const orderFoodLesson: LessonContent = {
       id: 'order-food-review-3',
       front: '房卡',
       back: {
-        en: 'room card',
-        fr: 'carte de chambre',
+        en: 'room key card',
+        fr: 'carte d’accès à la chambre',
       },
         explanation: {
           en: '房 = room｜卡 = card. Use it for the key card that opens your hotel room.',

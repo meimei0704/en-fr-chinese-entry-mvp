@@ -29,7 +29,7 @@ export const metroTicketLesson: LessonContent = {
         id: 'metro-ticket-line-02',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '在哪儿买票？',
-        pinyin: 'Zài nǎ ér mǎi piào?',
+        pinyin: 'Zài nǎr mǎi piào?',
         translation: { en: 'Where can I buy a ticket?', fr: 'Où puis-je acheter un ticket ?' },
         explanation: { en: '在哪儿 = where｜买 = buy｜票 = ticket. Ask this when looking for a ticket machine or ticket counter.', fr: '在哪儿 = où｜买 = acheter｜票 = ticket. Posez cette question pour trouver un distributeur ou un guichet.' },
         audio: '/audio/metro-ticket/line-02.mp3',
@@ -65,7 +65,7 @@ export const metroTicketLesson: LessonContent = {
         id: 'metro-ticket-line-06',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请问在哪儿换乘？',
-        pinyin: 'Qǐng wèn zài nǎ ér huàn chéng?',
+        pinyin: 'Qǐng wèn zài nǎr huàn chéng?',
         translation: { en: 'Excuse me, where do I transfer?', fr: 'Excusez-moi, où dois-je changer de ligne ?' },
         explanation: { en: '请问 = excuse me / may I ask｜在哪儿 = where｜换乘 = transfer. Ask this to find where to change lines.', fr: '请问 = excusez-moi｜在哪儿 = où｜换乘 = faire une correspondance. Posez cette question pour savoir où changer de ligne.' },
         audio: '/audio/metro-ticket/line-06.mp3',
@@ -289,8 +289,8 @@ export const metroTicketLesson: LessonContent = {
         fr: 'métro',
       },
       explanation: {
-        en: 'The transportation system for this lesson.',
-        fr: 'Le moyen de transport de cette leçon.',
+        en: 'Use this word when asking for or talking about subway travel.',
+        fr: 'Utilisez ce mot pour demander ou parler des déplacements en métro.',
       },
     },
     {

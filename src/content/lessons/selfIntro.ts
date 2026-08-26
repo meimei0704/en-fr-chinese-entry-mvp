@@ -25,8 +25,8 @@ export const selfIntroLesson: LessonContent = {
         hanzi: '请问您会说英语吗？',
         pinyin: 'Qǐng wèn nín huì shuō Yīng yǔ ma?',
         translation: {
-          en: 'Do you speak English?',
-          fr: 'Parlez-vous anglais ?',
+          en: 'Excuse me, do you speak English?',
+          fr: 'Excusez-moi, parlez-vous anglais ?',
         },
         explanation: {
           en: '请问 = excuse me / may I ask｜您 = you (polite)｜会 = can / know how to｜说 = speak｜英语 = English｜吗 = question particle. Use it to ask whether someone can speak English when you need help.',
@@ -47,8 +47,8 @@ export const selfIntroLesson: LessonContent = {
           fr: 'Où se trouve la récupération des bagages ?',
         },
         explanation: {
-          en: '行李 = luggage｜提取处 = baggage claim｜在 = to be at｜哪里 = where. Use it to ask where baggage claim is in the airport.',
-          fr: '行李 = bagages｜提取处 = récupération des bagages｜在 = être à / se trouver｜哪里 = où. Utilisez-la pour demander où se trouve la récupération des bagages à l’aéroport.',
+          en: '行李提取处 = baggage claim｜在 = to be located｜哪里 = where. Use it to ask where baggage claim is in the airport.',
+          fr: '行李提取处 = zone de retrait des bagages｜在 = se trouver｜哪里 = où. Utilisez-la pour demander où se trouve la zone de retrait des bagages à l’aéroport.',
         },
         audio: '/audio/self-intro/line-02.mp3',
       },
@@ -98,7 +98,7 @@ export const selfIntroLesson: LessonContent = {
         pinyin: 'Wǒ shì lái lǚ yóu de.',
         translation: {
           en: 'I’m here to travel.',
-          fr: 'Je suis venu(e) pour le tourisme.',
+          fr: 'Je suis venu(e) faire du tourisme.',
         },
         explanation: {
           en: '我 = I｜是 = am / to be｜来 = to come｜旅游 = to travel｜的 = (grammar particle). Use it to state your purpose for coming.',
@@ -169,8 +169,8 @@ export const selfIntroLesson: LessonContent = {
         hanzi: '请问去哪里打车？',
         pinyin: 'Qǐng wèn qù nǎ lǐ dǎ chē?',
         translation: {
-          en: 'Where can I get a taxi?',
-          fr: 'Où puis-je prendre un taxi ?',
+          en: 'Excuse me, where can I get a taxi?',
+          fr: 'Excusez-moi, où puis-je prendre un taxi ?',
         },
         explanation: {
           en: '请问 = excuse me / may I ask｜去 = to go｜哪里 = where｜打车 = to take a taxi. Use it to ask where you can get a taxi.',
@@ -293,7 +293,7 @@ export const selfIntroLesson: LessonContent = {
           hanzi: '我是来旅游的。',
           pinyin: 'Wǒ shì lái lǚ yóu de.',
           en: 'I’m here to travel.',
-          fr: 'Je suis venu(e) pour le tourisme.',
+          fr: 'Je suis venu(e) faire du tourisme.',
           audio: '/audio/self-intro/pattern-03-example-01.mp3',
         },
         {
@@ -431,7 +431,7 @@ export const selfIntroLesson: LessonContent = {
       audio: '/audio/self-intro/vocab-03.mp3',
       meaning: {
         en: 'help me',
-        fr: 'aider',
+        fr: 'm’aider',
       },
       explanation: {
         en: 'Use 帮我一下 when asking anyone to give you a hand.',
@@ -563,8 +563,8 @@ export const selfIntroLesson: LessonContent = {
         pinyin: 'Xíng li tí qǔ chù zài nǎ lǐ?',
         audio: '/audio/self-intro/practice-listening-02.mp3',
         explanation: {
-          en: '行李 = luggage｜提取处 = baggage claim｜在 = to be at｜哪里 = where. Use it as the first thing to ask after landing.',
-          fr: '行李 = bagages｜提取处 = récupération des bagages｜在 = être à｜哪里 = où. Utilisez-la comme première question après l’atterrissage.',
+          en: '行李提取处 = baggage claim｜在 = to be located｜哪里 = where. Use it as the first thing to ask after landing.',
+          fr: '行李提取处 = zone de retrait des bagages｜在 = se trouver｜哪里 = où. Utilisez-la comme première question après l’atterrissage.',
         },
       },
     ],
@@ -609,8 +609,8 @@ export const selfIntroLesson: LessonContent = {
         pinyin: 'xíng li tí qǔ chù',
         audio: '/audio/self-intro/practice-reading-01.mp3',
         explanation: {
-          en: '行李 = luggage｜提取处 = baggage claim. Use it to follow the signs after landing.',
-          fr: '行李 = bagages｜提取处 = récupération des bagages. Utilisez-le pour suivre les panneaux après l’atterrissage.',
+          en: '行李提取处 = baggage claim. Use it to follow the signs after landing.',
+          fr: '行李提取处 = zone de retrait des bagages. Utilisez-le pour suivre les panneaux après l’atterrissage.',
         },
       },
       {
@@ -650,16 +650,16 @@ export const selfIntroLesson: LessonContent = {
         fr: 'récupération des bagages',
       },
       explanation: {
-        en: '行李 = luggage｜提取处 = baggage claim. Use it for where you collect your luggage.',
-        fr: '行李 = bagages｜提取处 = récupération des bagages. Utilisez-le pour l’endroit où récupérer vos bagages.',
+        en: '行李提取处 = baggage claim. Use it for where you collect your luggage.',
+        fr: '行李提取处 = zone de retrait des bagages. Utilisez-le pour l’endroit où récupérer vos bagages.',
       },
     },
     {
       id: 'self-intro-review-3',
       front: '请问您会说英语吗',
       back: {
-        en: 'Do you speak English?',
-        fr: 'Parlez-vous anglais ?',
+        en: 'Excuse me, do you speak English?',
+        fr: 'Excusez-moi, parlez-vous anglais ?',
       },
       explanation: {
         en: '请问 = excuse me / may I ask｜您 = you (polite)｜会 = can / know how to｜说 = speak｜英语 = English｜吗 = question particle. Use it as a key rescue phrase when you need English help.',

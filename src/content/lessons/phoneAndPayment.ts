@@ -22,7 +22,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         hanzi: '我要买一个 SIM 卡。',
         pinyin: 'Wǒ yào mǎi yí gè SIM kǎ.',
         translation: { en: 'I want to buy a SIM card.', fr: 'Je veux acheter une carte SIM.' },
-        explanation: { en: '我 = I｜要 = want to｜买 = to buy｜一个 = one (measure word)｜SIM = SIM｜卡 = card. Use it to tell the shop you want to buy a SIM card.', fr: '我 = je｜要 = vouloir｜买 = acheter｜一个 = un / une (classificateur)｜SIM = SIM｜卡 = carte. Utilisez-la pour dire au magasin que vous voulez acheter une carte SIM.' },
+        explanation: { en: '我 = I｜要 = want to｜买 = to buy｜一个 = one (measure word)｜SIM 卡 = SIM card. Use it to tell the shop you want to buy a SIM card.', fr: '我 = je｜要 = vouloir｜买 = acheter｜一个 = un / une (classificateur)｜SIM 卡 = carte SIM. Utilisez-la pour dire au magasin que vous voulez acheter une carte SIM.' },
         audio: '/audio/phone-and-payment/line-01.mp3',
       },
       {
@@ -30,7 +30,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '能帮我安装一下吗？',
         pinyin: 'Néng bāng wǒ ān zhuāng yí xià ma?',
-        translation: { en: 'Please help me install it.', fr: 'Pouvez-vous m\'aider à l\'installer ?' },
+        translation: { en: 'Could you help me install it?', fr: 'Pouvez-vous m\'aider à l\'installer ?' },
         explanation: { en: '能 = can / to be able to｜帮 = to help｜我 = me｜安装 = to install｜一下 = a bit / a moment｜吗 = question particle. Use it to ask for help installing something.', fr: '能 = pouvoir｜帮 = aider｜我 = moi｜安装 = installer｜一下 = un peu / un instant｜吗 = particule interrogative. Utilisez-la pour demander de l’aide pour installer quelque chose.' },
         audio: '/audio/phone-and-payment/line-02.mp3',
       },
@@ -39,7 +39,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '我需要流量。',
         pinyin: 'Wǒ xū yào liú liàng.',
-        translation: { en: 'I need mobile data.', fr: 'J\'ai besoin de forfait data.' },
+        translation: { en: 'I need mobile data.', fr: 'J’ai besoin de données mobiles.' },
         explanation: { en: '我 = I｜需要 = to need｜流量 = data / mobile data. Use it to tell the shop you need mobile data.', fr: '我 = je｜需要 = avoir besoin de｜流量 = données mobiles. Utilisez-la pour dire au magasin que vous avez besoin de données mobiles.' },
         audio: '/audio/phone-and-payment/line-03.mp3',
       },
@@ -111,8 +111,8 @@ export const phoneAndPaymentLesson: LessonContent = {
       audio: '/audio/phone-and-payment/pattern-01.mp3',
       examples: [
         {
-          fill: 'SIM',
-          fillPinyin: 'SIM',
+          fill: 'SIM 卡',
+          fillPinyin: 'SIM kǎ',
           hanzi: '我要买一个 SIM 卡。',
           pinyin: 'Wǒ yào mǎi yí gè SIM kǎ.',
           en: 'I want to buy a SIM card.',
@@ -124,8 +124,8 @@ export const phoneAndPaymentLesson: LessonContent = {
           fillPinyin: 'shǒu jī kǎ',
           hanzi: '我要买一个手机卡。',
           pinyin: 'Wǒ yào mǎi yí gè shǒu jī kǎ.',
-          en: 'I want to buy a phone card.',
-          fr: 'Je veux acheter une carte téléphonique.',
+          en: 'I want to buy a SIM card.',
+          fr: 'Je veux acheter une carte SIM.',
           audio: '/audio/phone-and-payment/pattern-01-example-02.mp3',
         },
         {
@@ -220,7 +220,7 @@ export const phoneAndPaymentLesson: LessonContent = {
     {
       id: 'phone-and-payment-pattern-4',
       pattern: '……有多少流量？',
-      pinyin: '... yǒu duō shao liú liàng?',
+      pinyin: '... yǒu duō shǎo liú liàng?',
       meaning: {
         en: 'How much data does ... have?',
         fr: 'Combien de data a ... ?',
@@ -231,7 +231,7 @@ export const phoneAndPaymentLesson: LessonContent = {
           fill: '这个套餐',
           fillPinyin: 'zhè ge tào cān',
           hanzi: '这个套餐有多少流量？',
-          pinyin: 'Zhè ge tào cān yǒu duō shao liú liàng?',
+          pinyin: 'Zhè ge tào cān yǒu duō shǎo liú liàng?',
           en: 'How much data does this plan have?',
           fr: 'Combien de data ce forfait inclut-il ?',
           audio: '/audio/phone-and-payment/pattern-04-example-01.mp3',
@@ -240,16 +240,16 @@ export const phoneAndPaymentLesson: LessonContent = {
           fill: '这个手机卡',
           fillPinyin: 'zhè ge shǒu jī kǎ',
           hanzi: '这个手机卡有多少流量？',
-          pinyin: 'Zhè ge shǒu jī kǎ yǒu duō shao liú liàng?',
-          en: 'How much data does this phone card have?',
-          fr: 'Combien de data cette carte téléphonique inclut-elle ?',
+          pinyin: 'Zhè ge shǒu jī kǎ yǒu duō shǎo liú liàng?',
+          en: 'How much data does this SIM card have?',
+          fr: 'Combien de données cette carte SIM inclut-elle ?',
           audio: '/audio/phone-and-payment/pattern-04-example-02.mp3',
         },
         {
           fill: '每月套餐',
           fillPinyin: 'měi yuè tào cān',
           hanzi: '每月套餐有多少流量？',
-          pinyin: 'Měi yuè tào cān yǒu duō shao liú liàng?',
+          pinyin: 'Měi yuè tào cān yǒu duō shǎo liú liàng?',
           en: 'How much data does the monthly plan have?',
           fr: 'Combien de data le forfait mensuel inclut-il ?',
           audio: '/audio/phone-and-payment/pattern-04-example-03.mp3',
@@ -298,7 +298,7 @@ export const phoneAndPaymentLesson: LessonContent = {
     {
       id: 'phone-and-payment-pattern-6',
       pattern: '多少钱？',
-      pinyin: 'Duō shao qián?',
+      pinyin: 'Duō shǎo qián?',
       meaning: {
         en: 'How much is it?',
         fr: 'Combien ça coûte ?',
@@ -343,8 +343,8 @@ export const phoneAndPaymentLesson: LessonContent = {
       pinyin: 'shǒu jī kǎ',
       audio: '/audio/phone-and-payment/vocab-01.mp3',
       meaning: {
-        en: 'SIM card / phone card',
-        fr: 'carte SIM / carte de téléphone',
+        en: 'SIM card',
+        fr: 'carte SIM',
       },
       explanation: {
         en: 'The practical word for asking about phone service after arrival.',
@@ -424,7 +424,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         target: '手机卡',
         audio: '/audio/phone-and-payment/practice-listening-01.mp3',
         explanation: {
-          en: '手机 = mobile phone｜卡 = card. Use it for the phone card or SIM card in this service exchange.',
+          en: '手机 = mobile phone｜卡 = card. Use it for the SIM card in this service exchange.',
           fr: '手机 = téléphone portable｜卡 = carte. Utilisez-le pour la carte SIM dans cet échange de service.',
         },
       },
@@ -468,8 +468,8 @@ export const phoneAndPaymentLesson: LessonContent = {
       id: 'phone-and-payment-review-1',
       front: '手机卡',
       back: {
-        en: 'SIM card / phone card',
-        fr: 'carte SIM / carte de téléphone',
+        en: 'SIM card',
+        fr: 'carte SIM',
       },
         explanation: {
           en: '手机 = mobile phone｜卡 = card. Use it when asking for basic phone service.',

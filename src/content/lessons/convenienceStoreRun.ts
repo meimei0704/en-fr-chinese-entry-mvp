@@ -148,7 +148,7 @@ export const convenienceStoreRunLesson: LessonContent = {
     {
       id: 'convenience-store-run-pattern-1',
       pattern: '……多少钱？',
-      pinyin: '... duō shao qián?',
+      pinyin: '... duō shǎo qián?',
       meaning: {
         en: 'How much is ...?',
         fr: 'Combien coûte ... ?',
@@ -158,7 +158,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           fill: '这个',
           fillPinyin: 'zhè ge',
           hanzi: '这个多少钱？',
-          pinyin: 'Zhè ge duō shao qián?',
+          pinyin: 'Zhè ge duō shǎo qián?',
           en: 'How much is this?',
           fr: 'Combien coûte ceci ?',
           audio: '/audio/convenience-store-run/pattern-01-example-01.mp3',
@@ -167,7 +167,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           fill: '水',
           fillPinyin: 'shuǐ',
           hanzi: '水多少钱？',
-          pinyin: 'Shuǐ duō shao qián?',
+          pinyin: 'Shuǐ duō shǎo qián?',
           en: 'How much is the water?',
           fr: 'Combien coûte l’eau ?',
           audio: '/audio/convenience-store-run/pattern-01-example-02.mp3',
@@ -176,7 +176,7 @@ export const convenienceStoreRunLesson: LessonContent = {
           fill: '面包',
           fillPinyin: 'miàn bāo',
           hanzi: '面包多少钱？',
-          pinyin: 'Miàn bāo duō shao qián?',
+          pinyin: 'Miàn bāo duō shǎo qián?',
           en: 'How much is the bread?',
           fr: 'Combien coûte le pain ?',
           audio: '/audio/convenience-store-run/pattern-01-example-03.mp3',
@@ -439,7 +439,7 @@ export const convenienceStoreRunLesson: LessonContent = {
     {
       id: 'convenience-store-run-vocab-5',
       hanzi: '多少钱',
-      pinyin: 'duō shao qián',
+      pinyin: 'duō shǎo qián',
       audio: '/audio/convenience-store-run/vocab-05.mp3',
       meaning: {
         en: 'how much? / how much does it cost?',

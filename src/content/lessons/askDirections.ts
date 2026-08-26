@@ -21,7 +21,7 @@ export const askDirectionsLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '师傅您好，我要去这里。',
         pinyin: 'Shī fu nín hǎo, wǒ yào qù zhè lǐ.',
-        translation: { en: 'Hello, please go to this place.', fr: 'Bonjour, conduisez-moi à cet endroit, s\'il vous plaît.' },
+        translation: { en: 'Hello, driver. I’d like to go here.', fr: 'Bonjour, Monsieur le chauffeur. Je voudrais aller ici.' },
         explanation: { en: '师傅 = driver (polite)｜您 = you (polite)｜好 = good / hello｜我 = I｜要 = want to｜去 = to go to｜这里 = here. Use it to tell the driver your destination at the start of the ride.', fr: '师傅 = chauffeur (poli)｜您 = vous (poli)｜好 = bon / bonjour｜我 = je｜要 = vouloir｜去 = aller à｜这里 = ici. Utilisez-la pour indiquer votre destination au début de la course.' },
         audio: '/audio/ask-directions/line-01.mp3',
       },
@@ -40,7 +40,7 @@ export const askDirectionsLesson: LessonContent = {
         hanzi: '请打表。',
         pinyin: 'Qǐng dǎ biǎo.',
         translation: { en: 'Please use the meter.', fr: 'Veuillez utiliser le compteur.' },
-        explanation: { en: '请 = please｜打 = to turn on｜表 = meter. Use it to ask the driver to turn on the meter.', fr: '请 = s\'il vous plaît｜打 = allumer｜表 = compteur. Utilisez-la pour demander au chauffeur d\'allumer le compteur.' },
+        explanation: { en: '请 = please｜打表 = use / turn on the meter. Use it to ask the driver to turn on the meter.', fr: '请 = s\'il vous plaît｜打表 = utiliser / mettre en marche le compteur. Utilisez-la pour demander au chauffeur de mettre le compteur en marche.' },
         audio: '/audio/ask-directions/line-03.mp3',
       },
       {
@@ -48,7 +48,7 @@ export const askDirectionsLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '大概多久到？',
         pinyin: 'Dà gài duō jiǔ dào?',
-        translation: { en: 'How long will it take?', fr: 'Combien de temps pour arriver ?' },
+        translation: { en: 'How long will it take?', fr: 'Combien de temps le trajet prendra-t-il ?' },
         explanation: { en: '大概 = about / approximately｜多久 = how long｜到 = to arrive. Use it to check the approximate travel time.', fr: '大概 = environ / à peu près｜多久 = combien de temps｜到 = arriver. Utilisez-la pour connaître la durée approximative du trajet.' },
         audio: '/audio/ask-directions/line-04.mp3',
       },
@@ -66,7 +66,7 @@ export const askDirectionsLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请开慢一点。',
         pinyin: 'Qǐng kāi màn yì diǎn.',
-        translation: { en: 'Slow down please.', fr: 'Allez plus lentement, s\'il vous plaît.' },
+        translation: { en: 'Slow down, please.', fr: 'Roulez plus lentement, s’il vous plaît.' },
         explanation: { en: '请 = please｜开 = to drive｜慢 = slow｜一点 = a little. Use it to ask the driver to slow down.', fr: '请 = s\'il vous plaît｜开 = conduire｜慢 = lent｜一点 = un peu. Utilisez-la pour demander au chauffeur de ralentir.' },
         audio: '/audio/ask-directions/line-06.mp3',
       },
@@ -84,7 +84,7 @@ export const askDirectionsLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '一共多少钱？',
         pinyin: 'Yí gòng duō shǎo qián?',
-        translation: { en: 'How much is it?', fr: 'Combien ça fait au total ?' },
+        translation: { en: 'How much is it in total?', fr: 'Combien ça fait au total ?' },
         explanation: { en: '一共 = in total｜多少 = how much｜钱 = money. Use it to get the total fare when the ride ends.', fr: '一共 = au total｜多少 = combien｜钱 = argent. Utilisez-la pour connaître le prix total à la fin de la course.' },
         audio: '/audio/ask-directions/line-08.mp3',
       },
@@ -111,7 +111,7 @@ export const askDirectionsLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请给我发票。',
         pinyin: 'Qǐng gěi wǒ fā piào.',
-        translation: { en: 'Receipt, please.', fr: 'Un reçu, s\'il vous plaît.' },
+        translation: { en: 'Please give me a receipt.', fr: 'Veuillez me donner un reçu.' },
         explanation: { en: '请 = please｜给 = to give｜我 = me｜发票 = receipt / invoice. Use it when you need an official receipt for reimbursement.', fr: '请 = s\'il vous plaît｜给 = donner｜我 = moi｜发票 = reçu / facture. Utilisez-la quand vous avez besoin d\'un reçu officiel pour vous faire rembourser.' },
         audio: '/audio/ask-directions/line-11.mp3',
       },
@@ -123,8 +123,8 @@ export const askDirectionsLesson: LessonContent = {
       pattern: '师傅您好，我要去……。',
       pinyin: 'Shī fu nín hǎo, wǒ yào qù ... .',
       meaning: {
-        en: 'Hello, please go to ...',
-        fr: 'Bonjour, conduisez-moi à ...',
+        en: 'Hello, driver. I’d like to go to ...',
+        fr: 'Bonjour, Monsieur le chauffeur. Je voudrais aller à ...',
       },
       audio: '/audio/ask-directions/pattern-01.mp3',
       examples: [
@@ -133,8 +133,8 @@ export const askDirectionsLesson: LessonContent = {
           fillPinyin: 'zhè lǐ',
           hanzi: '师傅您好，我要去这里。',
           pinyin: 'Shī fu nín hǎo, wǒ yào qù zhè lǐ.',
-          en: 'Hello, please go to this place.',
-          fr: 'Bonjour, conduisez-moi à cet endroit, s\'il vous plaît.',
+          en: 'Hello, driver. I’d like to go here.',
+          fr: 'Bonjour, Monsieur le chauffeur. Je voudrais aller ici.',
           audio: '/audio/ask-directions/pattern-01-example-01.mp3',
         },
         {
@@ -142,8 +142,8 @@ export const askDirectionsLesson: LessonContent = {
           fillPinyin: 'zhè ge dì zhǐ',
           hanzi: '师傅您好，我要去这个地址。',
           pinyin: 'Shī fu nín hǎo, wǒ yào qù zhè ge dì zhǐ.',
-          en: 'Hello, please go to this address.',
-          fr: 'Bonjour, conduisez-moi à cette adresse, s\'il vous plaît.',
+          en: 'Hello, driver. I’d like to go to this address.',
+          fr: 'Bonjour, Monsieur le chauffeur. Je voudrais aller à cette adresse.',
           audio: '/audio/ask-directions/pattern-01-example-02.mp3',
         },
         {
@@ -151,8 +151,8 @@ export const askDirectionsLesson: LessonContent = {
           fillPinyin: 'jī chǎng',
           hanzi: '师傅您好，我要去机场。',
           pinyin: 'Shī fu nín hǎo, wǒ yào qù jī chǎng.',
-          en: 'Hello, please take me to the airport.',
-          fr: 'Bonjour, conduisez-moi à l\'aéroport, s\'il vous plaît.',
+          en: 'Hello, driver. I’d like to go to the airport.',
+          fr: 'Bonjour, Monsieur le chauffeur. Je voudrais aller à l\'aéroport.',
           audio: '/audio/ask-directions/pattern-01-example-03.mp3',
         },
       ],
@@ -241,7 +241,7 @@ export const askDirectionsLesson: LessonContent = {
       pinyin: 'Dà gài duō jiǔ dào?',
       meaning: {
         en: 'How long will it take?',
-        fr: 'Combien de temps pour arriver ?',
+        fr: 'Combien de temps le trajet prendra-t-il ?',
       },
       audio: '/audio/ask-directions/pattern-04.mp3',
     },
@@ -290,7 +290,7 @@ export const askDirectionsLesson: LessonContent = {
       pinyin: 'Qǐng kāi màn yì diǎn.',
       meaning: {
         en: 'Please drive slower.',
-        fr: 'Allez plus lentement, s\'il vous plaît.',
+        fr: 'Roulez plus lentement, s’il vous plaît.',
       },
     
       audio: '/audio/ask-directions/line-06.mp3',},
@@ -307,7 +307,7 @@ export const askDirectionsLesson: LessonContent = {
     {
       id: 'ask-directions-pattern-8',
       pattern: '一共多少钱？',
-      pinyin: 'Yí gòng duō shao qián?',
+      pinyin: 'Yí gòng duō shǎo qián?',
       meaning: {
         en: 'How much is it altogether?',
         fr: 'Combien ça fait au total ?',
@@ -340,7 +340,7 @@ export const askDirectionsLesson: LessonContent = {
       pinyin: 'Qǐng gěi wǒ fā piào.',
       meaning: {
         en: 'Please give me a receipt.',
-        fr: 'Un reçu, s\'il vous plaît.',
+        fr: 'Veuillez me donner un reçu.',
       },
     
       audio: '/audio/ask-directions/line-11.mp3',},
@@ -496,8 +496,8 @@ export const askDirectionsLesson: LessonContent = {
         target: '请打表。',
         audio: '/audio/ask-directions/practice-listening-02.mp3',
         explanation: {
-          en: '请 = please｜打 = to turn on｜表 = meter. Use it as the key safety phrase before the taxi starts moving.',
-          fr: '请 = s\'il vous plaît｜打 = allumer｜表 = compteur. Utilisez-le comme phrase de sécurité clé avant que le taxi ne démarre.',
+          en: '请 = please｜打表 = use / turn on the meter. Use it as the key safety phrase before the taxi starts moving.',
+          fr: '请 = s\'il vous plaît｜打表 = utiliser / mettre en marche le compteur. Utilisez-la comme phrase de sécurité clé avant que le taxi ne démarre.',
         },
       },
     ],
@@ -524,8 +524,8 @@ export const askDirectionsLesson: LessonContent = {
         target: '请打表。',
         audio: '/audio/ask-directions/practice-speaking-02.mp3',
         explanation: {
-          en: '请 = please｜打 = to turn on｜表 = meter. Use it to ask the driver to use the meter, keeping the request polite and simple.',
-          fr: '请 = s\'il vous plaît｜打 = allumer｜表 = compteur. Utilisez-le pour demander au chauffeur d\'utiliser le compteur, de façon polie et simple.',
+          en: '请 = please｜打表 = use / turn on the meter. Use it to ask the driver to use the meter, keeping the request polite and simple.',
+          fr: '请 = s\'il vous plaît｜打表 = utiliser / mettre en marche le compteur. Utilisez-la pour demander au chauffeur d\'utiliser le compteur, de façon polie et simple.',
         },
       },
     ],
@@ -598,7 +598,7 @@ export const askDirectionsLesson: LessonContent = {
     {
       id: 'ask-directions-review-4', front: '打表',
       back: { en: 'use the meter', fr: 'utiliser le compteur' },
-      explanation: { en: '打 = to turn on｜表 = meter. Use it as a key taxi safety word.', fr: '打 = allumer｜表 = compteur. Utilisez-le comme mot clé de sécurité en taxi.' },
+      explanation: { en: '打表 = use / turn on the meter. Use it as a key taxi safety phrase.', fr: '打表 = utiliser / mettre en marche le compteur. Utilisez cette expression comme phrase de sécurité clé en taxi.' },
     },
     {
       id: 'ask-directions-review-5', front: '扫码',
