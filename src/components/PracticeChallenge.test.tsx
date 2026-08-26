@@ -13,7 +13,6 @@ vi.mock('../lib/speech', () => ({
 }))
 
 const copy: PracticeChallengeCopy = {
-  playPromptAudio: (current: number) => `Play the audio for question ${current}`,
   playOptionAudio: (option: string) => `Play ${option}`,
   correctFeedback: 'Correct!',
   incorrectFeedback: 'Not quite.',
@@ -72,10 +71,22 @@ describe('PracticeChallenge', () => {
     expect(screen.queryByText(/^Streak$/)).not.toBeInTheDocument()
     expect(screen.queryByText(/^Lives$/)).not.toBeInTheDocument()
 
-    if (firstQuestion.kind === 'listen') {
-      expect(screen.getByRole('button', { name: 'Play the audio for question 1' })).toBeVisible()
-    } else {
-      expect(screen.queryByRole('button', { name: 'Play the audio for question 1' })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Play the audio for question 1' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('labels every option with an A/B/C letter badge', () => {
+    const challenge = renderChallenge()
+
+    const optionLetters = screen.getAllByText(/^[A-D]$/, { selector: '.option-button__letter' })
+    expect(optionLetters.map((node) => node.textContent)).toEqual(['A', 'B', 'C', 'D'])
+
+    for (const question of challenge.questions) {
+      for (const option of question.options) {
+        expect(screen.getByText(option.label, { selector: '.option-button__label' })).toBeVisible()
+      }
+      break
     }
   })
 
@@ -98,32 +109,45 @@ describe('PracticeChallenge', () => {
     }
   })
 
-  it('auto-plays the target audio for listen questions', async () => {
+  it('plays option audio without submitting the answer', async () => {
     const user = userEvent.setup()
-    const challenge = renderChallenge()
+    const seed = Array.from({ length: 100 }, (_, candidate) => candidate).find((candidate) =>
+      buildPracticeChallenge(selfIntroLesson, 'en', 5, candidate)
+        .questions[0].options.some((option) => option.audio),
+    )
+    expect(seed).toBeDefined()
 
-    for (const question of challenge.questions) {
-      if (question.kind === 'listen') {
-        await waitFor(() => {
-          expect(speakChinese).toHaveBeenCalledWith(
-            expect.objectContaining({ audioSrc: question.audio }),
-          )
-        })
-      } else {
-        expect(speakChinese).not.toHaveBeenCalled()
-      }
+    const challenge = renderChallenge({ seed: seed! })
+    const audibleOption = challenge.questions[0].options.find((option) => option.audio)
 
-      vi.mocked(speakChinese).mockClear()
+    expect(audibleOption).toBeDefined()
+    vi.mocked(speakChinese).mockClear()
 
-      const correctLabel =
-        question.options.find((option) => option.id === question.correctOptionId)?.label ?? ''
-      await user.click(screen.getByRole('button', { name: correctLabel }))
+    await user.click(screen.getByRole('button', { name: `Play ${audibleOption!.label}` }))
 
-      const nextButton = screen.queryByRole('button', { name: copy.nextQuestion })
-      if (nextButton) {
-        await user.click(nextButton)
-      }
-    }
+    expect(speakChinese).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: audibleOption!.label,
+        audioSrc: audibleOption!.audio,
+      }),
+    )
+    expect(screen.queryByText(copy.correctFeedback)).not.toBeInTheDocument()
+    expect(screen.queryByText(copy.incorrectFeedback)).not.toBeInTheDocument()
+  })
+
+  it('does not auto-play the correct answer for listen questions', async () => {
+    const seed = Array.from({ length: 100 }, (_, candidate) => candidate).find(
+      (candidate) =>
+        buildPracticeChallenge(selfIntroLesson, 'en', 5, candidate).questions[0]?.kind ===
+        'listen',
+    )
+    expect(seed).toBeDefined()
+
+    renderChallenge({ seed: seed! })
+
+    await waitFor(() => {
+      expect(speakChinese).not.toHaveBeenCalled()
+    })
   })
 
   it('advances through choice questions and reports completion once finished', async () => {

@@ -22,7 +22,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '请问，你可以帮我吗？',
         pinyin: 'Qǐng wèn, nǐ kě yǐ bāng wǒ ma?',
         translation: { en: 'Excuse me, can you help me?', fr: 'Excusez-moi, pouvez-vous m\'aider ?' },
-        explanation: { en: 'Use this to open a polite help request in a public place.', fr: 'Utilise cette structure pour ouvrir une demande d’aide polie dans un lieu public.' },
+        explanation: { en: '请问 = excuse me / may I ask｜你 = you｜可以 = can｜帮我 = help me｜吗 = yes-or-no question particle. Use this to begin a polite request for help.', fr: '请问 = excusez-moi｜你 = tu / vous｜可以 = pouvoir｜帮我 = m’aider｜吗 = particule de question fermée. Utilisez cette phrase pour commencer une demande d’aide polie.' },
         audio: '/audio/ask-for-help-problem/line-01.mp3',
       },
       {
@@ -31,7 +31,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我护照丢了。',
         pinyin: 'Wǒ hù zhào diū le.',
         translation: { en: 'I lost my passport.', fr: 'J\'ai perdu mon passeport.' },
-        explanation: { en: 'Name the lost item after 丢了, like your passport.', fr: 'Nomme l\'objet perdu après 丢了, comme ton passeport.' },
+        explanation: { en: '我 = I / my｜护照 = passport｜丢了 = got lost / is missing. Use this to report that your passport has been lost.', fr: '我 = je / mon｜护照 = passeport｜丢了 = s’est perdu / a disparu. Utilisez cette phrase pour signaler la perte de votre passeport.' },
         audio: '/audio/ask-for-help-problem/line-02.mp3',
       },
       {
@@ -40,7 +40,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '请说慢一点。',
         pinyin: 'Qǐng shuō màn yì diǎn.',
         translation: { en: 'Please speak slower.', fr: 'Parlez plus lentement, s\'il vous plaît.' },
-        explanation: { en: 'Ask 请说慢一点 when the other person speaks too fast.', fr: 'Demande 请说慢一点 quand l\'autre personne parle trop vite.' },
+        explanation: { en: '请 = please｜说 = speak｜慢一点 = a little more slowly. Use this polite request when someone is speaking too fast.', fr: '请 = s’il vous plaît｜说 = parler｜慢一点 = un peu plus lentement. Utilisez cette demande polie lorsque quelqu’un parle trop vite.' },
         audio: '/audio/ask-for-help-problem/line-03.mp3',
       },
       {
@@ -49,7 +49,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我听不懂。',
         pinyin: 'Wǒ tīng bù dǒng.',
         translation: { en: 'I don\'t understand.', fr: 'Je ne comprends pas.' },
-        explanation: { en: 'Say 我听不懂 to let the helper know you need simpler words.', fr: 'Dis 我听不懂 pour indiquer à la personne que tu as besoin de mots plus simples.' },
+        explanation: { en: '我 = I｜听 = hear / listen｜不懂 = do not understand. Say this when you cannot understand what you hear.', fr: '我 = je｜听 = entendre / écouter｜不懂 = ne pas comprendre. Dites cette phrase lorsque vous ne comprenez pas ce que vous entendez.' },
         audio: '/audio/ask-for-help-problem/line-04.mp3',
       },
       {
@@ -58,7 +58,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我手机没电了。',
         pinyin: 'Wǒ shǒu jī méi diàn le.',
         translation: { en: 'My phone is dead.', fr: 'Mon téléphone n\'a plus de batterie.' },
-        explanation: { en: 'Say 我手机没电了 when your phone has run out of battery.', fr: 'Dis 我手机没电了 quand ton téléphone n\'a plus de batterie.' },
+        explanation: { en: '我手机 = my phone｜没电 = be out of power｜了 = changed state. Use this to explain that your phone’s battery is dead.', fr: '我手机 = mon téléphone｜没电 = ne plus avoir de batterie｜了 = changement de situation. Utilisez cette phrase pour expliquer que votre téléphone est déchargé.' },
         audio: '/audio/ask-for-help-problem/line-05.mp3',
       },
       {
@@ -66,8 +66,8 @@ export const askForHelpProblemLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '请问哪里可以给手机充电？',
         pinyin: 'Qǐng wèn nǎ lǐ kě yǐ gěi shǒu jī chōng diàn?',
-        translation: { en: 'Where can I charge my phone?', fr: 'Où puis-je recharger mon téléphone ?' },
-        explanation: { en: 'Ask 哪里可以给手机充电 to find a place to charge your phone.', fr: 'Demande 哪里可以给手机充电 pour trouver un endroit où recharger ton téléphone.' },
+        translation: { en: 'Excuse me, where can I charge my phone?', fr: 'Excusez-moi, où puis-je recharger mon téléphone ?' },
+        explanation: { en: '请问 = excuse me / may I ask｜哪里 = where｜可以 = can｜给手机充电 = charge a phone. Ask this when looking for a charging point.', fr: '请问 = excusez-moi｜哪里 = où｜可以 = pouvoir｜给手机充电 = recharger un téléphone. Posez cette question pour trouver un point de recharge.' },
         audio: '/audio/ask-for-help-problem/line-06.mp3',
       },
       {
@@ -75,8 +75,8 @@ export const askForHelpProblemLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '您好，共享单车怎么用？',
         pinyin: 'Nín hǎo, gòng xiǎng dān chē zěn me yòng?',
-        translation: { en: 'How do I use the shared bike?', fr: 'Bonjour, comment utiliser le vélo partagé ?' },
-        explanation: { en: 'Ask 共享单车怎么用 to learn how to use a shared bike.', fr: 'Demande 共享单车怎么用 pour apprendre à utiliser un vélo partagé.' },
+        translation: { en: 'Hello, how do I use a shared bike?', fr: 'Bonjour, comment utiliser le vélo partagé ?' },
+        explanation: { en: '您好 = hello, politely｜共享单车 = shared bike｜怎么 = how｜用 = use. Ask this when you need instructions for a bike-sharing service.', fr: '您好 = bonjour, poliment｜共享单车 = vélo partagé｜怎么 = comment｜用 = utiliser. Posez cette question pour demander comment fonctionne un service de vélos partagés.' },
         audio: '/audio/ask-for-help-problem/line-07.mp3',
       },
       {
@@ -85,7 +85,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '能帮我一个忙吗？',
         pinyin: 'Néng bāng wǒ yí gè máng ma?',
         translation: { en: 'Could you do me a favor?', fr: 'Pouvez-vous me rendre un service ?' },
-        explanation: { en: 'Use 能帮我一个忙吗 to ask someone for a favor politely.', fr: 'Utilise 能帮我一个忙吗 pour demander poliment un service.' },
+        explanation: { en: '能 = can / could｜帮我 = help me｜一个忙 = a favor｜吗 = yes-or-no question particle. Use this polite sentence to ask someone for a favor.', fr: '能 = pouvoir｜帮我 = m’aider｜一个忙 = un service｜吗 = particule de question fermée. Utilisez cette phrase polie pour demander un service.' },
         audio: '/audio/ask-for-help-problem/line-08.mp3',
       },
       {
@@ -93,8 +93,8 @@ export const askForHelpProblemLesson: LessonContent = {
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '麻烦你了。',
         pinyin: 'Má fan nǐ le.',
-        translation: { en: 'Sorry to trouble you.', fr: 'Désolé de vous déranger.' },
-        explanation: { en: 'Say 麻烦你了 to thank someone after asking for their help.', fr: 'Dis 麻烦你了 pour remercier quelqu\'un après lui avoir demandé de l\'aide.' },
+        translation: { en: 'Thank you for your help.', fr: 'Merci pour votre aide.' },
+        explanation: { en: '麻烦 = trouble / inconvenience｜你 = you｜了 = completed situation. Use 麻烦你了 to acknowledge someone’s effort and thank them for helping.', fr: '麻烦 = dérangement / peine｜你 = vous｜了 = situation accomplie. Utilisez 麻烦你了 pour reconnaître l’effort de quelqu’un et le remercier.' },
         audio: '/audio/ask-for-help-problem/line-09.mp3',
       },
       {
@@ -103,7 +103,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '救命！',
         pinyin: 'Jiù mìng!',
         translation: { en: 'Help!', fr: 'Au secours !' },
-        explanation: { en: 'Shout 救命 in an emergency to call for urgent help.', fr: 'Crie 救命 en cas d\'urgence pour appeler de l\'aide.' },
+        explanation: { en: '救 = save｜命 = life. Shout 救命！ only in an emergency when you need immediate help.', fr: '救 = sauver｜命 = vie. Criez 救命！ uniquement en cas d’urgence pour obtenir une aide immédiate.' },
         audio: '/audio/ask-for-help-problem/line-10.mp3',
       },
       {
@@ -112,7 +112,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我迷路了。',
         pinyin: 'Wǒ mí lù le.',
         translation: { en: 'I am lost.', fr: 'Je suis perdu(e).' },
-        explanation: { en: 'Say 我迷路了 when you cannot find your way.', fr: 'Dis 我迷路了 quand tu ne trouves pas ton chemin.' },
+        explanation: { en: '我 = I｜迷路 = be lost｜了 = changed state. Say this when you cannot find your way.', fr: '我 = je｜迷路 = se perdre｜了 = changement de situation. Dites cette phrase lorsque vous ne trouvez plus votre chemin.' },
         audio: '/audio/ask-for-help-problem/line-11.mp3',
       },
       {
@@ -121,7 +121,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '请给警察打电话。',
         pinyin: 'Qǐng gěi jǐng chá dǎ diàn huà.',
         translation: { en: 'Please call the police.', fr: 'Veuillez appeler la police.' },
-        explanation: { en: 'Ask 请给警察打电话 when you need the police in an emergency.', fr: 'Demande 请给警察打电话 quand tu as besoin de la police en urgence.' },
+        explanation: { en: '请 = please｜给 = to / for｜警察 = police｜打电话 = make a phone call. Use this urgent request when you need someone to call the police.', fr: '请 = s’il vous plaît｜给 = à / pour｜警察 = police｜打电话 = téléphoner. Utilisez cette demande urgente pour faire appeler la police.' },
         audio: '/audio/ask-for-help-problem/line-12.mp3',
       },
       {
@@ -130,7 +130,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '卫生间在哪里？',
         pinyin: 'Wèi shēng jiān zài nǎ lǐ?',
         translation: { en: 'Where is the toilet?', fr: 'Où sont les toilettes ?' },
-        explanation: { en: 'Ask 卫生间在哪里 to find a restroom in a public place.', fr: 'Demande 卫生间在哪里 pour trouver des toilettes dans un lieu public.' },
+        explanation: { en: '卫生间 = restroom｜在 = be at｜哪里 = where. Ask this in a public place when you need the restroom.', fr: '卫生间 = toilettes｜在 = se trouver｜哪里 = où. Posez cette question dans un lieu public pour trouver les toilettes.' },
         audio: '/audio/ask-for-help-problem/line-13.mp3',
       },
       {
@@ -139,7 +139,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '打扰一下,请问最近的便利店在哪里?',
         pinyin: 'Dǎ rǎo yí xià, qǐng wèn zuì jìn de biàn lì diàn zài nǎ lǐ?',
         translation: { en: 'Excuse me, where is the nearest convenience store?', fr: 'Excusez-moi, où est la supérette la plus proche ?' },
-        explanation: { en: 'Ask 最近的便利店在哪里 to find a nearby convenience store.', fr: 'Demande 最近的便利店在哪里 pour trouver une supérette proche.' },
+        explanation: { en: '打扰一下 = excuse me｜请问 = may I ask｜最近的 = nearest｜便利店 = convenience store｜在哪里 = where is. Use this polite question to find the closest convenience store.', fr: '打扰一下 = excusez-moi｜请问 = puis-je demander｜最近的 = le plus proche｜便利店 = supérette｜在哪里 = où se trouve. Utilisez cette question polie pour trouver la supérette la plus proche.' },
         audio: '/audio/ask-for-help-problem/line-14.mp3',
       },
       {
@@ -148,7 +148,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我的手机不见了。',
         pinyin: 'Wǒ de shǒu jī bú jiàn le.',
         translation: { en: 'I lost my phone.', fr: 'J\'ai perdu mon téléphone.' },
-        explanation: { en: 'Say 我的手机不见了 to report a lost phone.', fr: 'Dis 我的手机不见了 pour signaler un téléphone perdu.' },
+        explanation: { en: '我的 = my｜手机 = phone｜不见了 = is missing. Use this to tell someone that you cannot find your phone.', fr: '我的 = mon｜手机 = téléphone｜不见了 = a disparu. Utilisez cette phrase pour dire que vous ne trouvez plus votre téléphone.' },
         audio: '/audio/ask-for-help-problem/line-15.mp3',
       },
       {
@@ -157,7 +157,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我的钱包不见了。',
         pinyin: 'Wǒ de qián bāo bú jiàn le.',
         translation: { en: 'I lost my wallet.', fr: 'J\'ai perdu mon portefeuille.' },
-        explanation: { en: 'Say 我的钱包不见了 to report a lost wallet.', fr: 'Dis 我的钱包不见了 pour signaler un portefeuille perdu.' },
+        explanation: { en: '我的 = my｜钱包 = wallet｜不见了 = is missing. Use this to tell someone that you cannot find your wallet.', fr: '我的 = mon｜钱包 = portefeuille｜不见了 = a disparu. Utilisez cette phrase pour dire que vous ne trouvez plus votre portefeuille.' },
         audio: '/audio/ask-for-help-problem/line-16.mp3',
       },
     ],
@@ -168,7 +168,7 @@ export const askForHelpProblemLesson: LessonContent = {
       pattern: '你可以帮我吗？',
       pinyin: 'Nǐ kě yǐ bāng wǒ ma?',
       meaning: {
-        en: 'Excuse me, can you help me?',
+        en: 'Can you help me?',
         fr: 'Pouvez-vous m\'aider ?',
       },
       audio: '/audio/ask-for-help-problem/pattern-01.mp3',
@@ -185,29 +185,29 @@ export const askForHelpProblemLesson: LessonContent = {
       examples: [
         {
           fill: '护照',
-          fillPinyin: 'hùzhào',
+          fillPinyin: 'hù zhào',
           hanzi: '我的护照丢了。',
           pinyin: 'Wǒ de hù zhào diū le.',
-          en: 'passport',
-          fr: 'passeport',
+          en: 'I lost my passport.',
+          fr: 'J’ai perdu mon passeport.',
           audio: '/audio/ask-for-help-problem/pattern-02-example-01.mp3',
         },
         {
           fill: '手机',
-          fillPinyin: 'shǒujī',
+          fillPinyin: 'shǒu jī',
           hanzi: '我的手机丢了。',
           pinyin: 'Wǒ de shǒu jī diū le.',
-          en: 'phone',
-          fr: 'téléphone',
+          en: 'I lost my phone.',
+          fr: 'J’ai perdu mon téléphone.',
           audio: '/audio/ask-for-help-problem/pattern-02-example-02.mp3',
         },
         {
           fill: '钱包',
-          fillPinyin: 'qiánbāo',
+          fillPinyin: 'qián bāo',
           hanzi: '我的钱包丢了。',
           pinyin: 'Wǒ de qián bāo diū le.',
-          en: 'wallet',
-          fr: 'portefeuille',
+          en: 'I lost my wallet.',
+          fr: 'J’ai perdu mon portefeuille.',
           audio: '/audio/ask-for-help-problem/pattern-02-example-03.mp3',
         },
       ],
@@ -257,8 +257,8 @@ export const askForHelpProblemLesson: LessonContent = {
       pattern: '请问哪里可以给手机充电？',
       pinyin: 'Qǐng wèn nǎ lǐ kě yǐ gěi shǒu jī chōng diàn?',
       meaning: {
-        en: 'Where can I charge my phone?',
-        fr: 'Où puis-je recharger mon téléphone ?',
+        en: 'Excuse me, where can I charge my phone?',
+        fr: 'Excusez-moi, où puis-je recharger mon téléphone ?',
       },
     
       audio: '/audio/ask-for-help-problem/line-06.mp3',},
@@ -287,8 +287,8 @@ export const askForHelpProblemLesson: LessonContent = {
       pattern: '麻烦你了。',
       pinyin: 'Má fan nǐ le.',
       meaning: {
-        en: 'Sorry to trouble you.',
-        fr: 'Désolé de vous déranger.',
+        en: 'Thank you for your help.',
+        fr: 'Merci pour votre aide.',
       },
     
       audio: '/audio/ask-for-help-problem/line-09.mp3',},
@@ -344,8 +344,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'aide / aider',
       },
       explanation: {
-        en: 'The core idea behind 帮我一下.',
-        fr: 'L’idée centrale derrière 帮我一下.',
+        en: 'Use 帮忙 when offering help or asking someone to help.',
+        fr: 'Utilisez 帮忙 pour proposer de l’aide ou demander à quelqu’un d’aider.',
       },
     },
     {
@@ -372,8 +372,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'téléphone',
       },
       explanation: {
-        en: 'The object with the problem in this scenario.',
-        fr: 'L’objet qui a un problème dans cette situation.',
+        en: 'A common word used when explaining a phone problem or asking to charge it.',
+        fr: 'Un mot courant pour expliquer un problème de téléphone ou demander à le recharger.',
       },
     },
     {
@@ -404,8 +404,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'Une phrase de réparation pour comprendre le chinois parlé.',
       },
     },
-    { id: 'ask-for-help-problem-vocab-6', hanzi: '没电', pinyin: 'méi diàn', audio: '/audio/ask-for-help-problem/vocab-06.mp3', meaning: { en: 'out of battery / no power', fr: 'plus de batterie / pas d\'électricité' }, explanation: { en: 'The key phrase for a dead phone or device.', fr: 'La phrase clé pour un téléphone ou un appareil déchargé.' } },
-    { id: 'ask-for-help-problem-vocab-7', hanzi: '无线网', pinyin: 'wú xiàn wǎng', audio: '/audio/ask-for-help-problem/vocab-07.mp3', meaning: { en: 'WiFi / wireless network', fr: 'WiFi / réseau sans fil' }, explanation: { en: 'A common word for WiFi you will see on signs.', fr: 'Un mot courant pour le WiFi que tu verras sur les panneaux.' } },
+    { id: 'ask-for-help-problem-vocab-6', hanzi: '没电', pinyin: 'méi diàn', audio: '/audio/ask-for-help-problem/vocab-06.mp3', meaning: { en: 'out of power / dead battery', fr: 'plus de batterie / pas d\'électricité' }, explanation: { en: 'The key phrase for a dead phone or device.', fr: 'La phrase clé pour un téléphone ou un appareil déchargé.' } },
+    { id: 'ask-for-help-problem-vocab-7', hanzi: '无线网', pinyin: 'wú xiàn wǎng', audio: '/audio/ask-for-help-problem/vocab-07.mp3', meaning: { en: 'Wi-Fi / wireless network', fr: 'WiFi / réseau sans fil' }, explanation: { en: 'A common word for WiFi you will see on signs.', fr: 'Un mot courant pour le WiFi que tu verras sur les panneaux.' } },
     { id: 'ask-for-help-problem-vocab-8', hanzi: '密码', pinyin: 'mì mǎ', audio: '/audio/ask-for-help-problem/vocab-08.mp3', meaning: { en: 'password / PIN', fr: 'mot de passe / code' }, explanation: { en: 'You will hear this when asking for WiFi access.', fr: 'Tu entendras ce mot en demandant l\'accès au WiFi.' } },
     { id: 'ask-for-help-problem-vocab-9', hanzi: '充电', pinyin: 'chōng diàn', audio: '/audio/ask-for-help-problem/vocab-09.mp3', meaning: { en: 'charge / recharge', fr: 'charger / recharger' }, explanation: { en: 'The action to restore battery power.', fr: 'L\'action pour restaurer la batterie.' } },
     { id: 'ask-for-help-problem-vocab-10', hanzi: '没关系', pinyin: 'méi guān xi', audio: '/audio/ask-for-help-problem/vocab-10.mp3', meaning: { en: 'no problem / it doesn\'t matter', fr: 'pas de problème / ce n\'est pas grave' }, explanation: { en: 'A friendly phrase to keep the help exchange relaxed.', fr: 'Une phrase amicale pour garder l\'échange d\'aide détendu.' } },
@@ -421,11 +421,11 @@ export const askForHelpProblemLesson: LessonContent = {
         target: '我的手机有问题，不能支付。',
         audio: '/audio/ask-for-help-problem/practice-listening-01.mp3',
         explanation: {
-          en: 'This is the key explanation after asking for help.',
-          fr: 'C’est l’explication clé après la demande d’aide.',
+          en: '我的手机 = my phone｜有问题 = has a problem｜不能支付 = cannot make a payment. Use this to explain the issue after asking for help.',
+          fr: '我的手机 = mon téléphone｜有问题 = a un problème｜不能支付 = ne peut pas payer. Utilisez cette phrase pour expliquer le problème après avoir demandé de l’aide.',
         },
       },
-      { id: 'ask-for-help-problem-listening-2', prompt: { en: 'Which phrase warns about low battery?', fr: 'Quelle phrase avertit d\'une batterie faible ?' }, target: '快没电了。', audio: '/audio/ask-for-help-problem/practice-listening-02.mp3', explanation: { en: '快没电了 is the warning you say or hear when battery is low.', fr: '快没电了 est l\'avertissement que tu dis ou entends quand la batterie est faible.' } },
+      { id: 'ask-for-help-problem-listening-2', prompt: { en: 'Which phrase warns about low battery?', fr: 'Quelle phrase avertit d\'une batterie faible ?' }, target: '快没电了。', audio: '/audio/ask-for-help-problem/practice-listening-02.mp3', explanation: { en: '快 = soon / almost｜没电 = be out of power｜了 = impending change. Use this warning when a battery is almost empty.', fr: '快 = bientôt / presque｜没电 = ne plus avoir de batterie｜了 = changement imminent. Utilisez cet avertissement lorsque la batterie est presque vide.' } },
     ],
     speaking: [
       {
@@ -437,11 +437,11 @@ export const askForHelpProblemLesson: LessonContent = {
         target: '可以帮我一下吗？',
         audio: '/audio/ask-for-help-problem/practice-speaking-01.mp3',
         explanation: {
-          en: 'Open with the polite request before explaining the issue.',
-          fr: 'Commence par la demande polie avant d’expliquer le problème.',
+          en: '可以 = can / could｜帮我 = help me｜一下 = for a moment｜吗 = yes-or-no question particle. Begin with this polite request before explaining the problem.',
+          fr: '可以 = pouvoir｜帮我 = m’aider｜一下 = un instant｜吗 = particule de question fermée. Commencez par cette demande polie avant d’expliquer le problème.',
         },
       },
-      { id: 'ask-for-help-problem-speaking-2', prompt: { en: 'Ask if there is WiFi here.', fr: 'Demande s\'il y a du WiFi ici.' }, target: '这里有WiFi吗？', audio: '/audio/ask-for-help-problem/practice-speaking-02.mp3', explanation: { en: 'A practical question when you need internet access.', fr: 'Une question pratique quand tu as besoin d\'accès internet.' } },
+      { id: 'ask-for-help-problem-speaking-2', prompt: { en: 'Ask if there is WiFi here.', fr: 'Demande s\'il y a du WiFi ici.' }, target: '这里有WiFi吗？', audio: '/audio/ask-for-help-problem/practice-speaking-02.mp3', explanation: { en: '这里 = here｜有 = have / there is｜WiFi = Wi-Fi｜吗 = yes-or-no question particle. Ask this when you need internet access.', fr: '这里 = ici｜有 = avoir / il y a｜WiFi = Wi-Fi｜吗 = particule de question fermée. Posez cette question lorsque vous avez besoin d’un accès à Internet.' } },
     ],
     reading: [
       {
@@ -453,8 +453,8 @@ export const askForHelpProblemLesson: LessonContent = {
         target: '请慢一点说。',
         audio: '/audio/ask-for-help-problem/practice-reading-01.mp3',
         explanation: {
-          en: 'This helps you keep the conversation understandable.',
-          fr: 'Cela t’aide à garder la conversation compréhensible.',
+          en: '请 = please｜慢一点 = a little more slowly｜说 = speak. Use this request when speech is too fast to follow.',
+          fr: '请 = s’il vous plaît｜慢一点 = un peu plus lentement｜说 = parler. Utilisez cette demande lorsque la personne parle trop vite.',
         },
       },
       { id: 'ask-for-help-problem-reading-2', prompt: { en: 'Match the phrase for "no problem".', fr: 'Associe la phrase pour "pas de problème".' }, target: '没关系', audio: '/audio/ask-for-help-problem/practice-reading-02.mp3', explanation: { en: '没关系 is a friendly go-to reply in many situations.', fr: '没关系 est une réponse amicale passe-partout dans de nombreuses situations.' } },
@@ -469,8 +469,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'aidez-moi un instant',
       },
       explanation: {
-        en: 'A polite core help request.',
-        fr: 'Une demande d’aide centrale et polie.',
+        en: '帮 = help｜我 = me｜一下 = for a moment. Use this short phrase inside a polite request for help.',
+        fr: '帮 = aider｜我 = moi｜一下 = un instant. Utilisez cette courte expression dans une demande d’aide polie.',
       },
     },
     {
@@ -481,8 +481,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'a un problème',
       },
       explanation: {
-        en: 'Use it after the item with the issue.',
-        fr: 'Utilise-le après l’objet qui pose problème.',
+        en: '有 = have｜问题 = problem. Put this after an item to say that something is wrong with it.',
+        fr: '有 = avoir｜问题 = problème. Placez cette expression après un objet pour dire qu’il présente un problème.',
       },
     },
     {
@@ -493,11 +493,11 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'un peu plus lentement',
       },
       explanation: {
-        en: 'A repair phrase when speech is too fast.',
-        fr: 'Une phrase de réparation si la parole est trop rapide.',
+        en: '慢 = slow｜一点 = a little. Use this phrase to ask someone to slow down.',
+        fr: '慢 = lent｜一点 = un peu. Utilisez cette expression pour demander à quelqu’un de ralentir.',
       },
     },
-    { id: 'ask-for-help-problem-review-4', front: '没电', back: { en: 'out of battery', fr: 'plus de batterie' }, explanation: { en: 'Say this when your phone is dead.', fr: 'Dis ceci quand ton téléphone est déchargé.' } },
+    { id: 'ask-for-help-problem-review-4', front: '没电', back: { en: 'out of power / dead battery', fr: 'plus de batterie' }, explanation: { en: 'Say this when your phone is dead.', fr: 'Dis ceci quand ton téléphone est déchargé.' } },
     { id: 'ask-for-help-problem-review-5', front: '密码', back: { en: 'password', fr: 'mot de passe' }, explanation: { en: 'Ask for this when connecting to WiFi.', fr: 'Demande ceci pour te connecter au WiFi.' } },
     { id: 'ask-for-help-problem-review-6', front: '没关系', back: { en: 'no problem', fr: 'pas de problème' }, explanation: { en: 'A friendly reply that keeps the exchange relaxed.', fr: 'Une réponse amicale qui garde l\'échange détendu.' } },
   ],

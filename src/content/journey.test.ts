@@ -68,6 +68,10 @@ describe('journey content', () => {
   it('pins the EN/FR Journey copy and icons for the same twelve lessons', () => {
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'en'))).toEqual(expectedEnglishTitles)
     expect(journeyNodes.map((node) => getLocalizedText(node.title, 'fr'))).toEqual(expectedFrenchTitles)
+    expect(journeyNodes[0]?.eyebrow).toEqual({
+      en: 'Etiquette',
+      fr: 'Étiquette',
+    })
     expect(journeyNodeIcons).toEqual({
       'daily-greetings': '👋',
       'airport-immigration': '✈️',

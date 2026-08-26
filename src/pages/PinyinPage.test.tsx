@@ -159,16 +159,27 @@ describe('PinyinPage', () => {
     expect(screen.getByRole('button', { name: 'Play bā' })).toBeVisible()
   })
 
-  it('shows annotation markers and side-by-side notes for er and ü in the finals module', async () => {
+  it('keeps er and ü cards star-free while marking their side-by-side notes', async () => {
     const user = userEvent.setup()
     renderRoute('/pinyin')
 
     await user.click(screen.getByRole('tab', { name: 'Finals' }))
 
-    const noteMarkers = screen.getAllByTestId('pinyin-note-mark')
-    expect(noteMarkers).toHaveLength(4)
+    for (const phoneme of ['er', 'ü']) {
+      const card = screen
+        .getByText(phoneme, { selector: '.pinyin-reference-card__phoneme' })
+        .closest('[data-testid="pinyin-card"]')
 
-    expect(screen.getAllByTestId('pinyin-note')).toHaveLength(2)
+      expect(card).not.toBeNull()
+      expect(within(card as HTMLElement).queryByTestId('pinyin-note-mark')).not.toBeInTheDocument()
+    }
+
+    const noteMarkers = screen.getAllByTestId('pinyin-note-mark')
+    expect(noteMarkers).toHaveLength(2)
+
+    for (const note of screen.getAllByTestId('pinyin-note')) {
+      expect(within(note).getByTestId('pinyin-note-mark')).toBeVisible()
+    }
 
     expect(screen.getByText('Spelling rule for ü: when following j, q, x, the dots are omitted in writing, but we still pronounce it as ü. Examples: ju, qu, xu.')).toBeVisible()
     expect(

@@ -48,6 +48,12 @@ function ruleBlock(selector: string) {
   return match[1]
 }
 
+function ruleBlocks(selector: string) {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`${escapedSelector}\\s*{([\\s\\S]*?)}`, 'g')
+  return Array.from(css.matchAll(regex), (match) => match[1])
+}
+
 function hasRule(selector: string) {
   const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   return new RegExp(`(^|\\n)\\s*${escapedSelector}\\s*{`, 'm').test(css)
@@ -80,13 +86,31 @@ function mediaBlock(query: string) {
   throw new Error(`Unclosed CSS media query ${query}`)
 }
 
-function hasMediaRuleWithDeclaration(query: string, selector: string, declaration: string) {
-  const rules = mediaBlock(query).matchAll(/([^{}]+)\{([^{}]*)}/g)
+function mediaBlocks(query: string) {
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const matches = Array.from(css.matchAll(new RegExp(`@media\\s*${escapedQuery}\\s*{`, 'g')))
 
-  for (const rule of rules) {
-    const selectors = rule[1].split(',').map((candidate) => candidate.trim())
-    if (selectors.includes(selector) && rule[2].includes(declaration)) {
-      return true
+  return matches.map((match) => {
+    const openingBrace = match.index + match[0].lastIndexOf('{')
+    let depth = 1
+    for (let index = openingBrace + 1; index < css.length; index += 1) {
+      if (css[index] === '{') depth += 1
+      if (css[index] === '}') depth -= 1
+      if (depth === 0) return css.slice(openingBrace + 1, index)
+    }
+    throw new Error(`Unclosed CSS media query ${query}`)
+  })
+}
+
+function hasMediaRuleWithDeclaration(query: string, selector: string, declaration: string) {
+  for (const block of mediaBlocks(query)) {
+    const rules = block.matchAll(/([^{}]+)\{([^{}]*)}/g)
+
+    for (const rule of rules) {
+      const selectors = rule[1].split(',').map((candidate) => candidate.trim())
+      if (selectors.includes(selector) && rule[2].includes(declaration)) {
+        return true
+      }
     }
   }
 
@@ -496,14 +520,13 @@ describe('global color accessibility tokens', () => {
     ).toBe(true)
   })
 
-  it('adds a shared card hover lift with deepened shadow and reduced-motion guard', () => {
+  it('adds a shared card hover lift while keeping the practice question container static', () => {
     const motionSelectors = [
       '.study-item',
       '.vocabulary-list__item',
       '.dialogue-card',
       '.lesson-card',
       '.review-flashcard',
-      '.practice-challenge__question',
     ]
 
     const combinedMotionSelector = [
@@ -512,14 +535,13 @@ describe('global color accessibility tokens', () => {
       '.dialogue-card',
       '.lesson-card',
       '.review-flashcard',
-      '.practice-challenge__question',
     ].join(',\n')
 
     expect(hasRuleWithDeclaration(combinedMotionSelector, 'transition:')).toBe(true)
 
     const hoverWithInsetSelectors = [
       '.study-item:hover,\n.study-item:focus-within,\n.vocabulary-list__item:hover,\n.vocabulary-list__item:focus-within,\n.dialogue-card:hover,\n.dialogue-card:focus-within',
-      '.lesson-card:hover,\n.lesson-card:focus-within,\n.review-flashcard:hover,\n.review-flashcard:focus-within,\n.practice-challenge__question:hover,\n.practice-challenge__question:focus-within',
+      '.lesson-card:hover,\n.lesson-card:focus-within,\n.review-flashcard:hover,\n.review-flashcard:focus-within',
     ]
     for (const selector of hoverWithInsetSelectors) {
       expect(hasRuleWithDeclaration(selector, 'transform: translateY(-2px);')).toBe(true)
@@ -531,6 +553,13 @@ describe('global color accessibility tokens', () => {
         hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', selector, 'transition: none;'),
       ).toBe(true)
     }
+
+    expect(css).not.toMatch(
+      /\.practice-challenge__question[^{}]*\{[^}]*(?:transition|transform|box-shadow)\s*:/,
+    )
+    expect(css).not.toMatch(
+      /\.practice-challenge__question:(?:hover|focus-within)[^{}]*\{[^}]*(?:transform|box-shadow)\s*:/,
+    )
   })
 
   it('scopes compact three-layer lesson layout away from shared and admin cards', () => {
@@ -619,6 +648,106 @@ describe('global color accessibility tokens', () => {
         '(max-width: 360px)',
         '.pinyin-syllable-intro__parts',
         'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
+  })
+
+  it('renders the pinyin reference note marker inline with its rule text', () => {
+    const note = ruleBlock('.pinyin-reference-note')
+    const text = ruleBlock('.pinyin-reference-note__text')
+
+    expect(note).toContain('display: flex;')
+    expect(note).toContain('flex-wrap: nowrap;')
+    expect(note).toContain('align-items: baseline;')
+    expect(note).not.toContain('flex-wrap: wrap;')
+    expect(text).toContain('flex: 1 1 auto;')
+    expect(text).toContain('min-width: 0;')
+  })
+
+  it('stacks practice challenge questions above their options in one column', () => {
+    const questionBlocks = ruleBlocks('.practice-challenge__question')
+
+    expect(questionBlocks.length).toBeGreaterThan(0)
+    expect(
+      questionBlocks.some((block) => block.includes('grid-template-columns: minmax(0, 1fr);')),
+    ).toBe(true)
+    expect(questionBlocks.some((block) => block.includes('minmax(0, 1.05fr)'))).toBe(false)
+    expect(questionBlocks.some((block) => block.includes('minmax(0, 0.95fr)'))).toBe(false)
+  })
+
+  it('keeps celebration and error feedback animations behind a reduced-motion guard', () => {
+    expect(hasRuleWithDeclaration('.practice-challenge__feedback--correct', 'animation: practice-celebrate-glow 700ms ease-out;')).toBe(true)
+    expect(hasRuleWithDeclaration('.practice-challenge__feedback--incorrect', 'animation: practice-incorrect-shake 400ms ease;')).toBe(true)
+
+    for (const selector of [
+      '.practice-challenge__feedback--correct .practice-challenge__feedback-heading',
+      '.practice-challenge__feedback--correct',
+      '.practice-challenge__feedback--incorrect',
+    ]) {
+      expect(
+        hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', selector, 'animation: none;'),
+      ).toBe(true)
+    }
+  })
+
+  it('renders the practice prompt as a text-only static block', () => {
+    const prompt = ruleBlock('.practice-challenge__prompt')
+    const paragraph = ruleBlock('.practice-challenge__prompt p')
+
+    expect(prompt).not.toContain('display: flex;')
+    expect(prompt).not.toContain('flex-wrap:')
+    expect(hasRule('.practice-challenge__prompt .speech-button')).toBe(false)
+    expect(paragraph).toContain('overflow-wrap: anywhere;')
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 760px)',
+        '.practice-challenge__question',
+        'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
+  })
+
+  it('flows left-aligned practice options as nowrap cards with compact audio', () => {
+    const options = ruleBlock('.practice-challenge__options')
+    const option = ruleBlock('.practice-challenge__option')
+    const answerButton = ruleBlock('.practice-challenge__option .option-button')
+    const speechButton = ruleBlock('.practice-challenge__option .speech-button')
+    const speechIcon = ruleBlock('.practice-challenge__option .speech-button__icon')
+    const label = ruleBlock('.option-button__label')
+    const pinyin = ruleBlock('.practice-challenge__option .option-button__pinyin')
+
+    expect(options).toContain('display: flex;')
+    expect(options).toContain('flex-wrap: wrap;')
+    expect(option).toContain('flex: 1 0 max-content;')
+    expect(option).toContain('min-width: min(100%, 12rem);')
+    expect(option).toContain('max-width: 100%;')
+    expect(option).toContain('align-items: center;')
+    expect(answerButton).toContain('min-width: 0;')
+    expect(answerButton).toContain('justify-content: flex-start;')
+    expect(answerButton).toContain('flex-wrap: nowrap;')
+    expect(answerButton).toContain('text-align: left;')
+    expect(answerButton).toContain('white-space: nowrap;')
+    expect(speechButton).toContain('width: 1.75rem;')
+    expect(speechButton).toContain('min-width: 1.75rem;')
+    expect(speechButton).toContain('margin-top: 0;')
+    expect(speechIcon).toContain('width: 0.8rem;')
+    expect(label).toContain('min-width: 0;')
+    expect(label).toContain('white-space: nowrap;')
+    expect(label).toContain('overflow-wrap: normal;')
+    expect(pinyin).toContain('white-space: nowrap;')
+    expect(pinyin).toContain('overflow-wrap: normal;')
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 480px)',
+        '.practice-challenge__option .option-button',
+        'flex-wrap: wrap;',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 480px)',
+        '.practice-challenge__option .option-button',
+        'white-space: normal;',
       ),
     ).toBe(true)
   })

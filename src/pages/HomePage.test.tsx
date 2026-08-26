@@ -306,7 +306,7 @@ describe('HomePage', () => {
     expect(screen.queryByRole('navigation', { name: /accès rapides d’apprentissage/i }))
       .not.toBeInTheDocument()
 
-    expect(screen.getByText('Bonjour')).toBeVisible()
+    expect(screen.getByText('Étiquette')).toBeVisible()
     expect(screen.getByText('Arrivée')).toBeVisible()
     expect(screen.getByText('Taxi')).toBeVisible()
     expect(screen.getByText('Hôtel')).toBeVisible()

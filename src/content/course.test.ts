@@ -45,6 +45,7 @@ const expectedDailyGreetingsChinese = [
   '不客气。',
   '不好意思。',
   '对不起。',
+  '没关系。',
   '是的。',
   '不是。',
   '再见。',
@@ -125,7 +126,7 @@ describe('course content', () => {
     expect(course.lessons.map((lesson) => lesson.id)).toEqual(expectedLessonIds)
 
     const expandedCounts: Record<string, Record<string, number>> = {
-      'daily-greetings': { dialogue: 17, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'daily-greetings': { dialogue: 18, patterns: 3, vocab: 11, practice: 2, cards: 6 },
       'self-intro': { dialogue: 10, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'ask-directions': { dialogue: 11, patterns: 11, vocab: 10, practice: 2, cards: 6 },
       'order-food': { dialogue: 14, patterns: 13, vocab: 10, practice: 2, cards: 6 },
@@ -187,12 +188,97 @@ describe('course content', () => {
       fr: '打招呼 / Salutations quotidiennes',
     })
     expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
-      Array.from({ length: 17 }, (_, index) => `daily-greetings-line-${String(index + 1).padStart(2, '0')}`),
+      Array.from({ length: 18 }, (_, index) => `daily-greetings-line-${String(index + 1).padStart(2, '0')}`),
     )
 
     for (const phrase of expectedDailyGreetingsChinese) {
       expect(text).toContain(phrase)
     }
+  })
+
+  it('pins the revised daily-greetings explanations, reply, and useful patterns', async () => {
+    const { course } = await import('./course')
+    const lesson = course.lessons[0]
+    const linesByHanzi = new Map(lesson.dialogue.lines.map((line) => [line.hanzi, line]))
+    const vocabularyByHanzi = new Map(lesson.vocabulary.map((item) => [item.hanzi, item]))
+
+    expect(linesByHanzi.get('您好。')?.explanation.en).toBe(
+      '您 = polite ‘you’｜好 = good / well. 您好 is a respectful greeting for elders, service staff, superiors, or strangers.',
+    )
+    expect(linesByHanzi.get('早上好。')?.explanation.en).toBe(
+      '早上 = morning｜好 = good. Use 早上好 as a morning greeting, roughly from waking up until noon.',
+    )
+    expect(linesByHanzi.get('很高兴认识你。')?.explanation.en).toBe(
+      '很 = very｜高兴 = glad / happy｜认识 = meet / get to know｜你 = you. Use this when meeting someone for the first time.',
+    )
+
+    const apologyIndex = lesson.dialogue.lines.findIndex((line) => line.hanzi === '对不起。')
+    expect(lesson.dialogue.lines[apologyIndex + 1]).toEqual(
+      expect.objectContaining({
+        id: 'daily-greetings-line-15',
+        hanzi: '没关系。',
+        audio: '/audio/daily-greetings/line-15.mp3',
+      }),
+    )
+    expect(vocabularyByHanzi.get('没关系')).toEqual(
+      expect.objectContaining({
+        id: 'daily-greetings-vocab-9',
+        audio: '/audio/daily-greetings/vocab-09.mp3',
+      }),
+    )
+
+    expect(lesson.sentencePatterns.map((pattern) => pattern.id)).toEqual([
+      'daily-greetings-pattern-2',
+      'daily-greetings-pattern-4',
+      'daily-greetings-pattern-5',
+    ])
+    expect(lesson.sentencePatterns.map((pattern) => pattern.pattern)).toEqual([
+      '……吗？',
+      '很高兴……。',
+      '不好意思，……。',
+    ])
+    expect(lesson.sentencePatterns[0]?.meaning.en).toBe(
+      'A particle at the end of a sentence, to make a yes-no question. No real meaning.',
+    )
+    expect(
+      lesson.sentencePatterns.flatMap((pattern) =>
+        (pattern.examples ?? []).map(({ hanzi, en, fr }) => ({ hanzi, en, fr })),
+      ),
+    ).toEqual([
+      { hanzi: '你好吗？', en: 'How are you?', fr: 'Comment allez-vous ?' },
+      { hanzi: '你有空吗？', en: 'Are you free?', fr: 'Êtes-vous libre ?' },
+      { hanzi: '好吃吗？', en: 'Is it tasty?', fr: "Est-ce que c'est bon ?" },
+      {
+        hanzi: '很高兴认识你。',
+        en: 'Nice to meet you.',
+        fr: 'Enchanté de faire votre connaissance.',
+      },
+      {
+        hanzi: '很高兴见到你。',
+        en: 'Nice to see you.',
+        fr: 'Je suis ravi de vous voir.',
+      },
+      {
+        hanzi: '很高兴认识大家。',
+        en: 'Nice to meet everyone.',
+        fr: 'Enchanté de faire connaissance avec tout le monde.',
+      },
+      {
+        hanzi: '不好意思，打扰一下。',
+        en: 'Excuse me for bothering you.',
+        fr: 'Excusez-moi de vous déranger.',
+      },
+      {
+        hanzi: '不好意思，借过一下。',
+        en: 'Excuse me, may I pass?',
+        fr: 'Excusez-moi, puis-je passer ?',
+      },
+      {
+        hanzi: '不好意思，我不会说中文。',
+        en: "Excuse me, I don't speak Chinese.",
+        fr: 'Excusez-moi, je ne parle pas chinois.',
+      },
+    ])
   })
 
   it('uses lesson two as the arrival-at-the-airport lesson with the approved sentences', async () => {
@@ -342,8 +428,8 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(613)
-    expect(new Set(audioPaths).size).toBe(559)
+    expect(audioPaths).toHaveLength(607)
+    expect(new Set(audioPaths).size).toBe(553)
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(

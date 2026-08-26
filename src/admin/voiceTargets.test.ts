@@ -47,7 +47,7 @@ describe('admin batch voice audio targets', () => {
           text: lesson.sentencePatterns[0]!.examples?.[0]?.hanzi ?? lesson.sentencePatterns[0]!.pattern,
           originalAudio: lesson.sentencePatterns[0]!.audio,
           language: 'zh-CN',
-          storageKey: `audio/${lesson.id}/pattern-01.mp3`,
+          storageKey: `audio/${lesson.id}/pattern-02.mp3`,
         }),
         expect.objectContaining({
           targetId: `vocabulary:${lesson.vocabulary[0]!.id}`,
@@ -109,9 +109,9 @@ describe('admin batch voice audio targets', () => {
     expect(completeTargets.some((target) => target.moduleType === 'pronunciation')).toBe(false)
     expect(visibleTargets).toHaveLength(479)
     expect(visibleCounts).toEqual({
-      dialogue: 152,
-      sentencePatterns: 125,
-      vocabulary: 130,
+      dialogue: 153,
+      sentencePatterns: 123,
+      vocabulary: 131,
       practice: 72,
     })
     expect(visibleTargets.every((target) => visibleModuleTypes.has(target.moduleType))).toBe(true)

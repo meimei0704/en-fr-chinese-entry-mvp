@@ -4,12 +4,10 @@ import { getLocalizedText } from '../content/copy'
 import type { ExplanationLanguage } from '../content/types'
 import type { PracticeChallenge, PracticeChallengeQuestion } from '../lib/practiceChallenge'
 import { playPracticeSound } from '../lib/practiceSound'
-import { speakChinese } from '../lib/speech'
 import { ExplanationBlock } from './ExplanationBlock'
 import { SpeechButton } from './SpeechButton'
 
 export interface PracticeChallengeCopy {
-  playPromptAudio: (current: number) => string
   playOptionAudio: (option: string) => string
   answerOptions: string
   correctFeedback: string
@@ -63,7 +61,6 @@ export function PracticeChallenge({
 
   const questions = challenge.questions
   const currentQuestion = questions[questionIndex]
-  const questionNumber = questionIndex + 1
   const isLastQuestion = questionIndex === questions.length - 1
 
   useEffect(() => {
@@ -72,18 +69,6 @@ export function PracticeChallenge({
       onComplete()
     }
   }, [finished, reported, onComplete])
-
-  useEffect(() => {
-    if (!currentQuestion || currentQuestion.kind !== 'listen') {
-      return
-    }
-
-    speakChinese({
-      text: currentQuestion.target,
-      audioSrc: currentQuestion.audio,
-      fallbackAudioSrc: currentQuestion.audioFallback,
-    })
-  }, [currentQuestion])
 
   function submitAnswer(isCorrect: boolean, reveal: string) {
     setAnswers((current) => [...current, { question: currentQuestion, correct: isCorrect }])
@@ -193,25 +178,20 @@ export function PracticeChallenge({
       <div className="practice-challenge__question">
         <div className="practice-challenge__prompt">
           <p>{getLocalizedText(currentQuestion.prompt, language)}</p>
-          {currentQuestion.kind === 'listen' && currentQuestion.audio ? (
-            <SpeechButton
-              label={copy.playPromptAudio(questionNumber)}
-              text={currentQuestion.target}
-              audioSrc={currentQuestion.audio}
-              fallbackAudioSrc={currentQuestion.audioFallback}
-            />
-          ) : null}
         </div>
 
         <div className="practice-challenge__options" role="group" aria-label={copy.answerOptions}>
-          {currentQuestion.options.map((option) => (
+          {currentQuestion.options.map((option, index) => (
             <div className="practice-challenge__option" key={option.id}>
               <button
                 type="button"
                 className="option-button"
                 onClick={() => handleChoice(currentQuestion, option.id)}
               >
-                {option.label}
+                <span className="option-button__letter" aria-hidden="true">
+                  {String.fromCharCode(65 + index)}
+                </span>
+                <span className="option-button__label">{option.label}</span>
                 {option.pinyin ? (
                   <span className="option-button__pinyin" aria-hidden="true">
                     {option.pinyin}
