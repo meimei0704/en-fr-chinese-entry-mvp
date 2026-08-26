@@ -188,7 +188,7 @@ export const dailyGreetingsLesson: LessonContent = {
         pinyin: 'Hěn gāo xìng rèn shi nǐ.',
         translation: {
           en: 'Nice to meet you.',
-          fr: 'Enchanté de faire votre connaissance.',
+          fr: 'Enchanté(e) de faire votre connaissance.',
         },
         explanation: {
           en: '很 = very｜高兴 = glad / happy｜认识 = meet / get to know｜你 = you. Use this when meeting someone for the first time.',
@@ -398,7 +398,7 @@ export const dailyGreetingsLesson: LessonContent = {
           hanzi: '很高兴认识你。',
           pinyin: 'Hěn gāo xìng rèn shi nǐ.',
           en: 'Nice to meet you.',
-          fr: 'Enchanté de faire votre connaissance.',
+          fr: 'Enchanté(e) de faire votre connaissance.',
           audio: '/audio/daily-greetings/pattern-04-example-01.mp3',
         },
         {
@@ -416,7 +416,7 @@ export const dailyGreetingsLesson: LessonContent = {
           hanzi: '很高兴认识大家。',
           pinyin: 'Hěn gāo xìng rèn shi dà jiā.',
           en: 'Nice to meet everyone.',
-          fr: 'Enchanté de faire connaissance avec tout le monde.',
+          fr: 'Enchanté(e) de faire connaissance avec tout le monde.',
           audio: '/audio/daily-greetings/pattern-04-example-03.mp3',
         },
       ],

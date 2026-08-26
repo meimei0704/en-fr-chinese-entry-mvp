@@ -27,6 +27,26 @@ function vocab(lessonId: string, id: string) {
 }
 
 describe('audited course semantics', () => {
+  it('uses the approved gender-compatible French greeting', () => {
+    const greetings = lesson('daily-greetings')
+    expect(line('daily-greetings', 'daily-greetings-line-10').translation.fr).toBe(
+      'Enchanté(e) de faire votre connaissance.',
+    )
+    expect(pattern('daily-greetings', 'daily-greetings-pattern-4').examples).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          hanzi: '很高兴认识你。',
+          fr: 'Enchanté(e) de faire votre connaissance.',
+        }),
+        expect.objectContaining({
+          hanzi: '很高兴认识大家。',
+          fr: 'Enchanté(e) de faire connaissance avec tout le monde.',
+        }),
+      ]),
+    )
+    expect(JSON.stringify(greetings)).not.toContain(':"Enchanté de ')
+  })
+
   it('keeps the airport phrases faithful and natural', () => {
     const airport = lesson('self-intro')
     expect(line('self-intro', 'self-intro-line-01').translation).toEqual({
