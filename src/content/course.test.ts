@@ -251,7 +251,7 @@ describe('course content', () => {
       {
         hanzi: '很高兴认识你。',
         en: 'Nice to meet you.',
-        fr: 'Enchanté de faire votre connaissance.',
+        fr: 'Enchanté(e) de faire votre connaissance.',
       },
       {
         hanzi: '很高兴见到你。',
@@ -261,7 +261,7 @@ describe('course content', () => {
       {
         hanzi: '很高兴认识大家。',
         en: 'Nice to meet everyone.',
-        fr: 'Enchanté de faire connaissance avec tout le monde.',
+        fr: 'Enchanté(e) de faire connaissance avec tout le monde.',
       },
       {
         hanzi: '不好意思，打扰一下。',
