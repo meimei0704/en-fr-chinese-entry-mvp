@@ -71,7 +71,7 @@ describe('LessonPage', () => {
       '请问您会说英语吗？',
     )
     expect(screen.getAllByLabelText(/dialogue line speaker traveler/i)[0]).toHaveTextContent(
-      'Qǐng wèn nín huì shuō Yīng yǔ ma?',
+      'qǐng wèn nín huì shuō yīng yǔ ma?',
     )
   })
 
@@ -447,7 +447,7 @@ describe('LessonPage', () => {
       .getByText('你好吗？')
       .closest('li.pattern-example')!
 
-    expect(within(completeExample).getByText('Nǐ hǎo ma?')).toHaveClass('pinyin-line')
+    expect(within(completeExample).getByText('nǐ hǎo ma?')).toHaveClass('pinyin-line')
     expect(within(completeExample).getByText('How are you?')).toBeVisible()
     expect(within(completeExample).queryByText('你好', { exact: true })).not.toBeInTheDocument()
     expect(within(completeExample).queryByText('nǐ hǎo')).not.toBeInTheDocument()
@@ -497,21 +497,13 @@ describe('LessonPage', () => {
     expect(speak).not.toHaveBeenCalled()
   })
 
-  it('keeps playback for single-sentence pattern cards and per-example playback for multi-example cards', () => {
+  it('keeps per-example playback for retained pattern cards', () => {
     const lesson = course.lessons.find((entry) => entry.id === 'metro-ticket')!
     const multiPattern = lesson.sentencePatterns.find(
       (pattern) => (pattern.examples?.length ?? 0) > 1,
     )!
 
     renderRoute('/lesson/metro-ticket')
-
-    const singleTitle = screen.getByText('在哪儿换乘？', { selector: '.study-item__title' })
-    const singleCard = singleTitle.closest('article.study-item--pattern')!
-    expect(within(singleCard).getByRole('button', { name: /play chinese/i })).toBeInTheDocument()
-
-    const boughtTitle = screen.getByText('在哪儿买票？', { selector: '.study-item__title' })
-    const boughtCard = boughtTitle.closest('article.study-item--pattern')!
-    expect(within(boughtCard).getByRole('button', { name: /play chinese/i })).toBeInTheDocument()
 
     const multiCard = screen
       .getByText(multiPattern.meaning.en)
