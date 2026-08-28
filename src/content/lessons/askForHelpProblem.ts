@@ -253,8 +253,8 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'aide / aider',
       },
       explanation: {
-        en: 'Use 帮忙 when offering help or asking someone to help.',
-        fr: 'Utilisez 帮忙 pour proposer de l’aide ou demander à quelqu’un d’aider.',
+        en: 'Use this word to ask for a favor or offer help. It is useful when you need assistance with luggage, directions, or a phone problem.',
+        fr: 'Utilisez ce mot pour demander un service ou proposer votre aide. Il est utile lorsque vous avez besoin d’aide avec des bagages, un itinéraire ou un problème de téléphone.',
       },
     },
     {
@@ -309,15 +309,15 @@ export const askForHelpProblemLesson: LessonContent = {
         fr: 'un peu plus lentement',
       },
       explanation: {
-        en: 'A repair phrase for understanding spoken Chinese.',
-        fr: 'Une phrase de réparation pour comprendre le chinois parlé.',
+        en: 'Use 慢一点 in requests such as 请说慢一点 (Please speak more slowly) or 请开慢一点 (Please drive more slowly).',
+        fr: 'Utilisez 慢一点 dans des demandes comme 请说慢一点 (Parlez plus lentement, s’il vous plaît) ou 请开慢一点 (Conduisez plus lentement, s’il vous plaît).',
       },
     },
     { id: 'ask-for-help-problem-vocab-6', hanzi: '没电', pinyin: 'méi diàn', audio: '/audio/ask-for-help-problem/vocab-06.mp3', meaning: { en: 'out of power / dead battery', fr: 'plus de batterie / pas d\'électricité' }, explanation: { en: 'The key phrase for a dead phone or device.', fr: 'La phrase clé pour un téléphone ou un appareil déchargé.' } },
     { id: 'ask-for-help-problem-vocab-7', hanzi: '无线网', pinyin: 'wú xiàn wǎng', audio: '/audio/ask-for-help-problem/vocab-07.mp3', meaning: { en: 'Wi-Fi / wireless network', fr: 'WiFi / réseau sans fil' }, explanation: { en: 'A common word for WiFi you will see on signs.', fr: 'Un mot courant pour le WiFi que tu verras sur les panneaux.' } },
     { id: 'ask-for-help-problem-vocab-8', hanzi: '密码', pinyin: 'mì mǎ', audio: '/audio/ask-for-help-problem/vocab-08.mp3', meaning: { en: 'password / PIN', fr: 'mot de passe / code' }, explanation: { en: 'You will hear this when asking for WiFi access.', fr: 'Tu entendras ce mot en demandant l\'accès au WiFi.' } },
-    { id: 'ask-for-help-problem-vocab-9', hanzi: '充电', pinyin: 'chōng diàn', audio: '/audio/ask-for-help-problem/vocab-09.mp3', meaning: { en: 'charge / recharge', fr: 'charger / recharger' }, explanation: { en: 'The action to restore battery power.', fr: 'L\'action pour restaurer la batterie.' } },
-    { id: 'ask-for-help-problem-vocab-10', hanzi: '没关系', pinyin: 'méi guān xi', audio: '/audio/ask-for-help-problem/vocab-10.mp3', meaning: { en: 'no problem / it doesn\'t matter', fr: 'pas de problème / ce n\'est pas grave' }, explanation: { en: 'A friendly phrase to keep the help exchange relaxed.', fr: 'Une phrase amicale pour garder l\'échange d\'aide détendu.' } },
+    { id: 'ask-for-help-problem-vocab-9', hanzi: '充电', pinyin: 'chōng diàn', audio: '/audio/ask-for-help-problem/vocab-09.mp3', meaning: { en: 'charge / recharge', fr: 'charger / recharger' }, explanation: { en: 'Shared power banks are very popular in China’s public places. Scan the QR code to rent one, then return it after charging your phone.', fr: 'Les batteries externes partagées sont très courantes dans les lieux publics en Chine. Scannez le code QR pour en louer une, puis rendez-la après avoir rechargé votre téléphone.' } },
+    { id: 'ask-for-help-problem-vocab-10', hanzi: '没关系', pinyin: 'méi guān xi', audio: '/audio/ask-for-help-problem/vocab-10.mp3', meaning: { en: 'no problem / it doesn\'t matter', fr: 'pas de problème / ce n\'est pas grave' }, explanation: { en: 'Use this mainly to reply when someone apologizes. It can also mean that something is not important.', fr: 'Utilisez cette expression surtout pour répondre à quelqu’un qui s’excuse. Elle peut aussi signifier que quelque chose n’est pas important.' } },
   ],
   practice: {
     listening: [

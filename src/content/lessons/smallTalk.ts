@@ -369,8 +369,8 @@ export const smallTalkLesson: LessonContent = {
         fr: 'discuter',
       },
       explanation: {
-        en: '聊天 is the word for casual chatting.',
-        fr: '聊天 est le mot pour une discussion informelle.',
+        en: 'Use this for relaxed conversation about topics such as travel, food, or where someone is from—not for a formal discussion.',
+        fr: 'Utilisez ce mot pour une conversation détendue sur le voyage, la cuisine ou l’origine de quelqu’un, et non pour une discussion formelle.',
       },
     },
     {

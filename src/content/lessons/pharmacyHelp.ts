@@ -318,8 +318,8 @@ export const pharmacyHelpLesson: LessonContent = {
         fr: 'médicament',
       },
       explanation: {
-        en: 'A core word in pharmacy instructions.',
-        fr: 'Un mot essentiel dans les consignes de pharmacie.',
+        en: 'At a pharmacy, tell the pharmacist your symptoms, ask which medicine is suitable, and confirm how much to take and how often.',
+        fr: 'À la pharmacie, décrivez vos symptômes, demandez quel médicament convient et confirmez la dose ainsi que la fréquence de prise.',
       },
     },
     {

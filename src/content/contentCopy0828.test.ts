@@ -143,6 +143,156 @@ describe('2026-08-28 lesson copy', () => {
     )
   })
 
+  it('uses the approved scene-based vocabulary explanations without untranslated Chinese sentences', () => {
+    const approvedExplanations = [
+      {
+        lessonId: 'self-intro',
+        hanzi: '会说',
+        explanation: {
+          en: 'Use this before a language when asking about someone’s language ability—for example, when seeking help at a hotel, shop, or station.',
+          fr: 'Utilisez ce mot devant une langue pour vous renseigner sur les compétences linguistiques de quelqu’un, par exemple lorsque vous cherchez de l’aide dans un hôtel, un magasin ou une gare.',
+        },
+      },
+      {
+        lessonId: 'self-intro',
+        hanzi: '待',
+        explanation: {
+          en: 'Use this with a place or length of time when telling a host, hotel staff, or an immigration officer how long you are staying.',
+          fr: 'Utilisez ce mot avec un lieu ou une durée pour indiquer à votre hôte, au personnel de l’hôtel ou à un agent d’immigration combien de temps vous comptez rester.',
+        },
+      },
+      {
+        lessonId: 'phone-and-payment',
+        hanzi: '手机号码',
+        explanation: {
+          en: 'You may be asked for this when buying a SIM card, registering for an app, or arranging a delivery.',
+          fr: 'On peut vous le demander lors de l’achat d’une carte SIM, de l’inscription à une application ou de l’organisation d’une livraison.',
+        },
+      },
+      {
+        lessonId: 'phone-and-payment',
+        hanzi: '支付',
+        explanation: {
+          en: 'In China, you will see this word when paying in an app or at checkout. WeChat Pay and Alipay are the most common mobile payment methods.',
+          fr: 'En Chine, vous verrez ce mot au moment de payer dans une application ou à la caisse. WeChat Pay et Alipay sont les moyens de paiement mobile les plus courants.',
+        },
+      },
+      {
+        lessonId: 'phone-and-payment',
+        hanzi: '可以',
+        explanation: {
+          en: 'Put this before an action to ask whether it is possible or allowed, such as when asking about payment methods, Wi-Fi, or available services.',
+          fr: 'Placez ce mot avant une action pour demander si elle est possible ou autorisée, par exemple pour vous renseigner sur les moyens de paiement, le Wi-Fi ou les services disponibles.',
+        },
+      },
+      {
+        lessonId: 'phone-and-payment',
+        hanzi: '充值',
+        explanation: {
+          en: 'With a Chinese prepaid SIM, you can top up through the carrier’s app, Alipay, WeChat, or at a service counter.',
+          fr: 'Avec une carte SIM prépayée chinoise, vous pouvez la recharger depuis l’application de l’opérateur, Alipay, WeChat ou dans un point de service.',
+        },
+      },
+      {
+        lessonId: 'phone-and-payment',
+        hanzi: '余额',
+        explanation: {
+          en: 'Check this before making calls, using mobile data, or paying from an account, so you know how much credit remains.',
+          fr: 'Vérifiez-le avant de téléphoner, d’utiliser des données mobiles ou de payer depuis un compte, afin de connaître le crédit restant.',
+        },
+      },
+      {
+        lessonId: 'train-station-ticket',
+        hanzi: '车票',
+        explanation: {
+          en: 'In China, a train ticket is usually linked to your passport; keep your passport ready when booking and entering the station.',
+          fr: 'En Chine, un billet de train est généralement associé à votre passeport ; gardez celui-ci à portée de main pour réserver et entrer dans la gare.',
+        },
+      },
+      {
+        lessonId: 'metro-ticket',
+        hanzi: '自动售票机',
+        explanation: {
+          en: 'At many metro stations, use a ticket vending machine to choose your destination and buy a single-journey ticket; look for the English-language option on screen.',
+          fr: 'Dans de nombreuses stations de métro, utilisez un distributeur pour choisir votre destination et acheter un ticket à l’unité ; cherchez l’option en anglais à l’écran.',
+        },
+      },
+      {
+        lessonId: 'metro-ticket',
+        hanzi: '上车',
+        explanation: {
+          en: 'Use this when boarding a bus, metro, or train; let passengers get off before you get on.',
+          fr: 'Utilisez ce mot lorsque vous montez dans un bus, un métro ou un train ; laissez d’abord les passagers descendre.',
+        },
+      },
+      {
+        lessonId: 'metro-ticket',
+        hanzi: '下车',
+        explanation: {
+          en: 'Use this when telling a driver or companion which stop you plan to get off at, and listen for it in transport announcements.',
+          fr: 'Utilisez ce mot pour indiquer à un chauffeur ou à un compagnon de voyage à quel arrêt vous comptez descendre, et repérez-le dans les annonces de transport.',
+        },
+      },
+      {
+        lessonId: 'ask-for-help-problem',
+        hanzi: '帮忙',
+        explanation: {
+          en: 'Use this word to ask for a favor or offer help. It is useful when you need assistance with luggage, directions, or a phone problem.',
+          fr: 'Utilisez ce mot pour demander un service ou proposer votre aide. Il est utile lorsque vous avez besoin d’aide avec des bagages, un itinéraire ou un problème de téléphone.',
+        },
+      },
+      {
+        lessonId: 'ask-for-help-problem',
+        hanzi: '慢一点',
+        explanation: {
+          en: 'Use 慢一点 in requests such as 请说慢一点 (Please speak more slowly) or 请开慢一点 (Please drive more slowly).',
+          fr: 'Utilisez 慢一点 dans des demandes comme 请说慢一点 (Parlez plus lentement, s’il vous plaît) ou 请开慢一点 (Conduisez plus lentement, s’il vous plaît).',
+        },
+      },
+      {
+        lessonId: 'ask-for-help-problem',
+        hanzi: '充电',
+        explanation: {
+          en: 'Shared power banks are very popular in China’s public places. Scan the QR code to rent one, then return it after charging your phone.',
+          fr: 'Les batteries externes partagées sont très courantes dans les lieux publics en Chine. Scannez le code QR pour en louer une, puis rendez-la après avoir rechargé votre téléphone.',
+        },
+      },
+      {
+        lessonId: 'ask-for-help-problem',
+        hanzi: '没关系',
+        explanation: {
+          en: 'Use this mainly to reply when someone apologizes. It can also mean that something is not important.',
+          fr: 'Utilisez cette expression surtout pour répondre à quelqu’un qui s’excuse. Elle peut aussi signifier que quelque chose n’est pas important.',
+        },
+      },
+      {
+        lessonId: 'pharmacy-help',
+        hanzi: '药',
+        explanation: {
+          en: 'At a pharmacy, tell the pharmacist your symptoms, ask which medicine is suitable, and confirm how much to take and how often.',
+          fr: 'À la pharmacie, décrivez vos symptômes, demandez quel médicament convient et confirmez la dose ainsi que la fréquence de prise.',
+        },
+      },
+      {
+        lessonId: 'small-talk',
+        hanzi: '聊天',
+        explanation: {
+          en: 'Use this for relaxed conversation about topics such as travel, food, or where someone is from—not for a formal discussion.',
+          fr: 'Utilisez ce mot pour une conversation détendue sur le voyage, la cuisine ou l’origine de quelqu’un, et non pour une discussion formelle.',
+        },
+      },
+    ] as const
+
+    for (const entry of approvedExplanations) {
+      expect(vocabulary(entry.lessonId, entry.hanzi).explanation).toEqual(entry.explanation)
+    }
+
+    for (const entry of approvedExplanations.filter(({ hanzi }) => hanzi !== '慢一点')) {
+      expect(entry.explanation.en).not.toMatch(/\p{Script=Han}/u)
+      expect(entry.explanation.fr).not.toMatch(/\p{Script=Han}/u)
+    }
+  })
+
   it('replaces the shopping currency unit with practical price vocabulary', () => {
     const shopping = lesson('convenience-store-run')
     const vocabularyItems = shopping.vocabulary.map((item) => item.hanzi)
