@@ -8,8 +8,10 @@ import { PracticeChallenge } from '../components/PracticeChallenge'
 import type { LessonContent } from '../content/types'
 import { fetchLesson } from '../lib/contentApi'
 import { buildPracticeChallenge } from '../lib/practiceChallenge'
-import { loadProgress, markPracticeSection, saveProgress, completeLesson } from '../lib/progress'
+import { loadProgress, markPracticeSection, saveProgress } from '../lib/progress'
 import { useCourse } from '../lib/contentContext'
+
+const practiceQuestionCount = 10
 
 function findLesson(course: ReturnType<typeof useCourse>['course'], lessonId?: string): LessonContent | undefined {
   return course?.lessons.find((lesson) => lesson.id === lessonId)
@@ -21,14 +23,13 @@ export function PracticePage() {
   const [fallbackLesson, setFallbackLesson] = useState<LessonContent | undefined>(undefined)
   const lesson = fallbackLesson ?? findLesson(course, lessonId)
   const [seed] = useState(() => Math.floor(Math.random() * 2 ** 31))
-  const [lessonCompleted, setLessonCompleted] = useState(false)
   const selectedLanguage = loadProgress().selectedExplanationLanguage
   const copy = getUiCopy(selectedLanguage)
 
   const buildChallenge = useCallback(
     (nextSeed: number) =>
       lesson
-        ? buildPracticeChallenge(lesson, selectedLanguage, 5, nextSeed)
+        ? buildPracticeChallenge(lesson, selectedLanguage, practiceQuestionCount, nextSeed)
         : { questions: [] },
     [lesson, selectedLanguage],
   )
@@ -116,25 +117,9 @@ export function PracticePage() {
           onComplete={() => {
             saveProgress(markPracticeSection(lesson.id, loadProgress()))
           }}
-          onCompleteLesson={() => {
-            if (course) {
-              saveProgress(completeLesson(course, lesson.id, loadProgress()))
-            }
-          }}
-          onLessonCompletedChange={setLessonCompleted}
         />
 
         <nav className="button-row" aria-label={copy.practicePage.practiceActions}>
-          {lessonCompleted ? (
-            <>
-              <Link className="secondary-link" to="/review">
-                {copy.practicePage.goToReview}
-              </Link>
-              <Link className="secondary-link" to="/progress">
-                {copy.practicePage.viewProgress}
-              </Link>
-            </>
-          ) : null}
           <Link className="secondary-link" to={`/lesson/${lesson.id}`}>
             {copy.practicePage.backToLesson}
           </Link>

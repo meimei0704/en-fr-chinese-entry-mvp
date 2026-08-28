@@ -115,7 +115,7 @@ describe('PracticePage', () => {
     })
     renderRoute('/lesson/self-intro/practice')
 
-    for (let questionNumber = 1; questionNumber <= 5; questionNumber += 1) {
+    for (let questionNumber = 1; questionNumber <= 10; questionNumber += 1) {
       if (screen.queryByRole('button', { name: /play again/i })) {
         break
       }
@@ -131,11 +131,75 @@ describe('PracticePage', () => {
       if (nextButton) {
         await user.click(nextButton)
       }
+      if (questionNumber === 5) {
+        expect(screen.queryByRole('button', { name: /play again/i })).not.toBeInTheDocument()
+      }
     }
 
     expect(screen.getByRole('button', { name: /play again/i })).toBeVisible()
+    expect(screen.queryByRole('button', { name: /complete lesson/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /lesson complete/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /go to review/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /view progress/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /back to lesson/i })).toBeVisible()
 
     const progress = loadProgress()
     expect(progress.lessonStepProgress['self-intro']?.completedSections).toContain('practice')
   })
+
+  it.each([
+    {
+      language: 'en' as const,
+      playAgain: /play again/i,
+      completeLesson: /complete lesson|lesson complete/i,
+      review: /go to review/i,
+      progress: /view progress/i,
+      backToLesson: /back to lesson/i,
+    },
+    {
+      language: 'fr' as const,
+      playAgain: /rejouer/i,
+      completeLesson: /terminer la leçon|leçon terminée/i,
+      review: /aller à la révision/i,
+      progress: /voir les progrès/i,
+      backToLesson: /retour à la leçon/i,
+    },
+  ])(
+    'keeps only replay and back-to-lesson actions after a completed %s practice round',
+    async ({ language, playAgain, completeLesson, review, progress, backToLesson }) => {
+      const user = userEvent.setup()
+
+      saveProgress({
+        ...createDefaultProgress(),
+        selectedExplanationLanguage: language,
+      })
+      renderRoute('/lesson/self-intro/practice')
+
+      for (let questionNumber = 1; questionNumber <= 10; questionNumber += 1) {
+        if (screen.queryByRole('button', { name: playAgain })) {
+          break
+        }
+
+        const options = screen
+          .getAllByRole('button', { name: /./ })
+          .filter((button) => !button.getAttribute('aria-label'))
+
+        await user.click(options[0])
+
+        const nextButton = screen.queryByRole('button', { name: /next question|question suivante/i })
+        if (nextButton) {
+          await user.click(nextButton)
+        }
+        if (questionNumber === 5) {
+          expect(screen.queryByRole('button', { name: playAgain })).not.toBeInTheDocument()
+        }
+      }
+
+      expect(screen.getByRole('button', { name: playAgain })).toBeVisible()
+      expect(screen.queryByRole('button', { name: completeLesson })).not.toBeInTheDocument()
+      expect(screen.queryByRole('link', { name: review })).not.toBeInTheDocument()
+      expect(screen.queryByRole('link', { name: progress })).not.toBeInTheDocument()
+      expect(screen.getByRole('link', { name: backToLesson })).toBeVisible()
+    },
+  )
 })

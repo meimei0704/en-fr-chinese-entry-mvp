@@ -143,6 +143,37 @@ describe('2026-08-28 lesson copy', () => {
     )
   })
 
+  it('replaces the shopping currency unit with practical price vocabulary', () => {
+    const shopping = lesson('convenience-store-run')
+    const vocabularyItems = shopping.vocabulary.map((item) => item.hanzi)
+
+    expect(vocabularyItems).not.toContain('毛')
+    expect(vocabularyItems).toEqual(
+      expect.arrayContaining(['便宜', '贵', '打折']),
+    )
+    expect(vocabulary('convenience-store-run', '便宜')).toMatchObject({
+      meaning: { en: 'cheap', fr: 'bon marché' },
+      explanation: {
+        en: 'Use 便宜 when comparing prices or asking a seller to lower the price, as in 可以便宜一点吗？',
+        fr: 'Utilisez 便宜 pour comparer les prix ou demander au vendeur de baisser le prix, comme dans 可以便宜一点吗？',
+      },
+    })
+    expect(vocabulary('convenience-store-run', '贵')).toMatchObject({
+      meaning: { en: 'expensive', fr: 'cher' },
+      explanation: {
+        en: 'Use 贵 to say that an item costs more than expected, as in 太贵了。',
+        fr: 'Utilisez 贵 pour dire qu’un article coûte plus cher que prévu, comme dans 太贵了。',
+      },
+    })
+    expect(vocabulary('convenience-store-run', '打折')).toMatchObject({
+      meaning: { en: 'discount', fr: 'remise' },
+      explanation: {
+        en: 'Look for 打折 signs to see whether an item is on sale; ask 现在打折吗？ before paying.',
+        fr: 'Repérez les panneaux 打折 pour savoir si un article est en promotion ; demandez 现在打折吗？ avant de payer.',
+      },
+    })
+  })
+
   it('updates help explanations and adds its topic-specific state-change pattern', () => {
     expect(line('ask-for-help-problem', '麻烦你了。').explanation.en).toContain(
       '了 = grammatical particle, adding politeness and gratitude',
