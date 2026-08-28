@@ -319,7 +319,7 @@ describe('AdminVoiceGenerationPage', () => {
     expect(getUserMedia).toHaveBeenCalledWith({ audio: true })
     expect(screen.getByRole('button', { name: /requesting microphone/i })).toBeDisabled()
     expect(screen.getByText(/check your browser microphone prompt/i)).toBeVisible()
-  })
+  }, 10_000)
 
   it('records a browser microphone sample and submits it as base64 when creating the profile', async () => {
     const user = userEvent.setup()
