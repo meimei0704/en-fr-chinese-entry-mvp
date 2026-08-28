@@ -17,6 +17,16 @@ the SQL seed must remain deterministic projections of that source.
   field, preserving the existing bilingual content model.
 - Add requested phrases and ellipsis formulas with lowercase pinyin (except
   approved embedded English terms).
+- Give each of the three hotel ellipsis formulas (`我要……。`,
+  `我已经……。`, and `我可以……吗？`) three hotel-context examples, and
+  give the small-talk `祝你……` formula three examples. Each example keeps
+  the existing bilingual, pinyin, and audio shape.
+- Keep the phone-card phrase `外国人可以办理吗？` as the second dialogue
+  phrase.
+- Keep the short vocabulary `meaning` fields for `话费`, `流量`, and `套餐`
+  separate from their longer learner-facing `explanation` fields. Put the
+  supplied descriptive copy in `explanation` and leave the concise meanings
+  intact.
 - Remove the three requested small-talk vocabulary entries without
   renumbering the remaining stable IDs.
 - Regenerate `pkg/seedgen/data/course.json` and
