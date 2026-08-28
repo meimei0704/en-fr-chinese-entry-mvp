@@ -428,8 +428,8 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(533)
-    expect(new Set(audioPaths).size).toBe(533)
+    expect(audioPaths).toHaveLength(545)
+    expect(new Set(audioPaths).size).toBe(545)
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(

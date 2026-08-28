@@ -14,7 +14,7 @@ type PatternContainer = {
   lessons: Array<{
     id: string
     dialogue: { lines: Array<{ hanzi: string }> }
-    sentencePatterns: Array<{ id: string; pattern: string }>
+    sentencePatterns: Array<{ id: string; pattern: string; examples?: unknown[] }>
   }>
 }
 
@@ -65,6 +65,10 @@ function expectUsefulPatternRules(value: PatternContainer, source: string) {
         dialogueHanzi,
         `${source} ${lesson.id}/${pattern.id} must not duplicate a dialogue phrase`,
       ).not.toContain(pattern.pattern)
+      expect(
+        pattern.examples?.length ?? 0,
+        `${source} ${lesson.id}/${pattern.id} must include at least one example`,
+      ).toBeGreaterThan(0)
     }
   }
 }

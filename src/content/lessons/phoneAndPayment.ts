@@ -30,6 +30,15 @@ export const phoneAndPaymentLesson: LessonContent = {
         audio: '/audio/phone-and-payment/line-01.mp3',
       },
       {
+        id: 'phone-and-payment-line-10',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '外国人可以办理吗？',
+        pinyin: 'wài guó rén kě yǐ bàn lǐ ma?',
+        translation: { en: 'Do you offer services for foreigners?', fr: 'Proposez-vous des services aux étrangers ?' },
+        explanation: { en: '外国人 = foreigner｜可以 = can / may｜办理 = to handle / provide a service｜吗 = question particle. Use it to ask whether foreigners can apply for the service.', fr: '外国人 = étranger｜可以 = pouvoir｜办理 = effectuer / fournir un service｜吗 = particule interrogative. Utilisez-la pour demander si les étrangers peuvent bénéficier de ce service.' },
+        audio: '/audio/phone-and-payment/line-10.mp3',
+      },
+      {
         id: 'phone-and-payment-line-02',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
         hanzi: '能帮我安装一下吗？',
@@ -100,15 +109,6 @@ export const phoneAndPaymentLesson: LessonContent = {
         translation: { en: 'There is no signal.', fr: 'Il n\'y a pas de signal.' },
         explanation: { en: '没有 = to not have / there is no｜信号 = signal. Use it to say your phone shows no signal.', fr: '没有 = il n’y a pas / ne pas avoir｜信号 = signal. Utilisez-la pour dire que votre téléphone n’a pas de signal.' },
         audio: '/audio/phone-and-payment/line-09.mp3',
-      },
-      {
-        id: 'phone-and-payment-line-10',
-        speaker: { en: 'Traveler', fr: 'Voyageur' },
-        hanzi: '外国人可以办理吗？',
-        pinyin: 'wài guó rén kě yǐ bàn lǐ ma?',
-        translation: { en: 'Do you offer services for foreigners?', fr: 'Proposez-vous des services aux étrangers ?' },
-        explanation: { en: '外国人 = foreigner｜可以 = can / may｜办理 = to handle / provide a service｜吗 = question particle. Use it to ask whether foreigners can apply for the service.', fr: '外国人 = étranger｜可以 = pouvoir｜办理 = effectuer / fournir un service｜吗 = particule interrogative. Utilisez-la pour demander si les étrangers peuvent bénéficier de ce service.' },
-        audio: '/audio/phone-and-payment/line-10.mp3',
       },
     ],
   },
@@ -386,12 +386,12 @@ export const phoneAndPaymentLesson: LessonContent = {
       pinyin: 'liú liàng',
       audio: '/audio/phone-and-payment/vocab-06.mp3',
       meaning: {
-        en: 'The amount of mobile internet usage. In China, it\'s commonly referred to as "data".',
-        fr: 'La quantité de données Internet mobiles utilisées. En Chine, on parle généralement de « data ».',
+        en: 'data / mobile data',
+        fr: 'données mobiles',
       },
       explanation: {
-        en: 'Use 流量 when checking the data included in a plan or the amount you have used.',
-        fr: 'Utilisez 流量 pour vérifier les données incluses dans un forfait ou la quantité déjà utilisée.',
+        en: 'The amount of mobile internet usage. In China, it\'s commonly referred to as "data".',
+        fr: 'La quantité de données Internet mobiles utilisées. En Chine, on parle généralement de « data ».',
       },
     },
     {
@@ -400,12 +400,12 @@ export const phoneAndPaymentLesson: LessonContent = {
       pinyin: 'tào cān',
       audio: '/audio/phone-and-payment/vocab-07.mp3',
       meaning: {
-        en: 'Service plans offered by telecom operators, including combinations of call minutes, SMS and data. Most plans auto-renew unless you change or cancel them. You can choose a plan based on your needs.',
-        fr: 'Les forfaits proposés par les opérateurs télécoms, qui combinent notamment des minutes d’appel, des SMS et des données. La plupart se renouvellent automatiquement, sauf si vous les modifiez ou les résiliez. Vous pouvez choisir un forfait selon vos besoins.',
+        en: 'plan / package',
+        fr: 'forfait',
       },
       explanation: {
-        en: 'Use 套餐 for a bundled mobile service plan.',
-        fr: 'Utilisez 套餐 pour parler d’un forfait de services mobiles regroupés.',
+        en: 'Service plans offered by telecom operators, including combinations of call minutes, SMS and data. Most plans auto-renew unless you change or cancel them. You can choose a plan based on your needs.',
+        fr: 'Les forfaits proposés par les opérateurs télécoms, qui combinent notamment des minutes d’appel, des SMS et des données. La plupart se renouvellent automatiquement, sauf si vous les modifiez ou les résiliez. Vous pouvez choisir un forfait selon vos besoins.',
       },
     },
     {
@@ -438,12 +438,12 @@ export const phoneAndPaymentLesson: LessonContent = {
       pinyin: 'huà fèi',
       audio: '/audio/phone-and-payment/vocab-11.mp3',
       meaning: {
-        en: 'The fees incurred for communication services.',
-        fr: 'Les frais engagés pour les services de communication.',
+        en: 'call charges / phone fees',
+        fr: 'frais d’appel / frais de téléphone',
       },
       explanation: {
-        en: 'The amount charged for calls, messages, and other mobile services.',
-        fr: 'Le montant facturé pour les appels, les messages et les autres services mobiles.',
+        en: 'The fees incurred for communication services.',
+        fr: 'Les frais engagés pour les services de communication.',
       },
     },
   ],

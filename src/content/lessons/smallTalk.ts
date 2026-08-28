@@ -271,6 +271,35 @@ export const smallTalkLesson: LessonContent = {
         fr: 'Je te souhaite ...',
       },
       audio: '/audio/small-talk/pattern-11.mp3',
+      examples: [
+        {
+          fill: '生日快乐',
+          fillPinyin: 'shēng rì kuài lè',
+          hanzi: '祝你生日快乐！',
+          pinyin: 'zhù nǐ shēng rì kuài lè!',
+          en: 'Happy birthday!',
+          fr: 'Joyeux anniversaire !',
+          audio: '/audio/small-talk/pattern-11-example-01.mp3',
+        },
+        {
+          fill: '周末愉快',
+          fillPinyin: 'zhōu mò yú kuài',
+          hanzi: '祝你周末愉快！',
+          pinyin: 'zhù nǐ zhōu mò yú kuài!',
+          en: 'Have a nice weekend!',
+          fr: 'Bon week-end !',
+          audio: '/audio/small-talk/pattern-11-example-02.mp3',
+        },
+        {
+          fill: '玩得开心',
+          fillPinyin: 'wán de kāi xīn',
+          hanzi: '祝你玩得开心！',
+          pinyin: 'zhù nǐ wán de kāi xīn!',
+          en: 'Have fun!',
+          fr: 'Amuse-toi bien !',
+          audio: '/audio/small-talk/pattern-11-example-03.mp3',
+        },
+      ],
     }
     ],
   vocabulary: [
