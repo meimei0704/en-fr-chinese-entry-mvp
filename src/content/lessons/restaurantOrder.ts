@@ -7,7 +7,7 @@ export const restaurantOrderLesson: LessonContent = {
     fr: '点餐 / Commander un repas',
   },
   scenario: {
-    en: 'Ask for a menu, order food and drinks, specify your preference and make the payment.',
+    en: 'Ask for a menu, order food and drinks, and specify your preference.',
     fr: 'Demander un menu, commander plats et boissons, préciser sa préférence et régler l\'addition.',
   },
   dialogue: {

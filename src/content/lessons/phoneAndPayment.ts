@@ -15,6 +15,10 @@ export const phoneAndPaymentLesson: LessonContent = {
       en: 'Ask about phone and payment setup',
       fr: 'Demander de l\'aide pour le téléphone et le paiement',
     },
+    intro: {
+      en: "In China, all SIM cards require real-name registration with your passport. Only official service centers work; small shops can’t help. There are four major telecom operators: China Mobile, China Unicom, China Telecom and China Broadnet. Each operator offers various mobile SIM card options. To monitor your communication expenses, download the operator's app or follow their official WeChat account to check call charges and data usage. Pay attention to billing rules inside and outside your plan, as data charges beyond your plan can be high. Cancel your SIM card at the official store before you leave China. Unpaid debt may prevent you from buying a Chinese SIM card later.",
+      fr: 'En Chine, toutes les cartes SIM doivent être enregistrées nominativement avec votre passeport. Seuls les centres de service officiels peuvent vous aider ; les petites boutiques ne le peuvent pas. Il existe quatre grands opérateurs de télécommunications : China Mobile, China Unicom, China Telecom et China Broadnet. Chaque opérateur propose différentes options de cartes SIM mobiles. Pour suivre vos frais de communication, téléchargez l’application de l’opérateur ou suivez son compte WeChat officiel afin de vérifier le coût des appels et l’utilisation des données. Faites attention aux règles de facturation dans et hors de votre forfait, car les données consommées au-delà du forfait peuvent coûter cher. Résiliez votre carte SIM dans la boutique officielle avant de quitter la Chine. Des impayés peuvent vous empêcher d’acheter une carte SIM chinoise plus tard.',
+    },
     lines: [
       {
         id: 'phone-and-payment-line-01',
@@ -96,6 +100,15 @@ export const phoneAndPaymentLesson: LessonContent = {
         translation: { en: 'There is no signal.', fr: 'Il n\'y a pas de signal.' },
         explanation: { en: '没有 = to not have / there is no｜信号 = signal. Use it to say your phone shows no signal.', fr: '没有 = il n’y a pas / ne pas avoir｜信号 = signal. Utilisez-la pour dire que votre téléphone n’a pas de signal.' },
         audio: '/audio/phone-and-payment/line-09.mp3',
+      },
+      {
+        id: 'phone-and-payment-line-10',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '外国人可以办理吗？',
+        pinyin: 'wài guó rén kě yǐ bàn lǐ ma?',
+        translation: { en: 'Do you offer services for foreigners?', fr: 'Proposez-vous des services aux étrangers ?' },
+        explanation: { en: '外国人 = foreigner｜可以 = can / may｜办理 = to handle / provide a service｜吗 = question particle. Use it to ask whether foreigners can apply for the service.', fr: '外国人 = étranger｜可以 = pouvoir｜办理 = effectuer / fournir un service｜吗 = particule interrogative. Utilisez-la pour demander si les étrangers peuvent bénéficier de ce service.' },
+        audio: '/audio/phone-and-payment/line-10.mp3',
       },
     ],
   },
@@ -307,7 +320,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'carte SIM',
       },
       explanation: {
-        en: 'The practical word for asking about phone service after arrival.',
+        en: 'A SIM card connects your phone to a mobile network.',
         fr: 'Le mot pratique pour demander un service téléphonique après l\'arrivée.',
       },
     },
@@ -321,7 +334,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'numéro de téléphone',
       },
       explanation: {
-        en: 'Recognize it when someone confirms the number attached to the phone.',
+        en: 'The number assigned to your mobile phone line.',
         fr: 'Reconnais-le quand quelqu\'un confirme le numéro lié au téléphone.',
       },
     },
@@ -335,7 +348,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'payer / paiement',
       },
       explanation: {
-        en: 'A core word for mobile payment questions.',
+        en: 'The act of paying for a product or service.',
         fr: 'Un mot central pour les questions de paiement mobile.',
       },
     },
@@ -349,7 +362,7 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'espèces',
       },
       explanation: {
-        en: 'A useful fallback if phone payment is not ready.',
+        en: 'Physical money in the form of notes and coins.',
         fr: 'Une solution utile si le paiement mobile n\'est pas prêt.',
       },
     },
@@ -363,15 +376,76 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'pouvoir / être possible',
       },
       explanation: {
-        en: 'Use it to ask if an action or payment method is possible.',
+        en: 'A word used to say that something is possible or permitted.',
         fr: 'Utilise-le pour demander si une action ou un moyen de paiement est possible.',
       },
     },
-    { id: 'phone-and-payment-vocab-6', hanzi: '流量', pinyin: 'liú liàng', audio: '/audio/phone-and-payment/vocab-06.mp3', meaning: { en: 'data / mobile data', fr: 'données mobiles' }, explanation: { en: 'The key word when choosing a phone plan.', fr: 'Le mot clé pour choisir un forfait téléphonique.' } },
-    { id: 'phone-and-payment-vocab-7', hanzi: '套餐', pinyin: 'tào cān', audio: '/audio/phone-and-payment/vocab-07.mp3', meaning: { en: 'plan / package', fr: 'forfait' }, explanation: { en: '套餐 means a bundled plan for phone, data, or even meals.', fr: '套餐 désigne un forfait groupé pour le téléphone, les données ou même les repas.' } },
-    { id: 'phone-and-payment-vocab-8', hanzi: '充值', pinyin: 'chōng zhí', audio: '/audio/phone-and-payment/vocab-08.mp3', meaning: { en: 'top up / recharge', fr: 'recharger' }, explanation: { en: 'Use 充值 when you need to add credit to your phone or transit card.', fr: 'Utilise 充值 quand tu dois ajouter du crédit à ton téléphone ou ta carte de transport.' } },
-    { id: 'phone-and-payment-vocab-9', hanzi: '微信', pinyin: 'wēi xìn', audio: '/audio/phone-and-payment/vocab-09.mp3', meaning: { en: 'WeChat', fr: 'WeChat' }, explanation: { en: 'The most common messaging and payment app in China.', fr: 'L\'application de messagerie et de paiement la plus courante en Chine.' } },
-    { id: 'phone-and-payment-vocab-10', hanzi: '余额', pinyin: 'yú é', audio: '/audio/phone-and-payment/vocab-10.mp3', meaning: { en: 'balance', fr: 'solde' }, explanation: { en: 'Check your 余额 to know how much credit you have left.', fr: 'Vérifie ton 余额 pour savoir combien de crédit il te reste.' } },
+    {
+      id: 'phone-and-payment-vocab-6',
+      hanzi: '流量',
+      pinyin: 'liú liàng',
+      audio: '/audio/phone-and-payment/vocab-06.mp3',
+      meaning: {
+        en: 'The amount of mobile internet usage. In China, it\'s commonly referred to as "data".',
+        fr: 'La quantité de données Internet mobiles utilisées. En Chine, on parle généralement de « data ».',
+      },
+      explanation: {
+        en: 'Use 流量 when checking the data included in a plan or the amount you have used.',
+        fr: 'Utilisez 流量 pour vérifier les données incluses dans un forfait ou la quantité déjà utilisée.',
+      },
+    },
+    {
+      id: 'phone-and-payment-vocab-7',
+      hanzi: '套餐',
+      pinyin: 'tào cān',
+      audio: '/audio/phone-and-payment/vocab-07.mp3',
+      meaning: {
+        en: 'Service plans offered by telecom operators, including combinations of call minutes, SMS and data. Most plans auto-renew unless you change or cancel them. You can choose a plan based on your needs.',
+        fr: 'Les forfaits proposés par les opérateurs télécoms, qui combinent notamment des minutes d’appel, des SMS et des données. La plupart se renouvellent automatiquement, sauf si vous les modifiez ou les résiliez. Vous pouvez choisir un forfait selon vos besoins.',
+      },
+      explanation: {
+        en: 'Use 套餐 for a bundled mobile service plan.',
+        fr: 'Utilisez 套餐 pour parler d’un forfait de services mobiles regroupés.',
+      },
+    },
+    {
+      id: 'phone-and-payment-vocab-8',
+      hanzi: '充值',
+      pinyin: 'chōng zhí',
+      audio: '/audio/phone-and-payment/vocab-08.mp3',
+      meaning: { en: 'top up / recharge', fr: 'recharger' },
+      explanation: { en: 'The act of adding credit to a phone account or prepaid service.', fr: 'L’action d’ajouter du crédit à un compte téléphonique ou à un service prépayé.' },
+    },
+    {
+      id: 'phone-and-payment-vocab-9',
+      hanzi: '微信',
+      pinyin: 'wēi xìn',
+      audio: '/audio/phone-and-payment/vocab-09.mp3',
+      meaning: { en: 'WeChat', fr: 'WeChat' },
+      explanation: { en: 'A messaging and payment app commonly used in China.', fr: 'Une application de messagerie et de paiement très utilisée en Chine.' },
+    },
+    {
+      id: 'phone-and-payment-vocab-10',
+      hanzi: '余额',
+      pinyin: 'yú é',
+      audio: '/audio/phone-and-payment/vocab-10.mp3',
+      meaning: { en: 'account balance', fr: 'solde du compte' },
+      explanation: { en: 'The amount of credit or money remaining in an account.', fr: 'Le montant de crédit ou d’argent restant sur un compte.' },
+    },
+    {
+      id: 'phone-and-payment-vocab-11',
+      hanzi: '话费',
+      pinyin: 'huà fèi',
+      audio: '/audio/phone-and-payment/vocab-11.mp3',
+      meaning: {
+        en: 'The fees incurred for communication services.',
+        fr: 'Les frais engagés pour les services de communication.',
+      },
+      explanation: {
+        en: 'The amount charged for calls, messages, and other mobile services.',
+        fr: 'Le montant facturé pour les appels, les messages et les autres services mobiles.',
+      },
+    },
   ],
   practice: {
     listening: [

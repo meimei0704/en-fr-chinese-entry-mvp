@@ -7,7 +7,7 @@ export const smallTalkLesson: LessonContent = {
     fr: '闲聊和赞美 / Petite conversation et compliments',
   },
   scenario: {
-    en: 'Break the ice with common conversation starters and send positive messages by giving people proper compliments.',
+    en: 'Common conversation starters to break the ice, send positive vibes by giving people compliments.',
     fr: 'Brise la glace avec des amorces de conversation courantes et envoie des messages positifs en faisant des compliments appropriés.',
   },
   dialogue: {
@@ -55,10 +55,10 @@ export const smallTalkLesson: LessonContent = {
       {
         id: 'small-talk-line-05',
         speaker: { en: 'Traveler', fr: 'Voyageur' },
-        hanzi: '你穿衣真好看.',
-        pinyin: 'nǐ chuān yī zhēn hǎo kàn.',
-        translation: { en: 'Your outfit looks really nice.', fr: 'Ta tenue est vraiment belle.' },
-        explanation: { en: '你 = you｜穿衣 = dress / wear clothes｜真 = really｜好看 = look good. Use this to compliment how someone is dressed.', fr: '你 = tu / vous｜穿衣 = s’habiller / porter des vêtements｜真 = vraiment｜好看 = être beau. Utilisez cette phrase pour complimenter la tenue de quelqu’un.' },
+        hanzi: '你穿的衣服很好看。',
+        pinyin: 'nǐ chuān de yī fu hěn hǎo kàn.',
+        translation: { en: 'The clothes you’re wearing look very nice.', fr: 'Les vêtements que tu portes sont très beaux.' },
+        explanation: { en: '你 = you｜穿的衣服 = the clothes you are wearing｜很 = very｜好看 = look nice. Use this to compliment someone’s clothes.', fr: '你 = tu / vous｜穿的衣服 = les vêtements que tu portes｜很 = très｜好看 = être beau. Utilisez cette phrase pour complimenter les vêtements de quelqu’un.' },
         audio: '/audio/small-talk/line-05.mp3',
       },
       {
@@ -132,6 +132,15 @@ export const smallTalkLesson: LessonContent = {
         translation: { en: 'Have fun! Goodbye!', fr: 'Amuse-toi bien ! Au revoir !' },
         explanation: { en: '祝 = wish｜你 = you｜玩得开心 = have fun｜再见 = goodbye. Use this friendly wish when parting from someone who is going out or travelling.', fr: '祝 = souhaiter｜你 = à toi / à vous｜玩得开心 = bien s’amuser｜再见 = au revoir. Utilisez ce souhait amical en quittant quelqu’un qui va sortir ou voyager.' },
         audio: '/audio/small-talk/line-13.mp3',
+      },
+      {
+        id: 'small-talk-line-14',
+        speaker: { en: 'Traveler', fr: 'Voyageur' },
+        hanzi: '和你聊天很开心。',
+        pinyin: 'hé nǐ liáo tiān hěn kāi xīn.',
+        translation: { en: 'I’m having a great time chatting with you.', fr: 'Je suis très heureux / heureuse de discuter avec toi.' },
+        explanation: { en: '和 = with｜你 = you｜聊天 = chat｜很开心 = be very happy. Use this warm phrase to say you enjoyed the conversation.', fr: '和 = avec｜你 = toi / vous｜聊天 = discuter｜很开心 = être très heureux. Utilisez cette phrase chaleureuse pour dire que vous avez apprécié la conversation.' },
+        audio: '/audio/small-talk/line-14.mp3',
       },
     ],
   },
@@ -252,6 +261,16 @@ export const smallTalkLesson: LessonContent = {
           audio: '/audio/small-talk/pattern-05-example-03.mp3',
         },
       ],
+    },
+    {
+      id: 'small-talk-pattern-6',
+      pattern: '祝你……',
+      pinyin: 'zhù nǐ ...',
+      meaning: {
+        en: 'I wish you ...',
+        fr: 'Je te souhaite ...',
+      },
+      audio: '/audio/small-talk/pattern-11.mp3',
     }
     ],
   vocabulary: [
@@ -312,34 +331,6 @@ export const smallTalkLesson: LessonContent = {
       },
     },
     {
-      id: 'small-talk-vocab-5',
-      hanzi: '计划',
-      pinyin: 'jì huà',
-      audio: '/audio/small-talk/vocab-05.mp3',
-      meaning: {
-        en: 'plan',
-        fr: 'projet / prévoir',
-      },
-      explanation: {
-        en: 'Use 计划 when talking about a plan or something you intend to do.',
-        fr: 'Utilisez 计划 pour parler d’un projet ou de quelque chose que vous prévoyez de faire.',
-      },
-    },
-    {
-      id: 'small-talk-vocab-6',
-      hanzi: '待',
-      pinyin: 'dāi',
-      audio: '/audio/small-talk/vocab-06.mp3',
-      meaning: {
-        en: 'to stay',
-        fr: 'rester',
-      },
-      explanation: {
-        en: '待 is used to say how long you will stay.',
-        fr: '待 s’utilise pour dire combien de temps vous restez.',
-      },
-    },
-    {
       id: 'small-talk-vocab-7',
       hanzi: '聊天',
       pinyin: 'liáo tiān',
@@ -379,20 +370,6 @@ export const smallTalkLesson: LessonContent = {
       explanation: {
         en: '玩得开心 means have fun.',
         fr: '玩得开心 signifie amuse-toi bien.',
-      },
-    },
-    {
-      id: 'small-talk-vocab-10',
-      hanzi: '上海',
-      pinyin: 'shàng hǎi',
-      audio: '/audio/small-talk/vocab-10.mp3',
-      meaning: {
-        en: 'Shanghai',
-        fr: 'Shanghai',
-      },
-      explanation: {
-        en: 'A common city name to practice saying where you or others are from.',
-        fr: 'Un nom de ville courant pour pratiquer l’origine.',
       },
     },
   ],

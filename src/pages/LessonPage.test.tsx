@@ -75,6 +75,18 @@ describe('LessonPage', () => {
     )
   })
 
+  it('renders a dialogue introduction before the phrase cards when provided', () => {
+    renderRoute('/lesson/phone-and-payment')
+
+    const dialogueRegion = screen.getByRole('region', { name: /dialogue practice/i })
+    expect(
+      within(dialogueRegion).getByText(/In China, all SIM cards require real-name registration/),
+    ).toBeVisible()
+    expect(
+      within(dialogueRegion).getAllByLabelText(/dialogue line speaker traveler/i)[0],
+    ).toBeVisible()
+  })
+
   it.each([
     ['en', 'We couldn’t find that lesson.', 'Back to home'],
     ['fr', 'Impossible de trouver cette leçon.', 'Retour à l’accueil'],

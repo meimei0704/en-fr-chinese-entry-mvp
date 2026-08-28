@@ -94,7 +94,7 @@ export const orderFoodLesson: LessonContent = {
         hanzi: '空调坏了。',
         pinyin: 'kōng tiáo huài le.',
         translation: { en: 'The air conditioner does not work.', fr: 'La climatisation ne fonctionne pas.' },
-        explanation: { en: '空调 = air conditioner｜坏 = broken / to break｜了 = (change-of-state particle). Use it to report a broken appliance in your room.', fr: '空调 = climatisation｜坏 = en panne / casser｜了 = (particule de changement d’état). Utilisez-la pour signaler un appareil en panne dans votre chambre.' },
+        explanation: { en: '空调 = air conditioner｜坏了 = broken / no longer working. Use it to report a broken appliance in your room.', fr: '空调 = climatisation｜坏了 = en panne / ne fonctionne plus. Utilisez-la pour signaler un appareil en panne dans votre chambre.' },
         audio: '/audio/order-food/line-09.mp3',
       },
       {
@@ -103,7 +103,7 @@ export const orderFoodLesson: LessonContent = {
         hanzi: '我的房卡丢了。',
         pinyin: 'wǒ de fáng kǎ diū le.',
         translation: { en: 'I lost my room key.', fr: 'J’ai perdu la carte d’accès à ma chambre.' },
-        explanation: { en: '我的 = my｜房卡 = room key card｜丢 = to lose｜了 = (completed-action particle). Use it to tell the front desk you lost your room key card.', fr: '我的 = mon / ma｜房卡 = carte d’accès à la chambre｜丢 = perdre｜了 = (particule d’action accomplie). Utilisez-la pour dire à la réception que vous avez perdu la carte d’accès à votre chambre.' },
+        explanation: { en: '我的 = my｜房卡 = room key card｜丢了 = lost. Use it to tell the front desk you lost your room key card.', fr: '我的 = mon / ma｜房卡 = carte d’accès à la chambre｜丢了 = avoir perdu / être perdue. Utilisez-la pour dire à la réception que vous avez perdu la carte d’accès à votre chambre.' },
         audio: '/audio/order-food/line-10.mp3',
       },
       {
@@ -261,6 +261,36 @@ export const orderFoodLesson: LessonContent = {
           audio: '/audio/order-food/pattern-05-example-03.mp3',
         },
       ],
+    },
+    {
+      id: 'order-food-pattern-6',
+      pattern: '我要……。',
+      pinyin: 'wǒ yào ... .',
+      meaning: {
+        en: 'I want ...',
+        fr: 'Je veux ...',
+      },
+      audio: '/audio/order-food/pattern-06.mp3',
+    },
+    {
+      id: 'order-food-pattern-7',
+      pattern: '我已经……。',
+      pinyin: 'wǒ yǐ jīng ... .',
+      meaning: {
+        en: 'I have already ...',
+        fr: 'J’ai déjà ...',
+      },
+      audio: '/audio/order-food/pattern-08.mp3',
+    },
+    {
+      id: 'order-food-pattern-8',
+      pattern: '我可以……吗？',
+      pinyin: 'wǒ kě yǐ ... ma?',
+      meaning: {
+        en: 'May I ...?',
+        fr: 'Puis-je ... ?',
+      },
+      audio: '/audio/order-food/pattern-12.mp3',
     }
     ],
   vocabulary: [

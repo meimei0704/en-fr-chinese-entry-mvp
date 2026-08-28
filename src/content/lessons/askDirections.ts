@@ -7,7 +7,7 @@ export const askDirectionsLesson: LessonContent = {
     fr: '打车 / Prendre un taxi',
   },
   scenario: {
-    en: 'Get to the right destination, ensure comfort and safety, make the payment.',
+    en: 'Get to your destination, ensuring comfort and safety.',
     fr: 'Arriver à la bonne destination, assurer confort et sécurité, et régler la course.',
   },
   dialogue: {

@@ -129,15 +129,15 @@ describe('course content', () => {
       'daily-greetings': { dialogue: 18, patterns: 3, vocab: 11, practice: 2, cards: 6 },
       'self-intro': { dialogue: 10, patterns: 5, vocab: 10, practice: 2, cards: 6 },
       'ask-directions': { dialogue: 11, patterns: 4, vocab: 10, practice: 2, cards: 6 },
-      'order-food': { dialogue: 14, patterns: 3, vocab: 10, practice: 2, cards: 6 },
-      'phone-and-payment': { dialogue: 9, patterns: 5, vocab: 10, practice: 2, cards: 6 },
+      'order-food': { dialogue: 14, patterns: 6, vocab: 10, practice: 2, cards: 6 },
+      'phone-and-payment': { dialogue: 10, patterns: 5, vocab: 11, practice: 2, cards: 6 },
       'restaurant-order': { dialogue: 14, patterns: 4, vocab: 10, practice: 2, cards: 6 },
       'train-station-ticket': { dialogue: 12, patterns: 4, vocab: 15, practice: 2, cards: 6 },
       'metro-ticket': { dialogue: 9, patterns: 3, vocab: 14, practice: 2, cards: 6 },
       'convenience-store-run': { dialogue: 14, patterns: 4, vocab: 10, practice: 2, cards: 6 },
-      'ask-for-help-problem': { dialogue: 16, patterns: 1, vocab: 10, practice: 2, cards: 6 },
+      'ask-for-help-problem': { dialogue: 16, patterns: 2, vocab: 10, practice: 2, cards: 6 },
       'pharmacy-help': { dialogue: 13, patterns: 4, vocab: 11, practice: 2, cards: 6 },
-      'small-talk': { dialogue: 13, patterns: 3, vocab: 10, practice: 2, cards: 6 },
+      'small-talk': { dialogue: 14, patterns: 4, vocab: 7, practice: 2, cards: 6 },
     }
 
     for (const lesson of course.lessons) {
@@ -325,7 +325,7 @@ describe('course content', () => {
       fr: '闲聊和赞美 / Petite conversation et compliments',
     })
     expect(lesson.dialogue.lines.map((line) => line.id)).toEqual(
-      Array.from({ length: 13 }, (_, index) => `small-talk-line-${String(index + 1).padStart(2, '0')}`),
+      Array.from({ length: 14 }, (_, index) => `small-talk-line-${String(index + 1).padStart(2, '0')}`),
     )
   })
 
@@ -428,8 +428,8 @@ describe('course content', () => {
   it('ships non-empty MP3 audio files for every Chinese playback reference', async () => {
     const audioPaths = await collectAudioPaths()
 
-    expect(audioPaths).toHaveLength(524)
-    expect(new Set(audioPaths).size).toBe(524)
+    expect(audioPaths).toHaveLength(533)
+    expect(new Set(audioPaths).size).toBe(533)
 
     for (const audioPath of audioPaths) {
       expect(audioPath).toMatch(

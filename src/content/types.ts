@@ -53,6 +53,7 @@ export interface DialogueLine {
 
 export interface DialogueSection {
   title: LocalizedField
+  intro?: LocalizedField
   lines: DialogueLine[]
 }
 

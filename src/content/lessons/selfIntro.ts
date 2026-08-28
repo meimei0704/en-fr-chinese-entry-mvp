@@ -7,7 +7,7 @@ export const selfIntroLesson: LessonContent = {
     fr: '到达机场 / Arrivée à l’aéroport',
   },
   scenario: {
-    en: 'Find your luggage, go through customs, ask for help to navigate the airport smoothly.',
+    en: 'Navigate the immigration and customs smoothly and ask for help when need.',
     fr: 'Récupérez vos bagages, passez la douane et demandez de l’aide pour vous repérer sereinement à l’aéroport.',
   },
   dialogue: {

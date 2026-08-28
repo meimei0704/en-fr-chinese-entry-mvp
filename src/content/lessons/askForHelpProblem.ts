@@ -94,7 +94,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '麻烦你了。',
         pinyin: 'má fan nǐ le.',
         translation: { en: 'Thank you for your help.', fr: 'Merci pour votre aide.' },
-        explanation: { en: '麻烦 = trouble / inconvenience｜你 = you｜了 = completed situation. Use 麻烦你了 to acknowledge someone’s effort and thank them for helping.', fr: '麻烦 = dérangement / peine｜你 = vous｜了 = situation accomplie. Utilisez 麻烦你了 pour reconnaître l’effort de quelqu’un et le remercier.' },
+        explanation: { en: '麻烦 = trouble / inconvenience｜你 = you｜了 = grammatical particle, adding politeness and gratitude. Use 麻烦你了 to acknowledge someone’s effort and thank them for helping.', fr: '麻烦 = dérangement / peine｜你 = vous｜了 = particule grammaticale ajoutant une nuance de politesse et de gratitude. Utilisez 麻烦你了 pour reconnaître l’effort de quelqu’un et le remercier.' },
         audio: '/audio/ask-for-help-problem/line-09.mp3',
       },
       {
@@ -112,7 +112,7 @@ export const askForHelpProblemLesson: LessonContent = {
         hanzi: '我迷路了。',
         pinyin: 'wǒ mí lù le.',
         translation: { en: 'I am lost.', fr: 'Je suis perdu(e).' },
-        explanation: { en: '我 = I｜迷路 = be lost｜了 = changed state. Say this when you cannot find your way.', fr: '我 = je｜迷路 = se perdre｜了 = changement de situation. Dites cette phrase lorsque vous ne trouvez plus votre chemin.' },
+        explanation: { en: '我 = I｜迷路 = be lost｜了 = grammatical particle showing that a new situation has come about. Say this when you cannot find your way.', fr: '我 = je｜迷路 = se perdre｜了 = particule grammaticale indiquant qu’une nouvelle situation est apparue. Dites cette phrase lorsque vous ne trouvez plus votre chemin.' },
         audio: '/audio/ask-for-help-problem/line-11.mp3',
       },
       {
@@ -199,6 +199,45 @@ export const askForHelpProblemLesson: LessonContent = {
           en: 'I lost my wallet.',
           fr: 'J’ai perdu mon portefeuille.',
           audio: '/audio/ask-for-help-problem/pattern-02-example-03.mp3',
+        },
+      ],
+    },
+    {
+      id: 'ask-for-help-problem-pattern-3',
+      pattern: '我……了',
+      pinyin: 'wǒ ... le',
+      meaning: {
+        en: 'I ... now.',
+        fr: 'Je ... maintenant.',
+      },
+      audio: '/audio/ask-for-help-problem/pattern-03.mp3',
+      examples: [
+        {
+          fill: '迷路',
+          fillPinyin: 'mí lù',
+          hanzi: '我迷路了。',
+          pinyin: 'wǒ mí lù le.',
+          en: 'I’m lost.',
+          fr: 'Je suis perdu(e).',
+          audio: '/audio/ask-for-help-problem/pattern-03-example-01.mp3',
+        },
+        {
+          fill: '手机没电',
+          fillPinyin: 'shǒu jī méi diàn',
+          hanzi: '我手机没电了。',
+          pinyin: 'wǒ shǒu jī méi diàn le.',
+          en: 'My phone is out of power.',
+          fr: 'Mon téléphone n’a plus de batterie.',
+          audio: '/audio/ask-for-help-problem/pattern-03-example-02.mp3',
+        },
+        {
+          fill: '护照丢',
+          fillPinyin: 'hù zhào diū',
+          hanzi: '我护照丢了。',
+          pinyin: 'wǒ hù zhào diū le.',
+          en: 'I lost my passport.',
+          fr: 'J’ai perdu mon passeport.',
+          audio: '/audio/ask-for-help-problem/pattern-03-example-03.mp3',
         },
       ],
     }
