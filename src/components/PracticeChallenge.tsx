@@ -15,8 +15,6 @@ export interface PracticeChallengeCopy {
   correctAnswer: (answer: string) => string
   nextQuestion: string
   playAgain: string
-  completeLesson: string
-  lessonCompleted: string
   answerReview: string
   answerReviewCorrect: string
   answerReviewIncorrect: string
@@ -28,8 +26,6 @@ interface PracticeChallengeProps {
   copy: PracticeChallengeCopy
   seed: number
   onComplete: () => void
-  onCompleteLesson: () => void
-  onLessonCompletedChange?: (completed: boolean) => void
 }
 
 interface AnswerRecord {
@@ -43,8 +39,6 @@ export function PracticeChallenge({
   copy,
   seed: initialSeed,
   onComplete,
-  onCompleteLesson,
-  onLessonCompletedChange,
 }: PracticeChallengeProps) {
   const [seed, setSeed] = useState(initialSeed)
   const [questionIndex, setQuestionIndex] = useState(0)
@@ -55,7 +49,6 @@ export function PracticeChallenge({
   } | null>(null)
   const [finished, setFinished] = useState(false)
   const [reported, setReported] = useState(false)
-  const [lessonCompleted, setLessonCompleted] = useState(false)
 
   const challenge = useMemo(() => buildChallenge(seed), [buildChallenge, seed])
 
@@ -101,16 +94,6 @@ export function PracticeChallenge({
     setFeedback(null)
     setFinished(false)
     setReported(false)
-    setLessonCompleted(false)
-  }
-
-  function handleCompleteLesson() {
-    if (lessonCompleted) {
-      return
-    }
-    setLessonCompleted(true)
-    onLessonCompletedChange?.(true)
-    onCompleteLesson()
   }
 
   function handleChoice(question: PracticeChallengeQuestion, optionId: string) {
@@ -131,14 +114,6 @@ export function PracticeChallenge({
         <div className="practice-challenge__result-actions">
           <button type="button" className="primary-button" onClick={restart}>
             {copy.playAgain}
-          </button>
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={handleCompleteLesson}
-            disabled={lessonCompleted}
-          >
-            {lessonCompleted ? copy.lessonCompleted : copy.completeLesson}
           </button>
         </div>
 

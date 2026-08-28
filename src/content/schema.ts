@@ -23,6 +23,7 @@ const dialogueLineSchema = z.object({
 
 const dialogueSectionSchema = z.object({
   title: localizedFieldSchema,
+  intro: localizedFieldSchema.optional(),
   lines: z.array(dialogueLineSchema),
 })
 

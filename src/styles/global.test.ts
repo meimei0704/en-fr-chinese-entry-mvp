@@ -652,15 +652,15 @@ describe('global color accessibility tokens', () => {
     ).toBe(true)
   })
 
-  it('renders the pinyin reference note marker inline with its rule text', () => {
+  it('centers pinyin reference notes beside their matching cards', () => {
     const note = ruleBlock('.pinyin-reference-note')
     const text = ruleBlock('.pinyin-reference-note__text')
 
-    expect(note).toContain('display: flex;')
-    expect(note).toContain('flex-wrap: nowrap;')
-    expect(note).toContain('align-items: baseline;')
-    expect(note).not.toContain('flex-wrap: wrap;')
-    expect(text).toContain('flex: 1 1 auto;')
+    expect(note).toContain('display: grid;')
+    expect(note).toContain('grid-template-columns: auto minmax(0, 1fr);')
+    expect(note).toContain('align-content: center;')
+    expect(note).toContain('align-items: start;')
+    expect(text).not.toContain('flex: 1 1 auto;')
     expect(text).toContain('min-width: 0;')
   })
 

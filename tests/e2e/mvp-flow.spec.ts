@@ -1,10 +1,6 @@
 import { expect, test } from 'playwright/test'
 
-import { course } from '../../src/content/course'
-
-const expectedReviewItemsWaiting = course.lessons[0].reviewCards.length - 1
-
-test('a first-time learner can start from Home, finish lesson one, and reach review and progress', async ({ page }) => {
+test('a first-time learner can start from Home, finish practice, and return to the lesson', async ({ page }) => {
   await page.goto('/')
 
   await expect(page.getByRole('heading', { name: '轻松学中文' })).toBeVisible()
@@ -30,33 +26,10 @@ test('a first-time learner can start from Home, finish lesson one, and reach rev
   }
   await expect(resultCard).toBeVisible()
 
-  await page.getByRole('button', { name: /complete lesson/i }).click()
-  await expect(page.getByText(/lesson complete\. review cards are ready/i)).toBeVisible()
-
-  await page.getByRole('link', { name: /go to review/i }).click()
-  await expect(page.getByText(/cards due today/i)).toBeVisible()
-  await expect(page.getByRole('region', { name: /flashcard front/i })).toContainText('你好')
-
-  await page.getByRole('button', { name: /mark complete/i }).click()
-  await expect(page.getByText(/1 card finished/i)).toBeVisible()
-
-  await page.getByRole('link', { name: /view progress/i }).click()
-  const learningIndicators = page.getByRole('region', { name: /learning indicators/i })
-  await expect(learningIndicators).toContainText('1 of 12 lessons completed')
-  await expect(learningIndicators).toContainText(
-    `${expectedReviewItemsWaiting} review items waiting`,
-  )
-
-  await page
-    .getByRole('navigation', { name: /main navigation/i })
-    .getByRole('link', { name: /^home$/i })
-    .click()
-  await expect(page.getByRole('link', { name: /continue learning/i })).toHaveCount(0)
-  await page.getByRole('link', { name: /打车\s+Take a taxi/i }).click()
-  await expect(page).toHaveURL(/\/lesson\/ask-directions$/)
-  await expect(
-    page.getByRole('heading', { name: /打车\s+Take a taxi/i }),
-  ).toBeVisible()
+  await expect(page.getByRole('button', { name: /complete lesson|lesson complete/i })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: /go to review|view progress/i })).toHaveCount(0)
+  await page.getByRole('link', { name: /back to lesson/i }).click()
+  await expect(page).toHaveURL(/\/lesson\/daily-greetings$/)
 })
 
 test('keeps the French arrival lesson header within a 320px viewport', async ({ page }) => {

@@ -73,11 +73,11 @@ describe('admin batch voice audio targets', () => {
     )
   })
 
-  it('locks the course manifest to the 479 existing zh-CN audio targets only', () => {
+  it('locks the course manifest to the 403 existing zh-CN audio targets only', () => {
     const targets = collectCourseVoiceAudioTargets(course.lessons)
     const targetTexts = new Set(targets.map((target) => target.text))
 
-    expect(targets).toHaveLength(479)
+    expect(targets).toHaveLength(403)
     expect(targets.every((target) => target.language === 'zh-CN')).toBe(true)
     expect(targets.every((target) => target.originalAudio.startsWith('/audio/'))).toBe(true)
     expect(targets.every((target) => target.storageKey.startsWith('audio/'))).toBe(true)
@@ -89,7 +89,7 @@ describe('admin batch voice audio targets', () => {
     expect(targets.some((target) => target.moduleType === 'reviewCards')).toBe(false)
   })
 
-  it('derives the 479 Admin Voice targets from the 479-target manifest', () => {
+  it('derives the 403 Admin Voice targets from the 403-target manifest', () => {
     const completeTargets = collectCourseVoiceAudioTargets(course.lessons)
     const visibleTargets = collectAdminVoiceVisibleTargets(course.lessons)
     const visibleModuleTypes = new Set([
@@ -105,12 +105,12 @@ describe('admin batch voice audio targets', () => {
       ]),
     )
 
-    expect(completeTargets).toHaveLength(479)
+    expect(completeTargets).toHaveLength(403)
     expect(completeTargets.some((target) => target.moduleType === 'pronunciation')).toBe(false)
-    expect(visibleTargets).toHaveLength(479)
+    expect(visibleTargets).toHaveLength(403)
     expect(visibleCounts).toEqual({
-      dialogue: 153,
-      sentencePatterns: 123,
+      dialogue: 155,
+      sentencePatterns: 45,
       vocabulary: 131,
       practice: 72,
     })

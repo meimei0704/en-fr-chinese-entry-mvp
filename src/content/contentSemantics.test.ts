@@ -104,10 +104,6 @@ describe('audited course semantics', () => {
       en: 'Hello, I’d like to check in.',
       fr: 'Bonjour, je voudrais m’enregistrer.',
     })
-    expect(pattern('order-food', 'order-food-pattern-1').meaning).toEqual({
-      en: 'I’d like to check in.',
-      fr: 'Je voudrais m’enregistrer.',
-    })
     expect(line('order-food', 'order-food-line-10').translation.fr).toBe(
       'J’ai perdu la carte d’accès à ma chambre.',
     )
@@ -185,9 +181,9 @@ describe('audited course semantics', () => {
       en: 'staffed lane / manual inspection lane',
       fr: 'passage avec contrôle manuel',
     })
-    expect(line('metro-ticket', 'metro-ticket-line-02').pinyin).toBe('Zài nǎr mǎi piào?')
+    expect(line('metro-ticket', 'metro-ticket-line-02').pinyin).toBe('zài nǎr mǎi piào?')
     expect(line('metro-ticket', 'metro-ticket-line-06').pinyin).toBe(
-      'Qǐng wèn zài nǎr huàn chéng?',
+      'qǐng wèn zài nǎr huàn chéng?',
     )
     expect(vocab('metro-ticket', 'metro-ticket-vocab-1').explanation).toEqual({
       en: 'Use this word when asking for or talking about subway travel.',
@@ -201,10 +197,10 @@ describe('audited course semantics', () => {
     )
     expect(JSON.stringify(lesson('ask-for-help-problem'))).not.toContain('out of battery')
     expect(line('pharmacy-help', 'pharmacy-help-line-12').pinyin).toBe(
-      'Fàn qián chī hái shì fàn hòu chī?',
+      'fàn qián chī hái shì fàn hòu chī?',
     )
     expect(line('small-talk', 'small-talk-line-13').pinyin).toBe(
-      'Zhù nǐ wán de kāi xīn! Zài jiàn!',
+      'zhù nǐ wán de kāi xīn! zài jiàn!',
     )
     expect(JSON.stringify(course)).not.toContain('duō shao')
   })

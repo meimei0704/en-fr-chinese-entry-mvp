@@ -38,11 +38,11 @@ describe('shuffle', () => {
 })
 
 describe('buildPracticeChallenge', () => {
-  it('produces exactly five mixed-type questions without duplicates', () => {
-    const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 5, 2024)
+  it('produces exactly ten mixed-type questions without duplicates', () => {
+    const challenge = buildPracticeChallenge(selfIntroLesson, 'en', 10, 2024)
 
-    expect(challenge.questions).toHaveLength(5)
-    expect(new Set(challenge.questions.map((question) => question.id)).size).toBe(5)
+    expect(challenge.questions).toHaveLength(10)
+    expect(new Set(challenge.questions.map((question) => question.id)).size).toBe(10)
 
     const kinds = new Set(challenge.questions.map((question) => question.kind))
     expect(kinds.has('listen')).toBe(true)

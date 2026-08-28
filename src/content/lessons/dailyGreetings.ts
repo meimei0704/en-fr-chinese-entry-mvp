@@ -23,7 +23,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '你好。',
-        pinyin: 'Nǐ hǎo.',
+        pinyin: 'nǐ hǎo.',
         translation: {
           en: 'Hello.',
           fr: 'Bonjour.',
@@ -41,7 +41,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '您好。',
-        pinyin: 'Nín hǎo.',
+        pinyin: 'nín hǎo.',
         translation: {
           en: 'Hello (formal).',
           fr: 'Bonjour (formel).',
@@ -59,7 +59,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '大家好。',
-        pinyin: 'Dà jiā hǎo.',
+        pinyin: 'dà jiā hǎo.',
         translation: {
           en: 'Hello everyone.',
           fr: 'Bonjour à tous.',
@@ -77,7 +77,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '早上好。',
-        pinyin: 'Zǎo shang hǎo.',
+        pinyin: 'zǎo shang hǎo.',
         translation: {
           en: 'Good morning.',
           fr: 'Bonjour (le matin).',
@@ -95,7 +95,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '下午好。',
-        pinyin: 'Xià wǔ hǎo.',
+        pinyin: 'xià wǔ hǎo.',
         translation: {
           en: 'Good afternoon.',
           fr: 'Bonjour (l’après-midi).',
@@ -113,7 +113,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '晚上好。',
-        pinyin: 'Wǎn shang hǎo.',
+        pinyin: 'wǎn shang hǎo.',
         translation: {
           en: 'Good evening.',
           fr: 'Bonsoir.',
@@ -131,7 +131,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '晚安。',
-        pinyin: 'Wǎn ān.',
+        pinyin: 'wǎn ān.',
         translation: {
           en: 'Good night.',
           fr: 'Bonne nuit.',
@@ -149,7 +149,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '你好吗？',
-        pinyin: 'Nǐ hǎo ma?',
+        pinyin: 'nǐ hǎo ma?',
         translation: {
           en: 'How are you?',
           fr: 'Comment allez-vous ?',
@@ -167,7 +167,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '我很好，谢谢。',
-        pinyin: 'Wǒ hěn hǎo, xiè xie.',
+        pinyin: 'wǒ hěn hǎo, xiè xie.',
         translation: {
           en: 'I’m very well, thank you.',
           fr: 'Je vais très bien, merci.',
@@ -185,7 +185,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '很高兴认识你。',
-        pinyin: 'Hěn gāo xìng rèn shi nǐ.',
+        pinyin: 'hěn gāo xìng rèn shi nǐ.',
         translation: {
           en: 'Nice to meet you.',
           fr: 'Enchanté(e) de faire votre connaissance.',
@@ -203,7 +203,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '谢谢。',
-        pinyin: 'Xiè xie.',
+        pinyin: 'xiè xie.',
         translation: {
           en: 'Thank you.',
           fr: 'Merci.',
@@ -221,7 +221,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '不客气。',
-        pinyin: 'Bú kè qi.',
+        pinyin: 'bú kè qi.',
         translation: {
           en: 'You are welcome.',
           fr: 'Je vous en prie.',
@@ -239,7 +239,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '不好意思。',
-        pinyin: 'Bù hǎo yì si.',
+        pinyin: 'bù hǎo yì si.',
         translation: {
           en: 'Excuse me.',
           fr: 'Excusez-moi.',
@@ -257,7 +257,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '对不起。',
-        pinyin: 'Duì bu qǐ.',
+        pinyin: 'duì bu qǐ.',
         translation: {
           en: 'I’m sorry.',
           fr: 'Je suis désolé.',
@@ -275,7 +275,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '没关系。',
-        pinyin: 'Méi guān xi.',
+        pinyin: 'méi guān xi.',
         translation: {
           en: 'It doesn\'t matter.',
           fr: 'Ce n\'est pas grave.',
@@ -293,7 +293,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '是的。',
-        pinyin: 'Shì de.',
+        pinyin: 'shì de.',
         translation: {
           en: 'Yes.',
           fr: 'Oui.',
@@ -311,7 +311,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '不是。',
-        pinyin: 'Bú shì.',
+        pinyin: 'bú shì.',
         translation: {
           en: 'No.',
           fr: 'Non.',
@@ -329,7 +329,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Voyageur',
         },
         hanzi: '再见。',
-        pinyin: 'Zài jiàn.',
+        pinyin: 'zài jiàn.',
         translation: {
           en: 'Goodbye.',
           fr: 'Au revoir.',
@@ -357,7 +357,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '你好',
           fillPinyin: 'nǐ hǎo',
           hanzi: '你好吗？',
-          pinyin: 'Nǐ hǎo ma?',
+          pinyin: 'nǐ hǎo ma?',
           en: 'How are you?',
           fr: 'Comment allez-vous ?',
           audio: '/audio/daily-greetings/pattern-02-example-01.mp3',
@@ -366,7 +366,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '你有空',
           fillPinyin: 'nǐ yǒu kòng',
           hanzi: '你有空吗？',
-          pinyin: 'Nǐ yǒu kòng ma?',
+          pinyin: 'nǐ yǒu kòng ma?',
           en: 'Are you free?',
           fr: 'Êtes-vous libre ?',
           audio: '/audio/daily-greetings/pattern-02-example-02.mp3',
@@ -375,7 +375,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '好吃',
           fillPinyin: 'hǎo chī',
           hanzi: '好吃吗？',
-          pinyin: 'Hǎo chī ma?',
+          pinyin: 'hǎo chī ma?',
           en: 'Is it tasty?',
           fr: 'Est-ce que c\'est bon ?',
           audio: '/audio/daily-greetings/pattern-02-example-03.mp3',
@@ -385,7 +385,7 @@ export const dailyGreetingsLesson: LessonContent = {
     {
       id: 'daily-greetings-pattern-4',
       pattern: '很高兴……。',
-      pinyin: 'Hěn gāo xìng ... .',
+      pinyin: 'hěn gāo xìng ... .',
       meaning: {
         en: 'I am glad to ...',
         fr: 'Je suis ravi de ...',
@@ -396,7 +396,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '认识你',
           fillPinyin: 'rèn shi nǐ',
           hanzi: '很高兴认识你。',
-          pinyin: 'Hěn gāo xìng rèn shi nǐ.',
+          pinyin: 'hěn gāo xìng rèn shi nǐ.',
           en: 'Nice to meet you.',
           fr: 'Enchanté(e) de faire votre connaissance.',
           audio: '/audio/daily-greetings/pattern-04-example-01.mp3',
@@ -405,7 +405,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '见到你',
           fillPinyin: 'jiàn dào nǐ',
           hanzi: '很高兴见到你。',
-          pinyin: 'Hěn gāo xìng jiàn dào nǐ.',
+          pinyin: 'hěn gāo xìng jiàn dào nǐ.',
           en: 'Nice to see you.',
           fr: 'Je suis ravi de vous voir.',
           audio: '/audio/daily-greetings/pattern-04-example-02.mp3',
@@ -414,7 +414,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '认识大家',
           fillPinyin: 'rèn shi dà jiā',
           hanzi: '很高兴认识大家。',
-          pinyin: 'Hěn gāo xìng rèn shi dà jiā.',
+          pinyin: 'hěn gāo xìng rèn shi dà jiā.',
           en: 'Nice to meet everyone.',
           fr: 'Enchanté(e) de faire connaissance avec tout le monde.',
           audio: '/audio/daily-greetings/pattern-04-example-03.mp3',
@@ -424,7 +424,7 @@ export const dailyGreetingsLesson: LessonContent = {
     {
       id: 'daily-greetings-pattern-5',
       pattern: '不好意思，……。',
-      pinyin: 'Bù hǎo yì si, ... .',
+      pinyin: 'bù hǎo yì si, ... .',
       meaning: {
         en: 'Excuse me, ...',
         fr: 'Excusez-moi, ...',
@@ -435,7 +435,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '打扰一下',
           fillPinyin: 'dǎ rǎo yí xià',
           hanzi: '不好意思，打扰一下。',
-          pinyin: 'Bù hǎo yì si, dǎ rǎo yí xià.',
+          pinyin: 'bù hǎo yì si, dǎ rǎo yí xià.',
           en: 'Excuse me for bothering you.',
           fr: 'Excusez-moi de vous déranger.',
           audio: '/audio/daily-greetings/pattern-05-example-01.mp3',
@@ -444,23 +444,23 @@ export const dailyGreetingsLesson: LessonContent = {
           fill: '借过一下',
           fillPinyin: 'jiè guò yí xià',
           hanzi: '不好意思，借过一下。',
-          pinyin: 'Bù hǎo yì si, jiè guò yí xià.',
+          pinyin: 'bù hǎo yì si, jiè guò yí xià.',
           en: 'Excuse me, may I pass?',
           fr: 'Excusez-moi, puis-je passer ?',
           audio: '/audio/daily-greetings/pattern-05-example-02.mp3',
         },
         {
           fill: '我不会说中文',
-          fillPinyin: 'wǒ bú huì shuō Zhōng wén',
+          fillPinyin: 'wǒ bú huì shuō zhōng wén',
           hanzi: '不好意思，我不会说中文。',
-          pinyin: 'Bù hǎo yì si, wǒ bú huì shuō Zhōng wén.',
+          pinyin: 'bù hǎo yì si, wǒ bú huì shuō zhōng wén.',
           en: 'Excuse me, I don\'t speak Chinese.',
           fr: 'Excusez-moi, je ne parle pas chinois.',
           audio: '/audio/daily-greetings/pattern-05-example-03.mp3',
         },
       ],
-    },
-  ],
+    }
+    ],
   vocabulary: [
     {
       id: 'daily-greetings-vocab-1',
@@ -626,7 +626,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Quelle phrase signifie « Bonjour à tous » ?',
         },
         target: '大家好。',
-        pinyin: 'Dà jiā hǎo.',
+        pinyin: 'dà jiā hǎo.',
         audio: '/audio/daily-greetings/practice-listening-01.mp3',
         explanation: {
           en: '大家 = everyone｜好 = hello / good. Use this greeting when addressing a group.',
@@ -640,7 +640,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Quelle phrase est la salutation formelle polie ?',
         },
         target: '您好。',
-        pinyin: 'Nín hǎo.',
+        pinyin: 'nín hǎo.',
         audio: '/audio/daily-greetings/practice-listening-02.mp3',
         explanation: {
           en: '您 = polite ‘you’｜好 = good / well. Use 您好 to greet staff, elders, or strangers respectfully.',
@@ -656,7 +656,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Dites « Bonjour » à quelqu’un que vous venez de rencontrer.',
         },
         target: '早上好。',
-        pinyin: 'Zǎo shang hǎo.',
+        pinyin: 'zǎo shang hǎo.',
         audio: '/audio/daily-greetings/practice-speaking-01.mp3',
         explanation: {
           en: '早上 = morning｜好 = good. Use 早上好 to greet someone in the morning.',
@@ -670,7 +670,7 @@ export const dailyGreetingsLesson: LessonContent = {
           fr: 'Remerciez quelqu’un et répondez-lui poliment.',
         },
         target: '谢谢。不客气。',
-        pinyin: 'Xiè xie. Bú kè qi.',
+        pinyin: 'xiè xie. bú kè qi.',
         audio: '/audio/daily-greetings/practice-speaking-02.mp3',
         explanation: {
           en: '谢谢 = thank you｜不客气 = you’re welcome. Use these two phrases as a natural exchange of thanks and response.',

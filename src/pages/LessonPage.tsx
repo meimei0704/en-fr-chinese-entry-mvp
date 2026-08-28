@@ -195,6 +195,11 @@ export function LessonPage() {
             aria-label={copy.lessonPage.dialoguePracticeLabel}
           >
             <h2>{copy.lessonPage.dialogue}</h2>
+            {lesson.dialogue.intro ? (
+              <p className="muted-text lesson-dialogue-intro">
+                {getLocalizedText(lesson.dialogue.intro, selectedLanguage)}
+              </p>
+            ) : null}
             <DialoguePlayer lines={lesson.dialogue.lines} language={selectedLanguage} />
           </section>
 

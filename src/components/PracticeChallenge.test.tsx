@@ -168,6 +168,7 @@ describe('PracticeChallenge', () => {
     await answerAllCorrect(user, challenge)
 
     expect(screen.getByRole('button', { name: copy.playAgain })).toBeVisible()
+    expect(screen.queryByRole('button', { name: /complete lesson|lesson complete/i })).not.toBeInTheDocument()
     expect(screen.getByText(copy.answerReview)).toBeVisible()
     expect(screen.queryByText('Challenge complete')).not.toBeInTheDocument()
     expect(onComplete).toHaveBeenCalledTimes(1)
