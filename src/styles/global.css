@@ -4031,10 +4031,11 @@ h2 {
 }
 
 .pinyin-reference-note {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 0.3rem 0.4rem;
-  align-items: baseline;
+  align-content: center;
+  align-items: start;
   min-height: 13.5rem;
   padding: 0.85rem 0.9rem;
   background: transparent;
@@ -4058,17 +4059,10 @@ h2 {
 }
 
 .pinyin-reference-note__text {
-  flex: 1 1 auto;
   min-width: 0;
   margin: 0;
   font-size: clamp(0.85rem, 1.8vw, 0.95rem);
   line-height: 1.5;
-}
-
-@media (min-width: 40rem) {
-  .pinyin-reference-note {
-    align-content: center;
-  }
 }
 
 .pinyin-whole-syllables__grid {
