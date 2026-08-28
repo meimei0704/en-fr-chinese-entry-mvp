@@ -309,8 +309,8 @@ export const trainStationTicketLesson: LessonContent = {
         fr: 'billet de train / ticket de transport',
       },
       explanation: {
-        en: 'A general word for a train ticket or another transport ticket.',
-        fr: 'Un terme général pour un billet de train ou un autre titre de transport.',
+        en: 'In China, a train ticket is usually linked to your passport; keep your passport ready when booking and entering the station.',
+        fr: 'En Chine, un billet de train est généralement associé à votre passeport ; gardez celui-ci à portée de main pour réserver et entrer dans la gare.',
       },
     },
     {

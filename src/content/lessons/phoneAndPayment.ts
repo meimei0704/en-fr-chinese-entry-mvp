@@ -334,8 +334,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'numéro de téléphone',
       },
       explanation: {
-        en: 'The number assigned to your mobile phone line.',
-        fr: 'Reconnais-le quand quelqu\'un confirme le numéro lié au téléphone.',
+        en: 'You may be asked for this when buying a SIM card, registering for an app, or arranging a delivery.',
+        fr: 'On peut vous le demander lors de l’achat d’une carte SIM, de l’inscription à une application ou de l’organisation d’une livraison.',
       },
     },
     {
@@ -348,8 +348,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'payer / paiement',
       },
       explanation: {
-        en: 'The act of paying for a product or service.',
-        fr: 'Un mot central pour les questions de paiement mobile.',
+        en: 'In China, you will see this word when paying in an app or at checkout. WeChat Pay and Alipay are the most common mobile payment methods.',
+        fr: 'En Chine, vous verrez ce mot au moment de payer dans une application ou à la caisse. WeChat Pay et Alipay sont les moyens de paiement mobile les plus courants.',
       },
     },
     {
@@ -376,8 +376,8 @@ export const phoneAndPaymentLesson: LessonContent = {
         fr: 'pouvoir / être possible',
       },
       explanation: {
-        en: 'A word used to say that something is possible or permitted.',
-        fr: 'Utilise-le pour demander si une action ou un moyen de paiement est possible.',
+        en: 'Put this before an action to ask whether it is possible or allowed, such as when asking about payment methods, Wi-Fi, or available services.',
+        fr: 'Placez ce mot avant une action pour demander si elle est possible ou autorisée, par exemple pour vous renseigner sur les moyens de paiement, le Wi-Fi ou les services disponibles.',
       },
     },
     {
@@ -414,7 +414,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       pinyin: 'chōng zhí',
       audio: '/audio/phone-and-payment/vocab-08.mp3',
       meaning: { en: 'top up / recharge', fr: 'recharger' },
-      explanation: { en: 'The act of adding credit to a phone account or prepaid service.', fr: 'L’action d’ajouter du crédit à un compte téléphonique ou à un service prépayé.' },
+      explanation: { en: 'With a Chinese prepaid SIM, you can top up through the carrier’s app, Alipay, WeChat, or at a service counter.', fr: 'Avec une carte SIM prépayée chinoise, vous pouvez la recharger depuis l’application de l’opérateur, Alipay, WeChat ou dans un point de service.' },
     },
     {
       id: 'phone-and-payment-vocab-9',
@@ -430,7 +430,7 @@ export const phoneAndPaymentLesson: LessonContent = {
       pinyin: 'yú é',
       audio: '/audio/phone-and-payment/vocab-10.mp3',
       meaning: { en: 'account balance', fr: 'solde du compte' },
-      explanation: { en: 'The amount of credit or money remaining in an account.', fr: 'Le montant de crédit ou d’argent restant sur un compte.' },
+      explanation: { en: 'Check this before making calls, using mobile data, or paying from an account, so you know how much credit remains.', fr: 'Vérifiez-le avant de téléphoner, d’utiliser des données mobiles ou de payer depuis un compte, afin de connaître le crédit restant.' },
     },
     {
       id: 'phone-and-payment-vocab-11',

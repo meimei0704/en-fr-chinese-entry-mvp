@@ -448,8 +448,8 @@ export const selfIntroLesson: LessonContent = {
         fr: 'savoir parler',
       },
       explanation: {
-        en: '会说英语 means can speak English.',
-        fr: '会说英语 signifie savoir parler anglais.',
+        en: 'Use this before a language when asking about someone’s language ability—for example, when seeking help at a hotel, shop, or station.',
+        fr: 'Utilisez ce mot devant une langue pour vous renseigner sur les compétences linguistiques de quelqu’un, par exemple lorsque vous cherchez de l’aide dans un hôtel, un magasin ou une gare.',
       },
     },
     {
@@ -476,8 +476,8 @@ export const selfIntroLesson: LessonContent = {
         fr: 'rester',
       },
       explanation: {
-        en: '待两个星期 means stay for two weeks.',
-        fr: '待两个星期 signifie rester deux semaines.',
+        en: 'Use this with a place or length of time when telling a host, hotel staff, or an immigration officer how long you are staying.',
+        fr: 'Utilisez ce mot avec un lieu ou une durée pour indiquer à votre hôte, au personnel de l’hôtel ou à un agent d’immigration combien de temps vous comptez rester.',
       },
     },
     {
