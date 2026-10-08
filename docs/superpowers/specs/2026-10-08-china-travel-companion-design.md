@@ -21,11 +21,15 @@ The reviewer's P1 constraint is explicit: **time-sensitive facts must come from 
 grounded source or be clearly marked "reference only / verify official" — never
 model memory.**
 
-Therefore the MVP composes itineraries from curated content that carries
-provenance (`source` + `lastVerified`), and classifies every fact as `stable`
-(etiquette, transport modes, culture) or `perishable` (prices, hours, schedules).
-Perishable facts always render with a "Verify official" badge and source link.
-This makes the feature accurate, cheap, testable, and independent of any LLM.
+Therefore the MVP composes itineraries from curated content that is **data, not
+prose**: every factual item carries a source and a `lastChecked` date, and is
+classified as `stable` (etiquette, transport modes, culture) or `perishable`
+(prices, hours, schedules). Each item also carries `origin: 'curated' | 'live'`
+so the UI can always distinguish a **static reference** from future **live**
+data. All facts render with their source + last-updated; `perishable` facts
+additionally render a prominent "Verify official" badge. Nothing factual is free
+text baked into a prompt. This makes the feature accurate, cheap, testable, and
+independent of any LLM.
 
 An optional, separately-gated AI enrichment layer and read-only live adapters are
 designed here but **deferred** (see [Deferred](#deferred-phase-2)); the MVP
@@ -91,15 +95,20 @@ Browser (/travel)
 
 - `TravelDestinationId` — union of the seed city ids.
 - `FactFreshness = 'stable' | 'perishable'`.
+- `FactOrigin = 'curated' | 'live'`.
 - `TravelSourceRef { id, label, url?, kind: 'official' | 'operator' | 'reputable', lastChecked }`.
-- `Attraction { id, name: LocalizedField, category: Interest, area, durationHours,
-  description: LocalizedField, tips?: LocalizedField, freshness, sourceIds }`.
-- `StayArea { id, name: LocalizedField, vibe, bestFor: Interest[], priceTier, transportNotes }`.
-- `TransportOption { id, mode: 'air'|'rail'|'metro'|'bus'|'taxi'|'rideshare'|'bike'|'walk',
-  description: LocalizedField, freshness, notes?: LocalizedField, sourceIds }`.
+- `TravelFact` (base for every factual item) — `{ id, text/title: LocalizedField,
+  origin: FactOrigin, freshness: FactFreshness, sourceIds: string[],
+  lastChecked: string }`. **Every** factual item extends this; there is no
+  source-less fact.
+- `Attraction extends TravelFact { category: Interest, area, durationHours,
+  description, tips? }`.
+- `StayArea extends TravelFact { name, vibe, bestFor: Interest[], priceTier, transportNotes }`.
+- `TransportOption extends TravelFact { mode: 'air'|'rail'|'metro'|'bus'|'taxi'|'rideshare'|'bike'|'walk',
+  notes? }`.
 - `PracticalInfo { payments, connectivity, etiquette, safety, visaEntry, emergencyNumbers }`
-  (each a `LocalizedField` + `freshness` where relevant; `visaEntry`/`safety`
-  carry a mandatory disclaimer flag).
+  — each entry is a `TravelFact` (so it too carries a source); `visaEntry`/`safety`
+  additionally carry a mandatory disclaimer flag.
 - `Destination { id, name, region, summary, bestSeasons, welcome, attractions,
   stayAreas, transport: { arrival[], gettingAround[] }, practical, sources, lastVerified }`.
 - `TravelContent { destinations, practical (country-level), contentVersion, generatedFrom }`.
@@ -107,8 +116,10 @@ Browser (/travel)
 Seed set (final list confirmed by @Dylan): `beijing`, `shanghai`, `xian`,
 `chengdu`, `hangzhou`, `guilin` (≥ 3 required to make multi-city real).
 
-Every `perishable` item must include `sourceIds` that resolve to a `TravelSourceRef`;
-a content-validation test enforces this (no perishable fact without a source).
+Content validation enforces: every `TravelFact` has ≥1 resolvable `sourceIds`
+entry and a valid `lastChecked`/`lastVerified`; `perishable` items are present so
+the "Verify official" path is exercised; every `LocalizedField` has en+fr. No
+fact — perishable or stable — may exist without a source.
 
 ## Planner
 
@@ -161,9 +172,10 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 1. From `/travel`, a valid request produces a deterministic itinerary covering
    **transport, a day-by-day plan, and stay areas** for every selected
    destination.
-2. Every `perishable` fact renders a "Verify official" badge with a source link
-   and `lastChecked`/`lastVerified` date; no perishable fact exists without a
-   source (enforced by content validation).
+2. Every fact renders its source + `lastChecked`; every `perishable` fact
+   additionally renders a prominent "Verify official" badge; each item shows its
+   `origin` (static reference vs live). A content-validation test fails the build
+   if any fact — stable or perishable — has no source.
 3. The practical panel is always present and includes the visa/entry + safety
    **not-legal-advice** disclaimer.
 4. UI and content render correctly in **en and fr**; the language toggle switches
@@ -179,13 +191,22 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 - **Unit (Vitest):** request validation bounds; day allocation and travel-day
   insertion; interest scoring + pace caps (no duplicate attractions); stay-area
   selection by budget; determinism (golden snapshots); provenance enforcement
-  (throw on perishable-without-source); i18n completeness (every
-  `LocalizedField` has en+fr); staleness threshold.
+  (throw on *any* source-less fact, not only perishable); `origin` carried
+  through; i18n completeness (every `LocalizedField` has en+fr); staleness
+  threshold.
+- **Failure-path cases (required):** invalid/empty request; unknown destination;
+  days out of range; a destination with too few attractions for the pace;
+  **stale content** (>180 days) → visible warning; content that fails validation
+  → surfaced error, never a silent empty plan. When phase-2 adapters land, add:
+  no key, upstream timeout, empty result — each degrading visibly to curated
+  reference text, never fabricated.
 - **Component (Vitest + Testing Library):** form validation; generate → render
-  day/stay/practical; "Verify official" badge present on perishable facts;
-  disclaimer visible; stale banner; language toggle.
+  day/stay/practical; source + `lastChecked` on all facts and "Verify official"
+  badge on perishable facts; origin (reference vs live) shown; disclaimer
+  visible; stale banner; language toggle.
 - **E2E (Playwright):** `/travel` renders; submit a request; itinerary + at least
-  one "Verify official" badge + the disclaimer are visible. No network.
+  one "Verify official" badge + the disclaimer are visible; invalid submit shows
+  inline validation. No network.
 - **Metrics (lightweight):** `performance.mark` around generation for a
   client-side duration; expose a pure `summarizeItinerary()` count (days,
   attractions, perishable facts) used in tests. No analytics dependency.
@@ -194,9 +215,10 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 
 ## Risks and mitigations
 
-- **Content staleness / wrong facts:** every destination carries `lastVerified`,
-  perishable facts carry sources + "Verify official", a stale banner appears past
-  180 days, and content is reviewed like course content.
+- **Content staleness / wrong facts:** every fact carries a source +
+  `lastChecked`; destinations carry `lastVerified`; perishable facts add the
+  prominent "Verify official" badge; a stale banner appears past 180 days; and
+  content is reviewed like course content.
 - **Hallucination:** MVP uses no model, so this risk is structurally removed;
   phase-2 LLM is constrained not to introduce facts (see below).
 - **Scope creep:** bounded seed city set; live booking/feeds explicitly deferred.

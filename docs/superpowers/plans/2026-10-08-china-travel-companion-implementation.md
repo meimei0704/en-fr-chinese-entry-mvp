@@ -31,15 +31,18 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - Test: `src/content/travel/validate.test.ts`
 
 - [ ] Define `TravelDestinationId`, `Interest = 'history'|'nature'|'food'|'shopping'|'nightlife'|'art'`,
-  `FactFreshness = 'stable'|'perishable'`, `TravelSourceRef`, `Attraction`,
-  `StayArea`, `TransportOption`, `PracticalInfo`, `Destination`, `TravelContent`
-  exactly as in the design's content model.
-- [ ] `validateTravelContent(content)`: assert unique ids; every `perishable`
-  fact has ≥1 resolvable `sourceIds`; every `LocalizedField` has en+fr;
-  `lastVerified` is a valid ISO date; `contentVersion` non-empty. Throw a typed
-  `TravelContentError` with a precise message.
-- [ ] Test: happy content passes; perishable-without-source fails;
-  missing-fr field fails; duplicate ids fail; bad date fails.
+  `FactFreshness = 'stable'|'perishable'`, `FactOrigin = 'curated'|'live'`,
+  `TravelSourceRef`, and the `TravelFact` base (`sourceIds`, `lastChecked`,
+  `origin`, `freshness`) implemented by `Attraction`, `StayArea`,
+  `TransportOption`, and each `PracticalInfo` entry; plus `Destination` and
+  `TravelContent` exactly as in the design's content model.
+- [ ] `validateTravelContent(content)`: unique ids; **every** `TravelFact` has
+  ≥1 resolvable `sourceIds` and a valid `lastChecked`; `lastVerified` is a valid
+  ISO date; `contentVersion` non-empty; every `LocalizedField` has en+fr; at
+  least one `perishable` fact exists (so the badge path is exercised). Throw a
+  typed `TravelContentError` with a precise message.
+- [ ] Test: happy content passes; **source-less fact (stable or perishable)
+  fails**; missing-fr field fails; duplicate ids fail; bad date fails.
 
 ## Task 2 — Seed destination content
 
@@ -55,8 +58,9 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] Author each seed destination with: summary + welcome, `bestSeasons`, ≥4
   `attractions` spanning categories, ≥2 `stayAreas`, arrival + getting-around
   `transport`, `sources`, `lastVerified`.
-- [ ] Mark prices/hours/schedules `perishable` and attach a `sourceIds` entry
-  (official/operator). Keep cultural/etiquette/mode descriptions `stable`.
+- [ ] Mark prices/hours/schedules `perishable`; keep cultural/etiquette/mode
+  descriptions `stable`. **Both** still carry a `sourceIds` entry + `lastChecked`
+  (no fact is source-less).
 - [ ] `validateTravelContent(travelContent)` passes; test asserts each
   destination has ≥4 attractions, ≥2 stay areas, and ≥1 perishable fact with a
   source (proves the boundary is exercised).
@@ -109,10 +113,12 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] `StayCard`: area, why, and "book via official/OTA — prices vary".
 - [ ] `PracticalPanel`: accessible accordion incl. visa/entry + safety
   disclaimer + emergency numbers.
-- [ ] `ProvenanceBadge`: "Verify official" + source link + `lastChecked`, on
-  perishable facts only. `FreshnessBanner`: `lastVerified` + stale warning.
-- [ ] Test each: rendering, labels, badge only on perishable, disclaimer
-  visible, accordion keyboard behavior, stale banner.
+- [ ] `ProvenanceBadge`: shows source + `lastChecked` + `origin` (reference vs
+  live) on **all** facts; adds the prominent "Verify official" badge on
+  `perishable` facts only. `FreshnessBanner`: `lastVerified` + stale warning.
+- [ ] Test each: rendering, labels, source shown on all facts, "Verify official"
+  only on perishable, origin shown, disclaimer visible, accordion keyboard
+  behavior, stale banner.
 
 ## Task 6 — Travel page + route + nav
 
