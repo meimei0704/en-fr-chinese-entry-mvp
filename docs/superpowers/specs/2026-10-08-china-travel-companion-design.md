@@ -181,19 +181,31 @@ therefore ask for more attraction-days than a city can fill. The exact rules
   ordered by (interest score desc, stable `id` asc). If the intersection is
   empty, `usable(d)` = all attractions of `d` (a city is never unusable).
   `N_d = |usable(d)|` (≥4 by content validation).
-- `capacityDays(d) = ceil(N_d / paceCap)` — the maximum number of
-  attraction-bearing days the city can fill without repeating an attraction. The
-  final day may be partially filled (the remainder attractions), hence `ceil`.
+- `interestMatchCount(d)` = the **number of `d`'s attraction entries** whose
+  `category ∈ request.interests` (a count of attractions, not of distinct
+  categories). Used only for day-allocation weighting.
+- **Single consumable list per city.** `usable(d)` is consumed strictly
+  front-to-back and each attraction is used at most once, so "no repeats" holds
+  by construction across both full attraction days and the arrival half-day.
 - **Travel day:** the arrival day of every destination after the first is a
-  relocation day. It consumes a day slot but **does not count against
-  `capacityDays`**; it shows the inter-city transport leg plus an arrival
-  half-day carrying at most `halfCap = floor(paceCap / 2)` attractions
-  (`relaxed` 0, `standard` 1, `packed` 1).
+  relocation day. It consumes a day slot, shows the inter-city transport leg plus
+  an arrival half-day, and **its attractions come out of the same `usable(d)`
+  list** — it is not extra capacity.
+- `arrivalHalfCap(d) = floor(paceCap / 2)` for a non-first destination
+  (`relaxed` 0, `standard` 1, `packed` 1), else `0`.
+- `arrivalAttractions(d) = min(arrivalHalfCap(d), N_d)` — the first
+  `arrivalAttractions(d)` items of `usable(d)` are reserved for the arrival
+  half-day.
+- `capacityDays(d) = ceil(max(0, N_d − arrivalAttractions(d)) / paceCap)` — the
+  maximum number of **full attraction-bearing days**, computed over the remaining
+  attractions only. The final full day may be partially filled, hence `ceil`.
+  (For a first destination `arrivalAttractions = 0`, so
+  `capacityDays(d) = ceil(N_d / paceCap)`.)
 
 **Day allocation (deterministic)**
 
-- `weight(d) = 1 + interestMatchCount(d)` (a city's attractions' categories in
-  `request.interests`); if `interests` is empty every weight is 1.
+- `weight(d) = 1 + interestMatchCount(d)`; if `interests` is empty every weight
+  is 1.
 - **Reserve first, then distribute:** give every selected destination exactly 1
   day as a floor, then distribute the remaining `R = days − destinations.length`
   days: `extra(d) = floor(R * weight(d) / Σweight)`, and the last
@@ -209,13 +221,18 @@ therefore ask for more attraction-days than a city can fill. The exact rules
 
 - `attractionDays(d) = max(0, min(allocated(d) − arrivalDays(d), capacityDays(d)))`,
   where `arrivalDays(d) = 1` for a non-first destination, else `0`.
+- The full attraction days schedule the next `min(attractionDays(d) * paceCap,
+  N_d − arrivalAttractions(d))` items of `usable(d)` after the reserved arrival
+  items, front-to-back. Total attractions scheduled from `d` =
+  `arrivalAttractions(d) + that amount ≤ N_d`, so **no attraction ever repeats**,
+  including on itineraries that contain a travel day.
 - `freeDays = Σ_d max(0, (allocated(d) − arrivalDays(d)) − capacityDays(d))` —
   over-capacity days, recorded in `meta.freeDays`.
 - A free day renders a clearly-labelled "free / flexible day" block with the
   destination's general tips and optional (non-scheduled) suggestions — never a
   fabricated attraction, and it is **not** an error.
-- Travel days are neither attraction days nor free days; they render the leg +
-  arrival half-day.
+- Travel days are neither attraction days nor free days; they render the leg plus
+  the arrival half-day (whose reserved attractions are already accounted above).
 
 This is the contract for AC1/AC5 and the Task 3 golden.
 

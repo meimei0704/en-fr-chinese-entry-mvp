@@ -91,14 +91,20 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   no duplicate attractions, budget-matched stay area, provenance carried through.
   `deps.now` injectable.
 - [ ] **Capacity / surplus (P1-2)** — implement the design's exact formulas:
-  `capacityDays(d) = ceil(usableCount(d) / paceCap)`; a non-first destination's
-  arrival day is a **travel day** (transport leg + arrival half-day ≤
-  `floor(paceCap/2)` attractions) and does **not** count against
-  `capacityDays`; `attractionDays(d) = max(0, min(allocated(d) − arrivalDays(d),
-  capacityDays(d)))`; `freeDays = Σ max(0, (allocated(d) − arrivalDays(d)) −
-  capacityDays(d))` recorded in `meta.freeDays`. Over-capacity days render as
-  `free`/optional blocks (destination tips + optional suggestions, no fabricated
-  attraction); a thin-content request must succeed, not error.
+  consume one ordered `usable(d)` list front-to-back (so no attraction repeats);
+  `arrivalAttractions(d) = min(floor(paceCap/2), N_d)` for a non-first
+  destination (relaxed 0 / standard 1 / packed 1); those first items are reserved
+  for the arrival half-day of the **travel day**;
+  `capacityDays(d) = ceil(max(0, N_d − arrivalAttractions(d)) / paceCap)`;
+  `attractionDays(d) = max(0, min(allocated(d) − arrivalDays(d),
+  capacityDays(d)))`; full days take the next
+  `min(attractionDays(d) * paceCap, N_d − arrivalAttractions(d))` items;
+  `freeDays = Σ max(0, (allocated(d) − arrivalDays(d)) − capacityDays(d))`
+  recorded in `meta.freeDays`. Over-capacity days render as `free`/optional
+  blocks (destination tips + optional suggestions, no fabricated attraction); a
+  thin-content request must succeed, not error.
+- [ ] `interestMatchCount(d)` = count of `d`'s attraction entries whose category
+  is in `interests` (used only for allocation weight).
 - [ ] **Allocation:** reserve 1 day per selected destination, then distribute the
   remaining `days − destinations.length` by `weight = 1 + interestMatchCount`
   (floor + largest-remainder, tie-break by input order), so `Σallocated = days`
@@ -110,9 +116,11 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   equality with `generatedAt` excluded; snapshot one golden itinerary);
   allocation for 1 city vs 3 cities; pace caps respected; no repeats; budget
   changes selected stay area; **over-capacity duration → `days.length === days`,
-  `meta.freeDays > 0`, free blocks present**; **travel day does not reduce
-  `capacityDays`**; `days < destinations` rejected; invalid request rejected;
-  `generatedAt` uses injected clock.
+  `meta.freeDays > 0`, free blocks present**; **a multi-city itinerary containing
+  a travel day schedules no duplicate attractions and totals ≤ `N_d` per city**
+  (the arrival half-day draws from the same ordered list);
+  `days < destinations` rejected; invalid request rejected; `generatedAt` uses
+  injected clock.
 
 ## Task 4 — i18n copy + content wiring
 
