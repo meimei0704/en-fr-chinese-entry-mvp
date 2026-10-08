@@ -8,6 +8,26 @@
 - review 队列与 progress 进度页
 - 本地静态数据与浏览器 localStorage 学习进度
 
+## Trip planner (`/travel`)
+
+`/travel` builds a deterministic, day-by-day China itinerary from a small offline
+content set. The learner picks destinations, trip length, interests, pace, budget and
+the itinerary language (English / Français); the planner then schedules travel legs,
+attractions, stay areas and practical essentials (payments, connectivity, etiquette,
+safety, visa/entry, emergency numbers). The same request always yields the same plan.
+
+- Everything runs in the browser against bundled seed content — **no network calls and
+  no API keys**. Generation is a pure client-side function, so the page works offline.
+- **Content/provenance model.** Every fact (attraction, transport option, stay area,
+  practical note, disclaimer) carries a source and a `lastChecked` date. Facts marked
+  `perishable` — opening hours, schedules, entry rules, prices, advisories — render a
+  **"Verify official"** link that points at a stable official domain. A freshness banner
+  states when the content was last verified, with a warning once it is over 180 days old.
+- **Reference only — confirm with official sources.** The planner is orientation, not a
+  booking or legal/visa authority. Opening hours, ticket rules and entry requirements
+  change; always confirm time-sensitive details (and any visa/entry requirement) with the
+  official sources linked from each fact before you travel.
+
 ## Tech Stack
 
 - Vite
