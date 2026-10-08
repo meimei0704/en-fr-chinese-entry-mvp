@@ -215,6 +215,11 @@ export const uiCopy = {
       },
       result: {
         summaryHeading: 'Trip summary',
+        gettingThereHeading: 'Getting there',
+        gettingThereHelper: (destination: string) =>
+          destination
+            ? `Arrival options to ${destination}.`
+            : 'Arrival options for your first destination.',
         dayHeading: (day: number) => `Day ${day}`,
         blocks: {
           morning: 'Morning',
@@ -463,6 +468,11 @@ export const uiCopy = {
       },
       result: {
         summaryHeading: 'Résumé du voyage',
+        gettingThereHeading: 'S’y rendre',
+        gettingThereHelper: (destination: string) =>
+          destination
+            ? `Options d’arrivée à ${destination}.`
+            : 'Options d’arrivée pour votre première destination.',
         dayHeading: (day: number) => `Jour ${day}`,
         blocks: {
           morning: 'Matin',

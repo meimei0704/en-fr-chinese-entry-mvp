@@ -4789,6 +4789,25 @@ h2 {
   margin: 0.35rem 0 0;
 }
 
+.itinerary-view__getting-there {
+  display: grid;
+  gap: 0.5rem;
+  padding: clamp(0.95rem, 2.5vw, 1.25rem);
+  border: 1px solid rgba(var(--color-border-rgb), 0.92);
+  border-left: 4px solid rgba(var(--color-speaker-service-border-rgb), 0.75);
+  border-radius: var(--radius-card);
+  background: rgba(var(--color-surface-white-rgb), 0.94);
+  box-shadow: var(--shadow-card);
+}
+
+.itinerary-view__getting-there h2 {
+  margin: 0;
+}
+
+.itinerary-view__getting-there > .muted-text {
+  margin: 0;
+}
+
 .itinerary-view__days {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));

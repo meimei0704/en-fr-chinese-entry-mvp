@@ -27,6 +27,7 @@ test('plans a trip fully offline with provenance and the official-source boundar
 
   const itinerary = page.getByRole('region', { name: 'Trip summary' })
   await expect(itinerary).toBeVisible()
+  await expect(itinerary.getByRole('heading', { name: 'Getting there' })).toBeVisible()
   await expect(itinerary.getByRole('heading', { name: 'Day 1' })).toBeVisible()
 
   const verifyOfficial = itinerary.getByRole('link', { name: 'Verify official' })

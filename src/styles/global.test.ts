@@ -765,6 +765,7 @@ describe('global color accessibility tokens', () => {
       '.itinerary-view',
       '.itinerary-view__summary',
       '.itinerary-view__title',
+      '.itinerary-view__getting-there',
       '.itinerary-view__days',
       '.itinerary-view__stays',
       '.day-card',

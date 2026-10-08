@@ -10,6 +10,7 @@ import type {
 import { DayCard } from './DayCard'
 import { FreshnessBanner } from './FreshnessBanner'
 import { PracticalPanel } from './PracticalPanel'
+import { ProvenanceBadge } from './ProvenanceBadge'
 import { StayCard } from './StayCard'
 
 interface ItineraryViewProps {
@@ -41,20 +42,13 @@ function practicalFacts(practical: ItineraryPractical): TravelFact[] {
     country.safety,
     country.visaEntry,
     country.emergencyNumbers,
-    ...practical.byDestination.flatMap((entry) => [
-      entry.practical.payments,
-      entry.practical.connectivity,
-      entry.practical.etiquette,
-      entry.practical.safety,
-      entry.practical.visaEntry,
-      entry.practical.emergencyNumbers,
-    ]),
   ]
 }
 
 /** True when at least one fact in the plan carries `origin: 'live'` (P2-4). */
 function itineraryHasLiveFact(itinerary: TravelItinerary): boolean {
   const facts: TravelFact[] = [
+    ...itinerary.legs.flatMap((leg) => leg.options),
     ...itinerary.days.flatMap(factsInDay),
     ...itinerary.stays.map((stay) => stay.stayArea),
     ...practicalFacts(itinerary.practical),
@@ -75,6 +69,10 @@ export function ItineraryView({ itinerary, language, now }: ItineraryViewProps) 
     ]),
   )
   const hasLiveFact = itineraryHasLiveFact(itinerary)
+  const gettingThere = itinerary.legs[0]
+  const firstDestinationName = gettingThere
+    ? destinationNames.get(gettingThere.toDestinationId)
+    : undefined
 
   return (
     <section className="itinerary-view" aria-label={copy.summaryHeading}>
@@ -93,6 +91,30 @@ export function ItineraryView({ itinerary, language, now }: ItineraryViewProps) 
         language={language}
         now={now}
       />
+
+      {gettingThere ? (
+        <section className="itinerary-view__getting-there" aria-label={copy.gettingThereHeading}>
+          <h2>{copy.gettingThereHeading}</h2>
+          <p className="muted-text">
+            {copy.gettingThereHelper(
+              firstDestinationName ? getLocalizedText(firstDestinationName, language) : '',
+            )}
+          </p>
+          <ul className="day-card__transport-options">
+            {gettingThere.options.map((option) => (
+              <li key={option.id}>
+                <h3 className="day-card__attraction">
+                  {getLocalizedText(option.title, language)}
+                </h3>
+                {option.notes ? (
+                  <p className="muted-text">{getLocalizedText(option.notes, language)}</p>
+                ) : null}
+                <ProvenanceBadge fact={option} language={language} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <div className="itinerary-view__days">
         {itinerary.days.map((day) => (

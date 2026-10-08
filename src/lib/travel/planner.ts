@@ -277,10 +277,6 @@ export function buildItinerary(
 
   const practical: ItineraryPractical = {
     country: content.practical,
-    byDestination: destinations.map((destination) => ({
-      destinationId: destination.id,
-      practical: destination.practical,
-    })),
   }
 
   const disclaimers: ItineraryDisclaimer[] = [

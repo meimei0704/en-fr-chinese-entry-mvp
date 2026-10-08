@@ -76,14 +76,8 @@ export interface ItineraryStay {
   stayArea: StayArea
 }
 
-export interface DestinationPractical {
-  destinationId: TravelDestinationId
-  practical: PracticalInfo
-}
-
 export interface ItineraryPractical {
   country: PracticalInfo
-  byDestination: DestinationPractical[]
 }
 
 export interface ItineraryDisclaimer {

@@ -37,6 +37,22 @@ describe('ItineraryView', () => {
     expect(screen.getByText(copy.freshnessBanner(itinerary.meta.lastVerified))).toBeInTheDocument()
   })
 
+  it('renders the Getting there block from the first leg with provenance', () => {
+    const copy = getUiCopy('en').travel.result
+    render(<ItineraryView itinerary={itinerary} language="en" />)
+
+    const firstLeg = itinerary.legs[0]
+    expect(firstLeg.fromDestinationId).toBeNull()
+    expect(screen.getByRole('heading', { name: copy.gettingThereHeading })).toBeInTheDocument()
+
+    for (const option of firstLeg.options) {
+      expect(screen.getAllByText(getLocalizedText(option.title, 'en')).length).toBeGreaterThan(0)
+      expect(
+        screen.getAllByText(getLocalizedText(option.title, 'en'))[0].closest('li'),
+      ).not.toBeNull()
+    }
+  })
+
   it('does not render an origin indicator for a pure-curated plan', () => {
     const copy = getUiCopy('en').travel.result
     render(<ItineraryView itinerary={itinerary} language="en" />)
