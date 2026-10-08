@@ -114,6 +114,15 @@ Browser (/travel)
   stayAreas, transport: { arrival[], gettingAround[] }, practical, sources, lastVerified }`.
 - `TravelContent { destinations, practical (country-level), contentVersion, generatedFrom }`.
 
+> **Per-destination `practical` is a phase-2 slot.** The MVP surfaces the
+> **country-level** `practical` only. The per-destination `practical` block is
+> still validated (it keeps the `PracticalInfo` shape honest for future
+> per-city detail) but is **not** copied into the itinerary and **not** rendered:
+> the seed builder emits identical generic advice for every city, so showing it
+> once per destination would duplicate the same text and mislead by implying
+> city-specific guidance (contrary to the no-noise rule in AC2). When phase 2
+> authors genuinely city-specific practical facts, it can be surfaced then.
+
 Seed set (final list confirmed by @Dylan): `beijing`, `shanghai`, `xian`,
 `chengdu`, `hangzhou`, `guilin` (≥ 3 required to make multi-city real).
 
@@ -145,13 +154,19 @@ perishable facts.
     (`relaxed` 1, `standard` 2, `packed` 3), no repeats, prefer higher score then
     stable id order for determinism;
   - choose a `StayArea` per destination matching `budget` and top interest;
-  - assemble `practical` + disclaimers + provenance;
+  - assemble `practical` + disclaimers + provenance. `practical` is the
+    **country-level** `PracticalInfo` only; the planner must **not** attach a
+    per-destination practical block (see the per-destination `practical` note
+    above). The first leg (`legs[0]`, `fromDestinationId: null`) is the
+    international arrival and is surfaced by the UI (see
+    [Getting there](#getting-there));
   - deterministic: same `(request, content.contentVersion)` → identical **plan
     body** (see [Determinism contract](#determinism-contract-p1-1)).
   `deps.now` is injectable so tests are stable.
 - `itinerary.ts` — `TravelItinerary { summary, legs[], days[], stays[],
   practical, disclaimers, meta: { contentVersion, lastVerified, generatedAt,
-  freeDays } }`.
+  freeDays } }`. `legs[0]` is the international arrival (`fromDestinationId:
+  null`); each later leg belongs to that destination's travel day.
 
 ### Determinism contract (P1-1)
 
@@ -250,11 +265,13 @@ This is the contract for AC1/AC5 and the Task 3 golden.
 - `TravelRequestForm` — destination multi-select (from curated content), days
   number, interest chips, pace/budget selects, language toggle, Generate button;
   inline validation; a sensible default so the page is never empty.
-- `ItineraryView` — trip summary; `DayCard` per day (morning/afternoon/evening,
-  attraction, duration, transport between, meal suggestion, tips); `StayCard` per
-  destination (area + why + "book via official/OTA — prices vary").
+- `ItineraryView` — trip summary; a **Getting there** block (see below);
+  `DayCard` per day (morning/afternoon/evening, attraction, duration, transport
+  between, meal suggestion, tips); `StayCard` per destination (area + why +
+  "book via official/OTA — prices vary").
 - `PracticalPanel` — accordion: payments, connectivity, etiquette, safety, visa/
-  entry (with disclaimer), emergency numbers.
+  entry (with disclaimer), emergency numbers. It renders the **country-level**
+  practical only (per-destination practical is not surfaced in the MVP).
 - `ProvenanceBadge` — source link + `lastChecked` on every fact; on `perishable`
   facts it adds the prominent "Verify official" badge, whose link is the fact's
   official `url` (guaranteed present by content validation). `origin` lives in
@@ -270,9 +287,26 @@ This is the contract for AC1/AC5 and the Task 3 golden.
   `src/styles/global.css` using the existing design tokens/utility classes
   (`page-shell`, `hero-card`, `badge`, etc.) — no new CSS framework, no unstyled
   semantic markup. The form, day cards, stay cards, practical accordion, badges,
-  and the free/travel day blocks must render as a coherent page (responsive,
-  visible focus states, readable contrast). Styling is its own task (plan
-  Task 8), because the earlier UI tasks intentionally covered behavior only.
+  the Getting-there block, and the free/travel day blocks must render as a
+  coherent page (responsive, visible focus states, readable contrast). Styling is
+  its own task (plan Task 8), because the earlier UI tasks intentionally covered
+  behavior only.
+
+### Getting there
+
+The design Goal promises coverage of "getting there / around". The first
+destination has no travel day (the traveller starts there), so its relocation is
+not carried by a `TravelDay`. To avoid dropping it:
+
+- `ItineraryView` renders a dedicated **Getting there** block for the trip's
+  first destination, built from `itinerary.legs[0]` (`fromDestinationId: null`,
+  `options` = the first destination's `transport.arrival`). It shows the
+  arrival-transport options to the first city with the same provenance
+  treatment as every other fact.
+- Inter-city legs for later destinations remain rendered on their travel days;
+  "getting around" for each city is already passed to its `DayCard`s.
+- The block always renders for a valid itinerary (there is always a first leg),
+  so `legs[0]` is never dead data.
 
 ### Navigation
 
@@ -283,7 +317,9 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 
 1. From `/travel`, a valid request produces a deterministic itinerary covering
    **transport, a day-by-day plan, and stay areas** for every selected
-   destination. `days.length` equals the requested `days`; any days beyond a
+   destination. Getting-there transport is shown for the trip's first
+   destination (the Getting-there block, from `legs[0]`), and inter-city legs on
+   travel days. `days.length` equals the requested `days`; any days beyond a
    city's attraction capacity are labelled **free** days (P1-2), never
    dropped or errored.
 2. Every fact renders its source + `lastChecked`; every `perishable` fact

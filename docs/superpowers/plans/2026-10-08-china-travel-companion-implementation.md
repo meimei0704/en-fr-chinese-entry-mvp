@@ -85,7 +85,12 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   (1–7 destinations, 1–21 days, known ids; return typed errors).
 - [ ] `TravelItinerary` shape: `summary`, `legs[]`, `days[]`, `stays[]`,
   `practical`, `disclaimers`, `meta { contentVersion, lastVerified, generatedAt,
-  freeDays }`.
+  freeDays }`. `practical` is the **country-level** `PracticalInfo` only — do
+  **not** add a per-destination practical block (per-city practical is a phase-2
+  slot; the seed's per-destination practical is validated content but is not
+  surfaced, to avoid duplicating identical boilerplate per city). `legs[0]` is
+  the international arrival (`fromDestinationId: null`) and is rendered by the
+  Getting-there block (Task 5), so it must be produced.
 - [ ] `buildItinerary(request, content, deps?)`: allocate days (multi-city
   travel half-day), interest scoring, pace caps (`relaxed`1/`standard`2/`packed`3),
   no duplicate attractions, budget-matched stay area, provenance carried through.
@@ -149,13 +154,16 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 
 - [ ] `TravelRequestForm`: destination chips, days, interests, pace, budget,
   language, Generate; inline validation; a valid default.
-- [ ] `ItineraryView` / `DayCard`: render summary, per-day blocks with
+- [ ] `ItineraryView` / `DayCard`: render summary, a **Getting-there** block for
+  the first destination built from `itinerary.legs[0]` (arrival options +
+  provenance; always present for a valid itinerary), per-day blocks with
   attraction + duration + transport + meal + tips; and a distinct **free day**
   block for over-capacity days (P1-2), never a blank or faked
   attraction.
 - [ ] `StayCard`: area, why, and "book via official/OTA — prices vary".
 - [ ] `PracticalPanel`: accessible accordion incl. visa/entry + safety
-  disclaimer + emergency numbers.
+  disclaimer + emergency numbers; renders the **country-level** practical only
+  (no per-destination block).
 - [ ] `ProvenanceBadge`: source + `lastChecked` on **all** facts; adds the
   prominent "Verify official" badge on `perishable` facts only, linking to the
   official `url`. Origin is **not** rendered per fact; show a single origin
@@ -165,8 +173,9 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] Test each: rendering, labels, source shown on all facts, "Verify official"
   only on perishable with an official link, **origin indicator present only with
   an injected `live` fixture and absent for pure-curated plans** (P2-4),
-  disclaimer visible, accordion keyboard behavior, stale banner with an injected
-  `now`, free-day block for an over-capacity request.
+  **Getting-there block renders `legs[0]` arrival options for the first
+  destination**, disclaimer visible, accordion keyboard behavior, stale banner
+  with an injected `now`, free-day block for an over-capacity request.
 
 ## Task 6 — Travel page + route + nav
 
@@ -188,8 +197,9 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - Create: `tests/travel.spec.ts` (Playwright)
 - Modify: `README.md` (feature blurb + "verify official" boundary)
 
-- [ ] E2E: `/travel` renders; submit a request; itinerary + ≥1 "Verify official"
-  badge + the disclaimer are visible. No network.
+- [ ] E2E: `/travel` renders; submit a request; itinerary (including the
+  Getting-there block) + ≥1 "Verify official" badge + the disclaimer are visible.
+  No network.
 - [ ] README: describe the feature, the content/provenance model, and the
   "reference only — confirm with official sources" boundary.
 
@@ -201,8 +211,8 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 
 - [ ] Style every `/travel` component with the existing design tokens and utility
   classes (`page-shell`, `hero-card`, `badge`, `muted-text`, …): request form,
-  day cards (attraction/travel/free variants), stay cards, practical accordion,
-  provenance/freshness badges. No new CSS framework.
+  Getting-there block, day cards (attraction/travel/free variants), stay cards,
+  practical accordion, provenance/freshness badges. No new CSS framework.
 - [ ] Responsive layout; visible keyboard focus states; readable contrast.
 - [ ] Test/extend the style test to assert the travel class names have rules
   (mirroring how other page class names are covered).
