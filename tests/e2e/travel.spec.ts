@@ -52,3 +52,32 @@ test('shows inline validation and no itinerary for an invalid submit', async ({ 
   await expect(alert).toContainText('Choose a trip length between 1 and 21 days.')
   await expect(page.getByRole('region', { name: 'Trip summary' })).toHaveCount(0)
 })
+
+test('renders the itinerary with real styles and a responsive single column', async ({ page }) => {
+  await page.goto('/travel')
+  await page.getByRole('button', { name: 'Generate itinerary' }).click()
+
+  const form = page.locator('.travel-form')
+  await expect(form).toBeVisible()
+  expect(await form.evaluate((element) => getComputedStyle(element).display)).toBe('grid')
+
+  const dayCard = page.locator('.day-card').first()
+  await expect(dayCard).toBeVisible()
+  const dayStyles = await dayCard.evaluate((element) => {
+    const styles = getComputedStyle(element)
+    return {
+      borderLeftWidth: styles.borderLeftWidth,
+      backgroundColor: styles.backgroundColor,
+      boxShadow: styles.boxShadow,
+    }
+  })
+  expect(dayStyles.borderLeftWidth).toBe('4px')
+  expect(dayStyles.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+  expect(dayStyles.boxShadow).not.toBe('none')
+
+  await page.setViewportSize({ width: 480, height: 900 })
+  const columns = await page
+    .locator('.itinerary-view__days')
+    .evaluate((element) => getComputedStyle(element).gridTemplateColumns)
+  expect(columns.split(' ').length).toBe(1)
+})

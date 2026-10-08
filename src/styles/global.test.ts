@@ -751,4 +751,102 @@ describe('global color accessibility tokens', () => {
       ),
     ).toBe(true)
   })
+
+  it('styles the travel companion page with tokens, focus, and responsive rules', () => {
+    const travelSelectors = [
+      '.travel-page__result',
+      '.travel-page__error',
+      '.travel-form',
+      '.travel-form__group',
+      '.travel-form__chips',
+      '.travel-form__field',
+      '.travel-form__errors',
+      '.travel-form__actions',
+      '.itinerary-view',
+      '.itinerary-view__summary',
+      '.itinerary-view__title',
+      '.itinerary-view__days',
+      '.itinerary-view__stays',
+      '.day-card',
+      '.day-card--attraction',
+      '.day-card--travel',
+      '.day-card--free',
+      '.day-card__header',
+      '.day-card__slot',
+      '.day-card__block',
+      '.day-card__attraction',
+      '.day-card__duration',
+      '.day-card__tips',
+      '.day-card__transport',
+      '.day-card__free',
+      '.day-card__free-label',
+      '.stay-card',
+      '.stay-card__destination',
+      '.stay-card__why',
+      '.stay-card__booking',
+      '.practical-panel',
+      '.practical-panel__disclaimer',
+      '.practical-panel__sections',
+      '.practical-panel__section',
+      '.practical-panel__trigger',
+      '.practical-panel__trigger--open',
+      '.practical-panel__content',
+      '.practical-panel__legal-note',
+      '.provenance-badge',
+      '.provenance-badge__sources',
+      '.provenance-badge__source',
+      '.provenance-badge__checked',
+      '.provenance-badge__verify',
+      '.freshness-banner',
+      '.freshness-banner--stale',
+      '.freshness-banner__verified',
+      '.freshness-banner__warning',
+    ]
+
+    for (const selector of travelSelectors) {
+      expect(hasRule(selector)).toBe(true)
+    }
+
+    expect(css).toContain('.day-card__blocks,')
+    expect(css).toContain('.travel-form__field input:focus-visible')
+    expect(css).toContain('.travel-form__field select:focus-visible')
+
+    expect(hasRuleWithDeclaration('.travel-form', 'box-shadow: var(--shadow-card);')).toBe(true)
+    expect(
+      hasRuleWithDeclaration(
+        '.day-card--attraction',
+        'border-left-color: rgba(var(--color-primary-rgb), 0.55);',
+      ),
+    ).toBe(true)
+    expect(
+      hasRuleWithDeclaration(
+        '.day-card--free',
+        'border-left-color: rgba(var(--color-jade-rgb), 0.55);',
+      ),
+    ).toBe(true)
+    expect(
+      hasRuleWithDeclaration('.practical-panel__trigger--open', 'background: var(--color-primary-100);'),
+    ).toBe(true)
+    expect(
+      hasRuleWithDeclaration('.freshness-banner--stale', 'background: var(--color-gold-tint-d-solid);'),
+    ).toBe(true)
+
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 760px)',
+        '.itinerary-view__days',
+        'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration(
+        '(max-width: 760px)',
+        '.itinerary-view__stays',
+        'grid-template-columns: minmax(0, 1fr);',
+      ),
+    ).toBe(true)
+    expect(
+      hasMediaRuleWithDeclaration('(prefers-reduced-motion: reduce)', '.day-card', 'transition: none;'),
+    ).toBe(true)
+  })
 })
