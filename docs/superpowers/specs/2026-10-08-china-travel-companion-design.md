@@ -178,9 +178,12 @@ therefore ask for more attraction-days than a city can fill. The exact rules
 
 - `paceCap` = `relaxed` 1 · `standard` 2 · `packed` 3 attractions/day.
 - `usable(d)` = attractions of `d` whose category is in `request.interests`,
-  ordered by (interest score desc, stable `id` asc). If the intersection is
-  empty, `usable(d)` = all attractions of `d` (a city is never unusable).
-  `N_d = |usable(d)|` (≥4 by content validation).
+  ordered by `interestScore` desc then stable `id` asc, where
+  `interestScore(a) = interests.length − interests.indexOf(a.category)` when the
+  category is requested (so an earlier-listed interest ranks higher), else `0`.
+  If the intersection is empty, `usable(d)` = all attractions of `d` in stable
+  `id` order (a city is never unusable). `N_d = |usable(d)|` (≥4 by content
+  validation).
 - `interestMatchCount(d)` = the **number of `d`'s attraction entries** whose
   `category ∈ request.interests` (a count of attractions, not of distinct
   categories). Used only for day-allocation weighting.
@@ -229,8 +232,12 @@ therefore ask for more attraction-days than a city can fill. The exact rules
 - `freeDays = Σ_d max(0, (allocated(d) − arrivalDays(d)) − capacityDays(d))` —
   over-capacity days, recorded in `meta.freeDays`.
 - A free day renders a clearly-labelled "free / flexible day" block with the
-  destination's general tips and optional (non-scheduled) suggestions — never a
-  fabricated attraction, and it is **not** an error.
+  destination's general tips (its `welcome`), never a fabricated attraction, and
+  it is **not** an error. Note: a free day occurs only when `allocated(d)` exceeds
+  `capacityDays(d)`, which means every usable attraction is already scheduled —
+  so any "optional, non-scheduled" attraction list is **empty by construction**
+  (the block is tips-only). The design does not promise unscheduled attraction
+  content it cannot supply.
 - Travel days are neither attraction days nor free days; they render the leg plus
   the arrival half-day (whose reserved attractions are already accounted above).
 
@@ -259,6 +266,13 @@ This is the contract for AC1/AC5 and the Task 3 golden.
   testable without time mocking.
 - Accessibility: labelled controls, keyboard-navigable accordion, `aria-live`
   for the generated result; copy in `src/content/copy.ts` (`uiCopy.travel`).
+- **Styling (explicit deliverable):** every component ships real styles in
+  `src/styles/global.css` using the existing design tokens/utility classes
+  (`page-shell`, `hero-card`, `badge`, etc.) — no new CSS framework, no unstyled
+  semantic markup. The form, day cards, stay cards, practical accordion, badges,
+  and the free/travel day blocks must render as a coherent page (responsive,
+  visible focus states, readable contrast). Styling is its own task (plan
+  Task 8), because the earlier UI tasks intentionally covered behavior only.
 
 ### Navigation
 
@@ -270,7 +284,7 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 1. From `/travel`, a valid request produces a deterministic itinerary covering
    **transport, a day-by-day plan, and stay areas** for every selected
    destination. `days.length` equals the requested `days`; any days beyond a
-   city's attraction capacity are labelled **free / optional** days (P1-2), never
+   city's attraction capacity are labelled **free** days (P1-2), never
    dropped or errored.
 2. Every fact renders its source + `lastChecked`; every `perishable` fact
    additionally renders a prominent "Verify official" badge (with an actionable
@@ -284,10 +298,11 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
    **not-legal-advice** disclaimer.
 4. UI and content render correctly in **en and fr**; the language toggle switches
    both; missing translations fail the content test rather than rendering blank.
-5. Invalid input (0 destinations, out-of-range days) shows inline validation and
-   never produces a crash or empty itinerary. A valid request whose duration
-   exceeds a city's attraction capacity still succeeds — it fills capacity and
-   marks the remainder free/optional (P1-2), it is **not** an error.
+5. Invalid input (0 destinations, out-of-range days, `days < destinations`)
+   shows inline validation and never produces a crash or empty itinerary. A valid
+   request whose duration exceeds a city's attraction capacity still succeeds — it
+   fills capacity and marks the remainder as free days (P1-2), it is **not** an
+   error.
 6. The feature works with **no network and no keys** (fully offline).
 7. Same `(request, contentVersion)` yields a byte-identical **plan body**;
    determinism excludes `meta.generatedAt`, which is clock-injected (see
@@ -295,6 +310,9 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 8. A stale-content warning appears when `lastVerified` is older than 180 days;
    `FreshnessBanner` takes an injectable `now` (defaulting to the real clock) so
    the threshold is testable without time mocking (P2-5).
+9. The `/travel` page and its components are styled with the app's existing
+   tokens/utilities (no unstyled markup), responsive, and keyboard-focus
+   visible.
 
 ## Evaluability
 

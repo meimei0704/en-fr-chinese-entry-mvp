@@ -100,11 +100,16 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   capacityDays(d)))`; full days take the next
   `min(attractionDays(d) * paceCap, N_d − arrivalAttractions(d))` items;
   `freeDays = Σ max(0, (allocated(d) − arrivalDays(d)) − capacityDays(d))`
-  recorded in `meta.freeDays`. Over-capacity days render as `free`/optional
-  blocks (destination tips + optional suggestions, no fabricated attraction); a
+  recorded in `meta.freeDays`. Over-capacity days render as `free` blocks
+  (destination tips only — the optional-attraction list is empty by construction;
+  no fabricated attraction); a
   thin-content request must succeed, not error.
 - [ ] `interestMatchCount(d)` = count of `d`'s attraction entries whose category
   is in `interests` (used only for allocation weight).
+- [ ] `usable(d)` ordering: `interestScore(a) = interests.length −
+  interests.indexOf(a.category)` (0 when not requested), sort desc then by
+  stable `id` asc; when no attraction matches, use all attractions in `id`
+  order.
 - [ ] **Allocation:** reserve 1 day per selected destination, then distribute the
   remaining `days − destinations.length` by `weight = 1 + interestMatchCount`
   (floor + largest-remainder, tie-break by input order), so `Σallocated = days`
@@ -145,8 +150,8 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] `TravelRequestForm`: destination chips, days, interests, pace, budget,
   language, Generate; inline validation; a valid default.
 - [ ] `ItineraryView` / `DayCard`: render summary, per-day blocks with
-  attraction + duration + transport + meal + tips; and a distinct **free /
-  optional day** block for over-capacity days (P1-2), never a blank or faked
+  attraction + duration + transport + meal + tips; and a distinct **free day**
+  block for over-capacity days (P1-2), never a blank or faked
   attraction.
 - [ ] `StayCard`: area, why, and "book via official/OTA — prices vary".
 - [ ] `PracticalPanel`: accessible accordion incl. visa/entry + safety
@@ -188,11 +193,26 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] README: describe the feature, the content/provenance model, and the
   "reference only — confirm with official sources" boundary.
 
-## Task 8 — Full verification + handoff
+## Task 8 — Travel UI styling
+
+**Files**
+- Modify: `src/styles/global.css` (+ `global.test.ts` if it asserts token/section
+  coverage)
+
+- [ ] Style every `/travel` component with the existing design tokens and utility
+  classes (`page-shell`, `hero-card`, `badge`, `muted-text`, …): request form,
+  day cards (attraction/travel/free variants), stay cards, practical accordion,
+  provenance/freshness badges. No new CSS framework.
+- [ ] Responsive layout; visible keyboard focus states; readable contrast.
+- [ ] Test/extend the style test to assert the travel class names have rules
+  (mirroring how other page class names are covered).
+
+## Task 9 — Full verification + handoff
 
 - [ ] `npm run test -- --run`, `npm run lint`, `npm run build`,
   `npx playwright test` all green; paste exact outputs.
 - [ ] Confirm generation is deterministic (golden test) and offline.
+- [ ] Confirm AC9: `/travel` renders styled (no unstyled markup), responsive.
 - [ ] Post gate handoff (head SHA, range, scope, evidence) to the Loop thread.
 
 ---
