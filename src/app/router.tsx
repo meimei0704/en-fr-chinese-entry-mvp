@@ -11,6 +11,7 @@ import { PinyinPage } from '../pages/PinyinPage'
 import { PracticePage } from '../pages/PracticePage'
 import { ProgressPage } from '../pages/ProgressPage'
 import { ReviewPage } from '../pages/ReviewPage'
+import { TravelPage } from '../pages/TravelPage'
 
 export const appRoutes: RouteObject[] = [
   {
@@ -27,6 +28,7 @@ export const appRoutes: RouteObject[] = [
       { path: '/culture', element: <CulturePage /> },
       { path: '/review', element: <ReviewPage /> },
       { path: '/progress', element: <ProgressPage /> },
+      { path: '/travel', element: <TravelPage /> },
     ],
   },
 ]

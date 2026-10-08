@@ -46,6 +46,14 @@ export function SiteHeader() {
         >
           {copy.nav.culture}
         </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            `site-header__link${isActive ? ' site-header__link--active' : ''}`
+          }
+          to="/travel"
+        >
+          {copy.nav.travel}
+        </NavLink>
       </nav>
     </header>
   )

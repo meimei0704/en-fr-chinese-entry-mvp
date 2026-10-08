@@ -10,6 +10,7 @@ const expectedNavLinks = [
   ['Pinyin', '/pinyin'],
   ['Journey', '/#home-basic-expressions-path'],
   ['Culture', '/culture'],
+  ['Travel', '/travel'],
 ] as const
 
 describe('SiteHeader', () => {
@@ -79,6 +80,15 @@ describe('SiteHeader', () => {
     )
   })
 
+  it('marks the Travel link active on the /travel route without highlighting Home', () => {
+    renderRoute('/travel')
+
+    expect(screen.getByRole('link', { name: 'Travel' })).toHaveClass('site-header__link--active')
+    expect(screen.getByRole('link', { name: 'Home' })).not.toHaveClass(
+      'site-header__link--active',
+    )
+  })
+
   it('renders French labels when the explanation language is French', () => {
     saveProgress({ ...createDefaultProgress(), selectedExplanationLanguage: 'fr' })
 
@@ -91,6 +101,7 @@ describe('SiteHeader', () => {
       '/#home-basic-expressions-path',
     )
     expect(within(nav).getByRole('link', { name: 'Culture' })).toHaveAttribute('href', '/culture')
+    expect(within(nav).getByRole('link', { name: 'Voyage' })).toHaveAttribute('href', '/travel')
   })
 
   it('hides the header on admin routes', () => {
