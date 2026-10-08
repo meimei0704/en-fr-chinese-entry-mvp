@@ -22,6 +22,7 @@ export const uiCopy = {
       pinyin: 'Pinyin',
       journey: 'Journey',
       culture: 'Culture',
+      travel: 'Travel',
     },
     courseSeries: {
       label: 'Course series',
@@ -171,6 +172,90 @@ export const uiCopy = {
       errorBody: 'Check your connection and try again.',
       retry: 'Retry',
     },
+    travel: {
+      eyebrow: 'Trip planner',
+      heading: 'Plan your trip to China',
+      intro:
+        'Pick your destinations, trip length and pace to get a day-by-day itinerary with transport, places to stay and practical essentials.',
+      form: {
+        destinationsLabel: 'Destinations',
+        daysLabel: 'Trip length (days)',
+        interestsLabel: 'Interests',
+        interests: {
+          history: 'History',
+          nature: 'Nature',
+          food: 'Food',
+          shopping: 'Shopping',
+          nightlife: 'Nightlife',
+          art: 'Art',
+        },
+        paceLabel: 'Pace',
+        pace: {
+          relaxed: 'Relaxed',
+          standard: 'Standard',
+          packed: 'Packed',
+        },
+        budgetLabel: 'Budget',
+        budget: {
+          budget: 'Budget',
+          mid: 'Mid-range',
+          comfort: 'Comfort',
+        },
+        languageLabel: 'Itinerary language',
+        generate: 'Generate itinerary',
+        resetDefaults: 'Reset to defaults',
+      },
+      validation: {
+        noDestinations: 'Select at least one destination.',
+        daysOutOfRange: 'Choose a trip length between 1 and 21 days.',
+        unknownDestination: 'One of the selected destinations is not available.',
+        daysBelowDestinations:
+          'Your trip must be at least as long as the number of destinations.',
+        generic: 'We couldn’t build an itinerary from this request. Review it and try again.',
+      },
+      result: {
+        summaryHeading: 'Trip summary',
+        dayHeading: (day: number) => `Day ${day}`,
+        blocks: {
+          morning: 'Morning',
+          afternoon: 'Afternoon',
+          evening: 'Evening',
+          transport: 'Transport',
+          meal: 'Meal',
+          tips: 'Tips',
+        },
+        freeDayLabel: 'Free / flexible day',
+        freeDayHelper:
+          'No fixed attraction is scheduled for this day. Use the free time to explore or rest; optional ideas are listed below.',
+        stayHeading: 'Where to stay',
+        stayBookingNote: 'Book via official sites or booking platforms — prices vary.',
+        practicalHeading: 'Practical essentials',
+        practicalSections: {
+          payments: 'Payments',
+          connectivity: 'Connectivity',
+          etiquette: 'Etiquette',
+          safety: 'Safety',
+          visaEntry: 'Visa and entry',
+          emergencyNumbers: 'Emergency numbers',
+        },
+        verifyOfficial: 'Verify official',
+        verifyOfficialHelper: 'Check the official source for current details.',
+        freshnessBanner: (date: string) => `Content verified on ${date}.`,
+        staleWarning: (days: number) =>
+          `This content is over ${days} days old. Verify time-sensitive details with official sources.`,
+        liveIndicator: 'Includes live data',
+        disclaimer: {
+          notLegalAdvice: 'General information only — not legal advice.',
+          visaEntry:
+            'Entry rules and visa requirements can change. Confirm them with the nearest Chinese embassy or consulate and official immigration sources before you travel.',
+          safety:
+            'Safety conditions vary by place and time. Check official travel advisories and local guidance before and during your trip.',
+        },
+        generatedAt: (date: string) => `Generated on ${date}`,
+        error: 'We couldn’t generate your itinerary.',
+        retry: 'Try again',
+      },
+    },
     common: {
       explanation: 'Explanation',
     },
@@ -184,6 +269,7 @@ export const uiCopy = {
       pinyin: 'Pinyin',
       journey: 'Parcours',
       culture: 'Culture',
+      travel: 'Voyage',
     },
     courseSeries: {
       label: 'Séries de cours',
@@ -332,6 +418,92 @@ export const uiCopy = {
       errorHeading: 'Impossible de charger le cours.',
       errorBody: 'Vérifie ta connexion puis réessaie.',
       retry: 'Réessayer',
+    },
+    travel: {
+      eyebrow: 'Planificateur de voyage',
+      heading: 'Planifiez votre voyage en Chine',
+      intro:
+        'Choisissez vos destinations, la durée et le rythme de votre séjour pour obtenir un itinéraire jour par jour avec les transports, les hébergements et les informations pratiques essentielles.',
+      form: {
+        destinationsLabel: 'Destinations',
+        daysLabel: 'Durée du séjour (jours)',
+        interestsLabel: 'Centres d’intérêt',
+        interests: {
+          history: 'Histoire',
+          nature: 'Nature',
+          food: 'Gastronomie',
+          shopping: 'Shopping',
+          nightlife: 'Vie nocturne',
+          art: 'Art',
+        },
+        paceLabel: 'Rythme',
+        pace: {
+          relaxed: 'Tranquille',
+          standard: 'Standard',
+          packed: 'Intense',
+        },
+        budgetLabel: 'Budget',
+        budget: {
+          budget: 'Économique',
+          mid: 'Moyen',
+          comfort: 'Confort',
+        },
+        languageLabel: 'Langue de l’itinéraire',
+        generate: 'Générer l’itinéraire',
+        resetDefaults: 'Réinitialiser les valeurs par défaut',
+      },
+      validation: {
+        noDestinations: 'Sélectionnez au moins une destination.',
+        daysOutOfRange: 'Choisissez une durée de séjour entre 1 et 21 jours.',
+        unknownDestination: 'L’une des destinations sélectionnées n’est pas disponible.',
+        daysBelowDestinations:
+          'Le séjour doit durer au moins aussi longtemps que le nombre de destinations.',
+        generic:
+          'Impossible de créer un itinéraire à partir de cette demande. Vérifiez-la puis réessayez.',
+      },
+      result: {
+        summaryHeading: 'Résumé du voyage',
+        dayHeading: (day: number) => `Jour ${day}`,
+        blocks: {
+          morning: 'Matin',
+          afternoon: 'Après-midi',
+          evening: 'Soirée',
+          transport: 'Transport',
+          meal: 'Repas',
+          tips: 'Conseils',
+        },
+        freeDayLabel: 'Journée libre / flexible',
+        freeDayHelper:
+          'Aucune visite fixe n’est prévue ce jour-là. Profitez de ce temps libre pour explorer ou vous reposer ; des idées facultatives sont proposées ci-dessous.',
+        stayHeading: 'Où loger',
+        stayBookingNote:
+          'Réservez via les sites officiels ou les plateformes de réservation — les prix varient.',
+        practicalHeading: 'Informations pratiques',
+        practicalSections: {
+          payments: 'Paiements',
+          connectivity: 'Connectivité',
+          etiquette: 'Étiquette',
+          safety: 'Sécurité',
+          visaEntry: 'Visa et entrée',
+          emergencyNumbers: 'Numéros d’urgence',
+        },
+        verifyOfficial: 'Vérifier auprès de la source officielle',
+        verifyOfficialHelper: 'Consultez la source officielle pour les informations à jour.',
+        freshnessBanner: (date: string) => `Contenu vérifié le ${date}.`,
+        staleWarning: (days: number) =>
+          `Ce contenu date de plus de ${days} jours. Vérifiez les informations sensibles auprès des sources officielles.`,
+        liveIndicator: 'Inclut des données en direct',
+        disclaimer: {
+          notLegalAdvice: 'Informations générales uniquement — sans valeur de conseil juridique.',
+          visaEntry:
+            'Les règles d’entrée et les exigences de visa peuvent changer. Vérifiez-les auprès de l’ambassade ou du consulat de Chine et des sources officielles d’immigration avant de partir.',
+          safety:
+            'Les conditions de sécurité varient selon les lieux et les périodes. Consultez les avis officiels et les recommandations locales avant et pendant votre voyage.',
+        },
+        generatedAt: (date: string) => `Généré le ${date}`,
+        error: 'Impossible de générer votre itinéraire.',
+        retry: 'Réessayer',
+      },
     },
     common: {
       explanation: 'Explication',
