@@ -37,12 +37,14 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   `TransportOption`, and each `PracticalInfo` entry; plus `Destination` and
   `TravelContent` exactly as in the design's content model.
 - [ ] `validateTravelContent(content)`: unique ids; **every** `TravelFact` has
-  ≥1 resolvable `sourceIds` and a valid `lastChecked`; `lastVerified` is a valid
-  ISO date; `contentVersion` non-empty; every `LocalizedField` has en+fr; at
-  least one `perishable` fact exists (so the badge path is exercised). Throw a
-  typed `TravelContentError` with a precise message.
+  ≥1 resolvable `sourceIds` and a valid `lastChecked`; **every `perishable` fact
+  cites ≥1 source with `kind:'official'` and a non-empty `url`** (P2-3);
+  `lastVerified` is a valid ISO date; `contentVersion` non-empty; every
+  `LocalizedField` has en+fr; at least one `perishable` fact exists (so the badge
+  path is exercised). Throw a typed `TravelContentError` with a precise message.
 - [ ] Test: happy content passes; **source-less fact (stable or perishable)
-  fails**; missing-fr field fails; duplicate ids fail; bad date fails.
+  fails**; **perishable fact without an official `url` fails**; missing-fr field
+  fails; duplicate ids fail; bad date fails.
 
 ## Task 2 — Seed destination content
 
@@ -60,11 +62,17 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   `transport`, `sources`, `lastVerified`.
 - [ ] Mark prices/hours/schedules `perishable`; keep cultural/etiquette/mode
   descriptions `stable`. **Both** still carry a `sourceIds` entry + `lastChecked`
-  (no fact is source-less).
+  (no fact is source-less); every perishable fact cites an official source with
+  a `url`.
 - [ ] `validateTravelContent(travelContent)` passes; test asserts each
-  destination has ≥4 attractions, ≥2 stay areas, and ≥1 perishable fact with a
-  source (proves the boundary is exercised).
+  destination has ≥4 attractions, ≥2 stay areas, and ≥1 perishable fact with an
+  official `url` (proves the boundary is exercised).
 - [ ] Country `practical` carries the mandatory visa/entry + safety disclaimer.
+- [ ] **Manual-review step (P2-6):** the content seed is human-reviewed and
+  attributed like course content before merge — a short checklist in this task /
+  PR description: facts checked against the cited official source, `lastChecked`
+  set to the review date, no unsourced claims. Presence of a source is not proof
+  of correctness; the review step is what covers correctness.
 
 ## Task 3 — Deterministic planner
 
@@ -76,15 +84,25 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] `TravelRequest` + `DEFAULT_TRAVEL_REQUEST` + `validateTravelRequest`
   (1–7 destinations, 1–21 days, known ids; return typed errors).
 - [ ] `TravelItinerary` shape: `summary`, `legs[]`, `days[]`, `stays[]`,
-  `practical`, `disclaimers`, `meta { contentVersion, lastVerified, generatedAt }`.
+  `practical`, `disclaimers`, `meta { contentVersion, lastVerified, generatedAt,
+  freeDays }`.
 - [ ] `buildItinerary(request, content, deps?)`: allocate days (multi-city
   travel half-day), interest scoring, pace caps (`relaxed`1/`standard`2/`packed`3),
   no duplicate attractions, budget-matched stay area, provenance carried through.
   `deps.now` injectable.
-- [ ] Test: determinism (two calls equal; snapshot one golden itinerary);
+- [ ] **Capacity / surplus (P1-2):** fill each city only up to its available
+  attractions at the requested pace; every requested day is still assigned, with
+  over-capacity days rendered as `free`/optional day blocks (destination tips +
+  optional suggestions, no fabricated attraction) and counted in
+  `meta.freeDays`. A thin-content request must succeed, not error.
+- [ ] **Determinism (P1-1):** compare the plan body only; `meta.generatedAt` is
+  excluded from byte-identity and is clock-injected in tests.
+- [ ] Test: determinism (two calls equal with a fixed `deps.now` **and** plan-body
+  equality with `generatedAt` excluded; snapshot one golden itinerary);
   allocation for 1 city vs 3 cities; pace caps respected; no repeats; budget
-  changes selected stay area; invalid request rejected; `generatedAt` uses
-  injected clock.
+  changes selected stay area; **over-capacity duration → `days.length === days`,
+  `meta.freeDays > 0`, free blocks present**; invalid request rejected;
+  `generatedAt` uses injected clock.
 
 ## Task 4 — i18n copy + content wiring
 
@@ -109,16 +127,22 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] `TravelRequestForm`: destination chips, days, interests, pace, budget,
   language, Generate; inline validation; a valid default.
 - [ ] `ItineraryView` / `DayCard`: render summary, per-day blocks with
-  attraction + duration + transport + meal + tips.
+  attraction + duration + transport + meal + tips; and a distinct **free /
+  optional day** block for over-capacity days (P1-2), never a blank or faked
+  attraction.
 - [ ] `StayCard`: area, why, and "book via official/OTA — prices vary".
 - [ ] `PracticalPanel`: accessible accordion incl. visa/entry + safety
   disclaimer + emergency numbers.
 - [ ] `ProvenanceBadge`: shows source + `lastChecked` + `origin` (reference vs
   live) on **all** facts; adds the prominent "Verify official" badge on
-  `perishable` facts only. `FreshnessBanner`: `lastVerified` + stale warning.
+  `perishable` facts only, linking to the official `url`. `FreshnessBanner`:
+  `lastVerified` + stale warning, with an injectable `now` prop (default
+  `Date.now`) so the 180-day threshold is tested without time mocking (P2-5).
 - [ ] Test each: rendering, labels, source shown on all facts, "Verify official"
-  only on perishable, origin shown, disclaimer visible, accordion keyboard
-  behavior, stale banner.
+  only on perishable with an official link, **`origin:'live'` rendering via an
+  injected fixture** (P2-4), disclaimer visible, accordion keyboard behavior,
+  stale banner with an injected `now`, free-day block for an over-capacity
+  request.
 
 ## Task 6 — Travel page + route + nav
 

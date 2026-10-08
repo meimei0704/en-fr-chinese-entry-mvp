@@ -119,7 +119,12 @@ Seed set (final list confirmed by @Dylan): `beijing`, `shanghai`, `xian`,
 Content validation enforces: every `TravelFact` has ≥1 resolvable `sourceIds`
 entry and a valid `lastChecked`/`lastVerified`; `perishable` items are present so
 the "Verify official" path is exercised; every `LocalizedField` has en+fr. No
-fact — perishable or stable — may exist without a source.
+fact — perishable or stable — may exist without a source. In addition, **every
+`perishable` fact must cite at least one source with `kind: 'official'` and a
+non-empty `url`**, so its "Verify official" affordance is always actionable (P2-3:
+a perishable badge must never be a dead link). `TravelSourceRef.url` stays
+optional in the type, but this validation rule makes it effectively required for
+perishable facts.
 
 ## Planner
 
@@ -139,10 +144,52 @@ fact — perishable or stable — may exist without a source.
     stable id order for determinism;
   - choose a `StayArea` per destination matching `budget` and top interest;
   - assemble `practical` + disclaimers + provenance;
-  - deterministic: same `(request, content.contentVersion)` → identical output.
+  - deterministic: same `(request, content.contentVersion)` → identical **plan
+    body** (see [Determinism contract](#determinism-contract-p1-1)).
   `deps.now` is injectable so tests are stable.
 - `itinerary.ts` — `TravelItinerary { summary, legs[], days[], stays[],
-  practical, disclaimers, meta: { contentVersion, lastVerified, generatedAt } }`.
+  practical, disclaimers, meta: { contentVersion, lastVerified, generatedAt,
+  freeDays } }`.
+
+### Determinism contract (P1-1)
+
+Determinism is defined over the **plan body** —
+`summary`, `legs`, `days`, `stays`, `practical`, `disclaimers`, and the
+`contentVersion`/`lastVerified`/`freeDays` parts of `meta`. The clock-derived
+`meta.generatedAt` is explicitly **outside** the determinism contract (it cannot
+be byte-identical across two real calls). Concretely:
+
+- AC7's "byte-identical" compares the plan body only; the golden snapshot
+  normalizes/omits `generatedAt`.
+- Task 3's "two calls equal" test injects a fixed `deps.now` (so `generatedAt` is
+  also equal in-test) **and** asserts the body equality independently of the
+  clock. Both mechanisms are required so the golden can never be flaky.
+
+### Day allocation vs. attraction capacity (P1-2)
+
+Requests allow 1–21 days across ≤7 cities, but each seed city publishes a bounded
+set of attractions (≥4) at pace caps of 1–3/day with no repeats. A request can
+therefore ask for more attraction-days than a city's content can fill (e.g.
+Beijing, `standard` pace, 10 days needs 20 distinct attractions from a
+4-attraction seed).
+
+**Chosen semantics (option a, friendly):** the planner fills each city up to its
+attraction capacity, then converts any remaining days into explicit **free /
+optional days** rather than dropping them or erroring:
+
+- every requested day is assigned to a destination — days are never silently
+  lost;
+- a city receives at most its fillable days
+  (`min(attractions_available_at_pace, allocated_days)`);
+- surplus days render as a `free day` block: a clearly-labelled
+  "free / flexible day" marker + the destination's general tips + optional
+  (non-scheduled) nearby suggestions — never a fabricated attraction;
+- a valid request always returns successfully; thin content never produces an
+  error;
+- `meta.freeDays` records the count so the UI and tests can assert it.
+
+This is the contract for AC1/AC5 and the Task 3 golden: `days.length` equals the
+requested `days`, and days beyond a city's capacity are `free` days.
 
 ## UI
 
@@ -156,9 +203,14 @@ fact — perishable or stable — may exist without a source.
   destination (area + why + "book via official/OTA — prices vary").
 - `PracticalPanel` — accordion: payments, connectivity, etiquette, safety, visa/
   entry (with disclaimer), emergency numbers.
-- `ProvenanceBadge` — "Verify official" + source link + `lastChecked`, shown on
-  every perishable fact; `FreshnessBanner` — content `lastVerified` + stale
-  warning (threshold 180 days).
+- `ProvenanceBadge` — `origin` + source link + `lastChecked` on every fact; on
+  `perishable` facts it adds the prominent "Verify official" badge, whose link is
+  the fact's official `url` (guaranteed present by content validation). Every
+  fact also shows its `origin` label (reference vs live); the `live` branch is
+  only reachable via injected fixtures in tests today. `FreshnessBanner` — content
+  `lastVerified` + stale warning (threshold 180 days); it accepts an injectable
+  `now` prop (defaults to `Date.now`) so the threshold is testable without time
+  mocking.
 - Accessibility: labelled controls, keyboard-navigable accordion, `aria-live`
   for the generated result; copy in `src/content/copy.ts` (`uiCopy.travel`).
 
@@ -171,39 +223,56 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
 
 1. From `/travel`, a valid request produces a deterministic itinerary covering
    **transport, a day-by-day plan, and stay areas** for every selected
-   destination.
+   destination. `days.length` equals the requested `days`; any days beyond a
+   city's attraction capacity are labelled **free / optional** days (P1-2), never
+   dropped or errored.
 2. Every fact renders its source + `lastChecked`; every `perishable` fact
-   additionally renders a prominent "Verify official" badge; each item shows its
-   `origin` (static reference vs live). A content-validation test fails the build
-   if any fact — stable or perishable — has no source.
+   additionally renders a prominent "Verify official" badge (with an actionable
+   official `url`); each item shows its `origin` (static reference vs live). A
+   content-validation test fails the build if any fact — stable or perishable —
+   has no source, and if any perishable fact lacks an official `url`. The MVP is
+   curated-only, so it renders the "reference only" label; the `live` rendering
+   branch is covered by an injected fixture in component tests (P2-4), and when a
+   plan is purely curated the origin label reads as reference (never a misleading
+   "live").
 3. The practical panel is always present and includes the visa/entry + safety
    **not-legal-advice** disclaimer.
 4. UI and content render correctly in **en and fr**; the language toggle switches
    both; missing translations fail the content test rather than rendering blank.
 5. Invalid input (0 destinations, out-of-range days) shows inline validation and
-   never produces a crash or empty itinerary.
+   never produces a crash or empty itinerary. A valid request whose duration
+   exceeds a city's attraction capacity still succeeds — it fills capacity and
+   marks the remainder free/optional (P1-2), it is **not** an error.
 6. The feature works with **no network and no keys** (fully offline).
-7. Same `(request, contentVersion)` yields byte-identical itinerary output.
-8. A stale-content warning appears when `lastVerified` is older than 180 days.
+7. Same `(request, contentVersion)` yields a byte-identical **plan body**;
+   determinism excludes `meta.generatedAt`, which is clock-injected (see
+   [Determinism contract](#determinism-contract-p1-1)).
+8. A stale-content warning appears when `lastVerified` is older than 180 days;
+   `FreshnessBanner` takes an injectable `now` (defaulting to the real clock) so
+   the threshold is testable without time mocking (P2-5).
 
 ## Evaluability
 
 - **Unit (Vitest):** request validation bounds; day allocation and travel-day
   insertion; interest scoring + pace caps (no duplicate attractions); stay-area
-  selection by budget; determinism (golden snapshots); provenance enforcement
-  (throw on *any* source-less fact, not only perishable); `origin` carried
-  through; i18n completeness (every `LocalizedField` has en+fr); staleness
-  threshold.
+  selection by budget; determinism (golden snapshots, `deps.now` injected, plan
+  body compared with `generatedAt` excluded); **over-capacity durations produce
+  free days** (`meta.freeDays > 0`, `days.length === request.days`); provenance
+  enforcement (throw on *any* source-less fact, not only perishable; and on a
+  perishable fact without an official `url`); `origin` carried through; i18n
+  completeness (every `LocalizedField` has en+fr); staleness threshold.
 - **Failure-path cases (required):** invalid/empty request; unknown destination;
-  days out of range; a destination with too few attractions for the pace;
-  **stale content** (>180 days) → visible warning; content that fails validation
-  → surfaced error, never a silent empty plan. When phase-2 adapters land, add:
-  no key, upstream timeout, empty result — each degrading visibly to curated
-  reference text, never fabricated.
+  days out of range; **stale content** (>180 days) → visible warning; content
+  that fails validation → surfaced error, never a silent empty plan. (A duration
+  exceeding attraction capacity is **not** a failure — it yields free days.) When
+  phase-2 adapters land, add: no key, upstream timeout, empty result — each
+  degrading visibly to curated reference text, never fabricated.
 - **Component (Vitest + Testing Library):** form validation; generate → render
-  day/stay/practical; source + `lastChecked` on all facts and "Verify official"
-  badge on perishable facts; origin (reference vs live) shown; disclaimer
-  visible; stale banner; language toggle.
+  day/stay/practical; source + `lastChecked` on all facts, "Verify official"
+  badge on perishable facts, and an actionable official link; origin shown, with
+  the `live` branch covered by an injected fixture; disclaimer visible; stale
+  banner driven by an injected `now`; free-day block renders for an
+  over-capacity request; language toggle.
 - **E2E (Playwright):** `/travel` renders; submit a request; itinerary + at least
   one "Verify official" badge + the disclaimer are visible; invalid submit shows
   inline validation. No network.
@@ -232,11 +301,14 @@ Designed but **not** in the MVP; no MVP code depends on them:
 
 - **AI enrichment** — `POST /api/travel` (`api/travel/index.ts` →
   `src/server/travel/*`) that turns the deterministic itinerary into friendlier
-  prose. Provider-agnostic OpenAI-compatible adapter (same shape as `/talk`);
-  key server-side only; strict system prompt: *may not introduce any perishable
+  prose. Provider-agnostic OpenAI-compatible adapter following the existing
+  lazy-handler pattern in `src/server/voice/*` (present on base `db7583b`), and
+  the same shape as the `/talk` design on `feat-voice-chat-buddy-0930`; key
+  server-side only; strict system prompt: *may not introduce any perishable
   fact not present in the provided itinerary*; tolerant of missing config
-  (returns the curated itinerary, `mode: 'curated'`); guard mirroring `/talk`
-  (best-effort rate limit + optional non-browser token, guard-before-call).
+  (returns the curated itinerary, `mode: 'curated'`); guard following the talk
+  design's "Endpoint guard" (best-effort rate limit + optional non-browser
+  token, guard-before-call).
 - **Read-only live adapters** — allowlisted tools (e.g. weather, exchange rate)
   with per-call timeout, returning `{ value, source, asOf }`; any adapter failure
   degrades to "verify official" curated text, never fabricates. Tool allowlist +
