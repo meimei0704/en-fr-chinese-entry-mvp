@@ -99,8 +99,11 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   capacityDays(d))` recorded in `meta.freeDays`. Over-capacity days render as
   `free`/optional blocks (destination tips + optional suggestions, no fabricated
   attraction); a thin-content request must succeed, not error.
-- [ ] `validateTravelRequest` also requires `days ≥ destinations.length` so
-  allocation is well-defined.
+- [ ] **Allocation:** reserve 1 day per selected destination, then distribute the
+  remaining `days − destinations.length` by `weight = 1 + interestMatchCount`
+  (floor + largest-remainder, tie-break by input order), so `Σallocated = days`
+  and every destination gets ≥1. `validateTravelRequest` also requires
+  `days ≥ destinations.length` so allocation is well-defined.
 - [ ] **Determinism (P1-1):** compare the plan body only; `meta.generatedAt` is
   excluded from byte-identity and is clock-injected in tests.
 - [ ] Test: determinism (two calls equal with a fixed `deps.now` **and** plan-body

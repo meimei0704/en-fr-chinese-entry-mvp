@@ -194,10 +194,14 @@ therefore ask for more attraction-days than a city can fill. The exact rules
 
 - `weight(d) = 1 + interestMatchCount(d)` (a city's attractions' categories in
   `request.interests`); if `interests` is empty every weight is 1.
-- `allocated(d) = floor(days * weight(d) / Σweight)`, then the remaining
-  `days − Σallocated` days are given by largest fractional remainder, tie-break
-  by request input order. Every selected destination gets ≥1 day; the request is
-  valid only when `days ≥ destinations.length` (see request validation).
+- **Reserve first, then distribute:** give every selected destination exactly 1
+  day as a floor, then distribute the remaining `R = days − destinations.length`
+  days: `extra(d) = floor(R * weight(d) / Σweight)`, and the last
+  `R − Σextra` days go to the largest fractional remainders, tie-break by
+  request input order. `allocated(d) = 1 + extra(d)`. This guarantees every
+  selected destination gets ≥1 day (the request is valid only when
+  `days ≥ destinations.length`; see request validation) and
+  `Σallocated(d) = days` exactly.
 - `days.length = Σallocated(d) = request.days` — **every requested day is
   assigned; no day is silently dropped.**
 
