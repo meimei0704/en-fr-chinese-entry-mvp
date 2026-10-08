@@ -15,7 +15,7 @@ import { TravelContentError, validateTravelContent } from './validate'
 function makeSource(overrides: Partial<TravelSourceRef> = {}): TravelSourceRef {
   return {
     id: 'src-official',
-    label: { en: 'Official source', fr: 'Source officielle' },
+    label: 'Official source',
     url: 'https://example.com/official',
     kind: 'official',
     lastChecked: '2026-10-01',
@@ -26,7 +26,7 @@ function makeSource(overrides: Partial<TravelSourceRef> = {}): TravelSourceRef {
 function makeReputableSource(): TravelSourceRef {
   return makeSource({
     id: 'src-reputable',
-    label: { en: 'Reputable guide', fr: 'Guide réputé' },
+    label: 'Reputable guide',
     url: undefined,
     kind: 'reputable',
   })
@@ -168,6 +168,35 @@ describe('validateTravelContent', () => {
 
     expect(() => validateTravelContent(content)).toThrow(TravelContentError)
     expect(() => validateTravelContent(content)).toThrow(/non-empty en and fr/i)
+  })
+
+  it('rejects a plain-string value for a bilingual content field', () => {
+    const content = makeValidContent()
+    content.destinations[0].summary = 'The capital.' as unknown as Destination['summary']
+
+    expect(() => validateTravelContent(content)).toThrow(TravelContentError)
+    expect(() => validateTravelContent(content)).toThrow(/must be an object with non-empty en and fr/i)
+  })
+
+  it('rejects a malformed fact whose sourceIds is not an array with the typed error', () => {
+    const content = makeValidContent()
+    content.destinations[0].attractions[0].sourceIds = 'src-official' as unknown as string[]
+
+    expect(() => validateTravelContent(content)).toThrow(TravelContentError)
+    expect(() => validateTravelContent(content)).toThrow(/sourceIds array/i)
+  })
+
+  it('rejects non-object content with the typed error instead of a TypeError', () => {
+    expect(() => validateTravelContent(null as unknown as TravelContent)).toThrow(TravelContentError)
+    expect(() => validateTravelContent(null as unknown as TravelContent)).toThrow(/must be an object/i)
+  })
+
+  it('rejects non-array destinations with the typed error instead of a TypeError', () => {
+    const content = makeValidContent()
+    content.destinations = undefined as unknown as Destination[]
+
+    expect(() => validateTravelContent(content)).toThrow(TravelContentError)
+    expect(() => validateTravelContent(content)).toThrow(/destinations must be an array/i)
   })
 
   it('rejects duplicate fact ids', () => {

@@ -1,4 +1,4 @@
-import type { LocalizedField } from '../types'
+import type { LocalizedText } from '../types'
 
 export type TravelDestinationId =
   | 'beijing'
@@ -32,7 +32,7 @@ export type PriceTier = 'budget' | 'mid' | 'comfort'
 
 export interface TravelSourceRef {
   id: string
-  label: LocalizedField
+  label: string
   url?: string
   kind: TravelSourceKind
   lastChecked: string
@@ -40,7 +40,7 @@ export interface TravelSourceRef {
 
 export interface TravelFact {
   id: string
-  title: LocalizedField
+  title: LocalizedText
   origin: FactOrigin
   freshness: FactFreshness
   sourceIds: string[]
@@ -49,23 +49,23 @@ export interface TravelFact {
 
 export interface Attraction extends TravelFact {
   category: Interest
-  area: LocalizedField
+  area: LocalizedText
   durationHours: number
-  description: LocalizedField
-  tips?: LocalizedField
+  description: LocalizedText
+  tips?: LocalizedText
 }
 
 export interface StayArea extends TravelFact {
-  name: LocalizedField
-  vibe: LocalizedField
+  name: LocalizedText
+  vibe: LocalizedText
   bestFor: Interest[]
   priceTier: PriceTier
-  transportNotes: LocalizedField
+  transportNotes: LocalizedText
 }
 
 export interface TransportOption extends TravelFact {
   mode: TransportMode
-  notes?: LocalizedField
+  notes?: LocalizedText
 }
 
 export interface DisclaimedTravelFact extends TravelFact {
@@ -88,11 +88,11 @@ export interface DestinationTransport {
 
 export interface Destination {
   id: TravelDestinationId
-  name: LocalizedField
-  region: LocalizedField
-  summary: LocalizedField
+  name: LocalizedText
+  region: LocalizedText
+  summary: LocalizedText
   bestSeasons: Season[]
-  welcome: LocalizedField
+  welcome: LocalizedText
   attractions: Attraction[]
   stayAreas: StayArea[]
   transport: DestinationTransport
