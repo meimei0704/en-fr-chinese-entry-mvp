@@ -90,18 +90,25 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
   travel half-day), interest scoring, pace caps (`relaxed`1/`standard`2/`packed`3),
   no duplicate attractions, budget-matched stay area, provenance carried through.
   `deps.now` injectable.
-- [ ] **Capacity / surplus (P1-2):** fill each city only up to its available
-  attractions at the requested pace; every requested day is still assigned, with
-  over-capacity days rendered as `free`/optional day blocks (destination tips +
-  optional suggestions, no fabricated attraction) and counted in
-  `meta.freeDays`. A thin-content request must succeed, not error.
+- [ ] **Capacity / surplus (P1-2)** — implement the design's exact formulas:
+  `capacityDays(d) = ceil(usableCount(d) / paceCap)`; a non-first destination's
+  arrival day is a **travel day** (transport leg + arrival half-day ≤
+  `floor(paceCap/2)` attractions) and does **not** count against
+  `capacityDays`; `attractionDays(d) = max(0, min(allocated(d) − arrivalDays(d),
+  capacityDays(d)))`; `freeDays = Σ max(0, (allocated(d) − arrivalDays(d)) −
+  capacityDays(d))` recorded in `meta.freeDays`. Over-capacity days render as
+  `free`/optional blocks (destination tips + optional suggestions, no fabricated
+  attraction); a thin-content request must succeed, not error.
+- [ ] `validateTravelRequest` also requires `days ≥ destinations.length` so
+  allocation is well-defined.
 - [ ] **Determinism (P1-1):** compare the plan body only; `meta.generatedAt` is
   excluded from byte-identity and is clock-injected in tests.
 - [ ] Test: determinism (two calls equal with a fixed `deps.now` **and** plan-body
   equality with `generatedAt` excluded; snapshot one golden itinerary);
   allocation for 1 city vs 3 cities; pace caps respected; no repeats; budget
   changes selected stay area; **over-capacity duration → `days.length === days`,
-  `meta.freeDays > 0`, free blocks present**; invalid request rejected;
+  `meta.freeDays > 0`, free blocks present**; **travel day does not reduce
+  `capacityDays`**; `days < destinations` rejected; invalid request rejected;
   `generatedAt` uses injected clock.
 
 ## Task 4 — i18n copy + content wiring
@@ -133,16 +140,17 @@ Design source of truth: `docs/superpowers/specs/2026-10-08-china-travel-companio
 - [ ] `StayCard`: area, why, and "book via official/OTA — prices vary".
 - [ ] `PracticalPanel`: accessible accordion incl. visa/entry + safety
   disclaimer + emergency numbers.
-- [ ] `ProvenanceBadge`: shows source + `lastChecked` + `origin` (reference vs
-  live) on **all** facts; adds the prominent "Verify official" badge on
-  `perishable` facts only, linking to the official `url`. `FreshnessBanner`:
+- [ ] `ProvenanceBadge`: source + `lastChecked` on **all** facts; adds the
+  prominent "Verify official" badge on `perishable` facts only, linking to the
+  official `url`. Origin is **not** rendered per fact; show a single origin
+  indicator only when the plan contains a `live` fact (P2-4). `FreshnessBanner`:
   `lastVerified` + stale warning, with an injectable `now` prop (default
   `Date.now`) so the 180-day threshold is tested without time mocking (P2-5).
 - [ ] Test each: rendering, labels, source shown on all facts, "Verify official"
-  only on perishable with an official link, **`origin:'live'` rendering via an
-  injected fixture** (P2-4), disclaimer visible, accordion keyboard behavior,
-  stale banner with an injected `now`, free-day block for an over-capacity
-  request.
+  only on perishable with an official link, **origin indicator present only with
+  an injected `live` fixture and absent for pure-curated plans** (P2-4),
+  disclaimer visible, accordion keyboard behavior, stale banner with an injected
+  `now`, free-day block for an over-capacity request.
 
 ## Task 6 — Travel page + route + nav
 

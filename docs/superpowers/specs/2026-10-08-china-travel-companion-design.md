@@ -25,11 +25,12 @@ Therefore the MVP composes itineraries from curated content that is **data, not
 prose**: every factual item carries a source and a `lastChecked` date, and is
 classified as `stable` (etiquette, transport modes, culture) or `perishable`
 (prices, hours, schedules). Each item also carries `origin: 'curated' | 'live'`
-so the UI can always distinguish a **static reference** from future **live**
-data. All facts render with their source + last-updated; `perishable` facts
-additionally render a prominent "Verify official" badge. Nothing factual is free
-text baked into a prompt. This makes the feature accurate, cheap, testable, and
-independent of any LLM.
+so the model can distinguish a **static reference** from future **live** data;
+the UI surfaces origin only when live facts are present (per-fact chips on
+pure-curated output are noise). All facts render with their source +
+last-updated; `perishable` facts additionally render a prominent "Verify
+official" badge. Nothing factual is free text baked into a prompt. This makes
+the feature accurate, cheap, testable, and independent of any LLM.
 
 An optional, separately-gated AI enrichment layer and read-only live adapters are
 designed here but **deferred** (see [Deferred](#deferred-phase-2)); the MVP
@@ -133,7 +134,8 @@ perishable facts.
 - `request.ts` — `TravelRequest { destinations: TravelDestinationId[]; days: number;
   interests: Interest[]; pace: 'relaxed'|'standard'|'packed'; budget:
   'budget'|'mid'|'comfort'; language: ExplanationLanguage }` plus
-  `validateTravelRequest` (bounds: 1–7 destinations, 1–21 days, ≥ 0 interests,
+  `validateTravelRequest` (bounds: 1–7 destinations, 1–21 days,
+  `days ≥ destinations.length` so day allocation is well-defined, ≥ 0 interests,
   unknown id → error) and `DEFAULT_TRAVEL_REQUEST`.
 - `planner.ts` — `buildItinerary(request, content, deps?)`:
   - dedupe/validate destinations; allocate `days` across them (longer trips get
@@ -167,29 +169,51 @@ be byte-identical across two real calls). Concretely:
 
 ### Day allocation vs. attraction capacity (P1-2)
 
-Requests allow 1–21 days across ≤7 cities, but each seed city publishes a bounded
+Requests allow 1–7 cities and 1–21 days, but each seed city publishes a bounded
 set of attractions (≥4) at pace caps of 1–3/day with no repeats. A request can
-therefore ask for more attraction-days than a city's content can fill (e.g.
-Beijing, `standard` pace, 10 days needs 20 distinct attractions from a
-4-attraction seed).
+therefore ask for more attraction-days than a city can fill. The exact rules
+(no interpretation room for the golden):
 
-**Chosen semantics (option a, friendly):** the planner fills each city up to its
-attraction capacity, then converts any remaining days into explicit **free /
-optional days** rather than dropping them or erroring:
+**Definitions**
 
-- every requested day is assigned to a destination — days are never silently
-  lost;
-- a city receives at most its fillable days
-  (`min(attractions_available_at_pace, allocated_days)`);
-- surplus days render as a `free day` block: a clearly-labelled
-  "free / flexible day" marker + the destination's general tips + optional
-  (non-scheduled) nearby suggestions — never a fabricated attraction;
-- a valid request always returns successfully; thin content never produces an
-  error;
-- `meta.freeDays` records the count so the UI and tests can assert it.
+- `paceCap` = `relaxed` 1 · `standard` 2 · `packed` 3 attractions/day.
+- `usable(d)` = attractions of `d` whose category is in `request.interests`,
+  ordered by (interest score desc, stable `id` asc). If the intersection is
+  empty, `usable(d)` = all attractions of `d` (a city is never unusable).
+  `N_d = |usable(d)|` (≥4 by content validation).
+- `capacityDays(d) = ceil(N_d / paceCap)` — the maximum number of
+  attraction-bearing days the city can fill without repeating an attraction. The
+  final day may be partially filled (the remainder attractions), hence `ceil`.
+- **Travel day:** the arrival day of every destination after the first is a
+  relocation day. It consumes a day slot but **does not count against
+  `capacityDays`**; it shows the inter-city transport leg plus an arrival
+  half-day carrying at most `halfCap = floor(paceCap / 2)` attractions
+  (`relaxed` 0, `standard` 1, `packed` 1).
 
-This is the contract for AC1/AC5 and the Task 3 golden: `days.length` equals the
-requested `days`, and days beyond a city's capacity are `free` days.
+**Day allocation (deterministic)**
+
+- `weight(d) = 1 + interestMatchCount(d)` (a city's attractions' categories in
+  `request.interests`); if `interests` is empty every weight is 1.
+- `allocated(d) = floor(days * weight(d) / Σweight)`, then the remaining
+  `days − Σallocated` days are given by largest fractional remainder, tie-break
+  by request input order. Every selected destination gets ≥1 day; the request is
+  valid only when `days ≥ destinations.length` (see request validation).
+- `days.length = Σallocated(d) = request.days` — **every requested day is
+  assigned; no day is silently dropped.**
+
+**Capacity & surplus**
+
+- `attractionDays(d) = max(0, min(allocated(d) − arrivalDays(d), capacityDays(d)))`,
+  where `arrivalDays(d) = 1` for a non-first destination, else `0`.
+- `freeDays = Σ_d max(0, (allocated(d) − arrivalDays(d)) − capacityDays(d))` —
+  over-capacity days, recorded in `meta.freeDays`.
+- A free day renders a clearly-labelled "free / flexible day" block with the
+  destination's general tips and optional (non-scheduled) suggestions — never a
+  fabricated attraction, and it is **not** an error.
+- Travel days are neither attraction days nor free days; they render the leg +
+  arrival half-day.
+
+This is the contract for AC1/AC5 and the Task 3 golden.
 
 ## UI
 
@@ -203,14 +227,15 @@ requested `days`, and days beyond a city's capacity are `free` days.
   destination (area + why + "book via official/OTA — prices vary").
 - `PracticalPanel` — accordion: payments, connectivity, etiquette, safety, visa/
   entry (with disclaimer), emergency numbers.
-- `ProvenanceBadge` — `origin` + source link + `lastChecked` on every fact; on
-  `perishable` facts it adds the prominent "Verify official" badge, whose link is
-  the fact's official `url` (guaranteed present by content validation). Every
-  fact also shows its `origin` label (reference vs live); the `live` branch is
-  only reachable via injected fixtures in tests today. `FreshnessBanner` — content
-  `lastVerified` + stale warning (threshold 180 days); it accepts an injectable
-  `now` prop (defaults to `Date.now`) so the threshold is testable without time
-  mocking.
+- `ProvenanceBadge` — source link + `lastChecked` on every fact; on `perishable`
+  facts it adds the prominent "Verify official" badge, whose link is the fact's
+  official `url` (guaranteed present by content validation). `origin` lives in
+  the data model but is surfaced by the UI **only when the plan contains at least
+  one `live` fact** (e.g. a single "includes live data" indicator), so
+  pure-curated output is not littered with a per-fact "static reference" chip.
+  `FreshnessBanner` — content `lastVerified` + stale warning (threshold 180 days);
+  it accepts an injectable `now` prop (defaults to `Date.now`) so the threshold is
+  testable without time mocking.
 - Accessibility: labelled controls, keyboard-navigable accordion, `aria-live`
   for the generated result; copy in `src/content/copy.ts` (`uiCopy.travel`).
 
@@ -228,13 +253,12 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
    dropped or errored.
 2. Every fact renders its source + `lastChecked`; every `perishable` fact
    additionally renders a prominent "Verify official" badge (with an actionable
-   official `url`); each item shows its `origin` (static reference vs live). A
+   official `url`). `origin` is **carried in the data model** and asserted by
+   unit tests to survive planning, but the UI renders an origin indicator **only
+   when at least one `live` fact is present** in the plan (P2-4 — a per-fact
+   "static reference" chip on pure-curated output is noise and misleading). A
    content-validation test fails the build if any fact — stable or perishable —
-   has no source, and if any perishable fact lacks an official `url`. The MVP is
-   curated-only, so it renders the "reference only" label; the `live` rendering
-   branch is covered by an injected fixture in component tests (P2-4), and when a
-   plan is purely curated the origin label reads as reference (never a misleading
-   "live").
+   has no source, and if any perishable fact lacks an official `url`.
 3. The practical panel is always present and includes the visa/entry + safety
    **not-legal-advice** disclaimer.
 4. UI and content render correctly in **en and fr**; the language toggle switches
@@ -269,10 +293,11 @@ Add a `/travel` `NavLink` to `src/app/SiteHeader.tsx` with `nav.travel` copy
   degrading visibly to curated reference text, never fabricated.
 - **Component (Vitest + Testing Library):** form validation; generate → render
   day/stay/practical; source + `lastChecked` on all facts, "Verify official"
-  badge on perishable facts, and an actionable official link; origin shown, with
-  the `live` branch covered by an injected fixture; disclaimer visible; stale
-  banner driven by an injected `now`; free-day block renders for an
-  over-capacity request; language toggle.
+  badge on perishable facts, and an actionable official link; the origin
+  indicator appears **only** when an injected fixture contains a `live` fact and
+  is absent for pure-curated plans; disclaimer visible; stale banner driven by an
+  injected `now`; free-day block renders for an over-capacity request; language
+  toggle.
 - **E2E (Playwright):** `/travel` renders; submit a request; itinerary + at least
   one "Verify official" badge + the disclaimer are visible; invalid submit shows
   inline validation. No network.
